@@ -12,8 +12,10 @@ import { WikiDocument, RepoInfo, WikiIndex } from './types.js';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-const WIKI_DIR = process.env.WIKI_DIR || path.resolve(__dirname, '../../wiki');
-const OUTPUT_DIR = path.resolve(__dirname, '../public/data');
+// In Netlify, base dir is 'web', so wiki is at '../wiki' from cwd
+// Locally when running from web/, it's also '../wiki'
+const WIKI_DIR = process.env.WIKI_DIR || path.resolve(process.cwd(), '../wiki');
+const OUTPUT_DIR = path.resolve(process.cwd(), 'public/data');
 
 interface Frontmatter {
   title?: string;
