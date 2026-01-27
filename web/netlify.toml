@@ -1,8 +1,10 @@
 # Netlify configuration for Code Wiki Web Interface
 
 [build]
-  # Build command - generates index and compiles functions
-  command = "npm install && npm run build"
+  # Build command - only compile functions
+  # NOTE: Index building is handled by GitHub Actions (.github/workflows/update-index.yml)
+  # which commits index.json with full repo access. Netlify just uses the committed index.
+  command = "npm install && npm run build:functions"
   # Directory containing the static files
   publish = "public"
   # Directory containing Netlify Functions
@@ -13,10 +15,10 @@
   NODE_VERSION = "20"
 
 # Environment variables are set in Netlify dashboard, not here
-# Required env vars:
-# - GITHUB_TOKEN: GitHub personal access token for API access
-# - GITHUB_USERNAME: GitHub username for repo filtering
-# - WIKI_REPO_PATH: Path to wiki in the repo (default: ../wiki)
+# Note: GITHUB_TOKEN is NOT needed for Netlify builds anymore
+# Index generation happens via GitHub Actions which has built-in GITHUB_TOKEN
+# Optional env vars:
+# - NETLIFY_BUILD_HOOK: If set in GitHub repo secrets, allows Actions to trigger rebuilds
 
 # Development settings
 [dev]
