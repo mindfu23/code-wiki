@@ -628,6 +628,43 @@ function setupEditor() {
     githubLoginBtn.addEventListener('click', handleLogin);
   }
 
+  // New document button and modal
+  const newDocBtn = document.getElementById('new-doc-btn');
+  const newDocModal = document.getElementById('new-doc-modal');
+  const newDocCancel = document.getElementById('new-doc-cancel');
+  const newDocCreate = document.getElementById('new-doc-create');
+  const modalBackdrop = newDocModal?.querySelector('.modal-backdrop');
+
+  if (newDocBtn) {
+    newDocBtn.addEventListener('click', () => {
+      if (newDocModal) {
+        newDocModal.style.display = 'flex';
+        document.getElementById('new-doc-filename').value = '';
+        document.getElementById('new-doc-filename').focus();
+      }
+    });
+  }
+
+  if (newDocCancel) {
+    newDocCancel.addEventListener('click', closeNewDocModal);
+  }
+
+  if (modalBackdrop) {
+    modalBackdrop.addEventListener('click', closeNewDocModal);
+  }
+
+  if (newDocCreate) {
+    newDocCreate.addEventListener('click', createNewDocument);
+  }
+
+  // Enter key in filename field
+  const filenameInput = document.getElementById('new-doc-filename');
+  if (filenameInput) {
+    filenameInput.addEventListener('keypress', (e) => {
+      if (e.key === 'Enter') createNewDocument();
+    });
+  }
+
   // Preview toggle
   const previewToggle = document.getElementById('editor-preview-toggle');
   const editorMain = document.querySelector('.editor-main');
@@ -704,6 +741,90 @@ function setupEditor() {
   });
 }
 
+// Close new document modal
+function closeNewDocModal() {
+  const modal = document.getElementById('new-doc-modal');
+  if (modal) modal.style.display = 'none';
+}
+
+// Create new document from modal
+function createNewDocument() {
+  const category = document.getElementById('new-doc-category').value;
+  const filename = document.getElementById('new-doc-filename').value.trim();
+
+  if (!filename) {
+    alert('Please enter a filename');
+    return;
+  }
+
+  // Sanitize filename (alphanumeric, hyphens, underscores only)
+  const sanitized = filename
+    .toLowerCase()
+    .replace(/[^a-z0-9\-_]/g, '-')
+    .replace(/-+/g, '-')
+    .replace(/^-|-$/g, '');
+
+  if (!sanitized) {
+    alert('Invalid filename');
+    return;
+  }
+
+  closeNewDocModal();
+
+  // Open editor for new document
+  openEditorForNew(category, sanitized);
+}
+
+// Open editor for a new document
+function openEditorForNew(category, filename) {
+  if (!currentUser) {
+    navigateTo('login');
+    return;
+  }
+
+  const relativePath = `${category}/${filename}.md`;
+
+  // Create a temporary document object for new doc
+  editingDocument = {
+    relativePath,
+    category,
+    title: '',
+    description: '',
+    tags: [],
+    language: '',
+    content: '',
+    isNew: true,
+  };
+  isDirty = false;
+
+  // Clear editor fields
+  document.getElementById('edit-title').value = '';
+  document.getElementById('edit-description').value = '';
+  document.getElementById('edit-tags').value = '';
+  document.getElementById('edit-language').value = '';
+  document.getElementById('editor-content').value = '';
+  document.getElementById('commit-message').value = `Add ${filename}`;
+
+  // Update title
+  document.getElementById('editor-title').textContent = `New Document: ${category}/${filename}.md`;
+
+  // Clear status
+  const status = document.getElementById('editor-status');
+  if (status) {
+    status.className = 'editor-status';
+    status.textContent = '';
+  }
+
+  // Reset preview
+  const previewPane = document.getElementById('preview-pane');
+  if (previewPane) previewPane.classList.add('hidden');
+  const previewToggle = document.getElementById('editor-preview-toggle');
+  if (previewToggle) previewToggle.textContent = 'Preview';
+
+  // Navigate to editor
+  navigateTo('editor', { doc: relativePath });
+}
+
 // Open editor for a document
 function openEditor(docPath) {
   if (!currentUser) {
@@ -714,6 +835,11 @@ function openEditor(docPath) {
   // Find document in index
   const doc = wikiIndex?.documents.find(d => d.relativePath === docPath);
   if (!doc) {
+    // Check if this might be a new document being created
+    if (editingDocument?.relativePath === docPath && editingDocument?.isNew) {
+      // Already set up for new document, just show editor
+      return;
+    }
     alert('Document not found');
     return;
   }
@@ -842,6 +968,7 @@ async function saveDocument() {
         path: editingDocument.relativePath,
         content,
         commitMessage,
+        isNew: editingDocument.isNew || false,
       }),
     });
 
@@ -849,13 +976,21 @@ async function saveDocument() {
 
     if (response.ok && result.success) {
       isDirty = false;
-      showEditorStatus('success', `Saved! Commit: ${result.commit.sha.slice(0, 7)}`);
+      const isNew = editingDocument.isNew;
+      showEditorStatus('success', `${isNew ? 'Created' : 'Saved'}! Commit: ${result.commit.sha.slice(0, 7)}`);
 
       // Update local index
       editingDocument.content = content;
       editingDocument.title = title;
       editingDocument.description = document.getElementById('edit-description').value.trim();
       editingDocument.updated = new Date().toISOString().split('T')[0];
+
+      // Add to index if new
+      if (isNew && wikiIndex) {
+        editingDocument.isNew = false;
+        editingDocument.contentPreview = content.slice(0, 200);
+        wikiIndex.documents.push(editingDocument);
+      }
 
       // Redirect back to document view after short delay
       setTimeout(() => {
