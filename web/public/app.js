@@ -482,7 +482,57 @@ async function showDocument(docPath) {
 // Basic markdown renderer
 function renderMarkdown(text) {
   // This is a simple renderer - for production, use a library like marked.js
-  let html = escapeHtml(text);
+
+  // First, process tables before escaping HTML
+  const lines = text.split('\n');
+  const processedLines = [];
+  let inTable = false;
+  let tableLines = [];
+
+  for (let i = 0; i < lines.length; i++) {
+    const line = lines[i].trim();
+
+    // Check if this is a table row (starts and ends with |, or is a separator row)
+    const isTableRow = line.startsWith('|') && line.endsWith('|');
+    const isSeparator = /^\|[\s\-:|]+\|$/.test(line);
+
+    if (isTableRow || isSeparator) {
+      if (!inTable) {
+        inTable = true;
+        tableLines = [];
+      }
+      tableLines.push(line);
+    } else {
+      if (inTable) {
+        // End of table, process it
+        processedLines.push(renderTable(tableLines));
+        inTable = false;
+        tableLines = [];
+      }
+      processedLines.push(lines[i]);
+    }
+  }
+
+  // Handle table at end of content
+  if (inTable && tableLines.length > 0) {
+    processedLines.push(renderTable(tableLines));
+  }
+
+  let html = escapeHtml(processedLines.join('\n'));
+
+  // Restore tables (they were marked with special tokens)
+  html = html.replace(/\[TABLE_START\]/g, '<table>');
+  html = html.replace(/\[TABLE_END\]/g, '</table>');
+  html = html.replace(/\[THEAD_START\]/g, '<thead>');
+  html = html.replace(/\[THEAD_END\]/g, '</thead>');
+  html = html.replace(/\[TBODY_START\]/g, '<tbody>');
+  html = html.replace(/\[TBODY_END\]/g, '</tbody>');
+  html = html.replace(/\[TR_START\]/g, '<tr>');
+  html = html.replace(/\[TR_END\]/g, '</tr>');
+  html = html.replace(/\[TH_START\]/g, '<th>');
+  html = html.replace(/\[TH_END\]/g, '</th>');
+  html = html.replace(/\[TD_START\]/g, '<td>');
+  html = html.replace(/\[TD_END\]/g, '</td>');
 
   // Headers
   html = html.replace(/^### (.*$)/gim, '<h3>$1</h3>');
@@ -500,6 +550,9 @@ function renderMarkdown(text) {
   // Links
   html = html.replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2" target="_blank">$1</a>');
 
+  // Horizontal rules
+  html = html.replace(/^---$/gim, '<hr>');
+
   // Lists
   html = html.replace(/^\- (.+)$/gim, '<li>$1</li>');
   html = html.replace(/(<li>.*<\/li>)/s, '<ul>$1</ul>');
@@ -516,8 +569,59 @@ function renderMarkdown(text) {
   html = html.replace(/(<\/pre>)<\/p>/g, '$1');
   html = html.replace(/<p>(<ul>)/g, '$1');
   html = html.replace(/(<\/ul>)<\/p>/g, '$1');
+  html = html.replace(/<p>(<table>)/g, '$1');
+  html = html.replace(/(<\/table>)<\/p>/g, '$1');
+  html = html.replace(/<p>(<hr>)/g, '$1');
+  html = html.replace(/(<hr>)<\/p>/g, '$1');
 
   return html;
+}
+
+// Render markdown table to HTML (with token placeholders to survive escaping)
+function renderTable(lines) {
+  if (lines.length < 2) return lines.join('\n');
+
+  let result = '[TABLE_START]';
+  let isHeader = true;
+
+  for (let i = 0; i < lines.length; i++) {
+    const line = lines[i].trim();
+
+    // Skip separator rows (|---|---|)
+    if (/^\|[\s\-:|]+\|$/.test(line)) {
+      if (isHeader) {
+        result += '[THEAD_END][TBODY_START]';
+        isHeader = false;
+      }
+      continue;
+    }
+
+    // Parse cells
+    const cells = line.split('|').slice(1, -1).map(c => c.trim());
+
+    if (isHeader && i === 0) {
+      result += '[THEAD_START]';
+    }
+
+    result += '[TR_START]';
+    cells.forEach(cell => {
+      if (isHeader && i === 0) {
+        result += `[TH_START]${cell}[TH_END]`;
+      } else {
+        result += `[TD_START]${cell}[TD_END]`;
+      }
+    });
+    result += '[TR_END]';
+  }
+
+  if (isHeader) {
+    result += '[THEAD_END]';
+  } else {
+    result += '[TBODY_END]';
+  }
+
+  result += '[TABLE_END]';
+  return result;
 }
 
 // Escape HTML
