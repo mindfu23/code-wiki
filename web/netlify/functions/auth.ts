@@ -1,47 +1,24 @@
 /**
- * Auth API function for Code Wiki (STUB)
- * Placeholder for future user authentication
- *
- * TODO: Implement with your preferred auth provider:
- * - Netlify Identity
- * - Auth0
- * - Supabase Auth
- * - Firebase Auth
- * - Custom JWT implementation
+ * Auth API function for Code Wiki
+ * Handles logout and auth status
+ * Login/signup handled via GitHub OAuth (oauth-login.ts, oauth-callback.ts)
  */
 
 import { Handler, HandlerEvent, HandlerContext } from '@netlify/functions';
+
+const SITE_URL = process.env.URL || process.env.SITE_URL || 'http://localhost:8888';
 
 // CORS headers
 const headers = {
   'Access-Control-Allow-Origin': '*',
   'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
   'Access-Control-Allow-Headers': 'Content-Type, Authorization',
+  'Access-Control-Allow-Credentials': 'true',
   'Content-Type': 'application/json',
 };
 
 interface AuthRequest {
-  action: 'login' | 'signup' | 'logout' | 'verify' | 'refresh';
-  email?: string;
-  password?: string;
-  name?: string;
-  token?: string;
-}
-
-interface User {
-  id: string;
-  email: string;
-  name?: string;
-  role: 'user' | 'admin';
-  createdAt: string;
-}
-
-interface AuthResponse {
-  success: boolean;
-  message: string;
-  user?: User;
-  token?: string;
-  expiresAt?: string;
+  action: 'logout' | 'status';
 }
 
 const handler: Handler = async (event: HandlerEvent, context: HandlerContext) => {
@@ -51,102 +28,51 @@ const handler: Handler = async (event: HandlerEvent, context: HandlerContext) =>
   }
 
   // Parse request
-  let request: AuthRequest;
+  let request: AuthRequest = { action: 'status' };
   try {
     if (event.httpMethod === 'POST' && event.body) {
       request = JSON.parse(event.body);
     } else {
       const params = event.queryStringParameters || {};
-      request = { action: params.action as AuthRequest['action'] || 'verify' };
+      request = { action: (params.action as AuthRequest['action']) || 'status' };
     }
   } catch (error) {
     return {
       statusCode: 400,
       headers,
+      body: JSON.stringify({ error: 'Invalid request body' }),
+    };
+  }
+
+  // Handle logout
+  if (request.action === 'logout') {
+    return {
+      statusCode: 200,
+      headers: {
+        ...headers,
+        'Set-Cookie': 'wiki_session=; HttpOnly; Secure; SameSite=Lax; Max-Age=0; Path=/',
+      },
+      body: JSON.stringify({ success: true, message: 'Logged out' }),
+    };
+  }
+
+  // Handle status check - redirect to /user endpoint
+  if (request.action === 'status') {
+    return {
+      statusCode: 200,
+      headers,
       body: JSON.stringify({
-        success: false,
-        message: 'Invalid request body',
+        message: 'Use /.netlify/functions/user to check authentication status',
+        loginUrl: '/.netlify/functions/oauth-login',
       }),
     };
   }
 
-  // Handle auth actions (all stubbed)
-  const response: AuthResponse = {
-    success: false,
-    message: '',
-  };
-
-  switch (request.action) {
-    case 'login':
-      response.message = 'Login functionality coming soon. Authentication is not yet implemented.';
-      break;
-
-    case 'signup':
-      response.message = 'Signup functionality coming soon. User registration is not yet implemented.';
-      break;
-
-    case 'logout':
-      response.success = true;
-      response.message = 'Logged out successfully (stub).';
-      break;
-
-    case 'verify':
-      response.message = 'Token verification not yet implemented.';
-      break;
-
-    case 'refresh':
-      response.message = 'Token refresh not yet implemented.';
-      break;
-
-    default:
-      response.message = `Unknown action: ${request.action}. Valid actions: login, signup, logout, verify, refresh`;
-  }
-
   return {
-    statusCode: response.success ? 200 : 501,
+    statusCode: 400,
     headers,
-    body: JSON.stringify(response),
+    body: JSON.stringify({ error: `Unknown action: ${request.action}` }),
   };
 };
 
 export { handler };
-
-/*
- * IMPLEMENTATION NOTES FOR FUTURE AUTH:
- *
- * 1. Netlify Identity (Easiest):
- *    - Enable in Netlify dashboard
- *    - Use netlify-identity-widget on frontend
- *    - Access user in functions via context.clientContext.user
- *
- * 2. JWT Implementation:
- *    - Store JWTSECRET in Netlify env vars
- *    - Use jsonwebtoken package
- *    - Store users in database (Supabase, PlanetScale, etc.)
- *
- * 3. OAuth Providers:
- *    - GitHub OAuth for developer-focused auth
- *    - Google OAuth for general users
- *    - Store provider tokens securely
- *
- * Example JWT login implementation:
- *
- * import jwt from 'jsonwebtoken';
- * import bcrypt from 'bcryptjs';
- *
- * async function login(email: string, password: string) {
- *   const user = await findUserByEmail(email);
- *   if (!user) throw new Error('User not found');
- *
- *   const valid = await bcrypt.compare(password, user.passwordHash);
- *   if (!valid) throw new Error('Invalid password');
- *
- *   const token = jwt.sign(
- *     { userId: user.id, email: user.email, role: user.role },
- *     process.env.JWT_SECRET!,
- *     { expiresIn: '7d' }
- *   );
- *
- *   return { user, token };
- * }
- */
