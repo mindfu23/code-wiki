@@ -13,6 +13,7 @@
   },
   "dependencies": {
     "@netlify/functions": "^2.4.0",
+    "@octokit/rest": "^20.0.0",
     "gray-matter": "^4.0.3"
   },
   "devDependencies": {
