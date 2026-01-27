@@ -323,7 +323,41 @@ main {
   color: var(--text-muted);
 }
 
-/* Repos Page */
+/* Browse Repos Section */
+.browse-repos-section {
+  margin-top: 3rem;
+  padding-top: 2rem;
+  border-top: 1px solid var(--border);
+}
+
+.browse-repos-section h2 {
+  margin-bottom: 1rem;
+}
+
+.repo-locations-link {
+  margin-bottom: 1.5rem;
+}
+
+.repo-locations-link a {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1rem;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  color: var(--primary);
+  text-decoration: none;
+  font-weight: 500;
+  transition: all 0.2s;
+}
+
+.repo-locations-link a:hover {
+  background: var(--bg);
+  border-color: var(--primary);
+}
+
+/* Repos Filters */
 .repo-filters {
   display: flex;
   gap: 1rem;
