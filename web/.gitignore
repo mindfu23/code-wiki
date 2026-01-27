@@ -5,8 +5,8 @@ node_modules/
 dist/
 netlify/functions-dist/
 
-# Generated data (rebuilt on deploy)
-public/data/
+# Generated data is now tracked for GitHub Actions updates
+# public/data/
 
 # Environment (use Netlify dashboard for secrets)
 .env

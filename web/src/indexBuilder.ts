@@ -65,7 +65,8 @@ async function parseWikiDocument(filePath: string, wikiDir: string): Promise<Wik
     const frontmatter = data as Frontmatter;
 
     const relativePath = path.relative(wikiDir, filePath);
-    const category = path.dirname(relativePath).split(path.sep)[0] || 'root';
+    const dirName = path.dirname(relativePath).split(path.sep)[0];
+    const category = (!dirName || dirName === '.') ? 'general' : dirName;
 
     // Skip index files from search results but include them for category listing
     const fileName = path.basename(filePath, '.md');
