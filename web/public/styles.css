@@ -334,27 +334,52 @@ main {
   margin-bottom: 1rem;
 }
 
-.repo-locations-link {
+/* Repo Tabs */
+.repo-tabs {
+  display: flex;
+  gap: 0;
   margin-bottom: 1.5rem;
+  border-bottom: 1px solid var(--border);
 }
 
-.repo-locations-link a {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.5rem;
-  padding: 0.75rem 1rem;
-  background: var(--bg-card);
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
-  color: var(--primary);
-  text-decoration: none;
+.repo-tab {
+  padding: 0.75rem 1.5rem;
+  background: transparent;
+  border: none;
+  border-bottom: 2px solid transparent;
+  color: var(--text-muted);
+  font-size: 0.95rem;
   font-weight: 500;
+  cursor: pointer;
   transition: all 0.2s;
 }
 
-.repo-locations-link a:hover {
+.repo-tab:hover {
+  color: var(--text);
   background: var(--bg);
-  border-color: var(--primary);
+}
+
+.repo-tab.active {
+  color: var(--primary);
+  border-bottom-color: var(--primary);
+}
+
+/* Repo Views */
+.repo-view {
+  display: none;
+}
+
+.repo-view.active {
+  display: block;
+}
+
+#repo-list-content {
+  max-height: 600px;
+  overflow-y: auto;
+  padding: 1rem;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
 }
 
 /* Repos Filters */

@@ -65,22 +65,32 @@
 
       <div class="browse-repos-section">
         <h2>Browse Repos</h2>
-        <div class="repo-locations-link">
-          <a href="/document?doc=projects/repo-locations.md" id="repo-locations-link">
-            View Repository Locations Index
-          </a>
+        <div class="repo-tabs">
+          <button class="repo-tab active" data-tab="list">List View</button>
+          <button class="repo-tab" data-tab="cards">Card View</button>
         </div>
-        <div class="repo-filters">
-          <select id="repo-status-filter">
-            <option value="">All Status</option>
-            <option value="synced">Synced</option>
-            <option value="local-only">Local Only</option>
-            <option value="github-only">GitHub Only</option>
-          </select>
-          <input type="text" id="repo-search" placeholder="Filter repositories...">
+
+        <!-- List View (Repository Locations Index) -->
+        <div id="repo-list-view" class="repo-view active">
+          <div id="repo-list-content" class="document-content">
+            <p class="loading">Loading repository index...</p>
+          </div>
         </div>
-        <div id="repos-container" class="repos-grid">
-          <!-- Repos loaded dynamically -->
+
+        <!-- Card View -->
+        <div id="repo-card-view" class="repo-view">
+          <div class="repo-filters">
+            <select id="repo-status-filter">
+              <option value="">All Status</option>
+              <option value="synced">Synced</option>
+              <option value="local-only">Local Only</option>
+              <option value="github-only">GitHub Only</option>
+            </select>
+            <input type="text" id="repo-search" placeholder="Filter repositories...">
+          </div>
+          <div id="repos-container" class="repos-grid">
+            <!-- Repos loaded dynamically -->
+          </div>
         </div>
       </div>
     </section>
