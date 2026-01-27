@@ -7,7 +7,7 @@ import * as fs from 'fs/promises';
 import * as path from 'path';
 import { fileURLToPath } from 'url';
 import matter from 'gray-matter';
-import { WikiDocument, RepoInfo, WikiIndex } from './types.js';
+import { WikiDocument, RepoInfo, RepoMarkdownFile, WikiIndex } from './types.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -133,6 +133,39 @@ async function parseRepoLocations(wikiDir: string): Promise<RepoInfo[]> {
   return repos;
 }
 
+async function scanRepoForMarkdownFiles(repoPath: string): Promise<RepoMarkdownFile[]> {
+  const mdFiles: RepoMarkdownFile[] = [];
+
+  async function scanDir(dir: string, baseDir: string): Promise<void> {
+    try {
+      const entries = await fs.readdir(dir, { withFileTypes: true });
+
+      for (const entry of entries) {
+        const fullPath = path.join(dir, entry.name);
+
+        // Skip hidden directories, node_modules, and common non-source directories
+        if (entry.isDirectory()) {
+          const skipDirs = ['.git', 'node_modules', '.next', 'dist', 'build', '.cache', 'coverage', '__pycache__', 'venv', '.venv'];
+          if (!entry.name.startsWith('.') && !skipDirs.includes(entry.name)) {
+            await scanDir(fullPath, baseDir);
+          }
+        } else if (entry.isFile() && entry.name.endsWith('.md')) {
+          const relativePath = path.relative(baseDir, fullPath);
+          mdFiles.push({
+            relativePath,
+            name: entry.name,
+          });
+        }
+      }
+    } catch (error) {
+      // Directory might not exist or be inaccessible
+    }
+  }
+
+  await scanDir(repoPath, repoPath);
+  return mdFiles.sort((a, b) => a.relativePath.localeCompare(b.relativePath));
+}
+
 async function buildIndex(): Promise<void> {
   console.log('Building Code Wiki index...');
   console.log(`Wiki directory: ${WIKI_DIR}`);
@@ -159,6 +192,16 @@ async function buildIndex(): Promise<void> {
   // Parse repo locations
   const repos = await parseRepoLocations(WIKI_DIR);
   console.log(`Found ${repos.length} repositories`);
+
+  // Scan each repo for markdown files
+  let totalMdFiles = 0;
+  for (const repo of repos) {
+    if (repo.localPath) {
+      repo.markdownFiles = await scanRepoForMarkdownFiles(repo.localPath);
+      totalMdFiles += repo.markdownFiles.length;
+    }
+  }
+  console.log(`Found ${totalMdFiles} markdown files across all repos`);
 
   // Build index
   const index: WikiIndex = {
