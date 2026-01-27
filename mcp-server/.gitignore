@@ -1,0 +1,22 @@
+# Dependencies
+node_modules/
+
+# Build output
+dist/
+
+# Environment variables
+.env
+
+# Runtime data (index cache)
+data/index.json
+data/sync-state.json
+
+# OS files
+.DS_Store
+
+# IDE
+.idea/
+.vscode/
+
+# Logs
+*.log
