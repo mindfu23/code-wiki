@@ -60,14 +60,27 @@ function redirectResponse(
   location: string,
   cookies?: string[],
   cacheControl?: string
-): { statusCode: number; headers: Record<string, string>; body: string } {
+): {
+  statusCode: number;
+  headers: Record<string, string>;
+  multiValueHeaders?: Record<string, string[]>;
+  body: string;
+} {
   const headers: Record<string, string> = { Location: location };
-  if (cookies && cookies.length > 0) {
-    headers['Set-Cookie'] = cookies.join(', ');
-  }
   if (cacheControl) {
     headers['Cache-Control'] = cacheControl;
   }
+
+  // Use multiValueHeaders for multiple Set-Cookie headers
+  if (cookies && cookies.length > 0) {
+    return {
+      statusCode: 302,
+      headers,
+      multiValueHeaders: { 'Set-Cookie': cookies },
+      body: '',
+    };
+  }
+
   return { statusCode: 302, headers, body: '' };
 }
 
@@ -154,11 +167,15 @@ const handler: Handler = async (event: HandlerEvent) => {
       exp: Date.now() + 30 * 24 * 60 * 60 * 1000, // 30 days
     };
 
+    console.log('OAuth callback: creating session for user', user.login);
+
     // Encrypt session
     const sessionToken = encryptSession(sessionData);
+    console.log('OAuth callback: session token created, length:', sessionToken.length);
 
     // Set session cookie and redirect to home
     const thirtyDays = 30 * 24 * 60 * 60;
+    console.log('OAuth callback: redirecting to', SITE_URL);
 
     return redirectResponse(
       SITE_URL,
