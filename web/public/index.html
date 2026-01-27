@@ -17,6 +17,7 @@
         <a href="/repos" class="nav-link" data-page="repos">Repos</a>
         <a href="/login" class="nav-link" data-page="login" id="login-nav-link">Login</a>
         <div id="user-nav" class="user-nav" style="display: none;">
+          <button id="new-doc-btn" class="btn btn-primary btn-sm">+ New</button>
           <img id="user-avatar" src="" alt="" class="user-avatar">
           <span id="user-name" class="user-name"></span>
           <button id="logout-btn" class="btn-link">Logout</button>
@@ -188,6 +189,34 @@
       </div>
     </section>
   </main>
+
+  <!-- New Document Modal -->
+  <div id="new-doc-modal" class="modal" style="display: none;">
+    <div class="modal-backdrop"></div>
+    <div class="modal-content">
+      <h3>Create New Document</h3>
+      <div class="form-group">
+        <label for="new-doc-category">Category</label>
+        <select id="new-doc-category">
+          <option value="patterns">Patterns</option>
+          <option value="utilities">Utilities</option>
+          <option value="integrations">Integrations</option>
+          <option value="templates">Templates</option>
+          <option value="snippets">Snippets</option>
+          <option value="projects">Projects</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label for="new-doc-filename">Filename</label>
+        <input type="text" id="new-doc-filename" placeholder="my-document" autocomplete="off">
+        <small class="form-hint">.md extension added automatically</small>
+      </div>
+      <div class="modal-actions">
+        <button id="new-doc-cancel" class="btn btn-secondary">Cancel</button>
+        <button id="new-doc-create" class="btn btn-primary">Create</button>
+      </div>
+    </div>
+  </div>
 
   <footer>
     <p>Code Wiki &copy; 2025 | <a href="https://github.com/mindfu23/code-wiki" target="_blank">GitHub</a></p>
