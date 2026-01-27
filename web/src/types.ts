@@ -16,6 +16,11 @@ export interface WikiDocument {
   category: string;
 }
 
+export interface RepoMarkdownFile {
+  relativePath: string;  // Path relative to repo root
+  name: string;          // Filename
+}
+
 export interface RepoInfo {
   name: string;
   description?: string;
@@ -24,6 +29,7 @@ export interface RepoInfo {
   languages: string[];
   lastCommitDate?: string;
   status: 'synced' | 'local-only' | 'github-only';
+  markdownFiles?: RepoMarkdownFile[];  // .md files in the repo
 }
 
 export interface SearchResult {
