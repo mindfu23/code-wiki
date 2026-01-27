@@ -1,0 +1,25 @@
+[
+  {
+    "path": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/code-wiki/wiki/snippets/_index.md",
+    "relativePath": "snippets/_index.md",
+    "title": "Snippets Index",
+    "description": "Small, focused code pieces",
+    "tags": [
+      "index",
+      "snippets"
+    ],
+    "content": "\n# Snippets\n\nThis category contains small, focused code pieces.\n\n## What belongs here\n\n- One-liners and short functions\n- Useful regex patterns\n- Shell commands\n- Quick solutions to common problems\n- Copy-paste ready code blocks\n\n## Adding new snippets\n\nCreate a new `.md` file in this directory following the document template in AGENTS.md.\n",
+    "contentPreview": "# Snippets  This category contains small, focused code pieces.  ## What belongs here  - One-liners and short functions - Useful regex patterns - Shell commands - Quick solutions to common problems - Copy-paste ready code blocks  ## Adding new snippets  Create a new `.md` file in this directory foll",
+    "category": "snippets"
+  },
+  {
+    "path": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/code-wiki/wiki/snippets/code-wiki-overview.md",
+    "relativePath": "snippets/code-wiki-overview.md",
+    "title": "Code wiki overview",
+    "tags": [],
+    "updated": "2026-01-27",
+    "content": "\nCreating this basic code wiki as a way to search through and understand all of the apps I've been developing in this repo, and also to create a general meta way to view setups like this for possible later creation for writers I'm giving tech services to or similar clients.",
+    "contentPreview": "Creating this basic code wiki as a way to search through and understand all of the apps I've been developing in this repo, and also to create a general meta way to view setups like this for possible later creation for writers I'm giving tech services to or similar clients.",
+    "category": "snippets"
+  }
+]
