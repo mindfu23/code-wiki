@@ -66,12 +66,20 @@
       <div class="browse-repos-section">
         <h2>Browse Repos</h2>
         <div class="repo-tabs">
-          <button class="repo-tab active" data-tab="list">List View</button>
+          <button class="repo-tab active" data-tab="files">Files View</button>
+          <button class="repo-tab" data-tab="list">List View</button>
           <button class="repo-tab" data-tab="card">Card View</button>
         </div>
 
+        <!-- Files View (Repos with .md files) -->
+        <div id="repo-files-view" class="repo-view active">
+          <div id="repo-files-content" class="repo-files-list">
+            <p class="loading">Loading repository files...</p>
+          </div>
+        </div>
+
         <!-- List View (Repository Locations Index) -->
-        <div id="repo-list-view" class="repo-view active">
+        <div id="repo-list-view" class="repo-view">
           <div id="repo-list-content" class="document-content">
             <p class="loading">Loading repository index...</p>
           </div>

@@ -186,6 +186,7 @@ function showPage(page, params = {}) {
     case 'browse':
       renderCategories();
       renderRepos();
+      loadRepoFilesView();
       loadRepoListView();
       if (params.category) {
         selectCategory(params.category);
@@ -470,6 +471,64 @@ function loadRepoListView() {
   } else {
     container.innerHTML = '<p class="placeholder-text">Repository index not found</p>';
   }
+}
+
+// Load repository files view - shows repos alphabetically with their .md files
+function loadRepoFilesView() {
+  const container = document.getElementById('repo-files-content');
+  if (!container) return;
+
+  if (!wikiIndex || !wikiIndex.repos) {
+    container.innerHTML = '<p class="placeholder-text">Loading repository data...</p>';
+    return;
+  }
+
+  // Sort repos alphabetically
+  const repos = [...wikiIndex.repos].sort((a, b) =>
+    a.name.toLowerCase().localeCompare(b.name.toLowerCase())
+  );
+
+  // Filter to repos that have markdown files
+  const reposWithMdFiles = repos.filter(repo =>
+    repo.markdownFiles && repo.markdownFiles.length > 0
+  );
+
+  if (reposWithMdFiles.length === 0) {
+    container.innerHTML = '<p class="placeholder-text">No markdown files found in repositories. Rebuild the index to scan for .md files.</p>';
+    return;
+  }
+
+  // Build the HTML
+  let html = '<div class="repo-files-list">';
+
+  for (const repo of reposWithMdFiles) {
+    const githubBaseUrl = repo.githubUrl ? repo.githubUrl.replace(/\.git$/, '') : null;
+
+    html += `<div class="repo-files-item">`;
+    html += `<div class="repo-files-header">`;
+    if (githubBaseUrl) {
+      html += `<a href="${githubBaseUrl}" target="_blank" class="repo-files-name">${escapeHtml(repo.name)}</a>`;
+    } else {
+      html += `<span class="repo-files-name">${escapeHtml(repo.name)}</span>`;
+    }
+    html += `<span class="repo-files-count">${repo.markdownFiles.length} file${repo.markdownFiles.length !== 1 ? 's' : ''}</span>`;
+    html += `</div>`;
+
+    html += `<ul class="repo-md-files">`;
+    for (const file of repo.markdownFiles) {
+      if (githubBaseUrl) {
+        const fileUrl = `${githubBaseUrl}/blob/main/${file.relativePath}`;
+        html += `<li><a href="${fileUrl}" target="_blank">${escapeHtml(file.relativePath)}</a></li>`;
+      } else {
+        html += `<li>${escapeHtml(file.relativePath)}</li>`;
+      }
+    }
+    html += `</ul>`;
+    html += `</div>`;
+  }
+
+  html += '</div>';
+  container.innerHTML = html;
 }
 
 // Show document
