@@ -1,0 +1,8 @@
+{
+  "mcpServers": {
+    "code-wiki": {
+      "command": "node",
+      "args": ["/Users/jamesbeach/Documents/visual-studio-code/github-copilot/code-wiki/mcp-server/dist/index.js"]
+    }
+  }
+}

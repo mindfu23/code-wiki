@@ -1,0 +1,29 @@
+# Dependencies
+node_modules/
+
+# Build output
+dist/
+netlify/functions-dist/
+
+# Generated data (rebuilt on deploy)
+public/data/
+
+# Environment (use Netlify dashboard for secrets)
+.env
+.env.local
+.env.*.local
+
+# IDE
+.vscode/
+.idea/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+npm-debug.log*
+
+# Netlify
+.netlify/
