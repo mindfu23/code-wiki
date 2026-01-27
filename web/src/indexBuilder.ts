@@ -1,12 +1,17 @@
 /**
  * Build-time index generator for Code Wiki
  * Generates a static JSON index from wiki content for use in Netlify functions
+ *
+ * Supports two modes:
+ * - Local: Scans local filesystem for .md files (default)
+ * - GitHub API: Uses GitHub Trees API to fetch .md files (set USE_GITHUB_API=true)
  */
 
 import * as fs from 'fs/promises';
 import * as path from 'path';
 import { fileURLToPath } from 'url';
 import matter from 'gray-matter';
+import { Octokit } from '@octokit/rest';
 import { WikiDocument, RepoInfo, RepoMarkdownFile, WikiIndex } from './types.js';
 
 const __filename = fileURLToPath(import.meta.url);
@@ -16,6 +21,10 @@ const __dirname = path.dirname(__filename);
 // Locally when running from web/, it's also '../wiki'
 const WIKI_DIR = process.env.WIKI_DIR || path.resolve(process.cwd(), '../wiki');
 const OUTPUT_DIR = path.resolve(process.cwd(), 'public/data');
+
+// GitHub API mode - used in CI when local repos aren't available
+const USE_GITHUB_API = process.env.USE_GITHUB_API === 'true';
+const GITHUB_TOKEN = process.env.GITHUB_TOKEN;
 
 interface Frontmatter {
   title?: string;
@@ -166,6 +175,72 @@ async function scanRepoForMarkdownFiles(repoPath: string): Promise<RepoMarkdownF
   return mdFiles.sort((a, b) => a.relativePath.localeCompare(b.relativePath));
 }
 
+/**
+ * Fetch markdown files from a GitHub repo using the Trees API
+ * This is efficient - one API call per repo to get the entire file tree
+ */
+async function fetchRepoMarkdownFilesFromGitHub(
+  octokit: Octokit,
+  owner: string,
+  repo: string
+): Promise<RepoMarkdownFile[]> {
+  const mdFiles: RepoMarkdownFile[] = [];
+
+  // Directories to skip (same as local scan)
+  const skipDirs = ['node_modules', '.next', 'dist', 'build', '.cache', 'coverage', '__pycache__', 'venv', '.venv'];
+
+  try {
+    // Get the default branch first
+    const { data: repoData } = await octokit.repos.get({ owner, repo });
+    const defaultBranch = repoData.default_branch;
+
+    // Get the entire tree recursively (one API call)
+    const { data: tree } = await octokit.git.getTree({
+      owner,
+      repo,
+      tree_sha: defaultBranch,
+      recursive: 'true',
+    });
+
+    // Filter for .md files, excluding common non-source directories
+    for (const item of tree.tree) {
+      if (item.type === 'blob' && item.path && item.path.endsWith('.md')) {
+        // Check if path contains any skip directories
+        const pathParts = item.path.split('/');
+        const shouldSkip = pathParts.some(part => skipDirs.includes(part) || part.startsWith('.'));
+
+        if (!shouldSkip) {
+          mdFiles.push({
+            relativePath: item.path,
+            name: path.basename(item.path),
+          });
+        }
+      }
+    }
+  } catch (error) {
+    const err = error as { status?: number };
+    if (err.status === 404) {
+      console.log(`  Repository ${owner}/${repo} not found or not accessible`);
+    } else {
+      console.error(`  Error fetching tree for ${owner}/${repo}:`, error);
+    }
+  }
+
+  return mdFiles.sort((a, b) => a.relativePath.localeCompare(b.relativePath));
+}
+
+/**
+ * Parse GitHub URL to extract owner and repo name
+ * Handles: https://github.com/owner/repo, https://github.com/owner/repo.git
+ */
+function parseGitHubUrl(url: string): { owner: string; repo: string } | null {
+  const match = url.match(/github\.com\/([^\/]+)\/([^\/\.]+)/);
+  if (match) {
+    return { owner: match[1], repo: match[2] };
+  }
+  return null;
+}
+
 async function buildIndex(): Promise<void> {
   console.log('Building Code Wiki index...');
   console.log(`Wiki directory: ${WIKI_DIR}`);
@@ -195,12 +270,41 @@ async function buildIndex(): Promise<void> {
 
   // Scan each repo for markdown files
   let totalMdFiles = 0;
-  for (const repo of repos) {
-    if (repo.localPath) {
-      repo.markdownFiles = await scanRepoForMarkdownFiles(repo.localPath);
-      totalMdFiles += repo.markdownFiles.length;
+
+  if (USE_GITHUB_API) {
+    // GitHub API mode - fetch .md files via Trees API
+    console.log('Using GitHub API to fetch markdown files...');
+
+    if (!GITHUB_TOKEN) {
+      console.warn('Warning: GITHUB_TOKEN not set. API rate limits will be very restrictive.');
+    }
+
+    const octokit = new Octokit({
+      auth: GITHUB_TOKEN,
+    });
+
+    for (const repo of repos) {
+      if (repo.githubUrl) {
+        const parsed = parseGitHubUrl(repo.githubUrl);
+        if (parsed) {
+          console.log(`  Fetching ${parsed.owner}/${parsed.repo}...`);
+          repo.markdownFiles = await fetchRepoMarkdownFilesFromGitHub(octokit, parsed.owner, parsed.repo);
+          totalMdFiles += repo.markdownFiles.length;
+        }
+      }
+    }
+  } else {
+    // Local mode - scan local filesystem
+    console.log('Scanning local filesystem for markdown files...');
+
+    for (const repo of repos) {
+      if (repo.localPath) {
+        repo.markdownFiles = await scanRepoForMarkdownFiles(repo.localPath);
+        totalMdFiles += repo.markdownFiles.length;
+      }
     }
   }
+
   console.log(`Found ${totalMdFiles} markdown files across all repos`);
 
   // Build index
