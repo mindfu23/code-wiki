@@ -1,0 +1,16 @@
+[
+  {
+    "path": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/code-wiki/wiki/integrations/_index.md",
+    "relativePath": "integrations/_index.md",
+    "title": "Integrations Index",
+    "description": "Third-party API connectors and service integrations",
+    "tags": [
+      "index",
+      "integrations",
+      "api"
+    ],
+    "content": "\n# Integrations\n\nThis category contains third-party API connectors and service integrations.\n\n## What belongs here\n\n- API client configurations\n- Authentication setups (OAuth, API keys)\n- SDK wrappers\n- Webhook handlers\n- Service connectors (databases, storage, etc.)\n\n## Example services\n\n- GitHub API\n- OpenAI/Anthropic APIs\n- Supabase\n- Firebase\n- Stripe\n- n8n workflows\n\n## Adding new integrations\n\nCreate a new `.md` file in this directory following the document template in AGENTS.md.\n",
+    "contentPreview": "# Integrations  This category contains third-party API connectors and service integrations.  ## What belongs here  - API client configurations - Authentication setups (OAuth, API keys) - SDK wrappers - Webhook handlers - Service connectors (databases, storage, etc.)  ## Example services  - GitHub A",
+    "category": "integrations"
+  }
+]

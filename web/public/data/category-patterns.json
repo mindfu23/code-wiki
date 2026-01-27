@@ -1,0 +1,15 @@
+[
+  {
+    "path": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/code-wiki/wiki/patterns/_index.md",
+    "relativePath": "patterns/_index.md",
+    "title": "Patterns Index",
+    "description": "Architectural patterns and design approaches",
+    "tags": [
+      "index",
+      "patterns"
+    ],
+    "content": "\n# Patterns\n\nThis category contains reusable architectural patterns and design approaches.\n\n## What belongs here\n\n- API client patterns\n- Error handling patterns\n- State management patterns\n- Authentication flows\n- Data fetching patterns\n- Form handling patterns\n- Component composition patterns\n\n## Adding new patterns\n\nCreate a new `.md` file in this directory following the document template in AGENTS.md.\n",
+    "contentPreview": "# Patterns  This category contains reusable architectural patterns and design approaches.  ## What belongs here  - API client patterns - Error handling patterns - State management patterns - Authentication flows - Data fetching patterns - Form handling patterns - Component composition patterns  ##",
+    "category": "patterns"
+  }
+]

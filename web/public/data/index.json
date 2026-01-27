@@ -1,0 +1,1927 @@
+{
+  "documents": [
+    {
+      "path": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/code-wiki/wiki/AGENTS.md",
+      "relativePath": "AGENTS.md",
+      "title": "AGENTS",
+      "tags": [],
+      "content": "# AI Agent Instructions\n\nThis repository is a personal code wiki containing documented, reusable code patterns and utilities.\n\n## How to Use This Wiki\n\n1. **Search first**: Use the `search_wiki` tool to find relevant code before writing new implementations\n2. **Check categories**: Use `list_category` to browse available content by topic\n3. **Respect existing patterns**: Code in this wiki has been tested and refined - prefer it over generating new code\n4. **Suggest additions**: If you create useful new code, suggest adding it to the wiki\n\n## Available Tools\n\n| Tool | Purpose |\n|------|---------|\n| `search_wiki` | Search curated wiki content (highest priority) |\n| `search_repos` | Full-text search across all local repositories |\n| `get_document` | Fetch a specific wiki document with frontmatter |\n| `get_file` | Fetch any file from any local repository |\n| `list_repos` | List all indexed repositories |\n| `list_category` | List documents in a wiki category |\n| `sync_repos` | Trigger GitHub sync for updates |\n| `get_preferences` | Get user coding preferences and recommendations |\n\n## User Preferences\n\n**Important**: Before making technology choices, architecture recommendations, or suggesting tools/libraries, agents should check the user's preferences using `get_preferences`.\n\nThe preferences directory contains:\n- Coding standards and style guides\n- Preferred technologies and frameworks\n- Development environment setup notes\n- Tool and library recommendations\n\nUsage:\n- `get_preferences` with no arguments lists all available preference files\n- `get_preferences` with a `file` argument returns the content of that specific file\n\n## Categories\n\n- **patterns/** - Architectural patterns and design approaches\n- **utilities/** - Standalone helper functions and utilities\n- **integrations/** - Third-party API connectors and service integrations\n- **templates/** - Project and file starters\n- **snippets/** - Small, focused code pieces\n- **projects/** - Documentation for active repositories\n\n## Document Structure\n\nWiki documents use YAML frontmatter for metadata:\n\n```yaml\n---\ntitle: \"Document Title\"\ntags: [\"tag1\", \"tag2\"]\nlanguage: \"typescript\"\nupdated: \"2025-01-27\"\nsource_repo: \"repo-name\"\ndescription: \"Brief description\"\n---\n```\n\n## Best Practices\n\n1. **Check preferences first**: Before recommending technologies or architectures, use `get_preferences` to understand user standards\n2. When asked to implement something, search the wiki first\n3. Wiki results are boosted in relevance - they represent curated, tested code\n4. If wiki doesn't have what's needed, search repos for similar patterns\n5. Prefer existing patterns over creating new ones\n6. When creating new code worth preserving, suggest adding to the wiki\n",
+      "contentPreview": "# AI Agent Instructions  This repository is a personal code wiki containing documented, reusable code patterns and utilities.  ## How to Use This Wiki  1. **Search first**: Use the `search_wiki` tool to find relevant code before writing new implementations 2. **Check categories**: Use `list_category",
+      "category": "general"
+    },
+    {
+      "path": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/code-wiki/wiki/integrations/_index.md",
+      "relativePath": "integrations/_index.md",
+      "title": "Integrations Index",
+      "description": "Third-party API connectors and service integrations",
+      "tags": [
+        "index",
+        "integrations",
+        "api"
+      ],
+      "content": "\n# Integrations\n\nThis category contains third-party API connectors and service integrations.\n\n## What belongs here\n\n- API client configurations\n- Authentication setups (OAuth, API keys)\n- SDK wrappers\n- Webhook handlers\n- Service connectors (databases, storage, etc.)\n\n## Example services\n\n- GitHub API\n- OpenAI/Anthropic APIs\n- Supabase\n- Firebase\n- Stripe\n- n8n workflows\n\n## Adding new integrations\n\nCreate a new `.md` file in this directory following the document template in AGENTS.md.\n",
+      "contentPreview": "# Integrations  This category contains third-party API connectors and service integrations.  ## What belongs here  - API client configurations - Authentication setups (OAuth, API keys) - SDK wrappers - Webhook handlers - Service connectors (databases, storage, etc.)  ## Example services  - GitHub A",
+      "category": "integrations"
+    },
+    {
+      "path": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/code-wiki/wiki/patterns/_index.md",
+      "relativePath": "patterns/_index.md",
+      "title": "Patterns Index",
+      "description": "Architectural patterns and design approaches",
+      "tags": [
+        "index",
+        "patterns"
+      ],
+      "content": "\n# Patterns\n\nThis category contains reusable architectural patterns and design approaches.\n\n## What belongs here\n\n- API client patterns\n- Error handling patterns\n- State management patterns\n- Authentication flows\n- Data fetching patterns\n- Form handling patterns\n- Component composition patterns\n\n## Adding new patterns\n\nCreate a new `.md` file in this directory following the document template in AGENTS.md.\n",
+      "contentPreview": "# Patterns  This category contains reusable architectural patterns and design approaches.  ## What belongs here  - API client patterns - Error handling patterns - State management patterns - Authentication flows - Data fetching patterns - Form handling patterns - Component composition patterns  ##",
+      "category": "patterns"
+    },
+    {
+      "path": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/code-wiki/wiki/projects/_index.md",
+      "relativePath": "projects/_index.md",
+      "title": "Projects Index",
+      "description": "Documentation for active repositories",
+      "tags": [
+        "index",
+        "projects"
+      ],
+      "content": "\n# Projects\n\nThis category contains documentation for active repositories.\n\n## What belongs here\n\n- Project overviews\n- Architecture decisions\n- Key file locations\n- Common tasks and commands\n- Deployment notes\n- Known issues and workarounds\n\n## Adding new project docs\n\nCreate a new `.md` file in this directory for each project you want to document.\nUse the project name as the filename (e.g., `searchbard.md`).\n",
+      "contentPreview": "# Projects  This category contains documentation for active repositories.  ## What belongs here  - Project overviews - Architecture decisions - Key file locations - Common tasks and commands - Deployment notes - Known issues and workarounds  ## Adding new project docs  Create a new `.md` file in th",
+      "category": "projects"
+    },
+    {
+      "path": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/code-wiki/wiki/projects/repo-locations.md",
+      "relativePath": "projects/repo-locations.md",
+      "title": "Repository Locations",
+      "description": "Mapping of repositories to local file system paths and GitHub URLs",
+      "tags": [
+        "index",
+        "repositories",
+        "auto-generated"
+      ],
+      "updated": "2026-01-27",
+      "content": "\n# Repository Locations\n\nThis page is **auto-generated** during indexing. Do not edit manually.\n\n**Last updated:** 2026-01-27T18:36:17.624Z\n\n## Summary\n\n| Status | Count |\n|--------|-------|\n| Synced (local + GitHub) | 23 |\n| Local only | 14 |\n| GitHub only (not cloned) | 0 |\n| **Total** | **37** |\n\n---\n\n## Synced Repositories\n\nThese repositories exist both locally and on GitHub.\n\n| Repository | Local Path | GitHub | Languages |\n|------------|------------|--------|-----------|\n| **apiTracker** | `/Users/jamesbeach/Documents/visual-studio-code/github-copilot/apiTracker` | [GitHub](https://github.com/mindfu23/apiTracker.git) | markdown, javascript, html, json, python, css |\n| **BookLarner** | `/Users/jamesbeach/Documents/visual-studio-code/github-copilot/BookLarner` | [GitHub](https://github.com/mindfu23/BookLarner.git) | markdown, javascript, html, json |\n| **Create** | `/Users/jamesbeach/Documents/visual-studio-code/github-copilot/Create` | [GitHub](https://github.com/mindfu23/Create) | markdown, html, json, typescript, javascript |\n| **EthicalAIditor** | `/Users/jamesbeach/Documents/visual-studio-code/github-copilot/EthicalAIditor` | [GitHub](https://github.com/mindfu23/EthicalAIditor) | markdown, html, json, typescript, javascript, python, yaml, sql, css |\n| **FreeWillEstimator** | `/Users/jamesbeach/Documents/visual-studio-code/github-copilot/FreeWillEstimator` | [GitHub](https://github.com/mindfu23/FreeWillEstimator.git) | markdown, javascript, html, css |\n| **FutureSketch** | `/Users/jamesbeach/Documents/visual-studio-code/github-copilot/FutureSketch` | [GitHub](https://github.com/mindfu23/FutureSketch.git) | python, markdown |\n| **gastown** | `/Users/jamesbeach/Documents/visual-studio-code/github-copilot/gastown` | [GitHub](https://github.com/mindfu23/gastown-mission-district.git) | markdown, json, shell, python |\n| **gastown-mission-district** | `/Users/jamesbeach/Documents/visual-studio-code/github-copilot/gastown-mission-district` | [GitHub](https://github.com/mindfu23/gastown-mission-district.git) | markdown, json, shell |\n| **GNN** | `/Users/jamesbeach/Documents/visual-studio-code/github-copilot/GNN` | [GitHub](https://github.com/mindfu23/GNN.git) | javascript, markdown, json, html, css |\n| **IsHe** | `/Users/jamesbeach/Documents/visual-studio-code/github-copilot/IsHe` | [GitHub](https://github.com/mindfu23/IsHe.git) | markdown, javascript, json, typescript |\n| **KorassViewer** | `/Users/jamesbeach/Documents/visual-studio-code/github-copilot/KorassViewer` | [GitHub](https://github.com/mindfu23/KorassViewer.git) | - |\n| **meme-renamer** | `/Users/jamesbeach/Documents/visual-studio-code/github-copilot/meme-renamer` | [GitHub](https://github.com/mindfu23/meme-renamer.git) | markdown, python |\n| **Musix** | `/Users/jamesbeach/Documents/visual-studio-code/github-copilot/Musix` | [GitHub](https://github.com/mindfu23/Musix.git) | markdown, html, json, javascript |\n| **n8n_workflows** | `/Users/jamesbeach/Documents/visual-studio-code/github-copilot/n8n_workflows` | [GitHub](https://github.com/mindfu23/n8n_workflows.git) | markdown, yaml, shell |\n| **plottoxml** | `/Users/jamesbeach/Documents/visual-studio-code/github-copilot/plottoxml` | [GitHub](https://github.com/mindfu23/plottoxml.git) | markdown |\n| **Postboi** | `/Users/jamesbeach/Documents/visual-studio-code/github-copilot/Postboi` | [GitHub](https://github.com/mindfu23/Postboi.git) | markdown, kotlin, python, swift, html |\n| **SacredGeometryOutliner** | `/Users/jamesbeach/Documents/visual-studio-code/github-copilot/SacredGeometryOutliner` | [GitHub](https://github.com/mindfu23/SacredGeometryOutliner.git) | markdown, javascript, html, css |\n| **SearchBard** | `/Users/jamesbeach/Documents/visual-studio-code/github-copilot/SearchBard` | [GitHub](https://github.com/mindfu23/SearchBard) | markdown, typescript, json, html, python |\n| **SierraTrails** | `/Users/jamesbeach/Documents/visual-studio-code/github-copilot/SierraTrails` | [GitHub](https://github.com/mindfu23/SierraTrails.git) | markdown, javascript, json |\n| **StoryPlot** | `/Users/jamesbeach/Documents/visual-studio-code/github-copilot/StoryPlot` | [GitHub](https://github.com/mindfu23/StoryPlot) | html, json, javascript, python |\n| **takehome_q** | `/Users/jamesbeach/Documents/visual-studio-code/github-copilot/takehome_q` | [GitHub](https://github.com/mindfu23/takehome_q.git) | markdown, python |\n| **Theorazine** | `/Users/jamesbeach/Documents/visual-studio-code/github-copilot/Theorazine` | [GitHub](https://github.com/mindfu23/Theorazine.git) | markdown, css, html, javascript, json |\n| **weirdchess** | `/Users/jamesbeach/Documents/visual-studio-code/github-copilot/weirdchess` | [GitHub](https://github.com/mindfu23/weirdchess) | markdown |\n\n---\n\n## Local Only Repositories\n\nThese repositories exist locally but are not linked to a GitHub remote.\n\n| Repository | Local Path | Languages |\n|------------|------------|-----------|\n| **agent-router** | `/Users/jamesbeach/Documents/visual-studio-code/github-copilot/agent-router` | markdown, yaml |\n| **antigravity-and-others** | `/Users/jamesbeach/Documents/visual-studio-code/antigravity-and-others` | markdown, html, json, javascript, python |\n| **Fractasy** | `/Users/jamesbeach/Documents/visual-studio-code/github-copilot/Fractasy` | markdown |\n| **friendli-assessment** | `/Users/jamesbeach/Documents/visual-studio-code/github-copilot/friendli-assessment` | markdown, python |\n| **GPTWrapper** | `/Users/jamesbeach/Documents/visual-studio-code/github-copilot/GPTWrapper` | markdown, shell, javascript, json, html |\n| **JBWordPressTheme** | `/Users/jamesbeach/Documents/visual-studio-code/github-copilot/JBWordPressTheme` | markdown, html, css, json |\n| **manuscript-editor** | `/Users/jamesbeach/Documents/visual-studio-code/antigravity-and-others/manuscript-editor` | markdown, html, json, javascript |\n| **Metabot** | `/Users/jamesbeach/Documents/visual-studio-code/github-copilot/Metabot` | markdown, json, yaml, html, typescript, javascript, shell |\n| **n8n** | `/Users/jamesbeach/Documents/visual-studio-code/github-copilot/n8n` | markdown, yaml, shell |\n| **Novelizer** | `/Users/jamesbeach/Documents/visual-studio-code/github-copilot/Novelizer` | markdown, python, yaml, html, json, javascript, typescript |\n| **ShamAIn** | `/Users/jamesbeach/Documents/visual-studio-code/github-copilot/ShamAIn` | markdown, shell, javascript, json, html |\n| **StoryCircle-dev** | `/Users/jamesbeach/Documents/visual-studio-code/github-copilot/StoryCircle-dev` | markdown, html, json, javascript, typescript, css |\n| **ValueApe** | `/Users/jamesbeach/Documents/visual-studio-code/github-copilot/ValueApe` | markdown, json, sql, html, python, typescript, css, javascript |\n| **WeirdTarot** | `/Users/jamesbeach/Documents/visual-studio-code/github-copilot/WeirdTarot` | markdown, json, javascript, html, css |\n\n---\n\n## GitHub Only Repositories\n\nThese repositories exist on GitHub but are not cloned locally.\nUse `sync_repos` to clone them, or clone manually.\n\n| Repository | GitHub URL | Language | Last Updated |\n|------------|------------|----------|--------------|\n| _All GitHub repositories are cloned locally_ | | | |\n\n---\n\n## Full Repository Details\n\n### agent-router\n\n- **Status:** local-only\n- **Local Path:** `/Users/jamesbeach/Documents/visual-studio-code/github-copilot/agent-router`\n- **Description:** Multi-model routing layer for Gas Town agents.\n- **Languages:** markdown, yaml\n- **Last Commit:** 2026-01-15T20:54:41-08:00\n\n### antigravity-and-others\n\n- **Status:** local-only\n- **Local Path:** `/Users/jamesbeach/Documents/visual-studio-code/antigravity-and-others`\n- **GitHub:** https://github.com/mindfu23/antigravity-and-others.git\n- **Languages:** markdown, html, json, javascript, python\n- **Last Commit:** 2026-01-26T12:21:41-08:00\n\n### apiTracker\n\n- **Status:** synced\n- **Local Path:** `/Users/jamesbeach/Documents/visual-studio-code/github-copilot/apiTracker`\n- **GitHub:** https://github.com/mindfu23/apiTracker.git\n- **Description:** A simple GUI tracker for health and number of remaining calls for my various APIs used in my other apps.\n- **Languages:** markdown, javascript, html, json, python, css\n- **Last Commit:** 2026-01-27T00:18:57+00:00\n\n### BookLarner\n\n- **Status:** synced\n- **Local Path:** `/Users/jamesbeach/Documents/visual-studio-code/github-copilot/BookLarner`\n- **GitHub:** https://github.com/mindfu23/BookLarner.git\n- **Description:** A cross-platform application (website, iOS, and Android) that allows users to scan book covers or provide URLs to get book information and AI-generated summaries, with affiliate links for purchasing.\n- **Languages:** markdown, javascript, html, json\n- **Last Commit:** 2025-12-20T18:15:32-08:00\n\n### Create\n\n- **Status:** synced\n- **Local Path:** `/Users/jamesbeach/Documents/visual-studio-code/github-copilot/Create`\n- **GitHub:** https://github.com/mindfu23/Create\n- **Description:** This is an app and also a proof of concept for a way to introduce kids of all ages to the power and fun of creating.\n- **Languages:** markdown, html, json, typescript, javascript\n- **Last Commit:** 2026-01-05T09:12:42-08:00\n\n### EthicalAIditor\n\n- **Status:** synced\n- **Local Path:** `/Users/jamesbeach/Documents/visual-studio-code/github-copilot/EthicalAIditor`\n- **GitHub:** https://github.com/mindfu23/EthicalAIditor\n- **Description:** An interface and AI wrapper for writers and editors, that's linked to LLMs trained only on legally and publicly available writing materials.\n- **Languages:** markdown, html, json, typescript, javascript, python, yaml, sql, css\n- **Last Commit:** 2026-01-16T13:50:17-08:00\n\n### Fractasy\n\n- **Status:** local-only\n- **Local Path:** `/Users/jamesbeach/Documents/visual-studio-code/github-copilot/Fractasy`\n- **Description:** A cross-platform fractal visualization app combining Fractint and Fragmentarium capabilities.\n- **Languages:** markdown\n- **Last Commit:** 2026-01-15T13:45:57-08:00\n\n### FreeWillEstimator\n\n- **Status:** synced\n- **Local Path:** `/Users/jamesbeach/Documents/visual-studio-code/github-copilot/FreeWillEstimator`\n- **GitHub:** https://github.com/mindfu23/FreeWillEstimator.git\n- **Description:** A web application for assessing your current level of autonomy and decision-making freedom through a psychology-based questionnaire.\n- **Languages:** markdown, javascript, html, css\n- **Last Commit:** 2025-12-08T13:55:50-08:00\n\n### friendli-assessment\n\n- **Status:** local-only\n- **Local Path:** `/Users/jamesbeach/Documents/visual-studio-code/github-copilot/friendli-assessment`\n- **GitHub:** https://github.com/mindfu23/takehome_q.git\n- **Description:** **Author:** James Beach\n- **Languages:** markdown, python\n- **Last Commit:** 2026-01-21T17:49:46-08:00\n\n### FutureSketch\n\n- **Status:** synced\n- **Local Path:** `/Users/jamesbeach/Documents/visual-studio-code/github-copilot/FutureSketch`\n- **GitHub:** https://github.com/mindfu23/FutureSketch.git\n- **Description:** Repo for scripts to control the LEDs for my interactive sculpture Future Sketch.\n- **Languages:** python, markdown\n- **Last Commit:** 2025-08-10T16:48:28-07:00\n\n### gastown\n\n- **Status:** synced\n- **Local Path:** `/Users/jamesbeach/Documents/visual-studio-code/github-copilot/gastown`\n- **GitHub:** https://github.com/mindfu23/gastown-mission-district.git\n- **Description:** **Multi-agent orchestration system for Claude Code with persistent work tracking**\n- **Languages:** markdown, json, shell, python\n- **Last Commit:** 2026-01-21T18:12:40-08:00\n\n### gastown-mission-district\n\n- **Status:** synced\n- **Local Path:** `/Users/jamesbeach/Documents/visual-studio-code/github-copilot/gastown-mission-district`\n- **GitHub:** https://github.com/mindfu23/gastown-mission-district.git\n- **Description:** This is a forked update to Gastown that adds multi-model agents, and also specifically integrates Gemini pro for rapid generation of style assets.\n- **Languages:** markdown, json, shell\n- **Last Commit:** 2026-01-17T11:41:45-08:00\n\n### GNN\n\n- **Status:** synced\n- **Local Path:** `/Users/jamesbeach/Documents/visual-studio-code/github-copilot/GNN`\n- **GitHub:** https://github.com/mindfu23/GNN.git\n- **Description:** A cross-platform mobile and web application that searches for and delivers positive news to users. Built with React Native and Expo, GNN provides a unified codebase for iOS, Android, and web platforms\n- **Languages:** javascript, markdown, json, html, css\n- **Last Commit:** 2025-12-25T12:15:42-08:00\n\n### GPTWrapper\n\n- **Status:** local-only\n- **Local Path:** `/Users/jamesbeach/Documents/visual-studio-code/github-copilot/GPTWrapper`\n- **GitHub:** https://github.com/mindfu23/GPTWrapper.git\n- **Description:** Basic wrapper for GPTs to make them Android or iOS capable apps.\n- **Languages:** markdown, shell, javascript, json, html\n- **Last Commit:** 2025-12-24T17:08:25-08:00\n\n### IsHe\n\n- **Status:** synced\n- **Local Path:** `/Users/jamesbeach/Documents/visual-studio-code/github-copilot/IsHe`\n- **GitHub:** https://github.com/mindfu23/IsHe.git\n- **Description:** Initial working version for an application that searches the names of specific famous people to see if they're deceased.\n- **Languages:** markdown, javascript, json, typescript\n- **Last Commit:** 2025-12-10T09:50:58-08:00\n\n### JBWordPressTheme\n\n- **Status:** local-only\n- **Local Path:** `/Users/jamesbeach/Documents/visual-studio-code/github-copilot/JBWordPressTheme`\n- **Description:** A modern WordPress Block Theme designed for jamesmbeach.com - featuring a dual-purpose design that showcases creative works (fiction, games, music) alongside IT consulting services.\n- **Languages:** markdown, html, css, json\n- **Last Commit:** 2025-12-22T12:02:02-08:00\n\n### KorassViewer\n\n- **Status:** synced\n- **Local Path:** `/Users/jamesbeach/Documents/visual-studio-code/github-copilot/KorassViewer`\n- **GitHub:** https://github.com/mindfu23/KorassViewer.git\n- **Description:** A viewer of images for the people in this korass. (See also: Cat's Cradle)\n- **Last Commit:** 2026-01-27T18:36:16.508Z\n\n### manuscript-editor\n\n- **Status:** local-only\n- **Local Path:** `/Users/jamesbeach/Documents/visual-studio-code/antigravity-and-others/manuscript-editor`\n- **GitHub:** https://github.com/mindfu23/manuscript-editor.git\n- **Description:** A Progressive Web App for editing markdown manuscripts stored in GitHub repositories. Designed for use on iPad and desktop browsers.\n- **Languages:** markdown, html, json, javascript\n- **Last Commit:** 2026-01-26T12:56:03-08:00\n\n### meme-renamer\n\n- **Status:** synced\n- **Local Path:** `/Users/jamesbeach/Documents/visual-studio-code/github-copilot/meme-renamer`\n- **GitHub:** https://github.com/mindfu23/meme-renamer.git\n- **Description:** AI-powered image renaming tool that analyzes images and renames files based on their content, including any visible text. Also includes a powerful duplicate image finder with visual comparison GUI.\n- **Languages:** markdown, python\n- **Last Commit:** 2025-12-27T15:12:00-08:00\n\n### Metabot\n\n- **Status:** local-only\n- **Local Path:** `/Users/jamesbeach/Documents/visual-studio-code/github-copilot/Metabot`\n- **GitHub:** https://github.com/mindfu23/Metabot.git\n- **Description:** Multi-AI query aggregation and synthesis application\n- **Languages:** markdown, json, yaml, html, typescript, javascript, shell\n- **Last Commit:** 2026-01-21T13:08:17-08:00\n\n### Musix\n\n- **Status:** synced\n- **Local Path:** `/Users/jamesbeach/Documents/visual-studio-code/github-copilot/Musix`\n- **GitHub:** https://github.com/mindfu23/Musix.git\n- **Description:** A music composition tool based on the Joseph Schillinger method\n- **Languages:** markdown, html, json, javascript\n- **Last Commit:** 2025-12-09T09:28:38-08:00\n\n### n8n\n\n- **Status:** local-only\n- **Local Path:** `/Users/jamesbeach/Documents/visual-studio-code/github-copilot/n8n`\n- **Description:** Self-hosted n8n workflow automation on GCP's Always Free tier.\n- **Languages:** markdown, yaml, shell\n- **Last Commit:** 2026-01-24T16:40:29-08:00\n\n### n8n_workflows\n\n- **Status:** synced\n- **Local Path:** `/Users/jamesbeach/Documents/visual-studio-code/github-copilot/n8n_workflows`\n- **GitHub:** https://github.com/mindfu23/n8n_workflows.git\n- **Description:** Self-hosted n8n workflow automation on GCP's Always Free tier.\n- **Languages:** markdown, yaml, shell\n- **Last Commit:** 2026-01-24T16:40:29-08:00\n\n### Novelizer\n\n- **Status:** local-only\n- **Local Path:** `/Users/jamesbeach/Documents/visual-studio-code/github-copilot/Novelizer`\n- **GitHub:** https://github.com/mindfu23/Novelizer\n- **Description:** AI-powered multi-agent novel writing and editing system.\n- **Languages:** markdown, python, yaml, html, json, javascript, typescript\n- **Last Commit:** 2026-01-19T11:10:44-08:00\n\n### plottoxml\n\n- **Status:** synced\n- **Local Path:** `/Users/jamesbeach/Documents/visual-studio-code/github-copilot/plottoxml`\n- **GitHub:** https://github.com/mindfu23/plottoxml.git\n- **Description:** Plotto—A new method of plot suggestion for writers of creative fiction\n- **Languages:** markdown\n- **Last Commit:** 2025-12-08T11:26:48-08:00\n\n### Postboi\n\n- **Status:** synced\n- **Local Path:** `/Users/jamesbeach/Documents/visual-studio-code/github-copilot/Postboi`\n- **GitHub:** https://github.com/mindfu23/Postboi.git\n- **Description:** Cross-platform mobile app (iOS & Android) for sharing images and text to Instagram, Facebook, and WordPress simultaneously. Built with Python and Kivy.\n- **Languages:** markdown, kotlin, python, swift, html\n- **Last Commit:** 2025-12-25T12:29:45-08:00\n\n### SacredGeometryOutliner\n\n- **Status:** synced\n- **Local Path:** `/Users/jamesbeach/Documents/visual-studio-code/github-copilot/SacredGeometryOutliner`\n- **GitHub:** https://github.com/mindfu23/SacredGeometryOutliner.git\n- **Description:** Transform images into sacred geometric line art with real-time controls.\n- **Languages:** markdown, javascript, html, css\n- **Last Commit:** 2025-12-22T09:43:57-08:00\n\n### SearchBard\n\n- **Status:** synced\n- **Local Path:** `/Users/jamesbeach/Documents/visual-studio-code/github-copilot/SearchBard`\n- **GitHub:** https://github.com/mindfu23/SearchBard\n- **Description:** A React-based web application that aggregates conference and event data from multiple sources to help users discover professional conferences across various subjects, locations, and date ranges.\n- **Languages:** markdown, typescript, json, html, python\n- **Last Commit:** 2025-12-14T14:29:09-08:00\n\n### ShamAIn\n\n- **Status:** local-only\n- **Local Path:** `/Users/jamesbeach/Documents/visual-studio-code/github-copilot/ShamAIn`\n- **GitHub:** https://github.com/mindfu23/ShamAIn.git\n- **Description:** An Android/iOS app wrapper for the ShamAIn custom GPT, built on the GPTWrapper framework.\n- **Languages:** markdown, shell, javascript, json, html\n- **Last Commit:** 2025-12-24T17:00:50-08:00\n\n### SierraTrails\n\n- **Status:** synced\n- **Local Path:** `/Users/jamesbeach/Documents/visual-studio-code/github-copilot/SierraTrails`\n- **GitHub:** https://github.com/mindfu23/SierraTrails.git\n- **Description:** Repo for a demo hiking and biking trailfinder app.\n- **Languages:** markdown, javascript, json\n- **Last Commit:** 2025-12-20T18:18:19-08:00\n\n### StoryCircle-dev\n\n- **Status:** local-only\n- **Local Path:** `/Users/jamesbeach/Documents/visual-studio-code/github-copilot/StoryCircle-dev`\n- **Description:** Interactive Story Circle visualization tool based on Dan Harmon's 8-step method\n- **Languages:** markdown, html, json, javascript, typescript, css\n- **Last Commit:** 2026-01-20T16:22:16-08:00\n\n### StoryPlot\n\n- **Status:** synced\n- **Local Path:** `/Users/jamesbeach/Documents/visual-studio-code/github-copilot/StoryPlot`\n- **GitHub:** https://github.com/mindfu23/StoryPlot\n- **Description:** A fiction story plot generator. Work in progress.\n- **Languages:** html, json, javascript, python\n- **Last Commit:** 2026-01-12T08:33:11-08:00\n\n### takehome_q\n\n- **Status:** synced\n- **Local Path:** `/Users/jamesbeach/Documents/visual-studio-code/github-copilot/takehome_q`\n- **GitHub:** https://github.com/mindfu23/takehome_q.git\n- **Description:** **Author:** James Beach\n- **Languages:** markdown, python\n- **Last Commit:** 2026-01-21T17:49:46-08:00\n\n### Theorazine\n\n- **Status:** synced\n- **Local Path:** `/Users/jamesbeach/Documents/visual-studio-code/github-copilot/Theorazine`\n- **GitHub:** https://github.com/mindfu23/Theorazine.git\n- **Description:** The Conspiracy Calculator - A mathematical tool for analyzing conspiracy theory viability\n- **Languages:** markdown, css, html, javascript, json\n- **Last Commit:** 2026-01-10T13:33:40-08:00\n\n### ValueApe\n\n- **Status:** local-only\n- **Local Path:** `/Users/jamesbeach/Documents/visual-studio-code/github-copilot/ValueApe`\n- **GitHub:** https://github.com/mindfu23/ValueApe\n- **Description:** A professional-grade research aide and stock prediction web application with a clean, extensible architecture designed for Phase 1 research capabilities and future Phase 2 live trading integration.\n- **Languages:** markdown, json, sql, html, python, typescript, css, javascript\n- **Last Commit:** 2026-01-27T06:14:51+00:00\n\n### weirdchess\n\n- **Status:** synced\n- **Local Path:** `/Users/jamesbeach/Documents/visual-studio-code/github-copilot/weirdchess`\n- **GitHub:** https://github.com/mindfu23/weirdchess\n- **Description:** Hyderabad Decimal Chess and other variants\n- **Languages:** markdown\n- **Last Commit:** 2026-01-16T20:05:54-08:00\n\n### WeirdTarot\n\n- **Status:** local-only\n- **Local Path:** `/Users/jamesbeach/Documents/visual-studio-code/github-copilot/WeirdTarot`\n- **GitHub:** https://github.com/mindfu23/WeirdTarot\n- **Description:** An integrative divination platform that unifies multiple oracle systems through cross-correspondences. Explore Tarot, I Ching, Zodiac, and MBTI layers to reveal deeper patterns.\n- **Languages:** markdown, json, javascript, html, css\n- **Last Commit:** 2025-12-28T19:23:09-08:00\n\n",
+      "contentPreview": "# Repository Locations  This page is **auto-generated** during indexing. Do not edit manually.  **Last updated:** 2026-01-27T18:36:17.624Z  ## Summary  | Status | Count | |--------|-------| | Synced (local + GitHub) | 23 | | Local only | 14 | | GitHub only (not cloned) | 0 | | **Total** | **37** |",
+      "category": "projects"
+    },
+    {
+      "path": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/code-wiki/wiki/snippets/_index.md",
+      "relativePath": "snippets/_index.md",
+      "title": "Snippets Index",
+      "description": "Small, focused code pieces",
+      "tags": [
+        "index",
+        "snippets"
+      ],
+      "content": "\n# Snippets\n\nThis category contains small, focused code pieces.\n\n## What belongs here\n\n- One-liners and short functions\n- Useful regex patterns\n- Shell commands\n- Quick solutions to common problems\n- Copy-paste ready code blocks\n\n## Adding new snippets\n\nCreate a new `.md` file in this directory following the document template in AGENTS.md.\n",
+      "contentPreview": "# Snippets  This category contains small, focused code pieces.  ## What belongs here  - One-liners and short functions - Useful regex patterns - Shell commands - Quick solutions to common problems - Copy-paste ready code blocks  ## Adding new snippets  Create a new `.md` file in this directory foll",
+      "category": "snippets"
+    },
+    {
+      "path": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/code-wiki/wiki/snippets/code-wiki-overview.md",
+      "relativePath": "snippets/code-wiki-overview.md",
+      "title": "Code wiki overview",
+      "tags": [],
+      "updated": "2026-01-27",
+      "content": "\nCreating this basic code wiki as a way to search through and understand all of the apps I've been developing in this repo, and also to create a general meta way to view setups like this for possible later creation for writers I'm giving tech services to or similar clients.",
+      "contentPreview": "Creating this basic code wiki as a way to search through and understand all of the apps I've been developing in this repo, and also to create a general meta way to view setups like this for possible later creation for writers I'm giving tech services to or similar clients.",
+      "category": "snippets"
+    },
+    {
+      "path": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/code-wiki/wiki/templates/_index.md",
+      "relativePath": "templates/_index.md",
+      "title": "Templates Index",
+      "description": "Project and file starters",
+      "tags": [
+        "index",
+        "templates",
+        "starter"
+      ],
+      "content": "\n# Templates\n\nThis category contains project and file starters.\n\n## What belongs here\n\n- Project scaffolds\n- Component templates\n- Configuration file templates\n- CI/CD pipeline templates\n- Docker configurations\n- Common file structures\n\n## Adding new templates\n\nCreate a new `.md` file in this directory following the document template in AGENTS.md.\n",
+      "contentPreview": "# Templates  This category contains project and file starters.  ## What belongs here  - Project scaffolds - Component templates - Configuration file templates - CI/CD pipeline templates - Docker configurations - Common file structures  ## Adding new templates  Create a new `.md` file in this direct",
+      "category": "templates"
+    },
+    {
+      "path": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/code-wiki/wiki/utilities/_index.md",
+      "relativePath": "utilities/_index.md",
+      "title": "Utilities Index",
+      "description": "Standalone helper functions and utilities",
+      "tags": [
+        "index",
+        "utilities"
+      ],
+      "content": "\n# Utilities\n\nThis category contains standalone helper functions and utilities.\n\n## What belongs here\n\n- Date/time helpers\n- String manipulation utilities\n- Array/object utilities\n- Validation functions\n- Formatting utilities\n- Type guards and type utilities\n- Math/calculation helpers\n\n## Adding new utilities\n\nCreate a new `.md` file in this directory following the document template in AGENTS.md.\n",
+      "contentPreview": "# Utilities  This category contains standalone helper functions and utilities.  ## What belongs here  - Date/time helpers - String manipulation utilities - Array/object utilities - Validation functions - Formatting utilities - Type guards and type utilities - Math/calculation helpers  ## Adding new",
+      "category": "utilities"
+    }
+  ],
+  "repos": [
+    {
+      "name": "agent-router",
+      "languages": [
+        "markdown",
+        "yaml"
+      ],
+      "status": "local-only",
+      "localPath": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/agent-router",
+      "description": "Multi-model routing layer for Gas Town agents.",
+      "lastCommitDate": "2026-01-15T20:54:41-08:00",
+      "markdownFiles": [
+        {
+          "relativePath": "PR-MULTI-MODEL-ROUTER.md",
+          "name": "PR-MULTI-MODEL-ROUTER.md"
+        },
+        {
+          "relativePath": "README.md",
+          "name": "README.md"
+        }
+      ]
+    },
+    {
+      "name": "antigravity-and-others",
+      "languages": [
+        "markdown",
+        "html",
+        "json",
+        "javascript",
+        "python"
+      ],
+      "status": "local-only",
+      "localPath": "/Users/jamesbeach/Documents/visual-studio-code/antigravity-and-others",
+      "githubUrl": "https://github.com/mindfu23/antigravity-and-others.git",
+      "lastCommitDate": "2026-01-26T12:21:41-08:00",
+      "markdownFiles": [
+        {
+          "relativePath": "initial-notes.md",
+          "name": "initial-notes.md"
+        },
+        {
+          "relativePath": "manuscript-editor/README.md",
+          "name": "README.md"
+        },
+        {
+          "relativePath": "novel-editing-tools/antigravity-mission-config.md",
+          "name": "antigravity-mission-config.md"
+        },
+        {
+          "relativePath": "novel-editing-tools/antigravity-prompts.md",
+          "name": "antigravity-prompts.md"
+        },
+        {
+          "relativePath": "novel-editing-tools/lined-editor-personal-1.md",
+          "name": "lined-editor-personal-1.md"
+        },
+        {
+          "relativePath": "novel-workspace/2fjt2/manuscript/chapters/00-front-matter.md",
+          "name": "00-front-matter.md"
+        },
+        {
+          "relativePath": "novel-workspace/2fjt2/manuscript/chapters/01-arrival-in-hell.md",
+          "name": "01-arrival-in-hell.md"
+        },
+        {
+          "relativePath": "novel-workspace/2fjt2/manuscript/chapters/02-the-woman-he-must-be-here-to-save.md",
+          "name": "02-the-woman-he-must-be-here-to-save.md"
+        },
+        {
+          "relativePath": "novel-workspace/2fjt2/manuscript/chapters/03-the-devil-you-think-you-know.md",
+          "name": "03-the-devil-you-think-you-know.md"
+        },
+        {
+          "relativePath": "novel-workspace/2fjt2/manuscript/chapters/04-frisbee-duel-with-the-devil.md",
+          "name": "04-frisbee-duel-with-the-devil.md"
+        },
+        {
+          "relativePath": "novel-workspace/2fjt2/manuscript/chapters/05-jesus-signs-a-contract-with-the-devil-an.md",
+          "name": "05-jesus-signs-a-contract-with-the-devil-an.md"
+        },
+        {
+          "relativePath": "novel-workspace/2fjt2/manuscript/chapters/06-jesus-returns-to-earth-in-st-louis-and-r.md",
+          "name": "06-jesus-returns-to-earth-in-st-louis-and-r.md"
+        },
+        {
+          "relativePath": "novel-workspace/2fjt2/manuscript/chapters/07-jesus-recruits-followers-in-a-small-miss.md",
+          "name": "07-jesus-recruits-followers-in-a-small-miss.md"
+        },
+        {
+          "relativePath": "novel-workspace/2fjt2/manuscript/chapters/08-marci-and-the-new-disciples-hide-in-colo.md",
+          "name": "08-marci-and-the-new-disciples-hide-in-colo.md"
+        },
+        {
+          "relativePath": "novel-workspace/2fjt2/manuscript/chapters/09-the-new-disciples-are-attacked-by-bomrak.md",
+          "name": "09-the-new-disciples-are-attacked-by-bomrak.md"
+        },
+        {
+          "relativePath": "novel-workspace/2fjt2/manuscript/chapters/10-jesus-and-the-disciples-survive-an-attac.md",
+          "name": "10-jesus-and-the-disciples-survive-an-attac.md"
+        },
+        {
+          "relativePath": "novel-workspace/2fjt2/manuscript/chapters/11-jesus-and-disciples-plan-to-reach-colora.md",
+          "name": "11-jesus-and-disciples-plan-to-reach-colora.md"
+        },
+        {
+          "relativePath": "novel-workspace/2fjt2/manuscript/chapters/12-the-new-disciples-move-forward-in-the-en.md",
+          "name": "12-the-new-disciples-move-forward-in-the-en.md"
+        },
+        {
+          "relativePath": "novel-workspace/2fjt2/manuscript/chapters/13-the-new-disciples-fight-and-defeat-the-s.md",
+          "name": "13-the-new-disciples-fight-and-defeat-the-s.md"
+        },
+        {
+          "relativePath": "novel-workspace/2fjt2/manuscript/chapters/14-jesus-decides-they-will-next-attack-los.md",
+          "name": "14-jesus-decides-they-will-next-attack-los.md"
+        },
+        {
+          "relativePath": "novel-workspace/2fjt2/manuscript/chapters/15-the-new-disciples-and-jesus-leave-the-ba.md",
+          "name": "15-the-new-disciples-and-jesus-leave-the-ba.md"
+        },
+        {
+          "relativePath": "novel-workspace/2fjt2/manuscript/chapters/16-bomraka-has-a-meeting.md",
+          "name": "16-bomraka-has-a-meeting.md"
+        },
+        {
+          "relativePath": "novel-workspace/2fjt2/manuscript/chapters/17-the-team-is-attacked-by-black-helicopter.md",
+          "name": "17-the-team-is-attacked-by-black-helicopter.md"
+        },
+        {
+          "relativePath": "novel-workspace/2fjt2/manuscript/chapters/18-jesus-shoots-the-governor-of-utah-dead-t.md",
+          "name": "18-jesus-shoots-the-governor-of-utah-dead-t.md"
+        },
+        {
+          "relativePath": "novel-workspace/2fjt2/manuscript/chapters/19-the-new-disciples-and-jesus-make-it-to-o.md",
+          "name": "19-the-new-disciples-and-jesus-make-it-to-o.md"
+        },
+        {
+          "relativePath": "novel-workspace/2fjt2/manuscript/chapters/20-the-new-disciples-plan-their-attack.md",
+          "name": "20-the-new-disciples-plan-their-attack.md"
+        },
+        {
+          "relativePath": "novel-workspace/2fjt2/manuscript/chapters/21-jesus-attacks-a-feminist-research-center.md",
+          "name": "21-jesus-attacks-a-feminist-research-center.md"
+        },
+        {
+          "relativePath": "novel-workspace/2fjt2/manuscript/chapters/22-continuing-the-fight-inside-the-liberal.md",
+          "name": "22-continuing-the-fight-inside-the-liberal.md"
+        },
+        {
+          "relativePath": "novel-workspace/2fjt2/manuscript/chapters/23-fighting-the-monster-blabber-strident-an.md",
+          "name": "23-fighting-the-monster-blabber-strident-an.md"
+        },
+        {
+          "relativePath": "novel-workspace/2fjt2/manuscript/chapters/24-jesus-et-all-battle-further-against-the.md",
+          "name": "24-jesus-et-all-battle-further-against-the.md"
+        },
+        {
+          "relativePath": "novel-workspace/2fjt2/manuscript/chapters/25-jesus-fights-and-rescues-lily.md",
+          "name": "25-jesus-fights-and-rescues-lily.md"
+        },
+        {
+          "relativePath": "novel-workspace/2fjt2/manuscript/chapters/26-jesus-fight-against-lily-continues.md",
+          "name": "26-jesus-fight-against-lily-continues.md"
+        },
+        {
+          "relativePath": "novel-workspace/2fjt2/manuscript/chapters/27-this-is-jesus-christ-speaking.md",
+          "name": "27-this-is-jesus-christ-speaking.md"
+        },
+        {
+          "relativePath": "novel-workspace/2fjt2/manuscript/chapters/28-jesus-christ-speaks-cont.md",
+          "name": "28-jesus-christ-speaks-cont.md"
+        },
+        {
+          "relativePath": "novel-workspace/2fjt2/manuscript/chapters/29-jesus-checks-in-with-reagan-and-sasquatc.md",
+          "name": "29-jesus-checks-in-with-reagan-and-sasquatc.md"
+        },
+        {
+          "relativePath": "novel-workspace/2fjt2/manuscript/chapters/30-situation-outside-los-angeles.md",
+          "name": "30-situation-outside-los-angeles.md"
+        },
+        {
+          "relativePath": "novel-workspace/2fjt2/manuscript/chapters/31-flight-to-stanford-reagan-helping.md",
+          "name": "31-flight-to-stanford-reagan-helping.md"
+        },
+        {
+          "relativePath": "novel-workspace/2fjt2/manuscript/chapters/32-the-next-morning-in-stanford-making-plan.md",
+          "name": "32-the-next-morning-in-stanford-making-plan.md"
+        },
+        {
+          "relativePath": "novel-workspace/2fjt2/manuscript/chapters/33-war-continues-is-fought-after-stanford-t.md",
+          "name": "33-war-continues-is-fought-after-stanford-t.md"
+        },
+        {
+          "relativePath": "novel-workspace/2fjt2/manuscript/chapters/34-steve-is-selected-to-infiltrate-and-is-s.md",
+          "name": "34-steve-is-selected-to-infiltrate-and-is-s.md"
+        },
+        {
+          "relativePath": "novel-workspace/2fjt2/manuscript/chapters/35-steve-floats-back-to-san-francisco.md",
+          "name": "35-steve-floats-back-to-san-francisco.md"
+        },
+        {
+          "relativePath": "novel-workspace/2fjt2/manuscript/chapters/36-jesus-prays-for-guidance-he-finds-some-i.md",
+          "name": "36-jesus-prays-for-guidance-he-finds-some-i.md"
+        },
+        {
+          "relativePath": "novel-workspace/2fjt2/manuscript/chapters/37-flashback-to-jesus-with-his-parents-jose.md",
+          "name": "37-flashback-to-jesus-with-his-parents-jose.md"
+        },
+        {
+          "relativePath": "novel-workspace/2fjt2/manuscript/chapters/38-steve-in-san-francisco.md",
+          "name": "38-steve-in-san-francisco.md"
+        },
+        {
+          "relativePath": "novel-workspace/2fjt2/manuscript/chapters/39-jesus-discusses-his-football-epiphany-wi.md",
+          "name": "39-jesus-discusses-his-football-epiphany-wi.md"
+        },
+        {
+          "relativePath": "novel-workspace/2fjt2/manuscript/chapters/40-jesus-ministers-to-lily-and-admits-priva.md",
+          "name": "40-jesus-ministers-to-lily-and-admits-priva.md"
+        },
+        {
+          "relativePath": "novel-workspace/2fjt2/manuscript/chapters/41-steve-in-san-francisco.md",
+          "name": "41-steve-in-san-francisco.md"
+        },
+        {
+          "relativePath": "novel-workspace/2fjt2/manuscript/chapters/42-jesus-reconvenes-the-new-disciples-to-mo.md",
+          "name": "42-jesus-reconvenes-the-new-disciples-to-mo.md"
+        },
+        {
+          "relativePath": "novel-workspace/2fjt2/manuscript/chapters/43-steve-struggles-with-doubt-in-san-franci.md",
+          "name": "43-steve-struggles-with-doubt-in-san-franci.md"
+        },
+        {
+          "relativePath": "novel-workspace/2fjt2/manuscript/chapters/44-bomraka-conference.md",
+          "name": "44-bomraka-conference.md"
+        },
+        {
+          "relativePath": "novel-workspace/2fjt2/manuscript/chapters/45-steve-discovers-the-rainbow-shield-gener.md",
+          "name": "45-steve-discovers-the-rainbow-shield-gener.md"
+        },
+        {
+          "relativePath": "novel-workspace/2fjt2/manuscript/chapters/46-the-rainbow-dome-falls-and-jesus-mobiliz.md",
+          "name": "46-the-rainbow-dome-falls-and-jesus-mobiliz.md"
+        },
+        {
+          "relativePath": "novel-workspace/2fjt2/manuscript/chapters/47-san-francisco-offers-unexpected-surrende.md",
+          "name": "47-san-francisco-offers-unexpected-surrende.md"
+        },
+        {
+          "relativePath": "novel-workspace/2fjt2/manuscript/chapters/48-jesus-commands-norad-and-prepares-his-ad.md",
+          "name": "48-jesus-commands-norad-and-prepares-his-ad.md"
+        },
+        {
+          "relativePath": "novel-workspace/2fjt2/manuscript/chapters/49-theo-hardwicke-celebrates-the-great-floo.md",
+          "name": "49-theo-hardwicke-celebrates-the-great-floo.md"
+        },
+        {
+          "relativePath": "novel-workspace/2fjt2/manuscript/chapters/50-media-marvels-at-the-miracle-of-the-floo.md",
+          "name": "50-media-marvels-at-the-miracle-of-the-floo.md"
+        },
+        {
+          "relativePath": "novel-workspace/2fjt2/manuscript/chapters/51-securing-san-francisco-and-los-angeles.md",
+          "name": "51-securing-san-francisco-and-los-angeles.md"
+        },
+        {
+          "relativePath": "novel-workspace/2fjt2/manuscript/chapters/52-bomraka-slays-his-generals-in-rage.md",
+          "name": "52-bomraka-slays-his-generals-in-rage.md"
+        },
+        {
+          "relativePath": "novel-workspace/2fjt2/manuscript/chapters/53-aaron-confides-his-worries-to-jesus.md",
+          "name": "53-aaron-confides-his-worries-to-jesus.md"
+        },
+        {
+          "relativePath": "novel-workspace/2fjt2/manuscript/chapters/54-jesus-prepares-for-the-final-confrontati.md",
+          "name": "54-jesus-prepares-for-the-final-confrontati.md"
+        },
+        {
+          "relativePath": "novel-workspace/2fjt2/manuscript/chapters/55-jesus-challenges-bomraka-to-the-crucibow.md",
+          "name": "55-jesus-challenges-bomraka-to-the-crucibow.md"
+        },
+        {
+          "relativePath": "novel-workspace/2fjt2/manuscript/chapters/56-jesus-secretly-modifies-his-motorcycle.md",
+          "name": "56-jesus-secretly-modifies-his-motorcycle.md"
+        },
+        {
+          "relativePath": "novel-workspace/2fjt2/manuscript/chapters/57-jesus-departs-in-the-tyrannoslayer.md",
+          "name": "57-jesus-departs-in-the-tyrannoslayer.md"
+        },
+        {
+          "relativePath": "novel-workspace/2fjt2/manuscript/chapters/58-into-the-crucibowl.md",
+          "name": "58-into-the-crucibowl.md"
+        },
+        {
+          "relativePath": "novel-workspace/2fjt2/manuscript/chapters/59-aaron-watches-jesuss-defeat-on-msnbc.md",
+          "name": "59-aaron-watches-jesuss-defeat-on-msnbc.md"
+        },
+        {
+          "relativePath": "novel-workspace/2fjt2/manuscript/chapters/60-bomraka-declares-victory-over-christs-fo.md",
+          "name": "60-bomraka-declares-victory-over-christs-fo.md"
+        },
+        {
+          "relativePath": "novel-workspace/2fjt2/manuscript/chapters/61-jesus-has-broken-into-the-oval-office.md",
+          "name": "61-jesus-has-broken-into-the-oval-office.md"
+        },
+        {
+          "relativePath": "novel-workspace/2fjt2/manuscript/chapters/62-jesus-hunts-bomraka-in-the-white-house-b.md",
+          "name": "62-jesus-hunts-bomraka-in-the-white-house-b.md"
+        },
+        {
+          "relativePath": "novel-workspace/2fjt2/manuscript/chapters/63-aaron-confronts-bomraka-at-gunpoint.md",
+          "name": "63-aaron-confronts-bomraka-at-gunpoint.md"
+        },
+        {
+          "relativePath": "novel-workspace/2fjt2/manuscript/chapters/64-jesus-scans-bomrakas-palm-for-the-nuclea.md",
+          "name": "64-jesus-scans-bomrakas-palm-for-the-nuclea.md"
+        },
+        {
+          "relativePath": "novel-workspace/2fjt2/manuscript/chapters/65-jesus-threatens-governors-with-nuclear-s.md",
+          "name": "65-jesus-threatens-governors-with-nuclear-s.md"
+        },
+        {
+          "relativePath": "novel-workspace/2fjt2/manuscript/chapters/66-jesus-holds-his-first-press-conference.md",
+          "name": "66-jesus-holds-his-first-press-conference.md"
+        },
+        {
+          "relativePath": "novel-workspace/2fjt2/manuscript/chapters/67-jesus-plans-to-end-abortion-nationwide.md",
+          "name": "67-jesus-plans-to-end-abortion-nationwide.md"
+        },
+        {
+          "relativePath": "novel-workspace/2fjt2/manuscript/chapters/68-a-secret-celebration-at-the-kennedy-cent.md",
+          "name": "68-a-secret-celebration-at-the-kennedy-cent.md"
+        },
+        {
+          "relativePath": "novel-workspace/2fjt2/manuscript/chapters/69-aaron-reveals-the-betrayal-to-jesus.md",
+          "name": "69-aaron-reveals-the-betrayal-to-jesus.md"
+        },
+        {
+          "relativePath": "novel-workspace/2fjt2/manuscript/chapters/70-jesus-learns-the-truth-about-his-creatio.md",
+          "name": "70-jesus-learns-the-truth-about-his-creatio.md"
+        },
+        {
+          "relativePath": "novel-workspace/2fjt2/manuscript/chapters/71-closing-quotes.md",
+          "name": "71-closing-quotes.md"
+        },
+        {
+          "relativePath": "novel-workspace/2fjt2/manuscript/chapters/72-author-note.md",
+          "name": "72-author-note.md"
+        },
+        {
+          "relativePath": "novel-workspace/2fjt2/manuscript/chapters/INDEX.md",
+          "name": "INDEX.md"
+        },
+        {
+          "relativePath": "novel-workspace/2fjt2/manuscript/high-level/2FJT2_dev-review.md",
+          "name": "2FJT2_dev-review.md"
+        },
+        {
+          "relativePath": "novel-workspace/2fjt2/manuscript/high-level/2FJT2_summary_v1.md",
+          "name": "2FJT2_summary_v1.md"
+        },
+        {
+          "relativePath": "novel-workspace/2fjt2/manuscript/high-level/2FJT2-character-and-plot-arcs.md",
+          "name": "2FJT2-character-and-plot-arcs.md"
+        },
+        {
+          "relativePath": "novel-workspace/2fjt2/manuscript/high-level/chapter-revisions.md",
+          "name": "chapter-revisions.md"
+        },
+        {
+          "relativePath": "novel-workspace/2fjt2/manuscript/high-level/notebookLM_notes-plot-threads.md",
+          "name": "notebookLM_notes-plot-threads.md"
+        },
+        {
+          "relativePath": "novel-workspace/2fjt2/manuscript/high-level/notebookLM_summary.md",
+          "name": "notebookLM_summary.md"
+        },
+        {
+          "relativePath": "possible-workflows/ai-fiction-writing-workflows.md",
+          "name": "ai-fiction-writing-workflows.md"
+        },
+        {
+          "relativePath": "possible-workflows/n8n-workflows-summary.md",
+          "name": "n8n-workflows-summary.md"
+        },
+        {
+          "relativePath": "resources/potential-gastown-rig/README.md",
+          "name": "README.md"
+        }
+      ]
+    },
+    {
+      "name": "apiTracker",
+      "languages": [
+        "markdown",
+        "javascript",
+        "html",
+        "json",
+        "python",
+        "css"
+      ],
+      "status": "synced",
+      "localPath": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/apiTracker",
+      "githubUrl": "https://github.com/mindfu23/apiTracker.git",
+      "description": "A simple GUI tracker for health and number of remaining calls for my various APIs used in my other apps.",
+      "lastCommitDate": "2026-01-27T00:18:57+00:00",
+      "markdownFiles": [
+        {
+          "relativePath": "browser-extension/README.md",
+          "name": "README.md"
+        },
+        {
+          "relativePath": "dist-platforms/firefox/README.md",
+          "name": "README.md"
+        },
+        {
+          "relativePath": "dist-platforms/safari/API Usage Scraper Extension/Resources/README.md",
+          "name": "README.md"
+        },
+        {
+          "relativePath": "dist-platforms/safari/README.md",
+          "name": "README.md"
+        },
+        {
+          "relativePath": "platforms/README.md",
+          "name": "README.md"
+        },
+        {
+          "relativePath": "TODO.md",
+          "name": "TODO.md"
+        }
+      ]
+    },
+    {
+      "name": "BookLarner",
+      "languages": [
+        "markdown",
+        "javascript",
+        "html",
+        "json"
+      ],
+      "status": "synced",
+      "localPath": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/BookLarner",
+      "githubUrl": "https://github.com/mindfu23/BookLarner.git",
+      "description": "A cross-platform application (website, iOS, and Android) that allows users to scan book covers or provide URLs to get book information and AI-generated summaries, with affiliate links for purchasing.",
+      "lastCommitDate": "2025-12-20T18:15:32-08:00",
+      "markdownFiles": [
+        {
+          "relativePath": "docs/adding-ai-provider.md",
+          "name": "adding-ai-provider.md"
+        },
+        {
+          "relativePath": "docs/adding-retailer.md",
+          "name": "adding-retailer.md"
+        },
+        {
+          "relativePath": "docs/deployment-guide.md",
+          "name": "deployment-guide.md"
+        },
+        {
+          "relativePath": "mobile/README.md",
+          "name": "README.md"
+        },
+        {
+          "relativePath": "README.md",
+          "name": "README.md"
+        },
+        {
+          "relativePath": "web/README.md",
+          "name": "README.md"
+        }
+      ]
+    },
+    {
+      "name": "Create",
+      "languages": [
+        "markdown",
+        "html",
+        "json",
+        "typescript",
+        "javascript"
+      ],
+      "status": "synced",
+      "localPath": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/Create",
+      "githubUrl": "https://github.com/mindfu23/Create",
+      "description": "This is an app and also a proof of concept for a way to introduce kids of all ages to the power and fun of creating.",
+      "lastCommitDate": "2026-01-05T09:12:42-08:00",
+      "markdownFiles": [
+        {
+          "relativePath": "client/src/lib/auth/README.md",
+          "name": "README.md"
+        },
+        {
+          "relativePath": "client/src/lib/cloudStorage/README.md",
+          "name": "README.md"
+        },
+        {
+          "relativePath": "README.md",
+          "name": "README.md"
+        }
+      ]
+    },
+    {
+      "name": "EthicalAIditor",
+      "languages": [
+        "markdown",
+        "html",
+        "json",
+        "typescript",
+        "javascript",
+        "python",
+        "yaml",
+        "sql",
+        "css"
+      ],
+      "status": "synced",
+      "localPath": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/EthicalAIditor",
+      "githubUrl": "https://github.com/mindfu23/EthicalAIditor",
+      "description": "An interface and AI wrapper for writers and editors, that's linked to LLMs trained only on legally and publicly available writing materials.",
+      "lastCommitDate": "2026-01-16T13:50:17-08:00",
+      "markdownFiles": [
+        {
+          "relativePath": "DEPLOYMENT.md",
+          "name": "DEPLOYMENT.md"
+        },
+        {
+          "relativePath": "Ethical_Aiditor_Front_End/README.md",
+          "name": "README.md"
+        },
+        {
+          "relativePath": "Ethical_Aiditor_Front_End/src/Attributions.md",
+          "name": "Attributions.md"
+        },
+        {
+          "relativePath": "HANDOFF.md",
+          "name": "HANDOFF.md"
+        },
+        {
+          "relativePath": "README.md",
+          "name": "README.md"
+        },
+        {
+          "relativePath": "TODO.md",
+          "name": "TODO.md"
+        }
+      ]
+    },
+    {
+      "name": "Fractasy",
+      "languages": [
+        "markdown"
+      ],
+      "status": "local-only",
+      "localPath": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/Fractasy",
+      "description": "A cross-platform fractal visualization app combining Fractint and Fragmentarium capabilities.",
+      "lastCommitDate": "2026-01-15T13:45:57-08:00",
+      "markdownFiles": [
+        {
+          "relativePath": "README.md",
+          "name": "README.md"
+        }
+      ]
+    },
+    {
+      "name": "FreeWillEstimator",
+      "languages": [
+        "markdown",
+        "javascript",
+        "html",
+        "css"
+      ],
+      "status": "synced",
+      "localPath": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/FreeWillEstimator",
+      "githubUrl": "https://github.com/mindfu23/FreeWillEstimator.git",
+      "description": "A web application for assessing your current level of autonomy and decision-making freedom through a psychology-based questionnaire.",
+      "lastCommitDate": "2025-12-08T13:55:50-08:00",
+      "markdownFiles": [
+        {
+          "relativePath": "README.md",
+          "name": "README.md"
+        }
+      ]
+    },
+    {
+      "name": "friendli-assessment",
+      "languages": [
+        "markdown",
+        "python"
+      ],
+      "status": "local-only",
+      "localPath": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/friendli-assessment",
+      "githubUrl": "https://github.com/mindfu23/takehome_q.git",
+      "description": "**Author:** James Beach",
+      "lastCommitDate": "2026-01-21T17:49:46-08:00",
+      "markdownFiles": [
+        {
+          "relativePath": "ANALYSIS.md",
+          "name": "ANALYSIS.md"
+        },
+        {
+          "relativePath": "q2/Synthesized_Migration_Guide_Draft.md",
+          "name": "Synthesized_Migration_Guide_Draft.md"
+        },
+        {
+          "relativePath": "q3/Synthesized_Model_Evaluation_Framework.md",
+          "name": "Synthesized_Model_Evaluation_Framework.md"
+        },
+        {
+          "relativePath": "README.md",
+          "name": "README.md"
+        }
+      ]
+    },
+    {
+      "name": "FutureSketch",
+      "languages": [
+        "python",
+        "markdown"
+      ],
+      "status": "synced",
+      "localPath": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/FutureSketch",
+      "githubUrl": "https://github.com/mindfu23/FutureSketch.git",
+      "description": "Repo for scripts to control the LEDs for my interactive sculpture Future Sketch.",
+      "lastCommitDate": "2025-08-10T16:48:28-07:00",
+      "markdownFiles": [
+        {
+          "relativePath": "README.md",
+          "name": "README.md"
+        }
+      ]
+    },
+    {
+      "name": "gastown",
+      "languages": [
+        "markdown",
+        "json",
+        "shell",
+        "python"
+      ],
+      "status": "synced",
+      "localPath": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/gastown",
+      "githubUrl": "https://github.com/mindfu23/gastown-mission-district.git",
+      "description": "**Multi-agent orchestration system for Claude Code with persistent work tracking**",
+      "lastCommitDate": "2026-01-21T18:12:40-08:00",
+      "markdownFiles": [
+        {
+          "relativePath": "agent_router/crew/README.md",
+          "name": "README.md"
+        },
+        {
+          "relativePath": "agent_router/mayor/rig/CLAUDE.md",
+          "name": "CLAUDE.md"
+        },
+        {
+          "relativePath": "agent_router/mayor/rig/README.md",
+          "name": "README.md"
+        },
+        {
+          "relativePath": "agent_router/refinery/rig/CLAUDE.md",
+          "name": "CLAUDE.md"
+        },
+        {
+          "relativePath": "agent_router/refinery/rig/PR-MULTI-MODEL-ROUTER.md",
+          "name": "PR-MULTI-MODEL-ROUTER.md"
+        },
+        {
+          "relativePath": "agent_router/refinery/rig/README.md",
+          "name": "README.md"
+        },
+        {
+          "relativePath": "AGENTS.md",
+          "name": "AGENTS.md"
+        },
+        {
+          "relativePath": "CHANGELOG.md",
+          "name": "CHANGELOG.md"
+        },
+        {
+          "relativePath": "CODE_OF_CONDUCT.md",
+          "name": "CODE_OF_CONDUCT.md"
+        },
+        {
+          "relativePath": "CONTRIBUTING.md",
+          "name": "CONTRIBUTING.md"
+        },
+        {
+          "relativePath": "docs/beads-native-messaging.md",
+          "name": "beads-native-messaging.md"
+        },
+        {
+          "relativePath": "docs/concepts/convoy.md",
+          "name": "convoy.md"
+        },
+        {
+          "relativePath": "docs/concepts/identity.md",
+          "name": "identity.md"
+        },
+        {
+          "relativePath": "docs/concepts/molecules.md",
+          "name": "molecules.md"
+        },
+        {
+          "relativePath": "docs/concepts/polecat-lifecycle.md",
+          "name": "polecat-lifecycle.md"
+        },
+        {
+          "relativePath": "docs/concepts/propulsion-principle.md",
+          "name": "propulsion-principle.md"
+        },
+        {
+          "relativePath": "docs/design/architecture.md",
+          "name": "architecture.md"
+        },
+        {
+          "relativePath": "docs/design/convoy-lifecycle.md",
+          "name": "convoy-lifecycle.md"
+        },
+        {
+          "relativePath": "docs/design/dog-pool-architecture.md",
+          "name": "dog-pool-architecture.md"
+        },
+        {
+          "relativePath": "docs/design/escalation-system.md",
+          "name": "escalation-system.md"
+        },
+        {
+          "relativePath": "docs/design/escalation.md",
+          "name": "escalation.md"
+        },
+        {
+          "relativePath": "docs/design/federation.md",
+          "name": "federation.md"
+        },
+        {
+          "relativePath": "docs/design/mail-protocol.md",
+          "name": "mail-protocol.md"
+        },
+        {
+          "relativePath": "docs/design/operational-state.md",
+          "name": "operational-state.md"
+        },
+        {
+          "relativePath": "docs/design/plugin-system.md",
+          "name": "plugin-system.md"
+        },
+        {
+          "relativePath": "docs/design/property-layers.md",
+          "name": "property-layers.md"
+        },
+        {
+          "relativePath": "docs/design/watchdog-chain.md",
+          "name": "watchdog-chain.md"
+        },
+        {
+          "relativePath": "docs/examples/hanoi-demo.md",
+          "name": "hanoi-demo.md"
+        },
+        {
+          "relativePath": "docs/formula-resolution.md",
+          "name": "formula-resolution.md"
+        },
+        {
+          "relativePath": "docs/glossary.md",
+          "name": "glossary.md"
+        },
+        {
+          "relativePath": "docs/INSTALLING.md",
+          "name": "INSTALLING.md"
+        },
+        {
+          "relativePath": "docs/mol-mall-design.md",
+          "name": "mol-mall-design.md"
+        },
+        {
+          "relativePath": "docs/overview.md",
+          "name": "overview.md"
+        },
+        {
+          "relativePath": "docs/reference.md",
+          "name": "reference.md"
+        },
+        {
+          "relativePath": "docs/why-these-features.md",
+          "name": "why-these-features.md"
+        },
+        {
+          "relativePath": "fractasy/crew/james/ios/Runner/Assets.xcassets/LaunchImage.imageset/README.md",
+          "name": "README.md"
+        },
+        {
+          "relativePath": "fractasy/crew/james/README.md",
+          "name": "README.md"
+        },
+        {
+          "relativePath": "fractasy/crew/README.md",
+          "name": "README.md"
+        },
+        {
+          "relativePath": "fractasy/mayor/rig/CLAUDE.md",
+          "name": "CLAUDE.md"
+        },
+        {
+          "relativePath": "fractasy/mayor/rig/README.md",
+          "name": "README.md"
+        },
+        {
+          "relativePath": "fractasy/refinery/rig/CLAUDE.md",
+          "name": "CLAUDE.md"
+        },
+        {
+          "relativePath": "fractasy/refinery/rig/ios/Runner/Assets.xcassets/LaunchImage.imageset/README.md",
+          "name": "README.md"
+        },
+        {
+          "relativePath": "fractasy/refinery/rig/README.md",
+          "name": "README.md"
+        },
+        {
+          "relativePath": "internal/formula/README.md",
+          "name": "README.md"
+        },
+        {
+          "relativePath": "internal/templates/commands/handoff.md",
+          "name": "handoff.md"
+        },
+        {
+          "relativePath": "npm-package/README.md",
+          "name": "README.md"
+        },
+        {
+          "relativePath": "OVERNIGHT-CRON-SETUP.md",
+          "name": "OVERNIGHT-CRON-SETUP.md"
+        },
+        {
+          "relativePath": "README.md",
+          "name": "README.md"
+        },
+        {
+          "relativePath": "RELEASING.md",
+          "name": "RELEASING.md"
+        },
+        {
+          "relativePath": "SECURITY.md",
+          "name": "SECURITY.md"
+        },
+        {
+          "relativePath": "templates/polecat-CLAUDE.md",
+          "name": "polecat-CLAUDE.md"
+        },
+        {
+          "relativePath": "templates/witness-CLAUDE.md",
+          "name": "witness-CLAUDE.md"
+        },
+        {
+          "relativePath": "weirdchess/AGENTS.md",
+          "name": "AGENTS.md"
+        },
+        {
+          "relativePath": "weirdchess/crew/james/MAYOR-PROMPT.md",
+          "name": "MAYOR-PROMPT.md"
+        },
+        {
+          "relativePath": "weirdchess/crew/james/README.md",
+          "name": "README.md"
+        },
+        {
+          "relativePath": "weirdchess/crew/james/WEIRDCHESS-SPEC.md",
+          "name": "WEIRDCHESS-SPEC.md"
+        },
+        {
+          "relativePath": "weirdchess/crew/james/weirdchess/ios/Runner/Assets.xcassets/LaunchImage.imageset/README.md",
+          "name": "README.md"
+        },
+        {
+          "relativePath": "weirdchess/crew/james/weirdchess/README.md",
+          "name": "README.md"
+        },
+        {
+          "relativePath": "weirdchess/crew/README.md",
+          "name": "README.md"
+        },
+        {
+          "relativePath": "weirdchess/mayor/rig/CLAUDE.md",
+          "name": "CLAUDE.md"
+        },
+        {
+          "relativePath": "weirdchess/mayor/rig/README.md",
+          "name": "README.md"
+        },
+        {
+          "relativePath": "weirdchess/refinery/rig/CLAUDE.md",
+          "name": "CLAUDE.md"
+        },
+        {
+          "relativePath": "weirdchess/refinery/rig/README.md",
+          "name": "README.md"
+        }
+      ]
+    },
+    {
+      "name": "gastown-mission-district",
+      "languages": [
+        "markdown",
+        "json",
+        "shell"
+      ],
+      "status": "synced",
+      "localPath": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/gastown-mission-district",
+      "githubUrl": "https://github.com/mindfu23/gastown-mission-district.git",
+      "description": "This is a forked update to Gastown that adds multi-model agents, and also specifically integrates Gemini pro for rapid generation of style assets.",
+      "lastCommitDate": "2026-01-17T11:41:45-08:00",
+      "markdownFiles": [
+        {
+          "relativePath": "agent_router/AGENTS.md",
+          "name": "AGENTS.md"
+        },
+        {
+          "relativePath": "AGENTS.md",
+          "name": "AGENTS.md"
+        },
+        {
+          "relativePath": "agents/lib/imagen-projects/README.md",
+          "name": "README.md"
+        },
+        {
+          "relativePath": "docs/IMAGEN.md",
+          "name": "IMAGEN.md"
+        },
+        {
+          "relativePath": "docs/MULTI-MODEL-AGENTS.md",
+          "name": "MULTI-MODEL-AGENTS.md"
+        },
+        {
+          "relativePath": "fractasy/AGENTS.md",
+          "name": "AGENTS.md"
+        },
+        {
+          "relativePath": "GEMINI-SETUP.md",
+          "name": "GEMINI-SETUP.md"
+        },
+        {
+          "relativePath": "GETTING-STARTED.md",
+          "name": "GETTING-STARTED.md"
+        },
+        {
+          "relativePath": "mayor/CLAUDE.md",
+          "name": "CLAUDE.md"
+        },
+        {
+          "relativePath": "plugins/README.md",
+          "name": "README.md"
+        },
+        {
+          "relativePath": "README.md",
+          "name": "README.md"
+        }
+      ]
+    },
+    {
+      "name": "GNN",
+      "languages": [
+        "javascript",
+        "markdown",
+        "json",
+        "html",
+        "css"
+      ],
+      "status": "synced",
+      "localPath": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/GNN",
+      "githubUrl": "https://github.com/mindfu23/GNN.git",
+      "description": "A cross-platform mobile and web application that searches for and delivers positive news to users. Built with React Native and Expo, GNN provides a unified codebase for iOS, Android, and web platforms",
+      "lastCommitDate": "2025-12-25T12:15:42-08:00",
+      "markdownFiles": [
+        {
+          "relativePath": "DEPLOYMENT.md",
+          "name": "DEPLOYMENT.md"
+        },
+        {
+          "relativePath": "gnn_template/INTEGRATION_GUIDE.md",
+          "name": "INTEGRATION_GUIDE.md"
+        },
+        {
+          "relativePath": "gnn_template/README.md",
+          "name": "README.md"
+        },
+        {
+          "relativePath": "README.md",
+          "name": "README.md"
+        },
+        {
+          "relativePath": "USER_GUIDE.md",
+          "name": "USER_GUIDE.md"
+        }
+      ]
+    },
+    {
+      "name": "GPTWrapper",
+      "languages": [
+        "markdown",
+        "shell",
+        "javascript",
+        "json",
+        "html"
+      ],
+      "status": "local-only",
+      "localPath": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/GPTWrapper",
+      "githubUrl": "https://github.com/mindfu23/GPTWrapper.git",
+      "description": "Basic wrapper for GPTs to make them Android or iOS capable apps.",
+      "lastCommitDate": "2025-12-24T17:08:25-08:00",
+      "markdownFiles": [
+        {
+          "relativePath": "MOBILE_SETUP.md",
+          "name": "MOBILE_SETUP.md"
+        },
+        {
+          "relativePath": "NETLIFY_DEPLOYMENT.md",
+          "name": "NETLIFY_DEPLOYMENT.md"
+        },
+        {
+          "relativePath": "README.md",
+          "name": "README.md"
+        }
+      ]
+    },
+    {
+      "name": "IsHe",
+      "languages": [
+        "markdown",
+        "javascript",
+        "json",
+        "typescript"
+      ],
+      "status": "synced",
+      "localPath": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/IsHe",
+      "githubUrl": "https://github.com/mindfu23/IsHe.git",
+      "description": "Initial working version for an application that searches the names of specific famous people to see if they're deceased.",
+      "lastCommitDate": "2025-12-10T09:50:58-08:00",
+      "markdownFiles": [
+        {
+          "relativePath": "app/README.md",
+          "name": "README.md"
+        },
+        {
+          "relativePath": "README.md",
+          "name": "README.md"
+        },
+        {
+          "relativePath": "web/DEPLOYMENT.md",
+          "name": "DEPLOYMENT.md"
+        },
+        {
+          "relativePath": "web/README.md",
+          "name": "README.md"
+        }
+      ]
+    },
+    {
+      "name": "JBWordPressTheme",
+      "languages": [
+        "markdown",
+        "html",
+        "css",
+        "json"
+      ],
+      "status": "local-only",
+      "localPath": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/JBWordPressTheme",
+      "description": "A modern WordPress Block Theme designed for jamesmbeach.com - featuring a dual-purpose design that showcases creative works (fiction, games, music) alongside IT consulting services.",
+      "lastCommitDate": "2025-12-22T12:02:02-08:00",
+      "markdownFiles": [
+        {
+          "relativePath": "INSTALLATION_GUIDE.md",
+          "name": "INSTALLATION_GUIDE.md"
+        },
+        {
+          "relativePath": "README.md",
+          "name": "README.md"
+        },
+        {
+          "relativePath": "website-redesign-notes.md",
+          "name": "website-redesign-notes.md"
+        }
+      ]
+    },
+    {
+      "name": "KorassViewer",
+      "languages": [],
+      "status": "synced",
+      "localPath": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/KorassViewer",
+      "githubUrl": "https://github.com/mindfu23/KorassViewer.git",
+      "description": "A viewer of images for the people in this korass. (See also: Cat's Cradle)",
+      "lastCommitDate": "2026-01-27T18:36:16.508Z",
+      "markdownFiles": []
+    },
+    {
+      "name": "manuscript-editor",
+      "languages": [
+        "markdown",
+        "html",
+        "json",
+        "javascript"
+      ],
+      "status": "local-only",
+      "localPath": "/Users/jamesbeach/Documents/visual-studio-code/antigravity-and-others/manuscript-editor",
+      "githubUrl": "https://github.com/mindfu23/manuscript-editor.git",
+      "description": "A Progressive Web App for editing markdown manuscripts stored in GitHub repositories. Designed for use on iPad and desktop browsers.",
+      "lastCommitDate": "2026-01-26T12:56:03-08:00",
+      "markdownFiles": [
+        {
+          "relativePath": "README.md",
+          "name": "README.md"
+        }
+      ]
+    },
+    {
+      "name": "meme-renamer",
+      "languages": [
+        "markdown",
+        "python"
+      ],
+      "status": "synced",
+      "localPath": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/meme-renamer",
+      "githubUrl": "https://github.com/mindfu23/meme-renamer.git",
+      "description": "AI-powered image renaming tool that analyzes images and renames files based on their content, including any visible text. Also includes a powerful duplicate image finder with visual comparison GUI.",
+      "lastCommitDate": "2025-12-27T15:12:00-08:00",
+      "markdownFiles": [
+        {
+          "relativePath": "README.md",
+          "name": "README.md"
+        }
+      ]
+    },
+    {
+      "name": "Metabot",
+      "languages": [
+        "markdown",
+        "json",
+        "yaml",
+        "html",
+        "typescript",
+        "javascript",
+        "shell"
+      ],
+      "status": "local-only",
+      "localPath": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/Metabot",
+      "githubUrl": "https://github.com/mindfu23/Metabot.git",
+      "description": "Multi-AI query aggregation and synthesis application",
+      "lastCommitDate": "2026-01-21T13:08:17-08:00",
+      "markdownFiles": [
+        {
+          "relativePath": "API.md",
+          "name": "API.md"
+        },
+        {
+          "relativePath": "ARCHITECTURE.md",
+          "name": "ARCHITECTURE.md"
+        },
+        {
+          "relativePath": "CODE_REVIEW.md",
+          "name": "CODE_REVIEW.md"
+        },
+        {
+          "relativePath": "CONTRIBUTING.md",
+          "name": "CONTRIBUTING.md"
+        },
+        {
+          "relativePath": "DEPLOYMENT.md",
+          "name": "DEPLOYMENT.md"
+        },
+        {
+          "relativePath": "DOCKER.md",
+          "name": "DOCKER.md"
+        },
+        {
+          "relativePath": "figma-export/README.md",
+          "name": "README.md"
+        },
+        {
+          "relativePath": "figma-export/src/Attributions.md",
+          "name": "Attributions.md"
+        },
+        {
+          "relativePath": "figma-export/src/guidelines/Guidelines.md",
+          "name": "Guidelines.md"
+        },
+        {
+          "relativePath": "IMPLEMENTATION_SUMMARY.md",
+          "name": "IMPLEMENTATION_SUMMARY.md"
+        },
+        {
+          "relativePath": "MCP_INTEGRATION.md",
+          "name": "MCP_INTEGRATION.md"
+        },
+        {
+          "relativePath": "README.md",
+          "name": "README.md"
+        },
+        {
+          "relativePath": "TODO.md",
+          "name": "TODO.md"
+        },
+        {
+          "relativePath": "VERIFICATION.md",
+          "name": "VERIFICATION.md"
+        }
+      ]
+    },
+    {
+      "name": "Musix",
+      "languages": [
+        "markdown",
+        "html",
+        "json",
+        "javascript"
+      ],
+      "status": "synced",
+      "localPath": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/Musix",
+      "githubUrl": "https://github.com/mindfu23/Musix.git",
+      "description": "A music composition tool based on the Joseph Schillinger method",
+      "lastCommitDate": "2025-12-09T09:28:38-08:00",
+      "markdownFiles": [
+        {
+          "relativePath": "README.md",
+          "name": "README.md"
+        }
+      ]
+    },
+    {
+      "name": "n8n",
+      "languages": [
+        "markdown",
+        "yaml",
+        "shell"
+      ],
+      "status": "local-only",
+      "localPath": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/n8n",
+      "description": "Self-hosted n8n workflow automation on GCP's Always Free tier.",
+      "lastCommitDate": "2026-01-24T16:40:29-08:00",
+      "markdownFiles": [
+        {
+          "relativePath": "docs/N8N_GCP_SETUP_GUIDE.md",
+          "name": "N8N_GCP_SETUP_GUIDE.md"
+        },
+        {
+          "relativePath": "n8n_workflows/README.md",
+          "name": "README.md"
+        },
+        {
+          "relativePath": "README.md",
+          "name": "README.md"
+        }
+      ]
+    },
+    {
+      "name": "n8n_workflows",
+      "languages": [
+        "markdown",
+        "yaml",
+        "shell"
+      ],
+      "status": "synced",
+      "localPath": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/n8n_workflows",
+      "githubUrl": "https://github.com/mindfu23/n8n_workflows.git",
+      "description": "Self-hosted n8n workflow automation on GCP's Always Free tier.",
+      "lastCommitDate": "2026-01-24T16:40:29-08:00",
+      "markdownFiles": [
+        {
+          "relativePath": "docs/N8N_GCP_SETUP_GUIDE.md",
+          "name": "N8N_GCP_SETUP_GUIDE.md"
+        },
+        {
+          "relativePath": "README.md",
+          "name": "README.md"
+        }
+      ]
+    },
+    {
+      "name": "Novelizer",
+      "languages": [
+        "markdown",
+        "python",
+        "yaml",
+        "html",
+        "json",
+        "javascript",
+        "typescript"
+      ],
+      "status": "local-only",
+      "localPath": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/Novelizer",
+      "githubUrl": "https://github.com/mindfu23/Novelizer",
+      "description": "AI-powered multi-agent novel writing and editing system.",
+      "lastCommitDate": "2026-01-19T11:10:44-08:00",
+      "markdownFiles": [
+        {
+          "relativePath": "added-editing-feature-files-perhaps/EDITING_GUIDE.md",
+          "name": "EDITING_GUIDE.md"
+        },
+        {
+          "relativePath": "added-editing-feature-files-perhaps/EDITING_MODE_SUMMARY.md",
+          "name": "EDITING_MODE_SUMMARY.md"
+        },
+        {
+          "relativePath": "added-editing-feature-files-perhaps/README.md",
+          "name": "README.md"
+        },
+        {
+          "relativePath": "complete-files-claude-agentic-flow-setup/PROJECT_SUMMARY.md",
+          "name": "PROJECT_SUMMARY.md"
+        },
+        {
+          "relativePath": "complete-files-claude-agentic-flow-setup/QUICKSTART.md",
+          "name": "QUICKSTART.md"
+        },
+        {
+          "relativePath": "complete-files-claude-agentic-flow-setup/README.md",
+          "name": "README.md"
+        },
+        {
+          "relativePath": "complete-files-claude-agentic-flow-setup/TROUBLESHOOTING.md",
+          "name": "TROUBLESHOOTING.md"
+        },
+        {
+          "relativePath": "DEVELOPMENT_PLAN.md",
+          "name": "DEVELOPMENT_PLAN.md"
+        },
+        {
+          "relativePath": "NOTES.md",
+          "name": "NOTES.md"
+        },
+        {
+          "relativePath": "NOVELIZER-ENHANCEMENTS.md",
+          "name": "NOVELIZER-ENHANCEMENTS.md"
+        },
+        {
+          "relativePath": "POSSIBLE-EXPANSION.md",
+          "name": "POSSIBLE-EXPANSION.md"
+        },
+        {
+          "relativePath": "README.md",
+          "name": "README.md"
+        },
+        {
+          "relativePath": "TODO_alt.md",
+          "name": "TODO_alt.md"
+        },
+        {
+          "relativePath": "TODO.md",
+          "name": "TODO.md"
+        },
+        {
+          "relativePath": "web/README.md",
+          "name": "README.md"
+        }
+      ]
+    },
+    {
+      "name": "plottoxml",
+      "languages": [
+        "markdown"
+      ],
+      "status": "synced",
+      "localPath": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/plottoxml",
+      "githubUrl": "https://github.com/mindfu23/plottoxml.git",
+      "description": "Plotto—A new method of plot suggestion for writers of creative fiction",
+      "lastCommitDate": "2025-12-08T11:26:48-08:00",
+      "markdownFiles": [
+        {
+          "relativePath": "LICENSE.md",
+          "name": "LICENSE.md"
+        },
+        {
+          "relativePath": "README.md",
+          "name": "README.md"
+        }
+      ]
+    },
+    {
+      "name": "Postboi",
+      "languages": [
+        "markdown",
+        "kotlin",
+        "python",
+        "swift",
+        "html"
+      ],
+      "status": "synced",
+      "localPath": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/Postboi",
+      "githubUrl": "https://github.com/mindfu23/Postboi.git",
+      "description": "Cross-platform mobile app (iOS & Android) for sharing images and text to Instagram, Facebook, and WordPress simultaneously. Built with Python and Kivy.",
+      "lastCommitDate": "2025-12-25T12:29:45-08:00",
+      "markdownFiles": [
+        {
+          "relativePath": "android/README.md",
+          "name": "README.md"
+        },
+        {
+          "relativePath": "ARCHITECTURE.md",
+          "name": "ARCHITECTURE.md"
+        },
+        {
+          "relativePath": "CONTRIBUTING.md",
+          "name": "CONTRIBUTING.md"
+        },
+        {
+          "relativePath": "IMPLEMENTATION_SUMMARY.md",
+          "name": "IMPLEMENTATION_SUMMARY.md"
+        },
+        {
+          "relativePath": "ios/README.md",
+          "name": "README.md"
+        },
+        {
+          "relativePath": "PROJECT_SUMMARY.md",
+          "name": "PROJECT_SUMMARY.md"
+        },
+        {
+          "relativePath": "QUICKSTART.md",
+          "name": "QUICKSTART.md"
+        },
+        {
+          "relativePath": "README.md",
+          "name": "README.md"
+        },
+        {
+          "relativePath": "STORE_CHECKLIST.md",
+          "name": "STORE_CHECKLIST.md"
+        },
+        {
+          "relativePath": "TODO.md",
+          "name": "TODO.md"
+        },
+        {
+          "relativePath": "UNIFIED_WORKFLOW.md",
+          "name": "UNIFIED_WORKFLOW.md"
+        },
+        {
+          "relativePath": "VERIFICATION.md",
+          "name": "VERIFICATION.md"
+        },
+        {
+          "relativePath": "web/README.md",
+          "name": "README.md"
+        }
+      ]
+    },
+    {
+      "name": "SacredGeometryOutliner",
+      "languages": [
+        "markdown",
+        "javascript",
+        "html",
+        "css"
+      ],
+      "status": "synced",
+      "localPath": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/SacredGeometryOutliner",
+      "githubUrl": "https://github.com/mindfu23/SacredGeometryOutliner.git",
+      "description": "Transform images into sacred geometric line art with real-time controls.",
+      "lastCommitDate": "2025-12-22T09:43:57-08:00",
+      "markdownFiles": [
+        {
+          "relativePath": "README.md",
+          "name": "README.md"
+        }
+      ]
+    },
+    {
+      "name": "SearchBard",
+      "languages": [
+        "markdown",
+        "typescript",
+        "json",
+        "html",
+        "python"
+      ],
+      "status": "synced",
+      "localPath": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/SearchBard",
+      "githubUrl": "https://github.com/mindfu23/SearchBard",
+      "description": "A React-based web application that aggregates conference and event data from multiple sources to help users discover professional conferences across various subjects, locations, and date ranges.",
+      "lastCommitDate": "2025-12-14T14:29:09-08:00",
+      "markdownFiles": [
+        {
+          "relativePath": "ANDROID_DEPLOYMENT.md",
+          "name": "ANDROID_DEPLOYMENT.md"
+        },
+        {
+          "relativePath": "ARCHITECTURE.md",
+          "name": "ARCHITECTURE.md"
+        },
+        {
+          "relativePath": "CAPACITOR_INTEGRATION.md",
+          "name": "CAPACITOR_INTEGRATION.md"
+        },
+        {
+          "relativePath": "conference-search/android/app/src/main/res/ICON_README.md",
+          "name": "ICON_README.md"
+        },
+        {
+          "relativePath": "conference-search/README.md",
+          "name": "README.md"
+        },
+        {
+          "relativePath": "LEGACY_FILES.md",
+          "name": "LEGACY_FILES.md"
+        },
+        {
+          "relativePath": "README_v2.md",
+          "name": "README_v2.md"
+        },
+        {
+          "relativePath": "README.md",
+          "name": "README.md"
+        }
+      ]
+    },
+    {
+      "name": "ShamAIn",
+      "languages": [
+        "markdown",
+        "shell",
+        "javascript",
+        "json",
+        "html"
+      ],
+      "status": "local-only",
+      "localPath": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/ShamAIn",
+      "githubUrl": "https://github.com/mindfu23/ShamAIn.git",
+      "description": "An Android/iOS app wrapper for the ShamAIn custom GPT, built on the GPTWrapper framework.",
+      "lastCommitDate": "2025-12-24T17:00:50-08:00",
+      "markdownFiles": [
+        {
+          "relativePath": "MOBILE_SETUP.md",
+          "name": "MOBILE_SETUP.md"
+        },
+        {
+          "relativePath": "NETLIFY_DEPLOYMENT.md",
+          "name": "NETLIFY_DEPLOYMENT.md"
+        },
+        {
+          "relativePath": "README.md",
+          "name": "README.md"
+        },
+        {
+          "relativePath": "SETUP_STEPS.md",
+          "name": "SETUP_STEPS.md"
+        }
+      ]
+    },
+    {
+      "name": "SierraTrails",
+      "languages": [
+        "markdown",
+        "javascript",
+        "json"
+      ],
+      "status": "synced",
+      "localPath": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/SierraTrails",
+      "githubUrl": "https://github.com/mindfu23/SierraTrails.git",
+      "description": "Repo for a demo hiking and biking trailfinder app.",
+      "lastCommitDate": "2025-12-20T18:18:19-08:00",
+      "markdownFiles": [
+        {
+          "relativePath": "ARCHITECTURE.md",
+          "name": "ARCHITECTURE.md"
+        },
+        {
+          "relativePath": "CODE_REVIEW.md",
+          "name": "CODE_REVIEW.md"
+        },
+        {
+          "relativePath": "IMPLEMENTATION_SUMMARY.md",
+          "name": "IMPLEMENTATION_SUMMARY.md"
+        },
+        {
+          "relativePath": "README.md",
+          "name": "README.md"
+        }
+      ]
+    },
+    {
+      "name": "StoryCircle-dev",
+      "languages": [
+        "markdown",
+        "html",
+        "json",
+        "javascript",
+        "typescript",
+        "css"
+      ],
+      "status": "local-only",
+      "localPath": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/StoryCircle-dev",
+      "description": "Interactive Story Circle visualization tool based on Dan Harmon's 8-step method",
+      "lastCommitDate": "2026-01-20T16:22:16-08:00",
+      "markdownFiles": [
+        {
+          "relativePath": "DEVELOPMENT_PLAN.md",
+          "name": "DEVELOPMENT_PLAN.md"
+        },
+        {
+          "relativePath": "TODO.md",
+          "name": "TODO.md"
+        }
+      ]
+    },
+    {
+      "name": "StoryPlot",
+      "languages": [
+        "html",
+        "json",
+        "javascript",
+        "python"
+      ],
+      "status": "synced",
+      "localPath": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/StoryPlot",
+      "githubUrl": "https://github.com/mindfu23/StoryPlot",
+      "description": "A fiction story plot generator. Work in progress.",
+      "lastCommitDate": "2026-01-12T08:33:11-08:00",
+      "markdownFiles": []
+    },
+    {
+      "name": "takehome_q",
+      "languages": [
+        "markdown",
+        "python"
+      ],
+      "status": "synced",
+      "localPath": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/takehome_q",
+      "githubUrl": "https://github.com/mindfu23/takehome_q.git",
+      "description": "**Author:** James Beach",
+      "lastCommitDate": "2026-01-21T17:49:46-08:00",
+      "markdownFiles": [
+        {
+          "relativePath": "ANALYSIS.md",
+          "name": "ANALYSIS.md"
+        },
+        {
+          "relativePath": "README.md",
+          "name": "README.md"
+        }
+      ]
+    },
+    {
+      "name": "Theorazine",
+      "languages": [
+        "markdown",
+        "css",
+        "html",
+        "javascript",
+        "json"
+      ],
+      "status": "synced",
+      "localPath": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/Theorazine",
+      "githubUrl": "https://github.com/mindfu23/Theorazine.git",
+      "description": "The Conspiracy Calculator - A mathematical tool for analyzing conspiracy theory viability",
+      "lastCommitDate": "2026-01-10T13:33:40-08:00",
+      "markdownFiles": [
+        {
+          "relativePath": "DEPLOYMENT.md",
+          "name": "DEPLOYMENT.md"
+        },
+        {
+          "relativePath": "PERFORMANCE_IMPROVEMENTS.md",
+          "name": "PERFORMANCE_IMPROVEMENTS.md"
+        },
+        {
+          "relativePath": "README.md",
+          "name": "README.md"
+        }
+      ]
+    },
+    {
+      "name": "ValueApe",
+      "languages": [
+        "markdown",
+        "json",
+        "sql",
+        "html",
+        "python",
+        "typescript",
+        "css",
+        "javascript"
+      ],
+      "status": "local-only",
+      "localPath": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/ValueApe",
+      "githubUrl": "https://github.com/mindfu23/ValueApe",
+      "description": "A professional-grade research aide and stock prediction web application with a clean, extensible architecture designed for Phase 1 research capabilities and future Phase 2 live trading integration.",
+      "lastCommitDate": "2026-01-27T06:14:51+00:00",
+      "markdownFiles": [
+        {
+          "relativePath": "autotrade-proposed-code.md",
+          "name": "autotrade-proposed-code.md"
+        },
+        {
+          "relativePath": "docs/architecture.md",
+          "name": "architecture.md"
+        },
+        {
+          "relativePath": "docs/DATA_PROVIDERS.md",
+          "name": "DATA_PROVIDERS.md"
+        },
+        {
+          "relativePath": "docs/finrl-integration.md",
+          "name": "finrl-integration.md"
+        },
+        {
+          "relativePath": "docs/INTEGRATION_EXAMPLES.md",
+          "name": "INTEGRATION_EXAMPLES.md"
+        },
+        {
+          "relativePath": "docs/REAL_TIME_DATA.md",
+          "name": "REAL_TIME_DATA.md"
+        },
+        {
+          "relativePath": "docs/schwab-integration.md",
+          "name": "schwab-integration.md"
+        },
+        {
+          "relativePath": "docs/SUPABASE_SETUP.md",
+          "name": "SUPABASE_SETUP.md"
+        },
+        {
+          "relativePath": "flow-analysis.md",
+          "name": "flow-analysis.md"
+        },
+        {
+          "relativePath": "PRD.md",
+          "name": "PRD.md"
+        },
+        {
+          "relativePath": "README.md",
+          "name": "README.md"
+        },
+        {
+          "relativePath": "SECURITY.md",
+          "name": "SECURITY.md"
+        },
+        {
+          "relativePath": "TODO.md",
+          "name": "TODO.md"
+        },
+        {
+          "relativePath": "webscraper/README.md",
+          "name": "README.md"
+        }
+      ]
+    },
+    {
+      "name": "weirdchess",
+      "languages": [
+        "markdown"
+      ],
+      "status": "synced",
+      "localPath": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/weirdchess",
+      "githubUrl": "https://github.com/mindfu23/weirdchess",
+      "description": "Hyderabad Decimal Chess and other variants",
+      "lastCommitDate": "2026-01-16T20:05:54-08:00",
+      "markdownFiles": [
+        {
+          "relativePath": "README.md",
+          "name": "README.md"
+        }
+      ]
+    },
+    {
+      "name": "WeirdTarot",
+      "languages": [
+        "markdown",
+        "json",
+        "javascript",
+        "html",
+        "css"
+      ],
+      "status": "local-only",
+      "localPath": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/WeirdTarot",
+      "githubUrl": "https://github.com/mindfu23/WeirdTarot",
+      "description": "An integrative divination platform that unifies multiple oracle systems through cross-correspondences. Explore Tarot, I Ching, Zodiac, and MBTI layers to reveal deeper patterns.",
+      "lastCommitDate": "2025-12-28T19:23:09-08:00",
+      "markdownFiles": [
+        {
+          "relativePath": "README.md",
+          "name": "README.md"
+        },
+        {
+          "relativePath": "TODO.md",
+          "name": "TODO.md"
+        },
+        {
+          "relativePath": "weird-tarot-complete.md",
+          "name": "weird-tarot-complete.md"
+        },
+        {
+          "relativePath": "weird-tarot-iching-expansion-module.md",
+          "name": "weird-tarot-iching-expansion-module.md"
+        },
+        {
+          "relativePath": "weird-tarot-integrative-tarot-module.md",
+          "name": "weird-tarot-integrative-tarot-module.md"
+        }
+      ]
+    }
+  ],
+  "categories": [
+    "general",
+    "integrations",
+    "patterns",
+    "projects",
+    "snippets",
+    "templates",
+    "utilities"
+  ],
+  "buildTime": "2026-01-27T22:43:44.845Z",
+  "version": "1.0.0"
+}
