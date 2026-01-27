@@ -122,14 +122,13 @@ function setupEventListeners() {
   repoStatusFilter.addEventListener('change', renderRepos);
   repoSearch.addEventListener('input', renderRepos);
 
-  // Repo locations link
-  const repoLocationsLink = document.getElementById('repo-locations-link');
-  if (repoLocationsLink) {
-    repoLocationsLink.addEventListener('click', (e) => {
-      e.preventDefault();
-      navigateTo('document', { doc: 'projects/repo-locations.md' });
+  // Repo view tabs
+  document.querySelectorAll('.repo-tab').forEach(tab => {
+    tab.addEventListener('click', () => {
+      const tabName = tab.dataset.tab;
+      switchRepoTab(tabName);
     });
-  }
+  });
 
   // Browser navigation
   window.addEventListener('popstate', handleNavigation);
@@ -187,6 +186,7 @@ function showPage(page, params = {}) {
     case 'browse':
       renderCategories();
       renderRepos();
+      loadRepoListView();
       if (params.category) {
         selectCategory(params.category);
       }
@@ -437,6 +437,39 @@ function renderRepos() {
       ` : ''}
     </div>
   `).join('');
+}
+
+// Switch between repo view tabs
+function switchRepoTab(tabName) {
+  // Update tab buttons
+  document.querySelectorAll('.repo-tab').forEach(tab => {
+    tab.classList.toggle('active', tab.dataset.tab === tabName);
+  });
+
+  // Update view visibility
+  document.querySelectorAll('.repo-view').forEach(view => {
+    view.classList.remove('active');
+  });
+
+  const activeView = document.getElementById(`repo-${tabName}-view`);
+  if (activeView) {
+    activeView.classList.add('active');
+  }
+}
+
+// Load repository list view content from repo-locations.md
+function loadRepoListView() {
+  const container = document.getElementById('repo-list-content');
+  if (!container) return;
+
+  // Find the repo-locations document in the index
+  const doc = wikiIndex?.documents.find(d => d.relativePath === 'projects/repo-locations.md');
+
+  if (doc) {
+    container.innerHTML = renderMarkdown(doc.content);
+  } else {
+    container.innerHTML = '<p class="placeholder-text">Repository index not found</p>';
+  }
 }
 
 // Show document
