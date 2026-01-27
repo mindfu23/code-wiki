@@ -534,25 +534,32 @@ function escapeHtml(text) {
 
 // Check authentication status
 async function checkAuth() {
+  console.log('checkAuth: starting...');
   try {
     const response = await fetch('/.netlify/functions/user', {
       credentials: 'include',
     });
+    console.log('checkAuth: response status', response.status);
     if (response.ok) {
       const data = await response.json();
+      console.log('checkAuth: user data', data);
       currentUser = data.user;
     } else {
+      const errorText = await response.text();
+      console.log('checkAuth: not authenticated', errorText);
       currentUser = null;
     }
   } catch (err) {
-    console.log('Auth check failed:', err);
+    console.error('checkAuth: failed', err);
     currentUser = null;
   }
+  console.log('checkAuth: currentUser =', currentUser);
   updateAuthUI();
 }
 
 // Update UI based on auth state
 function updateAuthUI() {
+  console.log('updateAuthUI: currentUser =', currentUser);
   const loginNavLink = document.getElementById('login-nav-link');
   const userNav = document.getElementById('user-nav');
   const userAvatar = document.getElementById('user-avatar');
@@ -560,7 +567,10 @@ function updateAuthUI() {
   const logoutBtn = document.getElementById('logout-btn');
   const editBtn = document.getElementById('edit-btn');
 
+  console.log('updateAuthUI: elements found', { loginNavLink: !!loginNavLink, userNav: !!userNav });
+
   if (currentUser) {
+    console.log('updateAuthUI: showing user nav for', currentUser.login);
     // Show user nav, hide login link
     if (loginNavLink) loginNavLink.style.display = 'none';
     if (userNav) {
