@@ -96,10 +96,14 @@ const handler: Handler = async (event: HandlerEvent, context: HandlerContext) =>
   }
 
   // Get session from cookie
-  const cookies = parseCookies(event.headers.cookie || '');
+  const cookieHeader = event.headers.cookie || '';
+  console.log('User endpoint: cookie header present:', !!cookieHeader, 'length:', cookieHeader.length);
+  const cookies = parseCookies(cookieHeader);
   const sessionToken = cookies.wiki_session;
+  console.log('User endpoint: wiki_session cookie present:', !!sessionToken);
 
   if (!sessionToken) {
+    console.log('User endpoint: no session token found');
     return {
       statusCode: 401,
       headers,
