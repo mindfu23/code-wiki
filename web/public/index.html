@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Code Wiki</title>
+  <link rel="stylesheet" href="/styles.css">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📚</text></svg>">
+</head>
+<body>
+  <header>
+    <div class="header-content">
+      <h1><a href="/">Code Wiki</a></h1>
+      <nav>
+        <a href="/" class="nav-link active" data-page="search">Search</a>
+        <a href="/browse" class="nav-link" data-page="browse">Browse</a>
+        <a href="/repos" class="nav-link" data-page="repos">Repos</a>
+        <a href="/login" class="nav-link" data-page="login">Login</a>
+      </nav>
+    </div>
+  </header>
+
+  <main id="app">
+    <!-- Search Page (default) -->
+    <section id="page-search" class="page active">
+      <div class="search-container">
+        <h2>Search Code Wiki</h2>
+        <div class="search-box">
+          <input
+            type="text"
+            id="search-input"
+            placeholder="Search wiki documents and repositories..."
+            autocomplete="off"
+          >
+          <button id="search-btn" type="button">Search</button>
+        </div>
+        <div class="search-filters">
+          <select id="filter-category">
+            <option value="">All Categories</option>
+          </select>
+          <select id="filter-language">
+            <option value="">All Languages</option>
+          </select>
+        </div>
+      </div>
+      <div id="search-results" class="results-container">
+        <p class="placeholder-text">Enter a search term to find wiki documents and code</p>
+      </div>
+    </section>
+
+    <!-- Browse Page -->
+    <section id="page-browse" class="page">
+      <h2>Browse Wiki</h2>
+      <div class="categories-grid" id="categories-container">
+        <!-- Categories loaded dynamically -->
+      </div>
+      <div id="category-content" class="category-content">
+        <!-- Category documents loaded here -->
+      </div>
+    </section>
+
+    <!-- Repos Page -->
+    <section id="page-repos" class="page">
+      <h2>Repositories</h2>
+      <div class="repo-filters">
+        <select id="repo-status-filter">
+          <option value="">All Status</option>
+          <option value="synced">Synced</option>
+          <option value="local-only">Local Only</option>
+          <option value="github-only">GitHub Only</option>
+        </select>
+        <input type="text" id="repo-search" placeholder="Filter repositories...">
+      </div>
+      <div id="repos-container" class="repos-grid">
+        <!-- Repos loaded dynamically -->
+      </div>
+    </section>
+
+    <!-- Document View Page -->
+    <section id="page-document" class="page">
+      <div class="document-header">
+        <a href="#" id="back-link" class="back-link">&larr; Back</a>
+        <h2 id="document-title">Document Title</h2>
+        <div id="document-meta" class="document-meta"></div>
+      </div>
+      <article id="document-content" class="document-content">
+        <!-- Document content loaded here -->
+      </article>
+    </section>
+
+    <!-- Login Page (Stub) -->
+    <section id="page-login" class="page">
+      <div class="auth-container">
+        <h2>Login</h2>
+        <p class="auth-notice">User authentication coming soon!</p>
+        <form id="login-form" class="auth-form">
+          <div class="form-group">
+            <label for="login-email">Email</label>
+            <input type="email" id="login-email" placeholder="you@example.com" disabled>
+          </div>
+          <div class="form-group">
+            <label for="login-password">Password</label>
+            <input type="password" id="login-password" placeholder="••••••••" disabled>
+          </div>
+          <button type="submit" class="auth-btn" disabled>Login</button>
+        </form>
+        <p class="auth-switch">
+          Don't have an account? <a href="/signup" data-page="signup">Sign up</a>
+        </p>
+      </div>
+    </section>
+
+    <!-- Signup Page (Stub) -->
+    <section id="page-signup" class="page">
+      <div class="auth-container">
+        <h2>Sign Up</h2>
+        <p class="auth-notice">User registration coming soon!</p>
+        <form id="signup-form" class="auth-form">
+          <div class="form-group">
+            <label for="signup-name">Name</label>
+            <input type="text" id="signup-name" placeholder="Your name" disabled>
+          </div>
+          <div class="form-group">
+            <label for="signup-email">Email</label>
+            <input type="email" id="signup-email" placeholder="you@example.com" disabled>
+          </div>
+          <div class="form-group">
+            <label for="signup-password">Password</label>
+            <input type="password" id="signup-password" placeholder="••••••••" disabled>
+          </div>
+          <button type="submit" class="auth-btn" disabled>Create Account</button>
+        </form>
+        <p class="auth-switch">
+          Already have an account? <a href="/login" data-page="login">Login</a>
+        </p>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <p>Code Wiki &copy; 2025 | <a href="https://github.com/mindfu23/code-wiki" target="_blank">GitHub</a></p>
+  </footer>
+
+  <script src="/app.js"></script>
+</body>
+</html>

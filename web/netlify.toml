@@ -1,0 +1,64 @@
+# Netlify configuration for Code Wiki Web Interface
+
+[build]
+  # Build command - generates index and compiles functions
+  command = "npm install && npm run build"
+  # Directory containing the static files
+  publish = "public"
+  # Directory containing Netlify Functions
+  functions = "netlify/functions-dist"
+
+[build.environment]
+  # Node version
+  NODE_VERSION = "20"
+
+# Environment variables are set in Netlify dashboard, not here
+# Required env vars:
+# - GITHUB_TOKEN: GitHub personal access token for API access
+# - GITHUB_USERNAME: GitHub username for repo filtering
+# - WIKI_REPO_PATH: Path to wiki in the repo (default: ../wiki)
+
+# Development settings
+[dev]
+  command = "npm run build:index"
+  publish = "public"
+  functions = "netlify/functions-dist"
+  port = 8888
+  autoLaunch = false
+
+# Headers for CORS and security
+[[headers]]
+  for = "/api/*"
+  [headers.values]
+    Access-Control-Allow-Origin = "*"
+    Access-Control-Allow-Methods = "GET, POST, OPTIONS"
+    Access-Control-Allow-Headers = "Content-Type, Authorization"
+    X-Content-Type-Options = "nosniff"
+    X-Frame-Options = "DENY"
+
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Content-Type-Options = "nosniff"
+    X-Frame-Options = "SAMEORIGIN"
+    Referrer-Policy = "strict-origin-when-cross-origin"
+
+# Redirects for SPA routing and API
+[[redirects]]
+  from = "/api/*"
+  to = "/.netlify/functions/:splat"
+  status = 200
+
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
+  conditions = {Role = ["admin", "user"]}
+
+# Handle OPTIONS preflight requests
+[[redirects]]
+  from = "/api/*"
+  to = "/.netlify/functions/:splat"
+  status = 200
+  force = true
+  conditions = {Method = ["OPTIONS"]}
