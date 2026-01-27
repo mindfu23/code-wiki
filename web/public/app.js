@@ -122,6 +122,15 @@ function setupEventListeners() {
   repoStatusFilter.addEventListener('change', renderRepos);
   repoSearch.addEventListener('input', renderRepos);
 
+  // Repo locations link
+  const repoLocationsLink = document.getElementById('repo-locations-link');
+  if (repoLocationsLink) {
+    repoLocationsLink.addEventListener('click', (e) => {
+      e.preventDefault();
+      navigateTo('document', { doc: 'projects/repo-locations.md' });
+    });
+  }
+
   // Browser navigation
   window.addEventListener('popstate', handleNavigation);
 }
@@ -177,13 +186,15 @@ function showPage(page, params = {}) {
   switch (page) {
     case 'browse':
       renderCategories();
+      renderRepos();
       if (params.category) {
         selectCategory(params.category);
       }
       break;
     case 'repos':
-      renderRepos();
-      break;
+      // Redirect /repos to /browse
+      navigateTo('browse');
+      return;
     case 'document':
       if (params.doc) {
         showDocument(params.doc);
