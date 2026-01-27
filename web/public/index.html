@@ -15,7 +15,12 @@
         <a href="/" class="nav-link active" data-page="search">Search</a>
         <a href="/browse" class="nav-link" data-page="browse">Browse</a>
         <a href="/repos" class="nav-link" data-page="repos">Repos</a>
-        <a href="/login" class="nav-link" data-page="login">Login</a>
+        <a href="/login" class="nav-link" data-page="login" id="login-nav-link">Login</a>
+        <div id="user-nav" class="user-nav" style="display: none;">
+          <img id="user-avatar" src="" alt="" class="user-avatar">
+          <span id="user-name" class="user-name"></span>
+          <button id="logout-btn" class="btn-link">Logout</button>
+        </div>
       </nav>
     </div>
   </header>
@@ -82,56 +87,103 @@
         <a href="#" id="back-link" class="back-link">&larr; Back</a>
         <h2 id="document-title">Document Title</h2>
         <div id="document-meta" class="document-meta"></div>
+        <button id="edit-btn" class="edit-btn" style="display: none;">Edit</button>
       </div>
       <article id="document-content" class="document-content">
         <!-- Document content loaded here -->
       </article>
     </section>
 
-    <!-- Login Page (Stub) -->
-    <section id="page-login" class="page">
-      <div class="auth-container">
-        <h2>Login</h2>
-        <p class="auth-notice">User authentication coming soon!</p>
-        <form id="login-form" class="auth-form">
-          <div class="form-group">
-            <label for="login-email">Email</label>
-            <input type="email" id="login-email" placeholder="you@example.com" disabled>
+    <!-- Editor Page -->
+    <section id="page-editor" class="page">
+      <div class="editor-container">
+        <div class="editor-header">
+          <a href="#" id="editor-back-link" class="back-link">&larr; Cancel</a>
+          <h2 id="editor-title">Edit Document</h2>
+          <div class="editor-actions">
+            <button id="editor-preview-toggle" class="btn btn-secondary">Preview</button>
+            <button id="editor-save" class="btn btn-primary">Save &amp; Commit</button>
+          </div>
+        </div>
+
+        <!-- Frontmatter Editor -->
+        <div class="frontmatter-editor">
+          <div class="form-row">
+            <div class="form-group">
+              <label for="edit-title">Title</label>
+              <input type="text" id="edit-title" placeholder="Document title">
+            </div>
+            <div class="form-group">
+              <label for="edit-language">Language</label>
+              <select id="edit-language">
+                <option value="">None</option>
+                <option value="javascript">JavaScript</option>
+                <option value="typescript">TypeScript</option>
+                <option value="python">Python</option>
+                <option value="go">Go</option>
+                <option value="rust">Rust</option>
+                <option value="java">Java</option>
+                <option value="csharp">C#</option>
+              </select>
+            </div>
           </div>
           <div class="form-group">
-            <label for="login-password">Password</label>
-            <input type="password" id="login-password" placeholder="••••••••" disabled>
+            <label for="edit-description">Description</label>
+            <input type="text" id="edit-description" placeholder="Brief description">
           </div>
-          <button type="submit" class="auth-btn" disabled>Login</button>
-        </form>
-        <p class="auth-switch">
-          Don't have an account? <a href="/signup" data-page="signup">Sign up</a>
-        </p>
+          <div class="form-group">
+            <label for="edit-tags">Tags (comma-separated)</label>
+            <input type="text" id="edit-tags" placeholder="api, patterns, typescript">
+          </div>
+        </div>
+
+        <!-- Markdown Toolbar -->
+        <div class="editor-toolbar">
+          <button type="button" data-action="bold" title="Bold (Ctrl+B)"><strong>B</strong></button>
+          <button type="button" data-action="italic" title="Italic (Ctrl+I)"><em>I</em></button>
+          <button type="button" data-action="code" title="Inline Code">&lt;/&gt;</button>
+          <button type="button" data-action="link" title="Link">&#128279;</button>
+          <button type="button" data-action="heading" title="Heading">H</button>
+          <button type="button" data-action="list" title="List">&#8226;</button>
+          <button type="button" data-action="codeblock" title="Code Block">```</button>
+        </div>
+
+        <!-- Editor Area -->
+        <div class="editor-main">
+          <div class="editor-pane" id="editor-pane">
+            <textarea id="editor-content" placeholder="Write your markdown content here..."></textarea>
+          </div>
+          <div class="preview-pane hidden" id="preview-pane">
+            <div id="editor-preview" class="document-content"></div>
+          </div>
+        </div>
+
+        <!-- Commit Message -->
+        <div class="commit-section">
+          <div class="form-group">
+            <label for="commit-message">Commit Message</label>
+            <input type="text" id="commit-message" placeholder="Describe your changes">
+          </div>
+        </div>
+
+        <!-- Status Messages -->
+        <div id="editor-status" class="editor-status"></div>
       </div>
     </section>
 
-    <!-- Signup Page (Stub) -->
-    <section id="page-signup" class="page">
+    <!-- Login Page -->
+    <section id="page-login" class="page">
       <div class="auth-container">
-        <h2>Sign Up</h2>
-        <p class="auth-notice">User registration coming soon!</p>
-        <form id="signup-form" class="auth-form">
-          <div class="form-group">
-            <label for="signup-name">Name</label>
-            <input type="text" id="signup-name" placeholder="Your name" disabled>
-          </div>
-          <div class="form-group">
-            <label for="signup-email">Email</label>
-            <input type="email" id="signup-email" placeholder="you@example.com" disabled>
-          </div>
-          <div class="form-group">
-            <label for="signup-password">Password</label>
-            <input type="password" id="signup-password" placeholder="••••••••" disabled>
-          </div>
-          <button type="submit" class="auth-btn" disabled>Create Account</button>
-        </form>
-        <p class="auth-switch">
-          Already have an account? <a href="/login" data-page="login">Login</a>
+        <h2>Sign In</h2>
+        <p class="auth-notice">Sign in with your GitHub account to edit wiki documents.</p>
+        <button id="github-login-btn" class="github-login-btn">
+          <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor">
+            <path d="M12 0C5.37 0 0 5.37 0 12c0 5.3 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 21.795 24 17.295 24 12c0-6.63-5.37-12-12-12"/>
+          </svg>
+          Sign in with GitHub
+        </button>
+        <p class="auth-info">
+          Your edits will be committed to the wiki repository under your GitHub identity.
         </p>
       </div>
     </section>

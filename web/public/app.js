@@ -7,6 +7,9 @@ let wikiIndex = null;
 let currentPage = 'search';
 let currentCategory = null;
 let currentDocument = null;
+let currentUser = null;
+let editingDocument = null;
+let isDirty = false;
 
 // DOM Elements
 const app = document.getElementById('app');
@@ -35,7 +38,9 @@ const categoryIcons = {
 // Initialize
 async function init() {
   await loadIndex();
+  await checkAuth();
   setupEventListeners();
+  setupEditor();
   handleNavigation();
 }
 
@@ -140,7 +145,7 @@ function handleNavigation() {
   if (path === '/browse' || path.startsWith('/browse')) page = 'browse';
   else if (path === '/repos' || path.startsWith('/repos')) page = 'repos';
   else if (path === '/login') page = 'login';
-  else if (path === '/signup') page = 'signup';
+  else if (path === '/editor' || path.startsWith('/editor')) page = 'editor';
   else if (path === '/document' || params.get('doc')) page = 'document';
 
   const pageParams = {};
@@ -182,6 +187,11 @@ function showPage(page, params = {}) {
     case 'document':
       if (params.doc) {
         showDocument(params.doc);
+      }
+      break;
+    case 'editor':
+      if (params.doc) {
+        openEditor(params.doc);
       }
       break;
   }
@@ -460,6 +470,13 @@ async function showDocument(docPath) {
 
   // Render content (basic markdown to HTML)
   documentContent.innerHTML = renderMarkdown(doc.content);
+
+  // Show edit button if logged in
+  const editBtn = document.getElementById('edit-btn');
+  if (editBtn) {
+    editBtn.style.display = currentUser ? 'inline-block' : 'none';
+    editBtn.onclick = () => openEditor(docPath);
+  }
 }
 
 // Basic markdown renderer
@@ -509,6 +526,408 @@ function escapeHtml(text) {
   const div = document.createElement('div');
   div.textContent = text;
   return div.innerHTML;
+}
+
+// ============================================
+// AUTH MODULE
+// ============================================
+
+// Check authentication status
+async function checkAuth() {
+  try {
+    const response = await fetch('/.netlify/functions/user', {
+      credentials: 'include',
+    });
+    if (response.ok) {
+      const data = await response.json();
+      currentUser = data.user;
+    } else {
+      currentUser = null;
+    }
+  } catch (err) {
+    console.log('Auth check failed:', err);
+    currentUser = null;
+  }
+  updateAuthUI();
+}
+
+// Update UI based on auth state
+function updateAuthUI() {
+  const loginNavLink = document.getElementById('login-nav-link');
+  const userNav = document.getElementById('user-nav');
+  const userAvatar = document.getElementById('user-avatar');
+  const userName = document.getElementById('user-name');
+  const logoutBtn = document.getElementById('logout-btn');
+  const editBtn = document.getElementById('edit-btn');
+
+  if (currentUser) {
+    // Show user nav, hide login link
+    if (loginNavLink) loginNavLink.style.display = 'none';
+    if (userNav) {
+      userNav.style.display = 'flex';
+      if (userAvatar) userAvatar.src = currentUser.avatar_url || '';
+      if (userName) userName.textContent = currentUser.name || currentUser.login;
+    }
+    if (logoutBtn) {
+      logoutBtn.onclick = handleLogout;
+    }
+    // Show edit button on document page
+    if (editBtn && currentDocument) {
+      editBtn.style.display = 'inline-block';
+    }
+  } else {
+    // Show login link, hide user nav
+    if (loginNavLink) loginNavLink.style.display = 'inline';
+    if (userNav) userNav.style.display = 'none';
+    if (editBtn) editBtn.style.display = 'none';
+  }
+}
+
+// Handle login - redirect to GitHub OAuth
+function handleLogin() {
+  window.location.href = '/.netlify/functions/oauth-login';
+}
+
+// Handle logout
+async function handleLogout() {
+  try {
+    await fetch('/.netlify/functions/auth', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      credentials: 'include',
+      body: JSON.stringify({ action: 'logout' }),
+    });
+  } catch (err) {
+    console.error('Logout error:', err);
+  }
+
+  currentUser = null;
+  updateAuthUI();
+  navigateTo('search');
+}
+
+// ============================================
+// EDITOR MODULE
+// ============================================
+
+// Setup editor event listeners
+function setupEditor() {
+  // GitHub login button on login page
+  const githubLoginBtn = document.getElementById('github-login-btn');
+  if (githubLoginBtn) {
+    githubLoginBtn.addEventListener('click', handleLogin);
+  }
+
+  // Preview toggle
+  const previewToggle = document.getElementById('editor-preview-toggle');
+  const editorMain = document.querySelector('.editor-main');
+  const previewPane = document.getElementById('preview-pane');
+
+  if (previewToggle) {
+    previewToggle.addEventListener('click', () => {
+      if (editorMain) editorMain.classList.toggle('split-view');
+      if (previewPane) {
+        previewPane.classList.toggle('hidden');
+        previewToggle.textContent = previewPane.classList.contains('hidden')
+          ? 'Preview'
+          : 'Hide Preview';
+        if (!previewPane.classList.contains('hidden')) {
+          updatePreview();
+        }
+      }
+    });
+  }
+
+  // Content change -> update preview
+  const contentArea = document.getElementById('editor-content');
+  if (contentArea) {
+    contentArea.addEventListener('input', () => {
+      isDirty = true;
+      const previewPane = document.getElementById('preview-pane');
+      if (previewPane && !previewPane.classList.contains('hidden')) {
+        updatePreview();
+      }
+    });
+
+    // Keyboard shortcuts
+    contentArea.addEventListener('keydown', (e) => {
+      if ((e.ctrlKey || e.metaKey) && e.key === 's') {
+        e.preventDefault();
+        saveDocument();
+      }
+    });
+  }
+
+  // Save button
+  const saveBtn = document.getElementById('editor-save');
+  if (saveBtn) {
+    saveBtn.addEventListener('click', saveDocument);
+  }
+
+  // Toolbar actions
+  document.querySelectorAll('.editor-toolbar button').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const action = btn.dataset.action;
+      if (action) applyToolbarAction(action);
+    });
+  });
+
+  // Back link
+  const backLink = document.getElementById('editor-back-link');
+  if (backLink) {
+    backLink.addEventListener('click', (e) => {
+      e.preventDefault();
+      if (isDirty && !confirm('You have unsaved changes. Discard?')) {
+        return;
+      }
+      isDirty = false;
+      history.back();
+    });
+  }
+
+  // Warn before leaving with unsaved changes
+  window.addEventListener('beforeunload', (e) => {
+    if (isDirty) {
+      e.preventDefault();
+      e.returnValue = '';
+    }
+  });
+}
+
+// Open editor for a document
+function openEditor(docPath) {
+  if (!currentUser) {
+    navigateTo('login');
+    return;
+  }
+
+  // Find document in index
+  const doc = wikiIndex?.documents.find(d => d.relativePath === docPath);
+  if (!doc) {
+    alert('Document not found');
+    return;
+  }
+
+  editingDocument = doc;
+  isDirty = false;
+
+  // Populate editor fields
+  document.getElementById('edit-title').value = doc.title || '';
+  document.getElementById('edit-description').value = doc.description || '';
+  document.getElementById('edit-tags').value = (doc.tags || []).join(', ');
+  document.getElementById('edit-language').value = doc.language || '';
+  document.getElementById('editor-content').value = extractContentBody(doc.content);
+  document.getElementById('commit-message').value = `Update ${doc.title}`;
+
+  // Update title
+  document.getElementById('editor-title').textContent = `Edit: ${doc.title}`;
+
+  // Clear status
+  const status = document.getElementById('editor-status');
+  if (status) {
+    status.className = 'editor-status';
+    status.textContent = '';
+  }
+
+  // Reset preview
+  const previewPane = document.getElementById('preview-pane');
+  if (previewPane) previewPane.classList.add('hidden');
+  const previewToggle = document.getElementById('editor-preview-toggle');
+  if (previewToggle) previewToggle.textContent = 'Preview';
+
+  // Navigate to editor
+  navigateTo('editor', { doc: docPath });
+}
+
+// Extract content body (without frontmatter)
+function extractContentBody(content) {
+  if (!content) return '';
+  // If content starts with ---, extract body after second ---
+  if (content.startsWith('---')) {
+    const endIndex = content.indexOf('---', 3);
+    if (endIndex !== -1) {
+      return content.slice(endIndex + 3).trim();
+    }
+  }
+  return content;
+}
+
+// Build frontmatter from form fields
+function buildFrontmatter() {
+  const title = document.getElementById('edit-title').value.trim();
+  const description = document.getElementById('edit-description').value.trim();
+  const tags = document.getElementById('edit-tags').value
+    .split(',')
+    .map(t => t.trim())
+    .filter(Boolean);
+  const language = document.getElementById('edit-language').value;
+
+  // Build YAML frontmatter
+  let yaml = '---\n';
+  yaml += `title: "${title}"\n`;
+  if (description) yaml += `description: "${description}"\n`;
+  if (tags.length > 0) yaml += `tags: [${tags.map(t => `"${t}"`).join(', ')}]\n`;
+  if (language) yaml += `language: "${language}"\n`;
+  yaml += `updated: "${new Date().toISOString().split('T')[0]}"\n`;
+  yaml += '---\n\n';
+
+  return yaml;
+}
+
+// Build full document content
+function buildDocumentContent() {
+  const frontmatter = buildFrontmatter();
+  const body = document.getElementById('editor-content').value;
+  return frontmatter + body;
+}
+
+// Update preview
+function updatePreview() {
+  const content = document.getElementById('editor-content').value;
+  const preview = document.getElementById('editor-preview');
+  if (preview) {
+    preview.innerHTML = renderMarkdown(content);
+  }
+}
+
+// Save document
+async function saveDocument() {
+  if (!currentUser || !editingDocument) {
+    alert('Please log in to save changes');
+    return;
+  }
+
+  const saveBtn = document.getElementById('editor-save');
+  const status = document.getElementById('editor-status');
+
+  // Validate
+  const title = document.getElementById('edit-title').value.trim();
+  if (!title) {
+    showEditorStatus('error', 'Title is required');
+    return;
+  }
+
+  const commitMessage = document.getElementById('commit-message').value.trim();
+  if (!commitMessage) {
+    showEditorStatus('error', 'Commit message is required');
+    return;
+  }
+
+  // Build content
+  const content = buildDocumentContent();
+
+  // Disable save button
+  if (saveBtn) {
+    saveBtn.disabled = true;
+    saveBtn.textContent = 'Saving...';
+  }
+  showEditorStatus('loading', 'Committing changes to GitHub...');
+
+  try {
+    const response = await fetch('/.netlify/functions/save-document', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      credentials: 'include',
+      body: JSON.stringify({
+        path: editingDocument.relativePath,
+        content,
+        commitMessage,
+      }),
+    });
+
+    const result = await response.json();
+
+    if (response.ok && result.success) {
+      isDirty = false;
+      showEditorStatus('success', `Saved! Commit: ${result.commit.sha.slice(0, 7)}`);
+
+      // Update local index
+      editingDocument.content = content;
+      editingDocument.title = title;
+      editingDocument.description = document.getElementById('edit-description').value.trim();
+      editingDocument.updated = new Date().toISOString().split('T')[0];
+
+      // Redirect back to document view after short delay
+      setTimeout(() => {
+        navigateTo('document', { doc: editingDocument.relativePath });
+      }, 1500);
+    } else {
+      showEditorStatus('error', result.error || 'Failed to save');
+    }
+  } catch (err) {
+    console.error('Save error:', err);
+    showEditorStatus('error', 'Network error. Please try again.');
+  } finally {
+    if (saveBtn) {
+      saveBtn.disabled = false;
+      saveBtn.textContent = 'Save & Commit';
+    }
+  }
+}
+
+// Show editor status message
+function showEditorStatus(type, message) {
+  const status = document.getElementById('editor-status');
+  if (status) {
+    status.className = `editor-status ${type}`;
+    status.textContent = message;
+  }
+}
+
+// Toolbar actions for markdown formatting
+function applyToolbarAction(action) {
+  const textarea = document.getElementById('editor-content');
+  if (!textarea) return;
+
+  const start = textarea.selectionStart;
+  const end = textarea.selectionEnd;
+  const selected = textarea.value.substring(start, end);
+
+  let replacement = '';
+  let cursorOffset = 0;
+
+  switch (action) {
+    case 'bold':
+      replacement = `**${selected || 'bold text'}**`;
+      cursorOffset = selected ? 0 : -2;
+      break;
+    case 'italic':
+      replacement = `*${selected || 'italic text'}*`;
+      cursorOffset = selected ? 0 : -1;
+      break;
+    case 'code':
+      replacement = `\`${selected || 'code'}\``;
+      cursorOffset = selected ? 0 : -1;
+      break;
+    case 'link':
+      replacement = `[${selected || 'link text'}](url)`;
+      cursorOffset = -1;
+      break;
+    case 'heading':
+      replacement = `## ${selected || 'Heading'}`;
+      break;
+    case 'list':
+      replacement = `- ${selected || 'List item'}`;
+      break;
+    case 'codeblock':
+      replacement = `\`\`\`\n${selected || 'code here'}\n\`\`\``;
+      cursorOffset = selected ? 0 : -4;
+      break;
+    default:
+      return;
+  }
+
+  textarea.value =
+    textarea.value.substring(0, start) +
+    replacement +
+    textarea.value.substring(end);
+
+  textarea.focus();
+  const newPos = start + replacement.length + cursorOffset;
+  textarea.setSelectionRange(newPos, newPos);
+
+  isDirty = true;
+  updatePreview();
 }
 
 // Initialize on load
