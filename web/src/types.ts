@@ -16,10 +16,14 @@ export interface WikiDocument {
   category: string;
 }
 
-export interface RepoMarkdownFile {
+export interface RepoDocFile {
   relativePath: string;  // Path relative to repo root
   name: string;          // Filename
+  fileType: 'md' | 'txt' | 'rst' | 'adoc' | 'org';  // File type for icon/rendering
 }
+
+// Backward compatibility alias
+export type RepoMarkdownFile = RepoDocFile;
 
 export interface RepoInfo {
   name: string;
@@ -29,7 +33,7 @@ export interface RepoInfo {
   languages: string[];
   lastCommitDate?: string;
   status: 'synced' | 'local-only' | 'github-only';
-  markdownFiles?: RepoMarkdownFile[];  // .md files in the repo
+  markdownFiles?: RepoDocFile[];  // Documentation files in the repo (.md, .txt, .rst, .adoc, .org)
 }
 
 export interface SearchResult {
