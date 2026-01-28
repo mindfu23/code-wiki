@@ -473,7 +473,19 @@ function loadRepoListView() {
   }
 }
 
-// Load repository files view - shows repos alphabetically with their .md files
+// Get icon for file type
+function getFileTypeIcon(fileType) {
+  const icons = {
+    md: '📝',
+    txt: '📄',
+    rst: '📜',
+    adoc: '📋',
+    org: '📓'
+  };
+  return icons[fileType] || '📄';
+}
+
+// Load repository files view - shows repos alphabetically with their doc files
 function loadRepoFilesView() {
   const container = document.getElementById('repo-files-content');
   if (!container) return;
@@ -488,20 +500,20 @@ function loadRepoFilesView() {
     a.name.toLowerCase().localeCompare(b.name.toLowerCase())
   );
 
-  // Filter to repos that have markdown files
-  const reposWithMdFiles = repos.filter(repo =>
+  // Filter to repos that have documentation files
+  const reposWithDocFiles = repos.filter(repo =>
     repo.markdownFiles && repo.markdownFiles.length > 0
   );
 
-  if (reposWithMdFiles.length === 0) {
-    container.innerHTML = '<p class="placeholder-text">No markdown files found in repositories. Rebuild the index to scan for .md files.</p>';
+  if (reposWithDocFiles.length === 0) {
+    container.innerHTML = '<p class="placeholder-text">No documentation files found in repositories. Rebuild the index to scan for files.</p>';
     return;
   }
 
   // Build the HTML
   let html = '<div class="repo-files-list">';
 
-  for (const repo of reposWithMdFiles) {
+  for (const repo of reposWithDocFiles) {
     const githubBaseUrl = repo.githubUrl ? repo.githubUrl.replace(/\.git$/, '') : null;
 
     html += `<div class="repo-files-item">`;
@@ -514,13 +526,15 @@ function loadRepoFilesView() {
     html += `<span class="repo-files-count">${repo.markdownFiles.length} file${repo.markdownFiles.length !== 1 ? 's' : ''}</span>`;
     html += `</div>`;
 
-    html += `<ul class="repo-md-files">`;
+    html += `<ul class="repo-doc-files">`;
     for (const file of repo.markdownFiles) {
+      const fileType = file.fileType || 'md';
+      const icon = getFileTypeIcon(fileType);
       if (githubBaseUrl) {
         const fileUrl = `${githubBaseUrl}/blob/main/${file.relativePath}`;
-        html += `<li><a href="${fileUrl}" target="_blank">${escapeHtml(file.relativePath)}</a></li>`;
+        html += `<li data-type="${fileType}"><span class="file-icon">${icon}</span><a href="${fileUrl}" target="_blank">${escapeHtml(file.relativePath)}</a></li>`;
       } else {
-        html += `<li>${escapeHtml(file.relativePath)}</li>`;
+        html += `<li data-type="${fileType}"><span class="file-icon">${icon}</span>${escapeHtml(file.relativePath)}</li>`;
       }
     }
     html += `</ul>`;
