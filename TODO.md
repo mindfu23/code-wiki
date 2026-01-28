@@ -51,6 +51,14 @@ Currently, non-markdown files (.txt, .rst, .adoc, .org) link directly to GitHub 
 - [ ] Full-text search within repo documentation files
 - [ ] Filter search results by file type
 
+### All Files Search Mode
+- [ ] Add dropdown with "Documents" (default) vs "All Files" options
+- [ ] Index all file paths in repos (not just doc files) - store as `allFiles: string[]`
+- [ ] "All Files" mode searches all filenames (.py, .js, .ts, etc.) and links to GitHub edit
+- [ ] Pagination: Show first 100 results with "Next 100" link
+- [ ] Cap at 500 results with "Too many results" message
+- [ ] Remove "Include repo files" checkbox when "All Files" is selected (redundant)
+
 ## Performance
 
 - [ ] Lazy load file lists for repos with many files
