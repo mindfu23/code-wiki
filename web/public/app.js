@@ -118,6 +118,12 @@ function setupEventListeners() {
   filterCategory.addEventListener('change', performSearch);
   filterLanguage.addEventListener('change', performSearch);
 
+  // Include repo files toggle
+  const includeRepoFilesToggle = document.getElementById('include-repo-files');
+  if (includeRepoFilesToggle) {
+    includeRepoFilesToggle.addEventListener('change', performSearch);
+  }
+
   // Repo filters
   repoStatusFilter.addEventListener('change', renderRepos);
   repoSearch.addEventListener('input', renderRepos);
@@ -214,6 +220,7 @@ function performSearch() {
   const query = searchInput.value.trim().toLowerCase();
   const category = filterCategory.value;
   const language = filterLanguage.value;
+  const includeRepoFiles = document.getElementById('include-repo-files')?.checked ?? true;
 
   if (!query && !category && !language) {
     searchResults.innerHTML = '<p class="placeholder-text">Enter a search term to find wiki documents and code</p>';
@@ -281,11 +288,54 @@ function performSearch() {
     });
   });
 
+  // Search repo files (if toggle is on)
+  if (includeRepoFiles && query) {
+    wikiIndex.repos.forEach(repo => {
+      if (!repo.markdownFiles || !repo.githubUrl) return;
+      if (language && !repo.languages.includes(language)) return;
+
+      const githubBaseUrl = repo.githubUrl.replace(/\.git$/, '');
+
+      repo.markdownFiles.forEach(file => {
+        let score = 0;
+        const searchText = `${file.relativePath} ${file.name}`.toLowerCase();
+
+        if (file.name.toLowerCase().includes(query)) score += 40;
+        else if (searchText.includes(query)) score += 15;
+
+        if (score > 0) {
+          const fileType = file.fileType || 'md';
+          const icon = getFileTypeIcon(fileType);
+          results.push({
+            type: 'repo-file',
+            title: `${icon} ${file.relativePath}`,
+            path: `${githubBaseUrl}/edit/main/${file.relativePath}`,
+            preview: `${repo.name} - ${file.name}`,
+            score,
+            tags: repo.languages,
+            repoName: repo.name,
+            fileType,
+          });
+        }
+      });
+    });
+  }
+
   // Sort by score
   results.sort((a, b) => b.score - a.score);
 
   // Render results
   renderSearchResults(results.slice(0, 50));
+}
+
+// Get display label for result type
+function getResultTypeLabel(type) {
+  switch (type) {
+    case 'wiki': return 'wiki';
+    case 'repo': return 'repo';
+    case 'repo-file': return 'file';
+    default: return type;
+  }
 }
 
 // Render search results
@@ -296,10 +346,10 @@ function renderSearchResults(results) {
   }
 
   searchResults.innerHTML = results.map(result => `
-    <div class="result-item" data-type="${result.type}" data-path="${result.path}">
+    <div class="result-item" data-type="${result.type}" data-path="${escapeHtml(result.path)}">
       <div class="result-header">
         <span class="result-title">${escapeHtml(result.title)}</span>
-        <span class="result-type">${result.type}</span>
+        <span class="result-type ${result.type}">${getResultTypeLabel(result.type)}</span>
       </div>
       <p class="result-preview">${escapeHtml(result.preview)}</p>
       <div class="result-meta">
@@ -320,7 +370,7 @@ function renderSearchResults(results) {
 
       if (type === 'wiki') {
         navigateTo('document', { doc: path });
-      } else if (type === 'repo' && path.startsWith('http')) {
+      } else if ((type === 'repo' || type === 'repo-file') && path.startsWith('http')) {
         window.open(path, '_blank');
       }
     });
