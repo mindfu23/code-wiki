@@ -3,8 +3,10 @@
  * Generates a static JSON index from wiki content for use in Netlify functions
  *
  * Supports two modes:
- * - Local: Scans local filesystem for .md files (default)
- * - GitHub API: Uses GitHub Trees API to fetch .md files (set USE_GITHUB_API=true)
+ * - Local: Scans local filesystem for doc files (default)
+ * - GitHub API: Uses GitHub Trees API to fetch doc files (set USE_GITHUB_API=true)
+ *
+ * Supported file types: .md, .txt, .rst, .adoc, .asciidoc, .org
  */
 
 import * as fs from 'fs/promises';
@@ -12,7 +14,25 @@ import * as path from 'path';
 import { fileURLToPath } from 'url';
 import matter from 'gray-matter';
 import { Octokit } from '@octokit/rest';
-import { WikiDocument, RepoInfo, RepoMarkdownFile, WikiIndex } from './types.js';
+import { WikiDocument, RepoInfo, RepoDocFile, WikiIndex } from './types.js';
+
+// Supported documentation file extensions
+const DOC_EXTENSIONS = ['.md', '.txt', '.rst', '.adoc', '.asciidoc', '.org'] as const;
+
+function getFileType(filename: string): RepoDocFile['fileType'] | null {
+  const ext = filename.toLowerCase();
+  if (ext.endsWith('.md')) return 'md';
+  if (ext.endsWith('.txt')) return 'txt';
+  if (ext.endsWith('.rst')) return 'rst';
+  if (ext.endsWith('.adoc') || ext.endsWith('.asciidoc')) return 'adoc';
+  if (ext.endsWith('.org')) return 'org';
+  return null;
+}
+
+function isDocFile(filename: string): boolean {
+  const lower = filename.toLowerCase();
+  return DOC_EXTENSIONS.some(ext => lower.endsWith(ext));
+}
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -143,8 +163,8 @@ async function parseRepoLocations(wikiDir: string): Promise<RepoInfo[]> {
   return repos;
 }
 
-async function scanRepoForMarkdownFiles(repoPath: string): Promise<RepoMarkdownFile[]> {
-  const mdFiles: RepoMarkdownFile[] = [];
+async function scanRepoForDocFiles(repoPath: string): Promise<RepoDocFile[]> {
+  const docFiles: RepoDocFile[] = [];
 
   async function scanDir(dir: string, baseDir: string): Promise<void> {
     try {
@@ -159,12 +179,16 @@ async function scanRepoForMarkdownFiles(repoPath: string): Promise<RepoMarkdownF
           if (!entry.name.startsWith('.') && !skipDirs.includes(entry.name)) {
             await scanDir(fullPath, baseDir);
           }
-        } else if (entry.isFile() && entry.name.endsWith('.md')) {
+        } else if (entry.isFile() && isDocFile(entry.name)) {
           const relativePath = path.relative(baseDir, fullPath);
-          mdFiles.push({
-            relativePath,
-            name: entry.name,
-          });
+          const fileType = getFileType(entry.name);
+          if (fileType) {
+            docFiles.push({
+              relativePath,
+              name: entry.name,
+              fileType,
+            });
+          }
         }
       }
     } catch (error) {
@@ -173,19 +197,20 @@ async function scanRepoForMarkdownFiles(repoPath: string): Promise<RepoMarkdownF
   }
 
   await scanDir(repoPath, repoPath);
-  return mdFiles.sort((a, b) => a.relativePath.localeCompare(b.relativePath));
+  return docFiles.sort((a, b) => a.relativePath.localeCompare(b.relativePath));
 }
 
 /**
- * Fetch markdown files from a GitHub repo using the Trees API
+ * Fetch documentation files from a GitHub repo using the Trees API
  * This is efficient - one API call per repo to get the entire file tree
+ * Supports: .md, .txt, .rst, .adoc, .asciidoc, .org
  */
-async function fetchRepoMarkdownFilesFromGitHub(
+async function fetchRepoDocFilesFromGitHub(
   octokit: Octokit,
   owner: string,
   repo: string
-): Promise<RepoMarkdownFile[]> {
-  const mdFiles: RepoMarkdownFile[] = [];
+): Promise<RepoDocFile[]> {
+  const docFiles: RepoDocFile[] = [];
 
   // Directories to skip (same as local scan)
   const skipDirs = ['node_modules', '.next', 'dist', 'build', '.cache', 'coverage', '__pycache__', 'venv', '.venv'];
@@ -203,18 +228,22 @@ async function fetchRepoMarkdownFilesFromGitHub(
       recursive: 'true',
     });
 
-    // Filter for .md files, excluding common non-source directories
+    // Filter for doc files, excluding common non-source directories
     for (const item of tree.tree) {
-      if (item.type === 'blob' && item.path && item.path.endsWith('.md')) {
+      if (item.type === 'blob' && item.path && isDocFile(item.path)) {
         // Check if path contains any skip directories
         const pathParts = item.path.split('/');
         const shouldSkip = pathParts.some(part => skipDirs.includes(part) || part.startsWith('.'));
 
         if (!shouldSkip) {
-          mdFiles.push({
-            relativePath: item.path,
-            name: path.basename(item.path),
-          });
+          const fileType = getFileType(item.path);
+          if (fileType) {
+            docFiles.push({
+              relativePath: item.path,
+              name: path.basename(item.path),
+              fileType,
+            });
+          }
         }
       }
     }
@@ -227,7 +256,7 @@ async function fetchRepoMarkdownFilesFromGitHub(
     }
   }
 
-  return mdFiles.sort((a, b) => a.relativePath.localeCompare(b.relativePath));
+  return docFiles.sort((a, b) => a.relativePath.localeCompare(b.relativePath));
 }
 
 /**
@@ -269,12 +298,12 @@ async function buildIndex(): Promise<void> {
   const repos = await parseRepoLocations(WIKI_DIR);
   console.log(`Found ${repos.length} repositories`);
 
-  // Scan each repo for markdown files
-  let totalMdFiles = 0;
+  // Scan each repo for documentation files
+  let totalDocFiles = 0;
 
   if (USE_GITHUB_API) {
-    // GitHub API mode - fetch .md files via Trees API
-    console.log('Using GitHub API to fetch markdown files...');
+    // GitHub API mode - fetch doc files via Trees API
+    console.log('Using GitHub API to fetch documentation files...');
 
     if (!GITHUB_TOKEN) {
       console.warn('Warning: GITHUB_TOKEN not set. API rate limits will be very restrictive.');
@@ -289,24 +318,24 @@ async function buildIndex(): Promise<void> {
         const parsed = parseGitHubUrl(repo.githubUrl);
         if (parsed) {
           console.log(`  Fetching ${parsed.owner}/${parsed.repo}...`);
-          repo.markdownFiles = await fetchRepoMarkdownFilesFromGitHub(octokit, parsed.owner, parsed.repo);
-          totalMdFiles += repo.markdownFiles.length;
+          repo.markdownFiles = await fetchRepoDocFilesFromGitHub(octokit, parsed.owner, parsed.repo);
+          totalDocFiles += repo.markdownFiles.length;
         }
       }
     }
   } else {
     // Local mode - scan local filesystem
-    console.log('Scanning local filesystem for markdown files...');
+    console.log('Scanning local filesystem for documentation files...');
 
     for (const repo of repos) {
       if (repo.localPath) {
-        repo.markdownFiles = await scanRepoForMarkdownFiles(repo.localPath);
-        totalMdFiles += repo.markdownFiles.length;
+        repo.markdownFiles = await scanRepoForDocFiles(repo.localPath);
+        totalDocFiles += repo.markdownFiles.length;
       }
     }
   }
 
-  console.log(`Found ${totalMdFiles} markdown files across all repos`);
+  console.log(`Found ${totalDocFiles} documentation files across all repos`);
 
   // Build index
   const index: WikiIndex = {

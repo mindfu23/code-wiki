@@ -431,28 +431,31 @@ span.repo-files-name {
   color: var(--text-muted);
 }
 
-.repo-md-files {
+.repo-doc-files {
   list-style: none;
   padding: 0;
   margin: 0.5rem 0 0 1rem;
 }
 
-.repo-md-files li {
+.repo-doc-files li {
   padding: 0.25rem 0;
   font-size: 0.9rem;
   font-family: var(--font-mono);
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
 }
 
-.repo-md-files li::before {
-  content: "📄 ";
+.repo-doc-files .file-icon {
+  flex-shrink: 0;
 }
 
-.repo-md-files a {
+.repo-doc-files a {
   color: var(--text);
   text-decoration: none;
 }
 
-.repo-md-files a:hover {
+.repo-doc-files a:hover {
   color: var(--primary);
   text-decoration: underline;
 }
