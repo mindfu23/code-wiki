@@ -1,6 +1,6 @@
 [
   {
-    "path": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/code-wiki/wiki/projects/_index.md",
+    "path": "/home/runner/work/code-wiki/code-wiki/wiki/projects/_index.md",
     "relativePath": "projects/_index.md",
     "title": "Projects Index",
     "description": "Documentation for active repositories",
@@ -13,7 +13,27 @@
     "category": "projects"
   },
   {
-    "path": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/code-wiki/wiki/projects/repo-locations.md",
+    "path": "/home/runner/work/code-wiki/code-wiki/wiki/projects/overall-next-steps.md",
+    "relativePath": "projects/overall-next-steps.md",
+    "title": "Overall next steps",
+    "tags": [],
+    "updated": "2026-01-28",
+    "content": "\nContinue setting up n8n so I can explore possible functionality for a) ShamAIn and b) Value Ape\n\nMake an app out of the easiest thing for the app store. \n\nReview all the other to-dos and keep moving them forward. ",
+    "contentPreview": "Continue setting up n8n so I can explore possible functionality for a) ShamAIn and b) Value Ape  Make an app out of the easiest thing for the app store.   Review all the other to-dos and keep moving them forward.",
+    "category": "projects"
+  },
+  {
+    "path": "/home/runner/work/code-wiki/code-wiki/wiki/projects/overall-to-do.md",
+    "relativePath": "projects/overall-to-do.md",
+    "title": "Overall to do",
+    "tags": [],
+    "updated": "2026-01-28",
+    "content": "\nNext is for me to research n8n and apply it to ShamAIn and Value Ape.\n\nAfter that, continue the novel development workflow.",
+    "contentPreview": "Next is for me to research n8n and apply it to ShamAIn and Value Ape.  After that, continue the novel development workflow.",
+    "category": "projects"
+  },
+  {
+    "path": "/home/runner/work/code-wiki/code-wiki/wiki/projects/repo-locations.md",
     "relativePath": "projects/repo-locations.md",
     "title": "Repository Locations",
     "description": "Mapping of repositories to local file system paths and GitHub URLs",

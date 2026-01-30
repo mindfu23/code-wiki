@@ -1,7 +1,7 @@
 {
   "documents": [
     {
-      "path": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/code-wiki/wiki/AGENTS.md",
+      "path": "/home/runner/work/code-wiki/code-wiki/wiki/AGENTS.md",
       "relativePath": "AGENTS.md",
       "title": "AGENTS",
       "tags": [],
@@ -10,7 +10,7 @@
       "category": "general"
     },
     {
-      "path": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/code-wiki/wiki/integrations/_index.md",
+      "path": "/home/runner/work/code-wiki/code-wiki/wiki/integrations/_index.md",
       "relativePath": "integrations/_index.md",
       "title": "Integrations Index",
       "description": "Third-party API connectors and service integrations",
@@ -24,7 +24,7 @@
       "category": "integrations"
     },
     {
-      "path": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/code-wiki/wiki/patterns/_index.md",
+      "path": "/home/runner/work/code-wiki/code-wiki/wiki/patterns/_index.md",
       "relativePath": "patterns/_index.md",
       "title": "Patterns Index",
       "description": "Architectural patterns and design approaches",
@@ -37,7 +37,25 @@
       "category": "patterns"
     },
     {
-      "path": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/code-wiki/wiki/projects/_index.md",
+      "path": "/home/runner/work/code-wiki/code-wiki/wiki/preferences/gcp-cloud-run-deployment.md",
+      "relativePath": "preferences/gcp-cloud-run-deployment.md",
+      "title": "gcp-cloud-run-deployment",
+      "tags": [],
+      "content": "# Google Cloud Run Deployment Guide\n\nA comprehensive guide for deploying Python/FastAPI backends to Google Cloud Run via GitHub Actions.\n\n## Prerequisites\n\n- Google Cloud account with billing enabled\n- GitHub repository\n- `gcloud` CLI installed locally\n\n## Initial GCP Setup\n\n### 1. Create or Select a Project\n\n```bash\n# List existing projects\ngcloud projects list\n\n# Create a new project (optional)\ngcloud projects create YOUR_PROJECT_ID --name=\"Your Project Name\"\n\n# Set active project\ngcloud config set project YOUR_PROJECT_ID\n```\n\n### 2. Enable Required APIs\n\n```bash\ngcloud services enable \\\n  run.googleapis.com \\\n  artifactregistry.googleapis.com \\\n  cloudbuild.googleapis.com \\\n  --project=YOUR_PROJECT_ID\n```\n\n### 3. Create Artifact Registry Repository\n\n```bash\ngcloud artifacts repositories create YOUR_REPO_NAME \\\n  --repository-format=docker \\\n  --location=us-central1 \\\n  --description=\"Docker images for your app\" \\\n  --project=YOUR_PROJECT_ID\n```\n\n### 4. Create Service Account for GitHub Actions\n\n```bash\n# Create the service account\ngcloud iam service-accounts create github-actions \\\n  --display-name=\"GitHub Actions\" \\\n  --project=YOUR_PROJECT_ID\n\n# Store the email for convenience\nSA_EMAIL=\"github-actions@YOUR_PROJECT_ID.iam.gserviceaccount.com\"\n```\n\n### 5. Grant Required Permissions\n\n```bash\n# Cloud Run Admin - deploy services\ngcloud projects add-iam-policy-binding YOUR_PROJECT_ID \\\n  --member=\"serviceAccount:$SA_EMAIL\" \\\n  --role=\"roles/run.admin\"\n\n# Artifact Registry Writer - push Docker images\ngcloud projects add-iam-policy-binding YOUR_PROJECT_ID \\\n  --member=\"serviceAccount:$SA_EMAIL\" \\\n  --role=\"roles/artifactregistry.writer\"\n\n# Service Account User - deploy as compute service account\n# First, find your compute service account number:\ngcloud projects describe YOUR_PROJECT_ID --format=\"value(projectNumber)\"\n# Then grant permission (replace PROJECT_NUMBER):\ngcloud iam service-accounts add-iam-policy-binding \\\n  PROJECT_NUMBER-compute@developer.gserviceaccount.com \\\n  --member=\"serviceAccount:$SA_EMAIL\" \\\n  --role=\"roles/iam.serviceAccountUser\" \\\n  --project=YOUR_PROJECT_ID\n```\n\n### 6. Create and Download Service Account Key\n\n```bash\ngcloud iam service-accounts keys create ~/github-actions-key.json \\\n  --iam-account=github-actions@YOUR_PROJECT_ID.iam.gserviceaccount.com \\\n  --project=YOUR_PROJECT_ID\n\n# View the key (copy this for GitHub secrets)\ncat ~/github-actions-key.json\n\n# IMPORTANT: Delete the local key file after copying to GitHub\nrm ~/github-actions-key.json\n```\n\n## GitHub Repository Setup\n\n### Required Secrets\n\nGo to GitHub → Repository → Settings → Secrets and variables → Actions\n\nAdd these secrets:\n\n| Secret Name | Value |\n|-------------|-------|\n| `GCP_PROJECT_ID` | Your GCP project ID (e.g., `my-project-123`) |\n| `GCP_SA_KEY` | The entire JSON content of the service account key |\n| `ANTHROPIC_API_KEY` | (Optional) API key for Anthropic |\n| `GOOGLE_API_KEY` | (Optional) API key for Google AI |\n| `OPENAI_API_KEY` | (Optional) API key for OpenAI |\n| `PERPLEXITY_API_KEY` | (Optional) API key for Perplexity |\n\n## GitHub Actions Workflow\n\nCreate `.github/workflows/deploy-backend.yml`:\n\n```yaml\nname: Deploy Backend to Cloud Run\n\non:\n  push:\n    branches:\n      - main\n    paths:\n      - 'src/**'\n      - 'pyproject.toml'\n      - 'Dockerfile'\n      - '.github/workflows/deploy-backend.yml'\n  workflow_dispatch:  # Allow manual trigger\n\nenv:\n  PROJECT_ID: ${{ secrets.GCP_PROJECT_ID }}\n  SERVICE_NAME: your-api-name\n  ARTIFACT_REPO: your-repo-name\n  REGION: us-central1\n\njobs:\n  deploy:\n    runs-on: ubuntu-latest\n\n    permissions:\n      contents: read\n      id-token: write\n\n    steps:\n      - name: Checkout code\n        uses: actions/checkout@v4\n\n      - name: Authenticate to Google Cloud\n        uses: google-github-actions/auth@v2\n        with:\n          credentials_json: ${{ secrets.GCP_SA_KEY }}\n\n      - name: Set up Cloud SDK\n        uses: google-github-actions/setup-gcloud@v2\n        with:\n          project_id: ${{ env.PROJECT_ID }}\n\n      - name: Configure Docker for Artifact Registry\n        run: |\n          gcloud auth configure-docker ${{ env.REGION }}-docker.pkg.dev --quiet\n\n      - name: Build and push Docker image\n        run: |\n          docker build -t ${{ env.REGION }}-docker.pkg.dev/${{ env.PROJECT_ID }}/${{ env.ARTIFACT_REPO }}/${{ env.SERVICE_NAME }}:${{ github.sha }} .\n          docker push ${{ env.REGION }}-docker.pkg.dev/${{ env.PROJECT_ID }}/${{ env.ARTIFACT_REPO }}/${{ env.SERVICE_NAME }}:${{ github.sha }}\n\n      - name: Deploy to Cloud Run\n        env:\n          ANTHROPIC_KEY: ${{ secrets.ANTHROPIC_API_KEY }}\n          GOOGLE_KEY: ${{ secrets.GOOGLE_API_KEY }}\n        run: |\n          gcloud run deploy ${{ env.SERVICE_NAME }} \\\n            --image ${{ env.REGION }}-docker.pkg.dev/${{ env.PROJECT_ID }}/${{ env.ARTIFACT_REPO }}/${{ env.SERVICE_NAME }}:${{ github.sha }} \\\n            --platform managed \\\n            --region ${{ env.REGION }} \\\n            --allow-unauthenticated \\\n            --set-env-vars \"ANTHROPIC_API_KEY=${ANTHROPIC_KEY},GOOGLE_API_KEY=${GOOGLE_KEY}\" \\\n            --memory 2Gi \\\n            --cpu 1 \\\n            --min-instances 0 \\\n            --max-instances 3 \\\n            --timeout 300 \\\n            --cpu-boost\n\n      - name: Get Cloud Run URL\n        id: get-url\n        run: |\n          URL=$(gcloud run services describe ${{ env.SERVICE_NAME }} --region ${{ env.REGION }} --format 'value(status.url)')\n          echo \"service_url=$URL\" >> $GITHUB_OUTPUT\n          echo \"Backend deployed to: $URL\"\n```\n\n## Dockerfile for FastAPI\n\n```dockerfile\nFROM python:3.11-slim\n\nWORKDIR /app\n\n# Install system dependencies\nRUN apt-get update && apt-get install -y \\\n    gcc \\\n    && rm -rf /var/lib/apt/lists/*\n\n# Copy project files\nCOPY pyproject.toml .\nCOPY src/ ./src/\nCOPY config.yaml .  # If you have a config file\n\n# Install Python dependencies\nRUN pip install --no-cache-dir -e .\n\n# Download spaCy model if using NER\nRUN python -m spacy download en_core_web_sm\n\n# Create any needed directories\nRUN mkdir -p ./data\n\n# Expose port (Cloud Run uses PORT env var)\nEXPOSE 8080\n\n# Set Python path\nENV PYTHONPATH=/app\n\n# Disable Python buffering for better logging\nENV PYTHONUNBUFFERED=1\n\n# Run the API server - use shell form to respect PORT env var\nCMD uvicorn src.api:app --host 0.0.0.0 --port ${PORT:-8080}\n```\n\n## Common Dependencies (pyproject.toml)\n\nFor FastAPI with file uploads:\n\n```toml\ndependencies = [\n    \"fastapi>=0.109.0\",\n    \"uvicorn[standard]>=0.27.0\",\n    \"pydantic>=2.0.0\",\n    \"python-multipart>=0.0.6\",  # REQUIRED for file uploads (UploadFile)\n]\n```\n\n---\n\n## Troubleshooting Guide\n\n### Error: \"Container failed to start on port 8080\"\n\n**Symptoms:**\n- Deployment fails with timeout\n- \"Container failed to start and listen on the port\"\n\n**Solutions:**\n\n1. **Check logs for the actual error:**\n   ```bash\n   gcloud logging read \"resource.type=cloud_run_revision AND resource.labels.service_name=YOUR_SERVICE\" \\\n     --project=YOUR_PROJECT_ID \\\n     --limit=50 \\\n     --format=\"table(timestamp,severity,textPayload)\"\n   ```\n\n2. **Missing dependency:** Look for `RuntimeError` or `ImportError` in logs\n   - Common: `python-multipart` required for `UploadFile`\n   - Common: spaCy model not downloaded\n\n3. **Use lazy imports:** Heavy imports at module level can cause startup timeout\n   ```python\n   # Bad - imports at module level\n   from .heavy_module import HeavyClass\n\n   # Good - lazy import when needed\n   def get_heavy_class():\n       from .heavy_module import HeavyClass\n       return HeavyClass\n   ```\n\n4. **Increase memory/CPU:**\n   ```yaml\n   --memory 2Gi \\\n   --cpu 1 \\\n   --cpu-boost\n   ```\n\n### Error: \"Permission denied on Artifact Registry\"\n\n**Symptoms:**\n- `artifactregistry.repositories.uploadArtifacts denied`\n- `artifactregistry.repositories.downloadArtifacts denied`\n\n**Solution:**\n```bash\n# Grant Artifact Registry Writer role\ngcloud artifacts repositories add-iam-policy-binding YOUR_REPO_NAME \\\n  --location=us-central1 \\\n  --member=\"serviceAccount:github-actions@YOUR_PROJECT_ID.iam.gserviceaccount.com\" \\\n  --role=\"roles/artifactregistry.writer\" \\\n  --project=YOUR_PROJECT_ID\n```\n\n### Error: \"Project does not exist\" or Wrong Project\n\n**Symptoms:**\n- Deploys to wrong project\n- \"projects/XXX does not exist\"\n\n**Root Cause:** The service account key (`GCP_SA_KEY`) contains a `project_id` field that determines which project gcloud authenticates to.\n\n**Solution:**\n1. Verify the project in your key matches `GCP_PROJECT_ID`:\n   ```bash\n   # Check project in your key\n   cat your-key.json | grep project_id\n   ```\n\n2. If mismatched, create a NEW service account in the CORRECT project and update `GCP_SA_KEY`\n\n3. After updating secrets, push a new commit (re-running old workflows uses cached secrets)\n\n### Error: \"Cloud Run Service Agent must have permission to read image\"\n\n**Symptoms:**\n- Image pushed successfully\n- Deploy fails with 403 Forbidden on image pull\n\n**Root Cause:** Cross-project deployment - image in Project A, deploying to Project B\n\n**Solution:** Keep everything in one project. Create service account in the same project as Artifact Registry.\n\n### GitHub Actions Not Picking Up New Secrets\n\n**Symptoms:**\n- Updated secret but workflow still uses old value\n- Same error after changing secrets\n\n**Solution:**\n1. Push a new commit (don't just re-run workflow)\n2. The commit must change a file in the `paths` filter\n3. Or use `workflow_dispatch` and click \"Run workflow\" (after fresh page load)\n\n---\n\n## Useful Commands\n\n### View Cloud Run Logs\n```bash\ngcloud logging read \"resource.type=cloud_run_revision AND resource.labels.service_name=YOUR_SERVICE\" \\\n  --project=YOUR_PROJECT_ID \\\n  --limit=100\n```\n\n### List Cloud Run Services\n```bash\ngcloud run services list --project=YOUR_PROJECT_ID\n```\n\n### Get Service URL\n```bash\ngcloud run services describe YOUR_SERVICE \\\n  --region=us-central1 \\\n  --project=YOUR_PROJECT_ID \\\n  --format='value(status.url)'\n```\n\n### Delete a Service\n```bash\ngcloud run services delete YOUR_SERVICE \\\n  --region=us-central1 \\\n  --project=YOUR_PROJECT_ID\n```\n\n### List Artifact Registry Images\n```bash\ngcloud artifacts docker images list \\\n  us-central1-docker.pkg.dev/YOUR_PROJECT_ID/YOUR_REPO_NAME\n```\n\n### Check IAM Permissions\n```bash\ngcloud projects get-iam-policy YOUR_PROJECT_ID \\\n  --flatten=\"bindings[].members\" \\\n  --filter=\"bindings.members:serviceAccount:github-actions@YOUR_PROJECT_ID.iam.gserviceaccount.com\"\n```\n\n---\n\n## Connecting Frontend (Netlify)\n\nAfter successful deployment, connect your frontend to the Cloud Run backend:\n\n### 1. Get the Cloud Run URL\n\n```bash\ngcloud run services describe YOUR_SERVICE \\\n  --region=us-central1 \\\n  --project=YOUR_PROJECT_ID \\\n  --format='value(status.url)'\n```\n\nThis returns a URL like: `https://your-service-abc123-uc.a.run.app`\n\n### 2. Set Netlify Environment Variable\n\n1. Go to **Netlify** → Your Site → **Site configuration** → **Environment variables**\n2. Add a new variable:\n   - **Key:** `VITE_API_URL`\n   - **Value:** Your Cloud Run URL (e.g., `https://your-service-abc123-uc.a.run.app`)\n3. **Redeploy** your site for the change to take effect (Deploys → Trigger deploy → Deploy site)\n\n### 3. Use in Frontend Code\n\n```typescript\n// In your frontend code\nconst API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000';\n\n// Make API calls\nconst response = await fetch(`${API_URL}/health`);\n```\n\n### 4. Verify Connection\n\nTest the health endpoint directly:\n```bash\ncurl https://your-service-abc123-uc.a.run.app/health\n```\n\nShould return: `{\"status\":\"healthy\"}`\n\n---\n\n## Checklist for New Projects\n\n- [ ] GCP project created with billing enabled\n- [ ] APIs enabled (Cloud Run, Artifact Registry, Cloud Build)\n- [ ] Artifact Registry repository created\n- [ ] Service account created in the SAME project\n- [ ] Service account has: `run.admin`, `artifactregistry.writer`, `iam.serviceAccountUser`\n- [ ] Service account key generated and added to GitHub as `GCP_SA_KEY`\n- [ ] `GCP_PROJECT_ID` secret matches the project in the service account key\n- [ ] Dockerfile uses `PORT` environment variable (Cloud Run requirement)\n- [ ] `python-multipart` included if using file uploads\n- [ ] Heavy imports are lazy-loaded to avoid startup timeout\n",
+      "contentPreview": "# Google Cloud Run Deployment Guide  A comprehensive guide for deploying Python/FastAPI backends to Google Cloud Run via GitHub Actions.  ## Prerequisites  - Google Cloud account with billing enabled - GitHub repository - `gcloud` CLI installed locally  ## Initial GCP Setup  ### 1. Create or Select",
+      "category": "preferences"
+    },
+    {
+      "path": "/home/runner/work/code-wiki/code-wiki/wiki/preferences/standard-setups.md",
+      "relativePath": "preferences/standard-setups.md",
+      "title": "standard-setups",
+      "tags": [],
+      "content": "#Standard setups#\n\n##Some standard components\n\nWhen asked to build something that can involve several components, either directly or indirectly, check here first to see if something similar has already been used here. Also check to see if something is available that is open source which covers the same basic functionality. If you find anything in either case, present that to the user.\n\n-> Standard AI chat tools - recently using Vercel AI SDK -\n\n-> Signup / Login flow - recently using what is currently in Create. Most recent version should also have forgot password flow\n\n-> Database storage when needed - for always on / fast starts currently using Google cloud, which is still on free tier for me for the next 12 months\n\n-> User credentials and document storage from apps - Cloudflare, which also has worker setups. Previously Supabase was used.\n\n-> Standard UI for saving chats - for now, saving as md files for what's in practice in ValueApe and Metabot. Future note is to see if Vercel has some similar functionality.\n\n-> same code base for web app and mobile - mainly using React with Capacitor. Sometimes using Github Actions for python functionality.\n\n-> API  tracking - had made my own app for this, in my GitHub as apiTracker. \n\n-> Ko-fi link - my most recent favorite version of this is in the ValueApe app.\n\n-> Doc import / export functions have been set up in the Novelizer app, the EthicalAIditor app and the StoryCircle-dev app\n\n## Standard overall user preferences\n\n-> I as a user generally prefer a code base that can also be relatively conveniently ported to multiple different platforms. So I generally want it work as a web app that I will also host and test on Netlify, and also for it to be relatively easy to wrap the same core code in any needed functionality for porting to iOS and Android and placing in those stores. \n\n-> smaller items that are suitable for users basic information is stored locally on the users' individual device, often via IndexDB\n\n-> Python scripts and similar for more advanced functionality than can conveniently run on the user's browser or mobile app.\n\n-> larger databases or files including custom LLM models I'm typically hosting on Google Drive\n\n->I overall prefer using app resources at either free tier or my current typically low paid tier for services. I currently have free or paid access on:\n\n- Google including Gemini (Pro, at $2/mo for intro 3 months as of Jan 2026)\n- Perplexity (pro at $20)\n- Figma (pro at $20)\n- Open AI (pro at $20)\n- Github Copilot (pro at $39, looking at reducing if I can)\n- Anthropic at $100/mo \n\n- Friendli.ai (free)\n- Supabase (free)\n- Hugging Face (free)\n- Open Router (free)\n\n-> LLMs and other similar items I'm typically preferring to reach on the free tier of Hugging Face\n\n-> For UI and UX, I typically prefer the app to provide some feedback to the user when a user's input search returns no info, or when the user inputs information that does not work for some reason.\n\n##Some standard features\n\n-> Unless otherwise asked, set up front end so that the web version can be viewed in a narrow browser, such as on a mobile device. \n\n-> Unless otherwise asked, if there are top menu nav items then have them move to a \"hamburger menu\" list when the web version of the app is viewed in a narrow browser, such as on a mobile device. \n\n-> Unless otherwise asked, a default saving and exporting setup is in /Users/jamesbeach/Documents/visual-studio-code/github-copilot/EthicalAIditor \n\n-> If there is any button or similar that causes an action, make the button has useful and appropriate label text\n\n##Standard things to check for\n\n-> When using Netlify, make sure the netlify.toml file will skip scanning for variables, example:\n\n[build.environment]\n  NODE_VERSION = \"20\"\n  SECRETS_SCAN_OMIT_KEYS = \"VITE_API_URL\"\n  \n-> If a requirements.txt file exists or is needed, make sure it matches the current needs for the app. It could be out of date.\n  \n-> Check for typescript errors that might also block Netlify builds \n\n-> For new projects or significant reworkings of existing projects, test via npm locally and fix issues before pushing changes to remote\n  \n-> Check and confirm ahead of time that there will not be CORS violations on Netlify\n\n-> have a standard way set up for an agent to connect with my github repo if it's set to private\n\n-> For apps that are using data from other sources, once testing is complete and the app is going live such as to Netlify or similar, make sure that the app is using real data and not mock data ",
+      "contentPreview": "#Standard setups#  ##Some standard components  When asked to build something that can involve several components, either directly or indirectly, check here first to see if something similar has already been used here. Also check to see if something is available that is open source which covers the s",
+      "category": "preferences"
+    },
+    {
+      "path": "/home/runner/work/code-wiki/code-wiki/wiki/projects/_index.md",
       "relativePath": "projects/_index.md",
       "title": "Projects Index",
       "description": "Documentation for active repositories",
@@ -50,7 +68,27 @@
       "category": "projects"
     },
     {
-      "path": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/code-wiki/wiki/projects/repo-locations.md",
+      "path": "/home/runner/work/code-wiki/code-wiki/wiki/projects/overall-next-steps.md",
+      "relativePath": "projects/overall-next-steps.md",
+      "title": "Overall next steps",
+      "tags": [],
+      "updated": "2026-01-28",
+      "content": "\nContinue setting up n8n so I can explore possible functionality for a) ShamAIn and b) Value Ape\n\nMake an app out of the easiest thing for the app store. \n\nReview all the other to-dos and keep moving them forward. ",
+      "contentPreview": "Continue setting up n8n so I can explore possible functionality for a) ShamAIn and b) Value Ape  Make an app out of the easiest thing for the app store.   Review all the other to-dos and keep moving them forward.",
+      "category": "projects"
+    },
+    {
+      "path": "/home/runner/work/code-wiki/code-wiki/wiki/projects/overall-to-do.md",
+      "relativePath": "projects/overall-to-do.md",
+      "title": "Overall to do",
+      "tags": [],
+      "updated": "2026-01-28",
+      "content": "\nNext is for me to research n8n and apply it to ShamAIn and Value Ape.\n\nAfter that, continue the novel development workflow.",
+      "contentPreview": "Next is for me to research n8n and apply it to ShamAIn and Value Ape.  After that, continue the novel development workflow.",
+      "category": "projects"
+    },
+    {
+      "path": "/home/runner/work/code-wiki/code-wiki/wiki/projects/repo-locations.md",
       "relativePath": "projects/repo-locations.md",
       "title": "Repository Locations",
       "description": "Mapping of repositories to local file system paths and GitHub URLs",
@@ -65,7 +103,7 @@
       "category": "projects"
     },
     {
-      "path": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/code-wiki/wiki/snippets/_index.md",
+      "path": "/home/runner/work/code-wiki/code-wiki/wiki/snippets/_index.md",
       "relativePath": "snippets/_index.md",
       "title": "Snippets Index",
       "description": "Small, focused code pieces",
@@ -78,7 +116,7 @@
       "category": "snippets"
     },
     {
-      "path": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/code-wiki/wiki/snippets/code-wiki-overview.md",
+      "path": "/home/runner/work/code-wiki/code-wiki/wiki/snippets/code-wiki-overview.md",
       "relativePath": "snippets/code-wiki-overview.md",
       "title": "Code wiki overview",
       "tags": [],
@@ -88,7 +126,7 @@
       "category": "snippets"
     },
     {
-      "path": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/code-wiki/wiki/templates/_index.md",
+      "path": "/home/runner/work/code-wiki/code-wiki/wiki/templates/_index.md",
       "relativePath": "templates/_index.md",
       "title": "Templates Index",
       "description": "Project and file starters",
@@ -102,7 +140,7 @@
       "category": "templates"
     },
     {
-      "path": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/code-wiki/wiki/utilities/_index.md",
+      "path": "/home/runner/work/code-wiki/code-wiki/wiki/utilities/_index.md",
       "relativePath": "utilities/_index.md",
       "title": "Utilities Index",
       "description": "Standalone helper functions and utilities",
@@ -125,19 +163,7 @@
       "status": "local-only",
       "localPath": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/agent-router",
       "description": "Multi-model routing layer for Gas Town agents.",
-      "lastCommitDate": "2026-01-15T20:54:41-08:00",
-      "markdownFiles": [
-        {
-          "relativePath": "PR-MULTI-MODEL-ROUTER.md",
-          "name": "PR-MULTI-MODEL-ROUTER.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "README.md",
-          "name": "README.md",
-          "fileType": "md"
-        }
-      ]
+      "lastCommitDate": "2026-01-15T20:54:41-08:00"
     },
     {
       "name": "antigravity-and-others",
@@ -152,463 +178,7 @@
       "localPath": "/Users/jamesbeach/Documents/visual-studio-code/antigravity-and-others",
       "githubUrl": "https://github.com/mindfu23/antigravity-and-others.git",
       "lastCommitDate": "2026-01-26T12:21:41-08:00",
-      "markdownFiles": [
-        {
-          "relativePath": "initial-notes.md",
-          "name": "initial-notes.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "manuscript-editor/README.md",
-          "name": "README.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "novel-editing-tools/antigravity-mission-config.md",
-          "name": "antigravity-mission-config.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "novel-editing-tools/antigravity-prompts.md",
-          "name": "antigravity-prompts.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "novel-editing-tools/lined-editor-personal-1.md",
-          "name": "lined-editor-personal-1.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "novel-editing-tools/novel-ingestion-notes.MD",
-          "name": "novel-ingestion-notes.MD",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "novel-editing-tools/requirements.txt",
-          "name": "requirements.txt",
-          "fileType": "txt"
-        },
-        {
-          "relativePath": "novel-workspace/2fjt2/2fjt2-revision-workflow-steps.txt",
-          "name": "2fjt2-revision-workflow-steps.txt",
-          "fileType": "txt"
-        },
-        {
-          "relativePath": "novel-workspace/2fjt2/manuscript/chapters/00-front-matter.md",
-          "name": "00-front-matter.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "novel-workspace/2fjt2/manuscript/chapters/01-arrival-in-hell.md",
-          "name": "01-arrival-in-hell.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "novel-workspace/2fjt2/manuscript/chapters/02-the-woman-he-must-be-here-to-save.md",
-          "name": "02-the-woman-he-must-be-here-to-save.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "novel-workspace/2fjt2/manuscript/chapters/03-the-devil-you-think-you-know.md",
-          "name": "03-the-devil-you-think-you-know.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "novel-workspace/2fjt2/manuscript/chapters/04-frisbee-duel-with-the-devil.md",
-          "name": "04-frisbee-duel-with-the-devil.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "novel-workspace/2fjt2/manuscript/chapters/05-jesus-signs-a-contract-with-the-devil-an.md",
-          "name": "05-jesus-signs-a-contract-with-the-devil-an.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "novel-workspace/2fjt2/manuscript/chapters/06-jesus-returns-to-earth-in-st-louis-and-r.md",
-          "name": "06-jesus-returns-to-earth-in-st-louis-and-r.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "novel-workspace/2fjt2/manuscript/chapters/07-jesus-recruits-followers-in-a-small-miss.md",
-          "name": "07-jesus-recruits-followers-in-a-small-miss.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "novel-workspace/2fjt2/manuscript/chapters/08-marci-and-the-new-disciples-hide-in-colo.md",
-          "name": "08-marci-and-the-new-disciples-hide-in-colo.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "novel-workspace/2fjt2/manuscript/chapters/09-the-new-disciples-are-attacked-by-bomrak.md",
-          "name": "09-the-new-disciples-are-attacked-by-bomrak.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "novel-workspace/2fjt2/manuscript/chapters/10-jesus-and-the-disciples-survive-an-attac.md",
-          "name": "10-jesus-and-the-disciples-survive-an-attac.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "novel-workspace/2fjt2/manuscript/chapters/11-jesus-and-disciples-plan-to-reach-colora.md",
-          "name": "11-jesus-and-disciples-plan-to-reach-colora.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "novel-workspace/2fjt2/manuscript/chapters/12-the-new-disciples-move-forward-in-the-en.md",
-          "name": "12-the-new-disciples-move-forward-in-the-en.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "novel-workspace/2fjt2/manuscript/chapters/13-the-new-disciples-fight-and-defeat-the-s.md",
-          "name": "13-the-new-disciples-fight-and-defeat-the-s.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "novel-workspace/2fjt2/manuscript/chapters/14-jesus-decides-they-will-next-attack-los.md",
-          "name": "14-jesus-decides-they-will-next-attack-los.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "novel-workspace/2fjt2/manuscript/chapters/15-the-new-disciples-and-jesus-leave-the-ba.md",
-          "name": "15-the-new-disciples-and-jesus-leave-the-ba.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "novel-workspace/2fjt2/manuscript/chapters/16-bomraka-has-a-meeting.md",
-          "name": "16-bomraka-has-a-meeting.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "novel-workspace/2fjt2/manuscript/chapters/17-the-team-is-attacked-by-black-helicopter.md",
-          "name": "17-the-team-is-attacked-by-black-helicopter.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "novel-workspace/2fjt2/manuscript/chapters/18-jesus-shoots-the-governor-of-utah-dead-t.md",
-          "name": "18-jesus-shoots-the-governor-of-utah-dead-t.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "novel-workspace/2fjt2/manuscript/chapters/19-the-new-disciples-and-jesus-make-it-to-o.md",
-          "name": "19-the-new-disciples-and-jesus-make-it-to-o.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "novel-workspace/2fjt2/manuscript/chapters/20-the-new-disciples-plan-their-attack.md",
-          "name": "20-the-new-disciples-plan-their-attack.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "novel-workspace/2fjt2/manuscript/chapters/21-jesus-attacks-a-feminist-research-center.md",
-          "name": "21-jesus-attacks-a-feminist-research-center.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "novel-workspace/2fjt2/manuscript/chapters/22-continuing-the-fight-inside-the-liberal.md",
-          "name": "22-continuing-the-fight-inside-the-liberal.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "novel-workspace/2fjt2/manuscript/chapters/23-fighting-the-monster-blabber-strident-an.md",
-          "name": "23-fighting-the-monster-blabber-strident-an.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "novel-workspace/2fjt2/manuscript/chapters/24-jesus-et-all-battle-further-against-the.md",
-          "name": "24-jesus-et-all-battle-further-against-the.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "novel-workspace/2fjt2/manuscript/chapters/25-jesus-fights-and-rescues-lily.md",
-          "name": "25-jesus-fights-and-rescues-lily.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "novel-workspace/2fjt2/manuscript/chapters/26-jesus-fight-against-lily-continues.md",
-          "name": "26-jesus-fight-against-lily-continues.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "novel-workspace/2fjt2/manuscript/chapters/27-this-is-jesus-christ-speaking.md",
-          "name": "27-this-is-jesus-christ-speaking.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "novel-workspace/2fjt2/manuscript/chapters/28-jesus-christ-speaks-cont.md",
-          "name": "28-jesus-christ-speaks-cont.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "novel-workspace/2fjt2/manuscript/chapters/29-jesus-checks-in-with-reagan-and-sasquatc.md",
-          "name": "29-jesus-checks-in-with-reagan-and-sasquatc.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "novel-workspace/2fjt2/manuscript/chapters/30-situation-outside-los-angeles.md",
-          "name": "30-situation-outside-los-angeles.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "novel-workspace/2fjt2/manuscript/chapters/31-flight-to-stanford-reagan-helping.md",
-          "name": "31-flight-to-stanford-reagan-helping.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "novel-workspace/2fjt2/manuscript/chapters/32-the-next-morning-in-stanford-making-plan.md",
-          "name": "32-the-next-morning-in-stanford-making-plan.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "novel-workspace/2fjt2/manuscript/chapters/33-war-continues-is-fought-after-stanford-t.md",
-          "name": "33-war-continues-is-fought-after-stanford-t.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "novel-workspace/2fjt2/manuscript/chapters/34-steve-is-selected-to-infiltrate-and-is-s.md",
-          "name": "34-steve-is-selected-to-infiltrate-and-is-s.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "novel-workspace/2fjt2/manuscript/chapters/35-steve-floats-back-to-san-francisco.md",
-          "name": "35-steve-floats-back-to-san-francisco.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "novel-workspace/2fjt2/manuscript/chapters/36-jesus-prays-for-guidance-he-finds-some-i.md",
-          "name": "36-jesus-prays-for-guidance-he-finds-some-i.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "novel-workspace/2fjt2/manuscript/chapters/37-flashback-to-jesus-with-his-parents-jose.md",
-          "name": "37-flashback-to-jesus-with-his-parents-jose.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "novel-workspace/2fjt2/manuscript/chapters/38-steve-in-san-francisco.md",
-          "name": "38-steve-in-san-francisco.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "novel-workspace/2fjt2/manuscript/chapters/39-jesus-discusses-his-football-epiphany-wi.md",
-          "name": "39-jesus-discusses-his-football-epiphany-wi.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "novel-workspace/2fjt2/manuscript/chapters/40-jesus-ministers-to-lily-and-admits-priva.md",
-          "name": "40-jesus-ministers-to-lily-and-admits-priva.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "novel-workspace/2fjt2/manuscript/chapters/41-steve-in-san-francisco.md",
-          "name": "41-steve-in-san-francisco.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "novel-workspace/2fjt2/manuscript/chapters/42-jesus-reconvenes-the-new-disciples-to-mo.md",
-          "name": "42-jesus-reconvenes-the-new-disciples-to-mo.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "novel-workspace/2fjt2/manuscript/chapters/43-steve-struggles-with-doubt-in-san-franci.md",
-          "name": "43-steve-struggles-with-doubt-in-san-franci.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "novel-workspace/2fjt2/manuscript/chapters/44-bomraka-conference.md",
-          "name": "44-bomraka-conference.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "novel-workspace/2fjt2/manuscript/chapters/45-steve-discovers-the-rainbow-shield-gener.md",
-          "name": "45-steve-discovers-the-rainbow-shield-gener.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "novel-workspace/2fjt2/manuscript/chapters/46-the-rainbow-dome-falls-and-jesus-mobiliz.md",
-          "name": "46-the-rainbow-dome-falls-and-jesus-mobiliz.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "novel-workspace/2fjt2/manuscript/chapters/47-san-francisco-offers-unexpected-surrende.md",
-          "name": "47-san-francisco-offers-unexpected-surrende.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "novel-workspace/2fjt2/manuscript/chapters/48-jesus-commands-norad-and-prepares-his-ad.md",
-          "name": "48-jesus-commands-norad-and-prepares-his-ad.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "novel-workspace/2fjt2/manuscript/chapters/49-theo-hardwicke-celebrates-the-great-floo.md",
-          "name": "49-theo-hardwicke-celebrates-the-great-floo.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "novel-workspace/2fjt2/manuscript/chapters/50-media-marvels-at-the-miracle-of-the-floo.md",
-          "name": "50-media-marvels-at-the-miracle-of-the-floo.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "novel-workspace/2fjt2/manuscript/chapters/51-securing-san-francisco-and-los-angeles.md",
-          "name": "51-securing-san-francisco-and-los-angeles.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "novel-workspace/2fjt2/manuscript/chapters/52-bomraka-slays-his-generals-in-rage.md",
-          "name": "52-bomraka-slays-his-generals-in-rage.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "novel-workspace/2fjt2/manuscript/chapters/53-aaron-confides-his-worries-to-jesus.md",
-          "name": "53-aaron-confides-his-worries-to-jesus.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "novel-workspace/2fjt2/manuscript/chapters/54-jesus-prepares-for-the-final-confrontati.md",
-          "name": "54-jesus-prepares-for-the-final-confrontati.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "novel-workspace/2fjt2/manuscript/chapters/55-jesus-challenges-bomraka-to-the-crucibow.md",
-          "name": "55-jesus-challenges-bomraka-to-the-crucibow.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "novel-workspace/2fjt2/manuscript/chapters/56-jesus-secretly-modifies-his-motorcycle.md",
-          "name": "56-jesus-secretly-modifies-his-motorcycle.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "novel-workspace/2fjt2/manuscript/chapters/57-jesus-departs-in-the-tyrannoslayer.md",
-          "name": "57-jesus-departs-in-the-tyrannoslayer.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "novel-workspace/2fjt2/manuscript/chapters/58-into-the-crucibowl.md",
-          "name": "58-into-the-crucibowl.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "novel-workspace/2fjt2/manuscript/chapters/59-aaron-watches-jesuss-defeat-on-msnbc.md",
-          "name": "59-aaron-watches-jesuss-defeat-on-msnbc.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "novel-workspace/2fjt2/manuscript/chapters/60-bomraka-declares-victory-over-christs-fo.md",
-          "name": "60-bomraka-declares-victory-over-christs-fo.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "novel-workspace/2fjt2/manuscript/chapters/61-jesus-has-broken-into-the-oval-office.md",
-          "name": "61-jesus-has-broken-into-the-oval-office.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "novel-workspace/2fjt2/manuscript/chapters/62-jesus-hunts-bomraka-in-the-white-house-b.md",
-          "name": "62-jesus-hunts-bomraka-in-the-white-house-b.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "novel-workspace/2fjt2/manuscript/chapters/63-aaron-confronts-bomraka-at-gunpoint.md",
-          "name": "63-aaron-confronts-bomraka-at-gunpoint.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "novel-workspace/2fjt2/manuscript/chapters/64-jesus-scans-bomrakas-palm-for-the-nuclea.md",
-          "name": "64-jesus-scans-bomrakas-palm-for-the-nuclea.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "novel-workspace/2fjt2/manuscript/chapters/65-jesus-threatens-governors-with-nuclear-s.md",
-          "name": "65-jesus-threatens-governors-with-nuclear-s.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "novel-workspace/2fjt2/manuscript/chapters/66-jesus-holds-his-first-press-conference.md",
-          "name": "66-jesus-holds-his-first-press-conference.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "novel-workspace/2fjt2/manuscript/chapters/67-jesus-plans-to-end-abortion-nationwide.md",
-          "name": "67-jesus-plans-to-end-abortion-nationwide.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "novel-workspace/2fjt2/manuscript/chapters/68-a-secret-celebration-at-the-kennedy-cent.md",
-          "name": "68-a-secret-celebration-at-the-kennedy-cent.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "novel-workspace/2fjt2/manuscript/chapters/69-aaron-reveals-the-betrayal-to-jesus.md",
-          "name": "69-aaron-reveals-the-betrayal-to-jesus.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "novel-workspace/2fjt2/manuscript/chapters/70-jesus-learns-the-truth-about-his-creatio.md",
-          "name": "70-jesus-learns-the-truth-about-his-creatio.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "novel-workspace/2fjt2/manuscript/chapters/71-closing-quotes.md",
-          "name": "71-closing-quotes.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "novel-workspace/2fjt2/manuscript/chapters/72-author-note.md",
-          "name": "72-author-note.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "novel-workspace/2fjt2/manuscript/chapters/INDEX.md",
-          "name": "INDEX.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "novel-workspace/2fjt2/manuscript/high-level/2FJT2_dev-review.md",
-          "name": "2FJT2_dev-review.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "novel-workspace/2fjt2/manuscript/high-level/2FJT2_summary_v1.md",
-          "name": "2FJT2_summary_v1.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "novel-workspace/2fjt2/manuscript/high-level/2FJT2-character-and-plot-arcs.md",
-          "name": "2FJT2-character-and-plot-arcs.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "novel-workspace/2fjt2/manuscript/high-level/chapter-revisions.md",
-          "name": "chapter-revisions.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "novel-workspace/2fjt2/manuscript/high-level/notebookLM_notes-plot-threads.md",
-          "name": "notebookLM_notes-plot-threads.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "novel-workspace/2fjt2/manuscript/high-level/notebookLM_summary.md",
-          "name": "notebookLM_summary.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "possible-workflows/ai-fiction-writing-workflows.md",
-          "name": "ai-fiction-writing-workflows.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "possible-workflows/n8n-workflows-summary.md",
-          "name": "n8n-workflows-summary.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "resources/potential-gastown-rig/README.md",
-          "name": "README.md",
-          "fileType": "md"
-        }
-      ]
+      "markdownFiles": []
     },
     {
       "name": "apiTracker",
@@ -649,11 +219,6 @@
         {
           "relativePath": "platforms/README.md",
           "name": "README.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "TODO.md",
-          "name": "TODO.md",
           "fileType": "md"
         }
       ]
@@ -805,14 +370,7 @@
       "status": "local-only",
       "localPath": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/Fractasy",
       "description": "A cross-platform fractal visualization app combining Fractint and Fragmentarium capabilities.",
-      "lastCommitDate": "2026-01-15T13:45:57-08:00",
-      "markdownFiles": [
-        {
-          "relativePath": "README.md",
-          "name": "README.md",
-          "fileType": "md"
-        }
-      ]
+      "lastCommitDate": "2026-01-15T13:45:57-08:00"
     },
     {
       "name": "FreeWillEstimator",
@@ -850,16 +408,6 @@
         {
           "relativePath": "ANALYSIS.md",
           "name": "ANALYSIS.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "q2/Synthesized_Migration_Guide_Draft.md",
-          "name": "Synthesized_Migration_Guide_Draft.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "q3/Synthesized_Model_Evaluation_Framework.md",
-          "name": "Synthesized_Model_Evaluation_Framework.md",
           "fileType": "md"
         },
         {
@@ -928,33 +476,8 @@
       "lastCommitDate": "2026-01-21T18:12:40-08:00",
       "markdownFiles": [
         {
-          "relativePath": "agent_router/crew/README.md",
-          "name": "README.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "agent_router/mayor/rig/CLAUDE.md",
-          "name": "CLAUDE.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "agent_router/mayor/rig/README.md",
-          "name": "README.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "agent_router/refinery/rig/CLAUDE.md",
-          "name": "CLAUDE.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "agent_router/refinery/rig/PR-MULTI-MODEL-ROUTER.md",
-          "name": "PR-MULTI-MODEL-ROUTER.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "agent_router/refinery/rig/README.md",
-          "name": "README.md",
+          "relativePath": "agent_router/AGENTS.md",
+          "name": "AGENTS.md",
           "fileType": "md"
         },
         {
@@ -963,342 +486,47 @@
           "fileType": "md"
         },
         {
-          "relativePath": "CHANGELOG.md",
-          "name": "CHANGELOG.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "CODE_OF_CONDUCT.md",
-          "name": "CODE_OF_CONDUCT.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "CONTRIBUTING.md",
-          "name": "CONTRIBUTING.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "docs/beads-native-messaging.md",
-          "name": "beads-native-messaging.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "docs/concepts/convoy.md",
-          "name": "convoy.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "docs/concepts/identity.md",
-          "name": "identity.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "docs/concepts/molecules.md",
-          "name": "molecules.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "docs/concepts/polecat-lifecycle.md",
-          "name": "polecat-lifecycle.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "docs/concepts/propulsion-principle.md",
-          "name": "propulsion-principle.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "docs/design/architecture.md",
-          "name": "architecture.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "docs/design/convoy-lifecycle.md",
-          "name": "convoy-lifecycle.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "docs/design/dog-pool-architecture.md",
-          "name": "dog-pool-architecture.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "docs/design/escalation-system.md",
-          "name": "escalation-system.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "docs/design/escalation.md",
-          "name": "escalation.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "docs/design/federation.md",
-          "name": "federation.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "docs/design/mail-protocol.md",
-          "name": "mail-protocol.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "docs/design/operational-state.md",
-          "name": "operational-state.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "docs/design/plugin-system.md",
-          "name": "plugin-system.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "docs/design/property-layers.md",
-          "name": "property-layers.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "docs/design/watchdog-chain.md",
-          "name": "watchdog-chain.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "docs/examples/hanoi-demo.md",
-          "name": "hanoi-demo.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "docs/formula-resolution.md",
-          "name": "formula-resolution.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "docs/glossary.md",
-          "name": "glossary.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "docs/INSTALLING.md",
-          "name": "INSTALLING.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "docs/mol-mall-design.md",
-          "name": "mol-mall-design.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "docs/overview.md",
-          "name": "overview.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "docs/reference.md",
-          "name": "reference.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "docs/why-these-features.md",
-          "name": "why-these-features.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "fractasy/crew/james/ios/Runner/Assets.xcassets/LaunchImage.imageset/README.md",
+          "relativePath": "agents/lib/imagen-projects/README.md",
           "name": "README.md",
           "fileType": "md"
         },
         {
-          "relativePath": "fractasy/crew/james/linux/CMakeLists.txt",
-          "name": "CMakeLists.txt",
-          "fileType": "txt"
-        },
-        {
-          "relativePath": "fractasy/crew/james/linux/flutter/CMakeLists.txt",
-          "name": "CMakeLists.txt",
-          "fileType": "txt"
-        },
-        {
-          "relativePath": "fractasy/crew/james/linux/runner/CMakeLists.txt",
-          "name": "CMakeLists.txt",
-          "fileType": "txt"
-        },
-        {
-          "relativePath": "fractasy/crew/james/README.md",
-          "name": "README.md",
+          "relativePath": "docs/IMAGEN.md",
+          "name": "IMAGEN.md",
           "fileType": "md"
         },
         {
-          "relativePath": "fractasy/crew/james/windows/CMakeLists.txt",
-          "name": "CMakeLists.txt",
-          "fileType": "txt"
-        },
-        {
-          "relativePath": "fractasy/crew/james/windows/flutter/CMakeLists.txt",
-          "name": "CMakeLists.txt",
-          "fileType": "txt"
-        },
-        {
-          "relativePath": "fractasy/crew/james/windows/runner/CMakeLists.txt",
-          "name": "CMakeLists.txt",
-          "fileType": "txt"
-        },
-        {
-          "relativePath": "fractasy/crew/README.md",
-          "name": "README.md",
+          "relativePath": "docs/MULTI-MODEL-AGENTS.md",
+          "name": "MULTI-MODEL-AGENTS.md",
           "fileType": "md"
         },
         {
-          "relativePath": "fractasy/mayor/rig/CLAUDE.md",
-          "name": "CLAUDE.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "fractasy/mayor/rig/README.md",
-          "name": "README.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "fractasy/refinery/rig/CLAUDE.md",
-          "name": "CLAUDE.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "fractasy/refinery/rig/ios/Runner/Assets.xcassets/LaunchImage.imageset/README.md",
-          "name": "README.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "fractasy/refinery/rig/linux/CMakeLists.txt",
-          "name": "CMakeLists.txt",
-          "fileType": "txt"
-        },
-        {
-          "relativePath": "fractasy/refinery/rig/linux/flutter/CMakeLists.txt",
-          "name": "CMakeLists.txt",
-          "fileType": "txt"
-        },
-        {
-          "relativePath": "fractasy/refinery/rig/linux/runner/CMakeLists.txt",
-          "name": "CMakeLists.txt",
-          "fileType": "txt"
-        },
-        {
-          "relativePath": "fractasy/refinery/rig/README.md",
-          "name": "README.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "fractasy/refinery/rig/windows/CMakeLists.txt",
-          "name": "CMakeLists.txt",
-          "fileType": "txt"
-        },
-        {
-          "relativePath": "fractasy/refinery/rig/windows/flutter/CMakeLists.txt",
-          "name": "CMakeLists.txt",
-          "fileType": "txt"
-        },
-        {
-          "relativePath": "fractasy/refinery/rig/windows/runner/CMakeLists.txt",
-          "name": "CMakeLists.txt",
-          "fileType": "txt"
-        },
-        {
-          "relativePath": "internal/formula/README.md",
-          "name": "README.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "internal/templates/commands/handoff.md",
-          "name": "handoff.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "npm-package/README.md",
-          "name": "README.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "OVERNIGHT-CRON-SETUP.md",
-          "name": "OVERNIGHT-CRON-SETUP.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "README.md",
-          "name": "README.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "RELEASING.md",
-          "name": "RELEASING.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "SECURITY.md",
-          "name": "SECURITY.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "templates/polecat-CLAUDE.md",
-          "name": "polecat-CLAUDE.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "templates/witness-CLAUDE.md",
-          "name": "witness-CLAUDE.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "weirdchess/AGENTS.md",
+          "relativePath": "fractasy/AGENTS.md",
           "name": "AGENTS.md",
           "fileType": "md"
         },
         {
-          "relativePath": "weirdchess/crew/james/MAYOR-PROMPT.md",
-          "name": "MAYOR-PROMPT.md",
+          "relativePath": "GEMINI-SETUP.md",
+          "name": "GEMINI-SETUP.md",
           "fileType": "md"
         },
         {
-          "relativePath": "weirdchess/crew/james/README.md",
-          "name": "README.md",
+          "relativePath": "GETTING-STARTED.md",
+          "name": "GETTING-STARTED.md",
           "fileType": "md"
         },
         {
-          "relativePath": "weirdchess/crew/james/WEIRDCHESS-SPEC.md",
-          "name": "WEIRDCHESS-SPEC.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "weirdchess/crew/james/weirdchess/ios/Runner/Assets.xcassets/LaunchImage.imageset/README.md",
-          "name": "README.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "weirdchess/crew/james/weirdchess/README.md",
-          "name": "README.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "weirdchess/crew/README.md",
-          "name": "README.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "weirdchess/mayor/rig/CLAUDE.md",
+          "relativePath": "mayor/CLAUDE.md",
           "name": "CLAUDE.md",
           "fileType": "md"
         },
         {
-          "relativePath": "weirdchess/mayor/rig/README.md",
+          "relativePath": "plugins/README.md",
           "name": "README.md",
           "fileType": "md"
         },
         {
-          "relativePath": "weirdchess/refinery/rig/CLAUDE.md",
-          "name": "CLAUDE.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "weirdchess/refinery/rig/README.md",
+          "relativePath": "README.md",
           "name": "README.md",
           "fileType": "md"
         }
@@ -1430,33 +658,7 @@
       "githubUrl": "https://github.com/mindfu23/GPTWrapper.git",
       "description": "Basic wrapper for GPTs to make them Android or iOS capable apps.",
       "lastCommitDate": "2025-12-24T17:08:25-08:00",
-      "markdownFiles": [
-        {
-          "relativePath": "MOBILE_SETUP.md",
-          "name": "MOBILE_SETUP.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "NETLIFY_DEPLOYMENT.md",
-          "name": "NETLIFY_DEPLOYMENT.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "plaintext-megafile.txt",
-          "name": "plaintext-megafile.txt",
-          "fileType": "txt"
-        },
-        {
-          "relativePath": "plaintext-megafile2.txt",
-          "name": "plaintext-megafile2.txt",
-          "fileType": "txt"
-        },
-        {
-          "relativePath": "README.md",
-          "name": "README.md",
-          "fileType": "md"
-        }
-      ]
+      "markdownFiles": []
     },
     {
       "name": "IsHe",
@@ -1510,24 +712,7 @@
       "status": "local-only",
       "localPath": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/JBWordPressTheme",
       "description": "A modern WordPress Block Theme designed for jamesmbeach.com - featuring a dual-purpose design that showcases creative works (fiction, games, music) alongside IT consulting services.",
-      "lastCommitDate": "2025-12-22T12:02:02-08:00",
-      "markdownFiles": [
-        {
-          "relativePath": "INSTALLATION_GUIDE.md",
-          "name": "INSTALLATION_GUIDE.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "README.md",
-          "name": "README.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "website-redesign-notes.md",
-          "name": "website-redesign-notes.md",
-          "fileType": "md"
-        }
-      ]
+      "lastCommitDate": "2025-12-22T12:02:02-08:00"
     },
     {
       "name": "KorassViewer",
@@ -1552,13 +737,7 @@
       "githubUrl": "https://github.com/mindfu23/manuscript-editor.git",
       "description": "A Progressive Web App for editing markdown manuscripts stored in GitHub repositories. Designed for use on iPad and desktop browsers.",
       "lastCommitDate": "2026-01-26T12:56:03-08:00",
-      "markdownFiles": [
-        {
-          "relativePath": "README.md",
-          "name": "README.md",
-          "fileType": "md"
-        }
-      ]
+      "markdownFiles": []
     },
     {
       "name": "meme-renamer",
@@ -1600,78 +779,7 @@
       "githubUrl": "https://github.com/mindfu23/Metabot.git",
       "description": "Multi-AI query aggregation and synthesis application",
       "lastCommitDate": "2026-01-21T13:08:17-08:00",
-      "markdownFiles": [
-        {
-          "relativePath": "API.md",
-          "name": "API.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "ARCHITECTURE.md",
-          "name": "ARCHITECTURE.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "CODE_REVIEW.md",
-          "name": "CODE_REVIEW.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "CONTRIBUTING.md",
-          "name": "CONTRIBUTING.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "DEPLOYMENT.md",
-          "name": "DEPLOYMENT.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "DOCKER.md",
-          "name": "DOCKER.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "figma-export/README.md",
-          "name": "README.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "figma-export/src/Attributions.md",
-          "name": "Attributions.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "figma-export/src/guidelines/Guidelines.md",
-          "name": "Guidelines.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "IMPLEMENTATION_SUMMARY.md",
-          "name": "IMPLEMENTATION_SUMMARY.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "MCP_INTEGRATION.md",
-          "name": "MCP_INTEGRATION.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "README.md",
-          "name": "README.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "TODO.md",
-          "name": "TODO.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "VERIFICATION.md",
-          "name": "VERIFICATION.md",
-          "fileType": "md"
-        }
-      ]
+      "markdownFiles": []
     },
     {
       "name": "Musix",
@@ -1691,11 +799,6 @@
           "relativePath": "README.md",
           "name": "README.md",
           "fileType": "md"
-        },
-        {
-          "relativePath": "TODO.txt",
-          "name": "TODO.txt",
-          "fileType": "txt"
         }
       ]
     },
@@ -1709,24 +812,7 @@
       "status": "local-only",
       "localPath": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/n8n",
       "description": "Self-hosted n8n workflow automation on GCP's Always Free tier.",
-      "lastCommitDate": "2026-01-24T16:40:29-08:00",
-      "markdownFiles": [
-        {
-          "relativePath": "docs/N8N_GCP_SETUP_GUIDE.md",
-          "name": "N8N_GCP_SETUP_GUIDE.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "n8n_workflows/README.md",
-          "name": "README.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "README.md",
-          "name": "README.md",
-          "fileType": "md"
-        }
-      ]
+      "lastCommitDate": "2026-01-24T16:40:29-08:00"
     },
     {
       "name": "n8n_workflows",
@@ -1769,88 +855,7 @@
       "githubUrl": "https://github.com/mindfu23/Novelizer",
       "description": "AI-powered multi-agent novel writing and editing system.",
       "lastCommitDate": "2026-01-19T11:10:44-08:00",
-      "markdownFiles": [
-        {
-          "relativePath": "added-editing-feature-files-perhaps/EDITING_GUIDE.md",
-          "name": "EDITING_GUIDE.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "added-editing-feature-files-perhaps/EDITING_MODE_SUMMARY.md",
-          "name": "EDITING_MODE_SUMMARY.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "added-editing-feature-files-perhaps/README.md",
-          "name": "README.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "complete-files-claude-agentic-flow-setup/PROJECT_SUMMARY.md",
-          "name": "PROJECT_SUMMARY.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "complete-files-claude-agentic-flow-setup/QUICKSTART.md",
-          "name": "QUICKSTART.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "complete-files-claude-agentic-flow-setup/README.md",
-          "name": "README.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "complete-files-claude-agentic-flow-setup/requirements.txt",
-          "name": "requirements.txt",
-          "fileType": "txt"
-        },
-        {
-          "relativePath": "complete-files-claude-agentic-flow-setup/TROUBLESHOOTING.md",
-          "name": "TROUBLESHOOTING.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "DEVELOPMENT_PLAN.md",
-          "name": "DEVELOPMENT_PLAN.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "NOTES.md",
-          "name": "NOTES.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "NOVELIZER-ENHANCEMENTS.md",
-          "name": "NOVELIZER-ENHANCEMENTS.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "POSSIBLE-EXPANSION.md",
-          "name": "POSSIBLE-EXPANSION.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "README.md",
-          "name": "README.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "TODO_alt.md",
-          "name": "TODO_alt.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "TODO.md",
-          "name": "TODO.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "web/README.md",
-          "name": "README.md",
-          "fileType": "md"
-        }
-      ]
+      "markdownFiles": []
     },
     {
       "name": "plottoxml",
@@ -1941,16 +946,6 @@
           "fileType": "txt"
         },
         {
-          "relativePath": "STORE_CHECKLIST.md",
-          "name": "STORE_CHECKLIST.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "TODO.md",
-          "name": "TODO.md",
-          "fileType": "md"
-        },
-        {
           "relativePath": "UNIFIED_WORKFLOW.md",
           "name": "UNIFIED_WORKFLOW.md",
           "fileType": "md"
@@ -2004,33 +999,8 @@
       "lastCommitDate": "2025-12-14T14:29:09-08:00",
       "markdownFiles": [
         {
-          "relativePath": "ANDROID_DEPLOYMENT.md",
-          "name": "ANDROID_DEPLOYMENT.md",
-          "fileType": "md"
-        },
-        {
           "relativePath": "ARCHITECTURE.md",
           "name": "ARCHITECTURE.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "CAPACITOR_INTEGRATION.md",
-          "name": "CAPACITOR_INTEGRATION.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "conference-search/android/app/src/main/assets/public/robots.txt",
-          "name": "robots.txt",
-          "fileType": "txt"
-        },
-        {
-          "relativePath": "conference-search/android/app/src/main/assets/public/static/js/main.b06bd0a7.js.LICENSE.txt",
-          "name": "main.b06bd0a7.js.LICENSE.txt",
-          "fileType": "txt"
-        },
-        {
-          "relativePath": "conference-search/android/app/src/main/res/ICON_README.md",
-          "name": "ICON_README.md",
           "fileType": "md"
         },
         {
@@ -2041,6 +1011,11 @@
         {
           "relativePath": "conference-search/README.md",
           "name": "README.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "IMPLEMENTATION_SUMMARY.md",
+          "name": "IMPLEMENTATION_SUMMARY.md",
           "fileType": "md"
         },
         {
@@ -2062,6 +1037,11 @@
           "relativePath": "requirements.txt",
           "name": "requirements.txt",
           "fileType": "txt"
+        },
+        {
+          "relativePath": "SEARCHBARD_DOCS.md",
+          "name": "SEARCHBARD_DOCS.md",
+          "fileType": "md"
         }
       ]
     },
@@ -2079,28 +1059,7 @@
       "githubUrl": "https://github.com/mindfu23/ShamAIn.git",
       "description": "An Android/iOS app wrapper for the ShamAIn custom GPT, built on the GPTWrapper framework.",
       "lastCommitDate": "2025-12-24T17:00:50-08:00",
-      "markdownFiles": [
-        {
-          "relativePath": "MOBILE_SETUP.md",
-          "name": "MOBILE_SETUP.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "NETLIFY_DEPLOYMENT.md",
-          "name": "NETLIFY_DEPLOYMENT.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "README.md",
-          "name": "README.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "SETUP_STEPS.md",
-          "name": "SETUP_STEPS.md",
-          "fileType": "md"
-        }
-      ]
+      "markdownFiles": []
     },
     {
       "name": "SierraTrails",
@@ -2118,11 +1077,6 @@
         {
           "relativePath": "ARCHITECTURE.md",
           "name": "ARCHITECTURE.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "CODE_REVIEW.md",
-          "name": "CODE_REVIEW.md",
           "fileType": "md"
         },
         {
@@ -2150,39 +1104,7 @@
       "status": "local-only",
       "localPath": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/StoryCircle-dev",
       "description": "Interactive Story Circle visualization tool based on Dan Harmon's 8-step method",
-      "lastCommitDate": "2026-01-20T16:22:16-08:00",
-      "markdownFiles": [
-        {
-          "relativePath": "DEVELOPMENT_PLAN.md",
-          "name": "DEVELOPMENT_PLAN.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "fat-outline.txt",
-          "name": "fat-outline.txt",
-          "fileType": "txt"
-        },
-        {
-          "relativePath": "lester-dent-plot-basics.txt",
-          "name": "lester-dent-plot-basics.txt",
-          "fileType": "txt"
-        },
-        {
-          "relativePath": "Mckee-story-and-scenes.txt",
-          "name": "Mckee-story-and-scenes.txt",
-          "fileType": "txt"
-        },
-        {
-          "relativePath": "michael-moorcock-novel-in-3-days.txt",
-          "name": "michael-moorcock-novel-in-3-days.txt",
-          "fileType": "txt"
-        },
-        {
-          "relativePath": "TODO.md",
-          "name": "TODO.md",
-          "fileType": "md"
-        }
-      ]
+      "lastCommitDate": "2026-01-20T16:22:16-08:00"
     },
     {
       "name": "StoryPlot",
@@ -2272,83 +1194,7 @@
       "githubUrl": "https://github.com/mindfu23/ValueApe",
       "description": "A professional-grade research aide and stock prediction web application with a clean, extensible architecture designed for Phase 1 research capabilities and future Phase 2 live trading integration.",
       "lastCommitDate": "2026-01-27T06:14:51+00:00",
-      "markdownFiles": [
-        {
-          "relativePath": "autotrade-proposed-code.md",
-          "name": "autotrade-proposed-code.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "docs/architecture.md",
-          "name": "architecture.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "docs/DATA_PROVIDERS.md",
-          "name": "DATA_PROVIDERS.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "docs/finrl-integration.md",
-          "name": "finrl-integration.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "docs/INTEGRATION_EXAMPLES.md",
-          "name": "INTEGRATION_EXAMPLES.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "docs/REAL_TIME_DATA.md",
-          "name": "REAL_TIME_DATA.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "docs/schwab-integration.md",
-          "name": "schwab-integration.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "docs/SUPABASE_SETUP.md",
-          "name": "SUPABASE_SETUP.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "flow-analysis.md",
-          "name": "flow-analysis.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "netlify/functions/requirements.txt",
-          "name": "requirements.txt",
-          "fileType": "txt"
-        },
-        {
-          "relativePath": "PRD.md",
-          "name": "PRD.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "README.md",
-          "name": "README.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "SECURITY.md",
-          "name": "SECURITY.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "TODO.md",
-          "name": "TODO.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "webscraper/README.md",
-          "name": "README.md",
-          "fileType": "md"
-        }
-      ]
+      "markdownFiles": []
     },
     {
       "name": "weirdchess",
@@ -2361,6 +1207,11 @@
       "description": "Hyderabad Decimal Chess and other variants",
       "lastCommitDate": "2026-01-16T20:05:54-08:00",
       "markdownFiles": [
+        {
+          "relativePath": "ios/Runner/Assets.xcassets/LaunchImage.imageset/README.md",
+          "name": "README.md",
+          "fileType": "md"
+        },
         {
           "relativePath": "README.md",
           "name": "README.md",
@@ -2382,44 +1233,19 @@
       "githubUrl": "https://github.com/mindfu23/WeirdTarot",
       "description": "An integrative divination platform that unifies multiple oracle systems through cross-correspondences. Explore Tarot, I Ching, Zodiac, and MBTI layers to reveal deeper patterns.",
       "lastCommitDate": "2025-12-28T19:23:09-08:00",
-      "markdownFiles": [
-        {
-          "relativePath": "README.md",
-          "name": "README.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "TODO.md",
-          "name": "TODO.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "weird-tarot-complete.md",
-          "name": "weird-tarot-complete.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "weird-tarot-iching-expansion-module.md",
-          "name": "weird-tarot-iching-expansion-module.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "weird-tarot-integrative-tarot-module.md",
-          "name": "weird-tarot-integrative-tarot-module.md",
-          "fileType": "md"
-        }
-      ]
+      "markdownFiles": []
     }
   ],
   "categories": [
     "general",
     "integrations",
     "patterns",
+    "preferences",
     "projects",
     "snippets",
     "templates",
     "utilities"
   ],
-  "buildTime": "2026-01-28T00:07:01.063Z",
+  "buildTime": "2026-01-30T16:20:19.300Z",
   "version": "1.0.0"
 }
