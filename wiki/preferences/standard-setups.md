@@ -76,6 +76,11 @@ When asked to build something that can involve several components, either direct
   
 -> Check and confirm ahead of time that there will not be CORS violations on Netlify
 
+-> CORS Configuration Gotcha: When using FastAPI (or similar) with CORSMiddleware, wildcard subdomain patterns like `https://*.netlify.app` do NOT work when `allow_credentials=True`. You must specify the exact domain:
+  - BAD: `allow_origins=["https://*.netlify.app"]` with `allow_credentials=True`
+  - GOOD: `allow_origins=["https://my-app.netlify.app"]` with `allow_credentials=True`
+  - ALTERNATIVE: Use `allow_origins=["*"]` with `allow_credentials=False` (less secure, no cookies/auth headers)
+
 -> have a standard way set up for an agent to connect with my github repo if it's set to private
 
 -> For apps that are using data from other sources, once testing is complete and the app is going live such as to Netlify or similar, make sure that the app is using real data and not mock data 
