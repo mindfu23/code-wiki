@@ -1,5 +1,7 @@
 #Standard setups#
 
+Note: this current file itself is available to the local mcp via .claude and is also stored in code-wiki/wiki/preferences.
+
 ##Some standard components
 
 When asked to build something that can involve several components, either directly or indirectly, check here first to see if something similar has already been used here. Also check to see if something is available that is open source which covers the same basic functionality. If you find anything in either case, present that to the user.
@@ -16,7 +18,10 @@ When asked to build something that can involve several components, either direct
 
 -> same code base for web app and mobile - mainly using React with Capacitor. Sometimes using Github Actions for python functionality.
 
--> API  tracking - had made my own app for this, in my GitHub as apiTracker. 
+-> Health checks - if the application is going to be used on Netlify or a mobile app, ask first and then integrate the health check currently in 
+Health checks are currently monitored in the free tier of Uptime Robot. 
+
+-> API / AI usage tracking - had made my own app for this, in my GitHub as apiTracker. 
 
 -> Ko-fi link - my most recent favorite version of this is in the ValueApe app.
 
