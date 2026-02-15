@@ -75,6 +75,7 @@ brew install ripgrep
 ```
 wiki/
 ├── AGENTS.md          # Instructions for AI agents
+├── preferences/       # Development preferences (symlinked to ~/.claude/preferences)
 ├── patterns/          # Architectural patterns
 ├── utilities/         # Helper functions
 ├── integrations/      # API connectors
@@ -82,6 +83,36 @@ wiki/
 ├── snippets/          # Small code pieces
 └── projects/          # Project documentation
 ```
+
+## Preferences Symlink
+
+The `wiki/preferences/` folder is symlinked to `~/.claude/preferences/` so that:
+
+1. The MCP server can read preferences from the standard Claude location
+2. Editing preferences in this repo automatically updates what Claude sees
+3. Preferences stay version-controlled in git
+
+### Setup (one-time)
+
+```bash
+# Remove existing preferences folder and create symlink
+rm -rf ~/.claude/preferences
+ln -s /Users/jamesbeach/Documents/visual-studio-code/github-copilot/code-wiki/wiki/preferences ~/.claude/preferences
+```
+
+### How It Works
+
+- Edit files in `wiki/preferences/*.md` in this repo
+- Changes are immediately available to Claude Code (no sync needed)
+- The `~/.claude/CLAUDE.md` file instructs Claude to check these preferences
+- The MCP server's `get_preferences` tool reads from this location
+
+### Current Preference Files
+
+| File | Purpose |
+|------|---------|
+| `standard-setups.md` | Tech stack, UI guidelines, deployment checks |
+| `gcp-cloud-run-deployment.md` | Google Cloud Run deployment guide |
 
 ## Adding Wiki Content
 
