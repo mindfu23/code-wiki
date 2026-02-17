@@ -160,7 +160,14 @@ async function parseRepoLocations(wikiDir: string): Promise<RepoInfo[]> {
     console.log('No repo-locations.md found, skipping repo index');
   }
 
-  return repos;
+  // Filter out local-only repos (repos without a GitHub URL)
+  const githubRepos = repos.filter(repo => repo.githubUrl);
+  const skippedCount = repos.length - githubRepos.length;
+  if (skippedCount > 0) {
+    console.log(`Skipping ${skippedCount} local-only repos (not on GitHub)`);
+  }
+
+  return githubRepos;
 }
 
 async function scanRepoForDocFiles(repoPath: string): Promise<RepoDocFile[]> {

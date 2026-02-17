@@ -245,25 +245,6 @@ main {
   color: #92400e;
 }
 
-.result-type.local {
-  background: #f3f4f6;
-  color: #6b7280;
-}
-
-.result-item.local-only {
-  opacity: 0.75;
-  border-style: dashed;
-}
-
-.result-item.local-only .result-title {
-  color: var(--text-muted);
-}
-
-.result-item.local-only:hover {
-  border-color: var(--secondary);
-  cursor: help;
-}
-
 .result-preview {
   color: var(--text-muted);
   font-size: 0.9rem;
