@@ -61,6 +61,14 @@ header h1 {
 header h1 a {
   color: var(--text);
   text-decoration: none;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.header-logo {
+  height: 32px;
+  width: auto;
 }
 
 nav {
@@ -104,11 +112,6 @@ main {
 .search-container {
   text-align: center;
   margin-bottom: 0.5rem;
-}
-
-.search-container h2 {
-  margin-bottom: 1.5rem;
-  font-size: 2rem;
 }
 
 .search-box {
@@ -1297,11 +1300,11 @@ footer a:hover {
 }
 
 .quickview-table .netlify-link {
-  color: #00c7b7;
+  color: var(--primary);
 }
 
 .quickview-table .netlify-link:hover {
-  color: #00a89b;
+  color: var(--primary-dark);
 }
 
 .quickview-table .no-deploy,
