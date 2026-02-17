@@ -921,6 +921,7 @@ async function handleLogout() {
 
   currentUser = null;
   quickViewCache = null;  // Clear cache since visible repos may change
+  quickViewLoaded = false;
   await loadIndex();  // Reload index to get public-only data
   updateAuthUI();
   navigateTo('search');
@@ -1388,6 +1389,7 @@ function applyToolbarAction(action) {
 // Quick View - Deployment table with Netlify integration
 let netlifySites = null;
 let quickViewCache = null;  // Cache for Quick View HTML
+let quickViewLoaded = false;  // Flag to track if Quick View has been loaded
 
 async function loadQuickView(forceRefresh = false) {
   // Quick View table on search page only
@@ -1396,12 +1398,8 @@ async function loadQuickView(forceRefresh = false) {
   if (!wikiIndex) return;
   if (!searchBody) return;
 
-  // Use cached HTML if available and not forcing refresh
-  // Also check if content is already displayed to avoid unnecessary DOM updates
-  if (quickViewCache && !forceRefresh) {
-    if (searchBody.innerHTML !== quickViewCache) {
-      searchBody.innerHTML = quickViewCache;
-    }
+  // Skip if already loaded and not forcing refresh
+  if (quickViewLoaded && !forceRefresh) {
     return;
   }
 
@@ -1508,8 +1506,9 @@ async function loadQuickView(forceRefresh = false) {
 
   const finalHtml = rowsHtml || '<tr><td colspan="4" class="placeholder-text">No repositories found</td></tr>';
 
-  // Cache the generated HTML
+  // Cache the generated HTML and mark as loaded
   quickViewCache = finalHtml;
+  quickViewLoaded = true;
   searchBody.innerHTML = finalHtml;
 }
 
