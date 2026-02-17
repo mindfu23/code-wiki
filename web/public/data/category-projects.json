@@ -1,6 +1,6 @@
 [
   {
-    "path": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/code-wiki/wiki/projects/_index.md",
+    "path": "/home/runner/work/code-wiki/code-wiki/wiki/projects/_index.md",
     "relativePath": "projects/_index.md",
     "title": "Projects Index",
     "description": "Documentation for active repositories",
@@ -13,7 +13,7 @@
     "category": "projects"
   },
   {
-    "path": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/code-wiki/wiki/projects/overall-next-steps.md",
+    "path": "/home/runner/work/code-wiki/code-wiki/wiki/projects/overall-next-steps.md",
     "relativePath": "projects/overall-next-steps.md",
     "title": "Overall next steps",
     "tags": [],
@@ -23,7 +23,7 @@
     "category": "projects"
   },
   {
-    "path": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/code-wiki/wiki/projects/overall-to-do.md",
+    "path": "/home/runner/work/code-wiki/code-wiki/wiki/projects/overall-to-do.md",
     "relativePath": "projects/overall-to-do.md",
     "title": "Overall to do",
     "tags": [],
@@ -33,7 +33,7 @@
     "category": "projects"
   },
   {
-    "path": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/code-wiki/wiki/projects/repo-locations.md",
+    "path": "/home/runner/work/code-wiki/code-wiki/wiki/projects/repo-locations.md",
     "relativePath": "projects/repo-locations.md",
     "title": "Repository Locations",
     "description": "Mapping of repositories to local file system paths and GitHub URLs",
