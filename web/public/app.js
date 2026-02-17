@@ -1144,19 +1144,45 @@ function openEditor(docPath) {
   }
 
   // Find document in index
-  const doc = wikiIndex?.documents.find(d => d.relativePath === docPath);
+  let doc = wikiIndex?.documents.find(d => d.relativePath === docPath);
+
   if (!doc) {
     // Check if this might be a new document being created
     if (editingDocument?.relativePath === docPath && editingDocument?.isNew) {
       // Already set up for new document, just show editor
       return;
     }
-    alert('Document not found');
-    return;
+
+    // Try to restore from sessionStorage (for documents not yet in index)
+    try {
+      const savedDoc = sessionStorage.getItem('editingDocument');
+      if (savedDoc) {
+        const parsed = JSON.parse(savedDoc);
+        if (parsed.relativePath === docPath) {
+          doc = parsed;
+          console.log('Restored document from sessionStorage');
+        }
+      }
+    } catch (e) {
+      console.error('Failed to restore document from sessionStorage:', e);
+    }
+
+    if (!doc) {
+      alert('Document not found in index. It may not have synced yet. Please try again in a moment.');
+      navigateTo('browse');
+      return;
+    }
   }
 
   editingDocument = doc;
   isDirty = false;
+
+  // Save to sessionStorage for page refreshes
+  try {
+    sessionStorage.setItem('editingDocument', JSON.stringify(doc));
+  } catch (e) {
+    console.error('Failed to save document to sessionStorage:', e);
+  }
 
   // Populate editor fields
   document.getElementById('edit-title').value = doc.title || '';
@@ -1239,8 +1265,13 @@ function updatePreview() {
 
 // Save document
 async function saveDocument() {
-  if (!currentUser || !editingDocument) {
-    alert('Please log in to save changes');
+  if (!currentUser) {
+    alert('Session expired. Please log in again.');
+    navigateTo('login');
+    return;
+  }
+  if (!editingDocument) {
+    alert('No document to save. Please try opening the document again.');
     return;
   }
 
@@ -1304,8 +1335,17 @@ async function saveDocument() {
         wikiIndex.documents.push(editingDocument);
       }
 
+      // Update sessionStorage with the saved document
+      try {
+        sessionStorage.setItem('editingDocument', JSON.stringify(editingDocument));
+      } catch (e) {
+        console.error('Failed to update sessionStorage:', e);
+      }
+
       // Redirect back to document view after short delay
       setTimeout(() => {
+        // Clear sessionStorage when leaving editor
+        sessionStorage.removeItem('editingDocument');
         navigateTo('document', { doc: editingDocument.relativePath });
       }, 1500);
     } else {
