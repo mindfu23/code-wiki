@@ -161,6 +161,16 @@
       "content": "X - Still need to resolve the index for the main page rebuilding every time someone goes to \"Browse\" and then returns to the main page.\n\nActually appears complete now.",
       "contentPreview": "X - Still need to resolve the index for the main page rebuilding every time someone goes to \"Browse\" and then returns to the main page.  Actually appears complete now.",
       "category": "projects"
+    },
+    {
+      "path": "wiki/projects/n8n-todo.md",
+      "relativePath": "projects/n8n-todo.md",
+      "title": "n8n To Do",
+      "tags": [],
+      "updated": "2026-02-17",
+      "content": "create or assign a domain name to the current IP address, as currently stored in Google Compute:\n\nhttp://35.188.141.23:5678",
+      "contentPreview": "create or assign a domain name to the current IP address, as currently stored in Google Compute:  http://35.188.141.23:5678",
+      "category": "projects"
     }
   ],
   "repos": [
@@ -1090,6 +1100,6 @@
     "templates",
     "utilities"
   ],
-  "buildTime": "2026-02-17T20:23:33.104Z",
+  "buildTime": "2026-02-17T20:33:42.855Z",
   "version": "1.0.0"
 }
