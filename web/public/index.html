@@ -11,6 +11,7 @@
   <header>
     <div class="header-content">
       <h1><a href="/"><img src="/logo.png" alt="Docsy" class="header-logo">Docsy McDocsface</a></h1>
+      <p class="header-subtitle">GitHub repos reader</p>
       <nav>
         <a href="/" class="nav-link active" data-page="search">Search</a>
         <a href="/browse" class="nav-link" data-page="browse">Browse</a>
@@ -55,7 +56,10 @@
 
       <!-- Quick View Table on Search Page -->
       <div class="quickview-section">
-        <h3>Quick View</h3>
+        <div class="quickview-header">
+          <h3>Quick View</h3>
+          <button id="refresh-quickview-btn" class="btn btn-sm btn-secondary" title="Refresh index">Refresh</button>
+        </div>
         <div class="quickview-table-container">
           <table class="quickview-table" id="search-quickview-table">
             <thead>

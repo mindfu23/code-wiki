@@ -147,6 +147,12 @@ function setupEventListeners() {
     includeRepoFilesToggle.addEventListener('change', performSearch);
   }
 
+  // Quick View refresh button
+  const refreshQuickViewBtn = document.getElementById('refresh-quickview-btn');
+  if (refreshQuickViewBtn) {
+    refreshQuickViewBtn.addEventListener('click', refreshQuickView);
+  }
+
   // Repo filters
   repoStatusFilter.addEventListener('change', renderRepos);
   repoSearch.addEventListener('input', renderRepos);
@@ -914,6 +920,8 @@ async function handleLogout() {
   }
 
   currentUser = null;
+  quickViewCache = null;  // Clear cache since visible repos may change
+  await loadIndex();  // Reload index to get public-only data
   updateAuthUI();
   navigateTo('search');
 }
@@ -1379,17 +1387,29 @@ function applyToolbarAction(action) {
 
 // Quick View - Deployment table with Netlify integration
 let netlifySites = null;
+let quickViewCache = null;  // Cache for Quick View HTML
 
-async function loadQuickView() {
+async function loadQuickView(forceRefresh = false) {
   // Quick View table on search page only
   const searchBody = document.getElementById('search-quickview-tbody');
 
   if (!wikiIndex) return;
   if (!searchBody) return;
 
+  // Use cached HTML if available and not forcing refresh
+  if (quickViewCache && !forceRefresh) {
+    searchBody.innerHTML = quickViewCache;
+    return;
+  }
+
   // Show loading state
   const loadingHtml = '<tr><td colspan="4" class="loading">Loading deployment data...</td></tr>';
   searchBody.innerHTML = loadingHtml;
+
+  // Clear Netlify sites cache on force refresh
+  if (forceRefresh) {
+    netlifySites = null;
+  }
 
   // Fetch Netlify sites if not already loaded
   if (!netlifySites) {
@@ -1484,7 +1504,28 @@ async function loadQuickView() {
   const rowsHtml = rows.join('');
 
   const finalHtml = rowsHtml || '<tr><td colspan="4" class="placeholder-text">No repositories found</td></tr>';
+
+  // Cache the generated HTML
+  quickViewCache = finalHtml;
   searchBody.innerHTML = finalHtml;
+}
+
+// Refresh Quick View (clear cache and reload)
+async function refreshQuickView() {
+  const btn = document.getElementById('refresh-quickview-btn');
+  if (btn) {
+    btn.disabled = true;
+    btn.textContent = 'Refreshing...';
+  }
+
+  // Also reload the index to get latest data
+  await loadIndex();
+  await loadQuickView(true);
+
+  if (btn) {
+    btn.disabled = false;
+    btn.textContent = 'Refresh';
+  }
 }
 
 // ============================================
