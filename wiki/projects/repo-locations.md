@@ -107,6 +107,7 @@ Use `sync_repos` to clone them, or clone manually.
 - **Last Commit:** 2026-01-26T12:21:41-08:00
 
 ### apiTracker
+- **Notes:** also implemented as a browser extension, and further developed there.
 
 - **Status:** synced
 - **Local Path:** `/Users/jamesbeach/Documents/visual-studio-code/github-copilot/apiTracker`
