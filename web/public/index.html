@@ -58,8 +58,8 @@
 
       <!-- Quick View Table on Search Page -->
       <div class="quickview-section">
-        <h3>Deployment Overview</h3>
-        <p class="quickview-description">Repositories and their Netlify deployment status.</p>
+        <h3>Quick View</h3>
+        <p class="quickview-description"><a href="/browse" class="browse-link">Browse Repos</a></p>
         <div class="quickview-table-container">
           <table class="quickview-table" id="search-quickview-table">
             <thead>
@@ -95,7 +95,6 @@
           <button class="repo-tab active" data-tab="files">Files View</button>
           <button class="repo-tab" data-tab="list">List View</button>
           <button class="repo-tab" data-tab="card">Card View</button>
-          <button class="repo-tab" data-tab="quickview">Quick View</button>
         </div>
 
         <!-- Files View (Repos with .md files) -->
@@ -128,26 +127,6 @@
           </div>
         </div>
 
-        <!-- Quick View (Deployment Table) -->
-        <div id="repo-quickview-view" class="repo-view">
-          <p class="quickview-description">Quick overview of repositories with their deployment status on Netlify.</p>
-          <div class="quickview-table-container">
-            <table class="quickview-table" id="quickview-table">
-              <thead>
-                <tr>
-                  <th>Repository</th>
-                  <th>Staging</th>
-                  <th>Notes</th>
-                </tr>
-              </thead>
-              <tbody id="quickview-tbody">
-                <tr>
-                  <td colspan="3" class="loading">Loading deployment data...</td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-        </div>
       </div>
     </section>
 
