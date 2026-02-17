@@ -189,6 +189,9 @@ function showPage(page, params = {}) {
 
   // Page-specific actions
   switch (page) {
+    case 'search':
+      loadQuickView();
+      break;
     case 'browse':
       renderCategories();
       renderRepos();
@@ -1353,11 +1356,17 @@ function applyToolbarAction(action) {
 let netlifySites = null;
 
 async function loadQuickView() {
-  const tbody = document.getElementById('quickview-tbody');
-  if (!tbody || !wikiIndex) return;
+  // Support both browse page and search page tables
+  const browseBody = document.getElementById('quickview-tbody');
+  const searchBody = document.getElementById('search-quickview-tbody');
+
+  if (!wikiIndex) return;
+  if (!browseBody && !searchBody) return;
 
   // Show loading state
-  tbody.innerHTML = '<tr><td colspan="3" class="loading">Loading deployment data...</td></tr>';
+  const loadingHtml = '<tr><td colspan="3" class="loading">Loading deployment data...</td></tr>';
+  if (browseBody) browseBody.innerHTML = loadingHtml;
+  if (searchBody) searchBody.innerHTML = loadingHtml;
 
   // Fetch Netlify sites if not already loaded
   if (!netlifySites) {
@@ -1415,7 +1424,9 @@ async function loadQuickView() {
     `;
   }).join('');
 
-  tbody.innerHTML = rows || '<tr><td colspan="3" class="placeholder-text">No repositories found</td></tr>';
+  const finalHtml = rows || '<tr><td colspan="3" class="placeholder-text">No repositories found</td></tr>';
+  if (browseBody) browseBody.innerHTML = finalHtml;
+  if (searchBody) searchBody.innerHTML = finalHtml;
 }
 
 // Initialize on load

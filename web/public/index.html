@@ -55,6 +55,28 @@
       <div id="search-results" class="results-container">
         <p class="placeholder-text">Enter a search term to find wiki documents and code</p>
       </div>
+
+      <!-- Quick View Table on Search Page -->
+      <div class="quickview-section">
+        <h3>Deployment Overview</h3>
+        <p class="quickview-description">Repositories and their Netlify deployment status.</p>
+        <div class="quickview-table-container">
+          <table class="quickview-table" id="search-quickview-table">
+            <thead>
+              <tr>
+                <th>Repository</th>
+                <th>Netlify</th>
+                <th>Notes</th>
+              </tr>
+            </thead>
+            <tbody id="search-quickview-tbody">
+              <tr>
+                <td colspan="3" class="loading">Loading deployment data...</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
     </section>
 
     <!-- Browse Page -->
@@ -107,7 +129,7 @@
         </div>
 
         <!-- Quick View (Deployment Table) -->
-        <div id="repo-quickview" class="repo-view">
+        <div id="repo-quickview-view" class="repo-view">
           <p class="quickview-description">Quick overview of repositories with their deployment status on Netlify.</p>
           <div class="quickview-table-container">
             <table class="quickview-table" id="quickview-table">
