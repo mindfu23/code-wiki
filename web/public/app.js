@@ -197,7 +197,6 @@ function showPage(page, params = {}) {
       renderRepos();
       loadRepoFilesView();
       loadRepoListView();
-      loadQuickView();
       if (params.category) {
         selectCategory(params.category);
       }
@@ -1356,17 +1355,15 @@ function applyToolbarAction(action) {
 let netlifySites = null;
 
 async function loadQuickView() {
-  // Support both browse page and search page tables
-  const browseBody = document.getElementById('quickview-tbody');
+  // Quick View table on search page only
   const searchBody = document.getElementById('search-quickview-tbody');
 
   if (!wikiIndex) return;
-  if (!browseBody && !searchBody) return;
+  if (!searchBody) return;
 
   // Show loading state
   const loadingHtml = '<tr><td colspan="3" class="loading">Loading deployment data...</td></tr>';
-  if (browseBody) browseBody.innerHTML = loadingHtml;
-  if (searchBody) searchBody.innerHTML = loadingHtml;
+  searchBody.innerHTML = loadingHtml;
 
   // Fetch Netlify sites if not already loaded
   if (!netlifySites) {
@@ -1459,8 +1456,7 @@ async function loadQuickView() {
   const rowsHtml = rows.join('');
 
   const finalHtml = rowsHtml || '<tr><td colspan="3" class="placeholder-text">No repositories found</td></tr>';
-  if (browseBody) browseBody.innerHTML = finalHtml;
-  if (searchBody) searchBody.innerHTML = finalHtml;
+  searchBody.innerHTML = finalHtml;
 }
 
 // ============================================
@@ -1473,11 +1469,10 @@ function renderNotesCell(repoName, noteText) {
   const escapedNote = escapeHtml(noteText);
 
   if (currentUser) {
-    // Logged in - show editable notes
+    // Logged in - show editable notes (clickable, styled with color)
     return `
-      <div class="notes-content" data-repo="${escapedRepoName}">
-        <span class="notes-text">${noteText ? escapedNote : '<span class="no-notes">-</span>'}</span>
-        <button class="notes-edit-btn" onclick="startEditNote('${escapedRepoName}', '${escapedNote.replace(/'/g, "\\'")}')">✏️</button>
+      <div class="notes-content" data-repo="${escapedRepoName}" onclick="startEditNote('${escapedRepoName}', '${escapedNote.replace(/'/g, "\\'")}')">
+        <span class="notes-text">${noteText ? escapedNote : '<span class="no-notes">click to add</span>'}</span>
       </div>
     `;
   } else {
@@ -1521,9 +1516,9 @@ function cancelEditNote(repoName, originalNote) {
 
   notesContents.forEach(container => {
     container.innerHTML = `
-      <span class="notes-text">${originalNote ? escapeHtml(originalNote) : '<span class="no-notes">-</span>'}</span>
-      <button class="notes-edit-btn" onclick="startEditNote('${escapeHtml(repoName)}', '${escapeHtml(originalNote).replace(/'/g, "\\'")}')">✏️</button>
+      <span class="notes-text">${originalNote ? escapeHtml(originalNote) : '<span class="no-notes">click to add</span>'}</span>
     `;
+    container.onclick = () => startEditNote(repoName, originalNote);
   });
 }
 
@@ -1568,9 +1563,9 @@ async function saveNote(repoName) {
       // Update UI with new value
       notesContents.forEach(container => {
         container.innerHTML = `
-          <span class="notes-text">${newNote ? escapeHtml(newNote) : '<span class="no-notes">-</span>'}</span>
-          <button class="notes-edit-btn" onclick="startEditNote('${escapeHtml(repoName)}', '${escapeHtml(newNote).replace(/'/g, "\\'")}')">✏️</button>
+          <span class="notes-text">${newNote ? escapeHtml(newNote) : '<span class="no-notes">click to add</span>'}</span>
         `;
+        container.onclick = () => startEditNote(repoName, newNote);
       });
     } else {
       // Show error and restore edit state

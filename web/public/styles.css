@@ -1269,6 +1269,7 @@ footer a:hover {
   padding: 0.4rem 0.75rem;
   border-bottom: 1px solid var(--border);
   vertical-align: middle;
+  text-align: left;
 }
 
 .quickview-table tbody tr:last-child td {
@@ -1307,37 +1308,33 @@ footer a:hover {
   max-width: 400px;
   color: var(--text-muted);
   position: relative;
+  border-left: 1px solid var(--border);
 }
 
 /* Editable notes */
 .notes-content {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-}
-
-.notes-text {
-  flex: 1;
-}
-
-.notes-edit-btn {
-  background: transparent;
-  border: none;
-  color: var(--text-muted);
   cursor: pointer;
-  padding: 0.2rem;
-  font-size: 0.85rem;
-  opacity: 0.5;
-  transition: opacity 0.2s;
-  flex-shrink: 0;
+  padding: 0.2rem 0.4rem;
+  margin: -0.2rem -0.4rem;
+  border-radius: 4px;
+  transition: background-color 0.2s;
 }
 
-.notes-content:hover .notes-edit-btn {
-  opacity: 1;
-}
-
-.notes-edit-btn:hover {
+.notes-content .notes-text {
   color: var(--primary);
+}
+
+.notes-content .notes-text .no-notes {
+  color: var(--primary);
+  opacity: 0.6;
+}
+
+.notes-content:hover {
+  background-color: rgba(37, 99, 235, 0.08);
+}
+
+.notes-content:hover .notes-text {
+  color: var(--primary-dark);
 }
 
 /* Edit mode */
@@ -1418,13 +1415,15 @@ footer a:hover {
   color: var(--text);
 }
 
-/* Quick View on Browse page - also center */
-#repo-quickview-view {
-  text-align: center;
+/* Browse link in Quick View section */
+.quickview-description .browse-link {
+  color: var(--primary);
+  text-decoration: none;
+  font-weight: 500;
 }
 
-#repo-quickview-view .quickview-description {
-  text-align: center;
+.quickview-description .browse-link:hover {
+  text-decoration: underline;
 }
 
 /* Separator row in quickview table */
