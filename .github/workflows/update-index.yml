@@ -38,7 +38,10 @@ jobs:
         working-directory: web
         env:
           USE_GITHUB_API: 'true'
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          # Use PAT for auto-discovery (can list all user repos)
+          # Falls back to GITHUB_TOKEN which only works with repo-locations.md
+          GITHUB_TOKEN: ${{ secrets.REPO_ACCESS_TOKEN || secrets.GITHUB_TOKEN }}
+          GITHUB_USERNAME: ${{ github.repository_owner }}
           WIKI_DIR: ${{ github.workspace }}/wiki
         run: npm run build:index
 
