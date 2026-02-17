@@ -397,6 +397,7 @@ Use `sync_repos` to clone them, or clone manually.
 - **Status:** local-only
 - **Local Path:** `/Users/jamesbeach/Documents/visual-studio-code/github-copilot/ValueApe`
 - **GitHub:** https://github.com/mindfu23/ValueApe
+- **Visibility:** private
 - **Description:** A professional-grade research aide and stock prediction web application with a clean, extensible architecture designed for Phase 1 research capabilities and future Phase 2 live trading integration.
 - **Languages:** markdown, json, sql, html, python, typescript, css, javascript
 - **Last Commit:** 2026-01-27T06:14:51+00:00
