@@ -151,6 +151,16 @@
       "content": "\n# Utilities\n\nThis category contains standalone helper functions and utilities.\n\n## What belongs here\n\n- Date/time helpers\n- String manipulation utilities\n- Array/object utilities\n- Validation functions\n- Formatting utilities\n- Type guards and type utilities\n- Math/calculation helpers\n\n## Adding new utilities\n\nCreate a new `.md` file in this directory following the document template in AGENTS.md.\n",
       "contentPreview": "# Utilities  This category contains standalone helper functions and utilities.  ## What belongs here  - Date/time helpers - String manipulation utilities - Array/object utilities - Validation functions - Formatting utilities - Type guards and type utilities - Math/calculation helpers  ## Adding new",
       "category": "utilities"
+    },
+    {
+      "path": "wiki/projects/docsy-todo-md.md",
+      "relativePath": "projects/docsy-todo-md.md",
+      "title": "Docsy to do",
+      "tags": [],
+      "updated": "2026-02-17",
+      "content": "Still need to resolve the index for the main page rebuilding every time someone goes to \"Browse\" and then returns to the main page.",
+      "contentPreview": "Still need to resolve the index for the main page rebuilding every time someone goes to \"Browse\" and then returns to the main page.",
+      "category": "projects"
     }
   ],
   "repos": [
@@ -1221,6 +1231,6 @@
     "templates",
     "utilities"
   ],
-  "buildTime": "2026-02-17T18:01:36.418Z",
+  "buildTime": "2026-02-17T20:22:33.223Z",
   "version": "1.0.0"
 }
