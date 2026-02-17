@@ -1413,8 +1413,25 @@ async function loadQuickView() {
     return a.repo.name.localeCompare(b.repo.name); // Alphabetical within group
   });
 
-  // Render the table
-  const rows = repoData.map(({ repo, githubUrl, netlifySite }) => {
+  // Find the index where non-deployed repos start
+  const firstNonDeployedIndex = repoData.findIndex(({ netlifySite }) => !netlifySite);
+  const hasDeployed = firstNonDeployedIndex !== 0;
+  const hasNonDeployed = firstNonDeployedIndex !== -1;
+
+  // Render the table with separator row
+  const rows = [];
+  repoData.forEach(({ repo, githubUrl, netlifySite }, index) => {
+    // Add separator row before first non-deployed repo (if there are deployed repos before it)
+    if (hasDeployed && hasNonDeployed && index === firstNonDeployedIndex) {
+      rows.push(`
+        <tr class="separator-row">
+          <td></td>
+          <td>Unstaged</td>
+          <td></td>
+        </tr>
+      `);
+    }
+
     // GitHub link
     const githubLink = githubUrl
       ? `<a href="${escapeHtml(githubUrl)}" target="_blank" title="View on GitHub">${escapeHtml(repo.name)}</a>`
@@ -1427,22 +1444,150 @@ async function loadQuickView() {
       stagingCell = `<a href="${escapeHtml(netlifySite.url)}" target="_blank" class="netlify-link" title="View live site">${escapeHtml(displayUrl)}</a>`;
     }
 
-    // Notes
-    const notes = repo.notes ? escapeHtml(repo.notes) : '<span class="no-notes">-</span>';
+    // Notes - with edit button if logged in
+    const notesContent = renderNotesCell(repo.name, repo.notes || '');
 
-    return `
+    rows.push(`
       <tr>
         <td>${githubLink}</td>
         <td>${stagingCell}</td>
-        <td class="notes-cell">${notes}</td>
+        <td class="notes-cell">${notesContent}</td>
       </tr>
-    `;
-  }).join('');
+    `);
+  });
 
-  const finalHtml = rows || '<tr><td colspan="3" class="placeholder-text">No repositories found</td></tr>';
+  const rowsHtml = rows.join('');
+
+  const finalHtml = rowsHtml || '<tr><td colspan="3" class="placeholder-text">No repositories found</td></tr>';
   if (browseBody) browseBody.innerHTML = finalHtml;
   if (searchBody) searchBody.innerHTML = finalHtml;
 }
+
+// ============================================
+// EDITABLE NOTES MODULE
+// ============================================
+
+// Render notes cell with edit capability
+function renderNotesCell(repoName, noteText) {
+  const escapedRepoName = escapeHtml(repoName);
+  const escapedNote = escapeHtml(noteText);
+
+  if (currentUser) {
+    // Logged in - show editable notes
+    return `
+      <div class="notes-content" data-repo="${escapedRepoName}">
+        <span class="notes-text">${noteText ? escapedNote : '<span class="no-notes">-</span>'}</span>
+        <button class="notes-edit-btn" onclick="startEditNote('${escapedRepoName}', '${escapedNote.replace(/'/g, "\\'")}')">✏️</button>
+      </div>
+    `;
+  } else {
+    // Not logged in - read-only notes
+    return noteText ? escapedNote : '<span class="no-notes">-</span>';
+  }
+}
+
+// Start editing a note
+function startEditNote(repoName, currentNote) {
+  // Find all notes cells for this repo (might be in multiple tables)
+  const notesContents = document.querySelectorAll(`.notes-content[data-repo="${repoName}"]`);
+
+  notesContents.forEach(container => {
+    container.innerHTML = `
+      <div class="notes-edit-form">
+        <input type="text" class="notes-edit-input" value="${escapeHtml(currentNote)}" placeholder="Add a note...">
+        <button class="notes-save-btn" onclick="saveNote('${escapeHtml(repoName)}')">Save</button>
+        <button class="notes-cancel-btn" onclick="cancelEditNote('${escapeHtml(repoName)}', '${escapeHtml(currentNote).replace(/'/g, "\\'")}')">Cancel</button>
+      </div>
+    `;
+
+    // Focus input and handle Enter key
+    const input = container.querySelector('.notes-edit-input');
+    if (input) {
+      input.focus();
+      input.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter') {
+          saveNote(repoName);
+        } else if (e.key === 'Escape') {
+          cancelEditNote(repoName, currentNote);
+        }
+      });
+    }
+  });
+}
+
+// Cancel editing a note
+function cancelEditNote(repoName, originalNote) {
+  const notesContents = document.querySelectorAll(`.notes-content[data-repo="${repoName}"]`);
+
+  notesContents.forEach(container => {
+    container.innerHTML = `
+      <span class="notes-text">${originalNote ? escapeHtml(originalNote) : '<span class="no-notes">-</span>'}</span>
+      <button class="notes-edit-btn" onclick="startEditNote('${escapeHtml(repoName)}', '${escapeHtml(originalNote).replace(/'/g, "\\'")}')">✏️</button>
+    `;
+  });
+}
+
+// Save a note
+async function saveNote(repoName) {
+  const notesContents = document.querySelectorAll(`.notes-content[data-repo="${repoName}"]`);
+  if (notesContents.length === 0) return;
+
+  // Get the new note value from the first input found
+  const input = notesContents[0].querySelector('.notes-edit-input');
+  if (!input) return;
+
+  const newNote = input.value.trim();
+
+  // Show saving state in all matching cells
+  notesContents.forEach(container => {
+    container.innerHTML = '<span class="notes-saving">Saving...</span>';
+  });
+
+  try {
+    const response = await fetch('/.netlify/functions/save-note', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      credentials: 'include',
+      body: JSON.stringify({
+        repoName: repoName,
+        note: newNote,
+      }),
+    });
+
+    const result = await response.json();
+
+    if (response.ok && result.success) {
+      // Update local index
+      if (wikiIndex) {
+        const repo = wikiIndex.repos.find(r => r.name === repoName);
+        if (repo) {
+          repo.notes = newNote;
+        }
+      }
+
+      // Update UI with new value
+      notesContents.forEach(container => {
+        container.innerHTML = `
+          <span class="notes-text">${newNote ? escapeHtml(newNote) : '<span class="no-notes">-</span>'}</span>
+          <button class="notes-edit-btn" onclick="startEditNote('${escapeHtml(repoName)}', '${escapeHtml(newNote).replace(/'/g, "\\'")}')">✏️</button>
+        `;
+      });
+    } else {
+      // Show error and restore edit state
+      alert(result.error || 'Failed to save note');
+      startEditNote(repoName, newNote);
+    }
+  } catch (err) {
+    console.error('Error saving note:', err);
+    alert('Network error. Please try again.');
+    startEditNote(repoName, newNote);
+  }
+}
+
+// Make functions available globally for onclick handlers
+window.startEditNote = startEditNote;
+window.cancelEditNote = cancelEditNote;
+window.saveNote = saveNote;
 
 // Initialize on load
 document.addEventListener('DOMContentLoaded', init);
