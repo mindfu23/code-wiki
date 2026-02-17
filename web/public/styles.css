@@ -1231,3 +1231,84 @@ footer a:hover {
   padding: 0.375rem 0.75rem;
   font-size: 0.85rem;
 }
+
+/* Quick View Table */
+.quickview-description {
+  color: var(--text-muted);
+  margin-bottom: 1rem;
+  font-size: 0.95rem;
+}
+
+.quickview-table-container {
+  background: var(--bg-card);
+  border-radius: var(--radius);
+  border: 1px solid var(--border);
+  overflow: hidden;
+}
+
+.quickview-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.95rem;
+}
+
+.quickview-table thead {
+  background: var(--bg);
+  border-bottom: 2px solid var(--border);
+}
+
+.quickview-table th {
+  padding: 0.875rem 1rem;
+  text-align: left;
+  font-weight: 600;
+  color: var(--text);
+}
+
+.quickview-table td {
+  padding: 0.75rem 1rem;
+  border-bottom: 1px solid var(--border);
+  vertical-align: middle;
+}
+
+.quickview-table tbody tr:last-child td {
+  border-bottom: none;
+}
+
+.quickview-table tbody tr:hover {
+  background: var(--bg);
+}
+
+.quickview-table a {
+  color: var(--primary);
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.quickview-table a:hover {
+  text-decoration: underline;
+}
+
+.quickview-table .netlify-link {
+  color: #00c7b7;
+}
+
+.quickview-table .netlify-link:hover {
+  color: #00a89b;
+}
+
+.quickview-table .no-deploy,
+.quickview-table .no-notes {
+  color: var(--text-muted);
+  font-style: italic;
+}
+
+.quickview-table .notes-cell {
+  max-width: 400px;
+  color: var(--text-muted);
+}
+
+.quickview-table .loading {
+  text-align: center;
+  color: var(--text-muted);
+  padding: 2rem;
+}

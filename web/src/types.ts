@@ -34,6 +34,17 @@ export interface RepoInfo {
   lastCommitDate?: string;
   status: 'synced' | 'local-only' | 'github-only';
   markdownFiles?: RepoDocFile[];  // Documentation files in the repo (.md, .txt, .rst, .adoc, .org)
+  notes?: string;  // User-added notes about the repo
+}
+
+export interface NetlifySite {
+  id: string;
+  name: string;
+  url: string;
+  ssl_url: string;
+  admin_url: string;
+  repo_url?: string;  // GitHub repo URL if connected
+  updated_at: string;
 }
 
 export interface SearchResult {

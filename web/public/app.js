@@ -194,6 +194,7 @@ function showPage(page, params = {}) {
       renderRepos();
       loadRepoFilesView();
       loadRepoListView();
+      loadQuickView();
       if (params.category) {
         selectCategory(params.category);
       }
@@ -1346,6 +1347,75 @@ function applyToolbarAction(action) {
 
   isDirty = true;
   updatePreview();
+}
+
+// Quick View - Deployment table with Netlify integration
+let netlifySites = null;
+
+async function loadQuickView() {
+  const tbody = document.getElementById('quickview-tbody');
+  if (!tbody || !wikiIndex) return;
+
+  // Show loading state
+  tbody.innerHTML = '<tr><td colspan="3" class="loading">Loading deployment data...</td></tr>';
+
+  // Fetch Netlify sites if not already loaded
+  if (!netlifySites) {
+    try {
+      const response = await fetch('/.netlify/functions/netlify-sites');
+      const data = await response.json();
+      if (data.success && data.data?.sites) {
+        netlifySites = data.data.sites;
+      } else {
+        netlifySites = [];
+        console.warn('Could not load Netlify sites:', data.error || 'Unknown error');
+      }
+    } catch (error) {
+      console.error('Error fetching Netlify sites:', error);
+      netlifySites = [];
+    }
+  }
+
+  // Build a map of GitHub URLs to Netlify sites
+  const netlifyByRepoUrl = new Map();
+  netlifySites.forEach(site => {
+    if (site.repoUrl) {
+      // Normalize the repo URL (remove .git suffix, etc.)
+      const normalizedUrl = site.repoUrl.replace(/\.git$/, '').toLowerCase();
+      netlifyByRepoUrl.set(normalizedUrl, site);
+    }
+  });
+
+  // Render the table
+  const rows = wikiIndex.repos.map(repo => {
+    const githubUrl = repo.githubUrl?.replace(/\.git$/, '') || '';
+    const normalizedGithub = githubUrl.toLowerCase();
+    const netlifySite = netlifyByRepoUrl.get(normalizedGithub);
+
+    // GitHub link
+    const githubLink = githubUrl
+      ? `<a href="${escapeHtml(githubUrl)}" target="_blank" title="View on GitHub">${escapeHtml(repo.name)}</a>`
+      : escapeHtml(repo.name);
+
+    // Netlify link
+    let netlifyCell = '<span class="no-deploy">-</span>';
+    if (netlifySite) {
+      netlifyCell = `<a href="${escapeHtml(netlifySite.url)}" target="_blank" class="netlify-link" title="View live site">${escapeHtml(netlifySite.name)}</a>`;
+    }
+
+    // Notes
+    const notes = repo.notes ? escapeHtml(repo.notes) : '<span class="no-notes">-</span>';
+
+    return `
+      <tr>
+        <td>${githubLink}</td>
+        <td>${netlifyCell}</td>
+        <td class="notes-cell">${notes}</td>
+      </tr>
+    `;
+  }).join('');
+
+  tbody.innerHTML = rows || '<tr><td colspan="3" class="placeholder-text">No repositories found</td></tr>';
 }
 
 // Initialize on load

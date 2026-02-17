@@ -149,6 +149,8 @@ async function parseRepoLocations(wikiDir: string): Promise<RepoInfo[]> {
           repo.languages = line.replace('- **Languages:**', '').trim().split(', ').filter(Boolean);
         } else if (line.startsWith('- **Last Commit:**')) {
           repo.lastCommitDate = line.replace('- **Last Commit:**', '').trim();
+        } else if (line.startsWith('- **Notes:**')) {
+          repo.notes = line.replace('- **Notes:**', '').trim();
         }
       }
 
