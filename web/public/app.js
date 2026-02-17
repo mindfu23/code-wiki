@@ -277,6 +277,7 @@ function performSearch() {
       score = 5; // Default score for filter-only results
     }
 
+    const isLocalOnly = !repo.githubUrl;
     results.push({
       type: 'repo',
       title: repo.name,
@@ -285,6 +286,7 @@ function performSearch() {
       score,
       tags: repo.languages,
       repoName: repo.name,
+      isLocalOnly,
     });
   });
 
@@ -329,7 +331,8 @@ function performSearch() {
 }
 
 // Get display label for result type
-function getResultTypeLabel(type) {
+function getResultTypeLabel(type, isLocalOnly = false) {
+  if (type === 'repo' && isLocalOnly) return 'local';
   switch (type) {
     case 'wiki': return 'wiki';
     case 'repo': return 'repo';
@@ -345,13 +348,19 @@ function renderSearchResults(results) {
     return;
   }
 
-  searchResults.innerHTML = results.map(result => `
-    <div class="result-item" data-type="${result.type}" data-path="${escapeHtml(result.path)}">
+  searchResults.innerHTML = results.map(result => {
+    const isLocalOnly = result.isLocalOnly || false;
+    const localClass = isLocalOnly ? ' local-only' : '';
+    const typeLabel = getResultTypeLabel(result.type, isLocalOnly);
+    const typeClass = isLocalOnly ? 'local' : result.type;
+
+    return `
+    <div class="result-item${localClass}" data-type="${result.type}" data-path="${escapeHtml(result.path)}" data-local="${isLocalOnly}">
       <div class="result-header">
         <span class="result-title">${escapeHtml(result.title)}</span>
-        <span class="result-type ${result.type}">${getResultTypeLabel(result.type)}</span>
+        <span class="result-type ${typeClass}">${typeLabel}</span>
       </div>
-      <p class="result-preview">${escapeHtml(result.preview)}</p>
+      <p class="result-preview">${escapeHtml(result.preview)}${isLocalOnly ? ' <em>(local only, not on GitHub)</em>' : ''}</p>
       <div class="result-meta">
         ${result.tags && result.tags.length > 0 ? `
           <div class="result-tags">
@@ -360,16 +369,19 @@ function renderSearchResults(results) {
         ` : ''}
       </div>
     </div>
-  `).join('');
+  `}).join('');
 
   // Add click handlers
   searchResults.querySelectorAll('.result-item').forEach(item => {
     item.addEventListener('click', () => {
       const type = item.dataset.type;
       const path = item.dataset.path;
+      const isLocal = item.dataset.local === 'true';
 
       if (type === 'wiki') {
         navigateTo('document', { doc: path });
+      } else if (isLocal) {
+        alert('This repository is local only and not yet on GitHub.\n\nLocal path: ' + path);
       } else if ((type === 'repo' || type === 'repo-file') && path.startsWith('http')) {
         window.open(path, '_blank');
       }
