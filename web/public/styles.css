@@ -71,6 +71,14 @@ header h1 a {
   width: auto;
 }
 
+.header-subtitle {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  margin-top: -0.5rem;
+  margin-left: 2.5rem;
+  font-weight: 400;
+}
+
 nav {
   display: flex;
   gap: 1.5rem;
@@ -1445,10 +1453,23 @@ footer a:hover {
   text-align: center;
 }
 
+.quickview-header {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 0.5rem;
+}
+
 .quickview-section h3 {
   font-size: 1.25rem;
-  margin-bottom: 0.5rem;
+  margin-bottom: 0;
   color: var(--text);
+}
+
+#refresh-quickview-btn {
+  font-size: 0.75rem;
+  padding: 0.25rem 0.5rem;
 }
 
 /* Browse link in Quick View section */
