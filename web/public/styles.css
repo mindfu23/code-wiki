@@ -1466,6 +1466,7 @@ footer a:hover {
   color: var(--text-muted);
   border-bottom: 2px solid var(--border);
   border-top: 2px solid var(--border);
+  text-align: center;
 }
 
 /* Repo Doc Modal */
