@@ -283,6 +283,7 @@ Use `sync_repos` to clone them, or clone manually.
 - **Last Commit:** 2026-01-24T16:40:29-08:00
 
 ### n8n_workflows
+- **Notes:** Not deployed directly, will put URL in once it's set up.
 
 - **Status:** synced
 - **Local Path:** `/Users/jamesbeach/Documents/visual-studio-code/github-copilot/n8n_workflows`
