@@ -66,15 +66,20 @@ header h1 a {
   gap: 0.5rem;
 }
 
+.header-brand {
+  display: flex;
+  flex-direction: column;
+}
+
 .header-logo {
   height: 32px;
   width: auto;
 }
 
 .header-subtitle {
-  font-size: 0.75rem;
+  font-size: 0.7rem;
   color: var(--text-muted);
-  margin-top: -0.5rem;
+  margin-top: -0.25rem;
   margin-left: 2.5rem;
   font-weight: 400;
 }
