@@ -1472,7 +1472,7 @@ function renderNotesCell(repoName, noteText) {
     // Logged in - show editable notes (clickable, styled with color)
     return `
       <div class="notes-content" data-repo="${escapedRepoName}" onclick="startEditNote('${escapedRepoName}', '${escapedNote.replace(/'/g, "\\'")}')">
-        <span class="notes-text">${noteText ? escapedNote : '<span class="no-notes">click to add</span>'}</span>
+        <span class="notes-text">${noteText ? escapedNote : '<span class="no-notes">-</span>'}</span>
       </div>
     `;
   } else {
@@ -1516,7 +1516,7 @@ function cancelEditNote(repoName, originalNote) {
 
   notesContents.forEach(container => {
     container.innerHTML = `
-      <span class="notes-text">${originalNote ? escapeHtml(originalNote) : '<span class="no-notes">click to add</span>'}</span>
+      <span class="notes-text">${originalNote ? escapeHtml(originalNote) : '<span class="no-notes">-</span>'}</span>
     `;
     container.onclick = () => startEditNote(repoName, originalNote);
   });
@@ -1563,7 +1563,7 @@ async function saveNote(repoName) {
       // Update UI with new value
       notesContents.forEach(container => {
         container.innerHTML = `
-          <span class="notes-text">${newNote ? escapeHtml(newNote) : '<span class="no-notes">click to add</span>'}</span>
+          <span class="notes-text">${newNote ? escapeHtml(newNote) : '<span class="no-notes">-</span>'}</span>
         `;
         container.onclick = () => startEditNote(repoName, newNote);
       });
