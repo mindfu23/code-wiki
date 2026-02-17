@@ -20,25 +20,25 @@ The web interface at [your-site.netlify.app](https://your-site.netlify.app) prov
 - Category browsing for wiki content
 - Repository documentation browser
 
-### GitHub-Only Indexing
+### Automatic Repository Discovery
 
-The web index **only includes repositories with GitHub URLs**. This is intentional:
+When you set `GITHUB_USERNAME` (or `GITHUB_REPO_OWNER`) and `GITHUB_TOKEN`, the index builder **automatically discovers all your GitHub repositories**:
 
-1. **Simpler setup for forks**: Users who fork this repo don't need local file access
-2. **Consistent builds**: GitHub Actions and local builds produce the same results
-3. **Direct editing**: All search results link to GitHub for easy editing
+- **No manual listing required**: All public and private repos are found automatically
+- **Correct visibility on first build**: Public/private status comes directly from GitHub
+- **Stays in sync**: Changes to repo visibility on GitHub are picked up on next build
 
-Repositories without a GitHub URL in `wiki/projects/repo-locations.md` are automatically skipped during index builds.
+The `wiki/projects/repo-locations.md` file is optional - use it only if you need to add local paths or notes to specific repos.
 
 ### Running the Index Builder
 
 ```bash
 cd web
 npm install
-npm run build:index
+GITHUB_USERNAME=your-username GITHUB_TOKEN=$(gh auth token) npm run build:index
 ```
 
-This scans `wiki/projects/repo-locations.md` and fetches documentation files from each GitHub repo using the GitHub Trees API.
+This automatically discovers all repos for your GitHub user and fetches their documentation files.
 
 ### Supported File Types
 
@@ -58,22 +58,24 @@ The indexer finds these documentation file types in your repos:
 
 1. **Fork this repository** and deploy to Netlify
 
-2. **Add your repositories** to `wiki/projects/repo-locations.md`:
+2. **Your repos are discovered automatically** - just set `GITHUB_USERNAME` in environment variables (step 3). Optionally, add local paths or notes to `wiki/projects/repo-locations.md`:
    ```markdown
    ### my-project
-   - **Status:** active
-   - **GitHub:** https://github.com/username/my-project
-   - **Description:** My awesome project
-   - **Languages:** TypeScript, Python
-   - **Visibility:** private  <!-- Optional: hide from public view -->
+   - **Local Path:** `/path/to/my-project`
+   - **Notes:** My personal notes about this project
    ```
 
 3. **Set environment variables** in Netlify Dashboard → Site settings → Environment variables:
 
+   **Required:**
+   | Variable | Description |
+   |----------|-------------|
+   | `GITHUB_REPO_OWNER` | Your GitHub username - used for repo discovery AND edit authorization |
+   | `GITHUB_TOKEN` | Personal access token with `repo` scope - enables auto-discovery of all your repos |
+
    **Required for editing features:**
    | Variable | Description |
    |----------|-------------|
-   | `GITHUB_REPO_OWNER` | Your GitHub username (e.g., `myusername`) |
    | `GITHUB_CLIENT_ID` | GitHub OAuth App client ID |
    | `GITHUB_CLIENT_SECRET` | GitHub OAuth App secret |
    | `SESSION_SECRET` | Random 32+ character string for session encryption |
@@ -103,26 +105,10 @@ The indexer finds these documentation file types in your repos:
 
 ### Private Repository Visibility
 
-Private repositories are automatically hidden from unauthenticated visitors.
-
-**Automatic Detection (Recommended):**
-
-When `GITHUB_TOKEN` is set, the index builder automatically detects each repo's visibility from the GitHub API. This means:
-- No manual marking required
-- Changes to repo visibility on GitHub sync automatically
-- Works in both local builds and GitHub Actions
-
-**Manual Override:**
-
-You can optionally mark repos as private in `repo-locations.md`:
-```markdown
-### my-private-project
-- **Status:** synced
-- **GitHub:** https://github.com/username/my-private-project
-- **Visibility:** private
-```
-
-Note: When `GITHUB_TOKEN` is set, the API-detected visibility overrides manual settings.
+Private repositories are **automatically detected** and hidden from unauthenticated visitors. When you set `GITHUB_REPO_OWNER` and `GITHUB_TOKEN`:
+- All your repos (public AND private) are discovered automatically
+- Visibility is pulled directly from GitHub - no manual marking needed
+- Changes to repo visibility on GitHub sync on next build
 
 **Choose an access mode** via `PRIVATE_REPO_ACCESS` env var:
 
@@ -141,10 +127,10 @@ Note: When `GITHUB_TOKEN` is set, the API-detected visibility overrides manual s
    - Slower - requires GitHub API calls on each page load
    - Best for team wikis where multiple people need access
 
-3. **How it works**:
-   - Public visitors see only public repos (from static `index.json`)
-   - When logged in, the app fetches from `/.netlify/functions/full-index`
-   - The endpoint filters repos based on the access mode
+**How it works:**
+- Public visitors see only public repos (from static `index.json`)
+- When logged in, the app fetches from `/.netlify/functions/full-index`
+- The endpoint filters repos based on the access mode
 
 ### MCP Server Setup (Optional)
 
