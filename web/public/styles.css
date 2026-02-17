@@ -1260,9 +1260,15 @@ footer a:hover {
 
 .quickview-table th {
   padding: 0.5rem 0.75rem;
-  text-align: left;
+  text-align: center;
   font-weight: 600;
   color: var(--text);
+}
+
+.quickview-table th .header-hint {
+  font-weight: 400;
+  color: var(--text-muted);
+  font-size: 0.85em;
 }
 
 .quickview-table td {
