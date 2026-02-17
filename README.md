@@ -1,62 +1,122 @@
 # Code Wiki
 
-A personal code wiki with MCP server integration for AI agents. Provides local-first code search across repositories with curated wiki content.
+A personal code wiki with MCP server integration for AI agents. Provides searchable documentation across GitHub repositories with curated wiki content.
 
 ## Features
 
-- **Local-first indexing**: Indexes all your local git repositories
-- **Full-text search**: Uses ripgrep for fast code search across repos
+- **GitHub-based indexing**: Indexes documentation files from your GitHub repositories
+- **Web interface**: Search and browse wiki content and repo documentation
 - **Curated wiki**: Store reusable patterns, utilities, and snippets
 - **MCP integration**: AI agents can search and retrieve code via MCP tools
-- **GitHub sync**: Background sync to pull updates and detect new repos
+- **Automatic updates**: GitHub Actions rebuilds the index daily or on changes
+
+## Web Interface
+
+The web interface at [your-site.netlify.app](https://your-site.netlify.app) provides:
+
+- Full-text search across wiki documents
+- Search across documentation files in GitHub repos (toggle on by default)
+- Click-to-edit: Search results link directly to GitHub's edit page
+- Category browsing for wiki content
+- Repository documentation browser
+
+### GitHub-Only Indexing
+
+The web index **only includes repositories with GitHub URLs**. This is intentional:
+
+1. **Simpler setup for forks**: Users who fork this repo don't need local file access
+2. **Consistent builds**: GitHub Actions and local builds produce the same results
+3. **Direct editing**: All search results link to GitHub for easy editing
+
+Repositories without a GitHub URL in `wiki/projects/repo-locations.md` are automatically skipped during index builds.
+
+### Running the Index Builder
+
+```bash
+cd web
+npm install
+npm run build:index
+```
+
+This scans `wiki/projects/repo-locations.md` and fetches documentation files from each GitHub repo using the GitHub Trees API.
+
+### Supported File Types
+
+The indexer finds these documentation file types in your repos:
+
+| Extension | Format |
+|-----------|--------|
+| `.md` | Markdown |
+| `.txt` | Plain text |
+| `.rst` | reStructuredText |
+| `.adoc`, `.asciidoc` | AsciiDoc |
+| `.org` | Org Mode |
 
 ## Setup
 
-### 1. Install dependencies
+### Web Interface Setup
 
-```bash
-cd mcp-server
-npm install
-```
+1. **Fork this repository** and deploy to Netlify
 
-### 2. Configure environment
+2. **Add your repositories** to `wiki/projects/repo-locations.md`:
+   ```markdown
+   ### my-project
+   - **Status:** active
+   - **GitHub:** https://github.com/username/my-project
+   - **Description:** My awesome project
+   - **Languages:** TypeScript, Python
+   ```
 
-Edit `mcp-server/.env` with your paths:
+3. **Set environment variables** in Netlify (optional, for GitHub OAuth editing):
+   - `GITHUB_CLIENT_ID` - GitHub OAuth app client ID
+   - `GITHUB_CLIENT_SECRET` - GitHub OAuth app secret
+   - `SESSION_SECRET` - Random string for session encryption
 
-```bash
-SOURCE_DIRS=/path/to/your/repos,/another/path
-WIKI_DIR=/path/to/code-wiki/wiki
-GITHUB_USERNAME=your-username
-GITHUB_TOKEN=ghp_xxx  # Optional, for private repos
-```
+4. **GitHub Actions** automatically rebuilds the index:
+   - Daily at midnight UTC
+   - When `repo-locations.md` changes
+   - Or trigger manually from the Actions tab
 
-### 3. Build the server
+### MCP Server Setup (Optional)
 
-```bash
-cd mcp-server
-npm run build
-```
+The MCP server provides local code search for AI agents like Claude Code.
 
-### 4. Configure Claude Code
+1. **Install dependencies**:
+   ```bash
+   cd mcp-server
+   npm install
+   ```
 
-Add to your Claude Code MCP settings (`.mcp.json` or settings):
+2. **Configure environment** - Edit `mcp-server/.env`:
+   ```bash
+   SOURCE_DIRS=/path/to/your/repos,/another/path
+   WIKI_DIR=/path/to/code-wiki/wiki
+   GITHUB_USERNAME=your-username
+   GITHUB_TOKEN=ghp_xxx  # Optional, for private repos
+   ```
 
-```json
-{
-  "mcpServers": {
-    "code-wiki": {
-      "command": "node",
-      "args": ["/Users/jamesbeach/Documents/visual-studio-code/github-copilot/code-wiki/mcp-server/dist/index.js"]
-    }
-  }
-}
-```
+3. **Build the server**:
+   ```bash
+   cd mcp-server
+   npm run build
+   ```
 
-### 5. Install ripgrep (recommended)
+4. **Configure Claude Code** - Add to `.mcp.json`:
+   ```json
+   {
+     "mcpServers": {
+       "code-wiki": {
+         "command": "node",
+         "args": ["/path/to/code-wiki/mcp-server/dist/index.js"]
+       }
+     }
+   }
+   ```
 
-```bash
-brew install ripgrep
-```
+5. **Install ripgrep** (recommended for fast local search):
+   ```bash
+   brew install ripgrep
+   ```
 
 ## MCP Tools
 
