@@ -216,6 +216,7 @@ Use `sync_repos` to clone them, or clone manually.
 - **Last Commit:** 2025-12-24T17:08:25-08:00
 
 ### IsHe
+- **Notes:** TBD
 
 - **Status:** synced
 - **Local Path:** `/Users/jamesbeach/Documents/visual-studio-code/github-copilot/IsHe`
