@@ -1642,14 +1642,16 @@ window.saveRepoDoc = saveRepoDoc;
 // ============================================
 
 // Render notes cell with edit capability
+// Uses data attributes to safely store note text with special characters
 function renderNotesCell(repoName, noteText) {
   const escapedRepoName = escapeHtml(repoName);
   const escapedNote = escapeHtml(noteText);
 
   if (currentUser) {
     // Logged in - show editable notes (clickable, styled with color)
+    // Store note in data attribute to avoid inline handler escaping issues
     return `
-      <div class="notes-content" data-repo="${escapedRepoName}" onclick="startEditNote('${escapedRepoName}', '${escapedNote.replace(/'/g, "\\'")}')">
+      <div class="notes-content" data-repo="${escapedRepoName}" data-note="${escapedNote}">
         <span class="notes-text">${noteText ? escapedNote : '<span class="no-notes">-</span>'}</span>
       </div>
     `;
@@ -1659,44 +1661,72 @@ function renderNotesCell(repoName, noteText) {
   }
 }
 
-// Start editing a note
-function startEditNote(repoName, currentNote) {
-  // Find all notes cells for this repo (might be in multiple tables)
+// Start editing a note - reads note from data attribute
+function startEditNote(repoName) {
+  // Find all notes cells for this repo
   const notesContents = document.querySelectorAll(`.notes-content[data-repo="${repoName}"]`);
+  if (notesContents.length === 0) return;
+
+  // Get current note from data attribute
+  const currentNote = notesContents[0].dataset.note || '';
 
   notesContents.forEach(container => {
-    container.innerHTML = `
-      <div class="notes-edit-form">
-        <input type="text" class="notes-edit-input" value="${escapeHtml(currentNote)}" placeholder="Add a note...">
-        <button class="notes-save-btn" onclick="saveNote('${escapeHtml(repoName)}')">Save</button>
-        <button class="notes-cancel-btn" onclick="cancelEditNote('${escapeHtml(repoName)}', '${escapeHtml(currentNote).replace(/'/g, "\\'")}')">Cancel</button>
-      </div>
-    `;
+    // Create edit form
+    const form = document.createElement('div');
+    form.className = 'notes-edit-form';
 
-    // Focus input and handle Enter key
-    const input = container.querySelector('.notes-edit-input');
-    if (input) {
-      input.focus();
-      input.addEventListener('keydown', (e) => {
-        if (e.key === 'Enter') {
-          saveNote(repoName);
-        } else if (e.key === 'Escape') {
-          cancelEditNote(repoName, currentNote);
-        }
-      });
-    }
+    const input = document.createElement('input');
+    input.type = 'text';
+    input.className = 'notes-edit-input';
+    input.value = currentNote;
+    input.placeholder = 'Add a note...';
+
+    const saveBtn = document.createElement('button');
+    saveBtn.className = 'notes-save-btn';
+    saveBtn.textContent = 'Save';
+    saveBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      saveNote(repoName);
+    });
+
+    const cancelBtn = document.createElement('button');
+    cancelBtn.className = 'notes-cancel-btn';
+    cancelBtn.textContent = 'Cancel';
+    cancelBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      cancelEditNote(repoName);
+    });
+
+    form.appendChild(input);
+    form.appendChild(saveBtn);
+    form.appendChild(cancelBtn);
+
+    container.innerHTML = '';
+    container.appendChild(form);
+
+    // Focus input and handle keyboard
+    input.focus();
+    input.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') {
+        e.preventDefault();
+        saveNote(repoName);
+      } else if (e.key === 'Escape') {
+        e.preventDefault();
+        cancelEditNote(repoName);
+      }
+    });
   });
 }
 
-// Cancel editing a note
-function cancelEditNote(repoName, originalNote) {
+// Cancel editing a note - restores display from data attribute
+function cancelEditNote(repoName) {
   const notesContents = document.querySelectorAll(`.notes-content[data-repo="${repoName}"]`);
 
   notesContents.forEach(container => {
+    const originalNote = container.dataset.note || '';
     container.innerHTML = `
       <span class="notes-text">${originalNote ? escapeHtml(originalNote) : '<span class="no-notes">-</span>'}</span>
     `;
-    container.onclick = () => startEditNote(repoName, originalNote);
   });
 }
 
@@ -1738,26 +1768,49 @@ async function saveNote(repoName) {
         }
       }
 
-      // Update UI with new value
+      // Update UI with new value and update data attribute
       notesContents.forEach(container => {
+        container.dataset.note = newNote;
         container.innerHTML = `
           <span class="notes-text">${newNote ? escapeHtml(newNote) : '<span class="no-notes">-</span>'}</span>
         `;
-        container.onclick = () => startEditNote(repoName, newNote);
       });
     } else {
       // Show error and restore edit state
       alert(result.error || 'Failed to save note');
-      startEditNote(repoName, newNote);
+      // Restore the data attribute and try editing again
+      notesContents.forEach(container => {
+        container.dataset.note = newNote;
+      });
+      startEditNote(repoName);
     }
   } catch (err) {
     console.error('Error saving note:', err);
     alert('Network error. Please try again.');
-    startEditNote(repoName, newNote);
+    notesContents.forEach(container => {
+      container.dataset.note = newNote;
+    });
+    startEditNote(repoName);
   }
 }
 
-// Make functions available globally for onclick handlers
+// Set up event delegation for notes clicking
+function setupNotesEventDelegation() {
+  document.addEventListener('click', (e) => {
+    const notesContent = e.target.closest('.notes-content');
+    if (notesContent && !e.target.closest('.notes-edit-form')) {
+      const repoName = notesContent.dataset.repo;
+      if (repoName) {
+        startEditNote(repoName);
+      }
+    }
+  });
+}
+
+// Initialize notes event delegation on load
+setupNotesEventDelegation();
+
+// Make functions available globally (for debugging)
 window.startEditNote = startEditNote;
 window.cancelEditNote = cancelEditNote;
 window.saveNote = saveNote;
