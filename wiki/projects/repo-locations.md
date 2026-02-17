@@ -197,7 +197,7 @@ Use `sync_repos` to clone them, or clone manually.
 - **Last Commit:** 2026-01-17T11:41:45-08:00
 
 ### GNN
-- **Notes:** TBD, mobile dev versions need UX.
+- **Notes:** TBD, mobile dev versions need UX. future track for this is "my good news" or similar, where the user picks their good news and it's formatted how they want it. TBD
 
 - **Status:** synced
 - **Local Path:** `/Users/jamesbeach/Documents/visual-studio-code/github-copilot/GNN`
