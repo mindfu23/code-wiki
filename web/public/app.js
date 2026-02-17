@@ -1425,10 +1425,7 @@ async function loadQuickView() {
     if (hasDeployed && hasNonDeployed && index === firstNonDeployedIndex) {
       rows.push(`
         <tr class="separator-row">
-          <td></td>
-          <td>Unstaged</td>
-          <td></td>
-          <td></td>
+          <td colspan="4">Unstaged</td>
         </tr>
       `);
     }
