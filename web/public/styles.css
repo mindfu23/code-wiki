@@ -1310,6 +1310,29 @@ footer a:hover {
   font-style: italic;
 }
 
+.quickview-table .docs-cell {
+  border-left: 1px solid var(--border);
+}
+
+.quickview-table .docs-cell a {
+  color: var(--primary);
+  text-decoration: none;
+}
+
+.quickview-table .docs-cell a:hover {
+  text-decoration: underline;
+}
+
+.quickview-table .docs-needed {
+  color: var(--warning);
+  cursor: pointer;
+  font-style: italic;
+}
+
+.quickview-table .docs-needed:hover {
+  text-decoration: underline;
+}
+
 .quickview-table .notes-cell {
   max-width: 400px;
   color: var(--text-muted);
@@ -1440,4 +1463,36 @@ footer a:hover {
   color: var(--text-muted);
   border-bottom: 2px solid var(--border);
   border-top: 2px solid var(--border);
+}
+
+/* Repo Doc Modal */
+.repo-doc-modal-content {
+  width: 600px;
+  max-width: 90vw;
+}
+
+.repo-doc-subtitle {
+  color: var(--text-muted);
+  margin-bottom: 1.25rem;
+  font-size: 0.95rem;
+}
+
+.repo-doc-modal-content textarea {
+  width: 100%;
+  padding: 0.75rem;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  font-family: var(--font-mono);
+  font-size: 0.9rem;
+  line-height: 1.5;
+  resize: vertical;
+}
+
+.repo-doc-modal-content textarea:focus {
+  outline: none;
+  border-color: var(--primary);
+}
+
+.repo-doc-modal-content .editor-status {
+  margin-bottom: 1rem;
 }

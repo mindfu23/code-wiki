@@ -1362,7 +1362,7 @@ async function loadQuickView() {
   if (!searchBody) return;
 
   // Show loading state
-  const loadingHtml = '<tr><td colspan="3" class="loading">Loading deployment data...</td></tr>';
+  const loadingHtml = '<tr><td colspan="4" class="loading">Loading deployment data...</td></tr>';
   searchBody.innerHTML = loadingHtml;
 
   // Fetch Netlify sites if not already loaded
@@ -1425,6 +1425,7 @@ async function loadQuickView() {
           <td></td>
           <td>Unstaged</td>
           <td></td>
+          <td></td>
         </tr>
       `);
     }
@@ -1441,6 +1442,9 @@ async function loadQuickView() {
       stagingCell = `<a href="${escapeHtml(netlifySite.url)}" target="_blank" class="netlify-link" title="View live site">${escapeHtml(displayUrl)}</a>`;
     }
 
+    // Docs link - find README.md or first markdown file
+    const docsContent = renderDocsCell(repo, githubUrl);
+
     // Notes - with edit button if logged in
     const notesContent = renderNotesCell(repo.name, repo.notes || '');
 
@@ -1448,6 +1452,7 @@ async function loadQuickView() {
       <tr>
         <td>${githubLink}</td>
         <td>${stagingCell}</td>
+        <td class="docs-cell">${docsContent}</td>
         <td class="notes-cell">${notesContent}</td>
       </tr>
     `);
@@ -1455,9 +1460,182 @@ async function loadQuickView() {
 
   const rowsHtml = rows.join('');
 
-  const finalHtml = rowsHtml || '<tr><td colspan="3" class="placeholder-text">No repositories found</td></tr>';
+  const finalHtml = rowsHtml || '<tr><td colspan="4" class="placeholder-text">No repositories found</td></tr>';
   searchBody.innerHTML = finalHtml;
 }
+
+// ============================================
+// DOCS COLUMN MODULE
+// ============================================
+
+// Render docs cell - link to README.md, first markdown file, or "Docs needed"
+function renderDocsCell(repo, githubUrl) {
+  const markdownFiles = repo.markdownFiles || [];
+
+  if (markdownFiles.length === 0) {
+    // No docs - show "Docs needed" with link to create
+    if (currentUser && githubUrl) {
+      return `<span class="docs-needed" onclick="openRepoDocEditor('${escapeHtml(repo.name)}', '${escapeHtml(githubUrl)}')">Docs needed</span>`;
+    } else {
+      return '<span class="no-deploy">-</span>';
+    }
+  }
+
+  // Find README.md (case insensitive) or use first file
+  const readmeFile = markdownFiles.find(f =>
+    f.name.toLowerCase() === 'readme.md'
+  );
+  const docFile = readmeFile || markdownFiles[0];
+
+  if (!docFile) {
+    return '<span class="no-deploy">-</span>';
+  }
+
+  // Link to GitHub blob view
+  if (githubUrl) {
+    const blobUrl = `${githubUrl.replace(/\.git$/, '')}/blob/main/${docFile.relativePath}`;
+    const displayName = docFile.name.length > 20
+      ? docFile.name.substring(0, 17) + '...'
+      : docFile.name;
+    return `<a href="${escapeHtml(blobUrl)}" target="_blank" title="${escapeHtml(docFile.relativePath)}">${escapeHtml(displayName)}</a>`;
+  }
+
+  return escapeHtml(docFile.name);
+}
+
+// Open editor to create a new doc for a repo
+function openRepoDocEditor(repoName, githubUrl) {
+  if (!currentUser) {
+    navigateTo('login');
+    return;
+  }
+
+  // Store repo info for the editor
+  window.pendingRepoDoc = {
+    repoName,
+    githubUrl,
+    defaultFilename: 'README.md'
+  };
+
+  // Show the repo doc modal
+  const modal = document.getElementById('repo-doc-modal');
+  if (modal) {
+    modal.style.display = 'flex';
+    document.getElementById('repo-doc-repo-name').textContent = repoName;
+    document.getElementById('repo-doc-filename').value = 'README.md';
+    document.getElementById('repo-doc-content').value = `# ${repoName}\n\n`;
+    document.getElementById('repo-doc-content').focus();
+  }
+}
+
+// Close repo doc modal
+function closeRepoDocModal() {
+  const modal = document.getElementById('repo-doc-modal');
+  if (modal) {
+    modal.style.display = 'none';
+  }
+  window.pendingRepoDoc = null;
+}
+
+// Save repo doc
+async function saveRepoDoc() {
+  if (!currentUser || !window.pendingRepoDoc) {
+    alert('Please log in to create documentation');
+    return;
+  }
+
+  const { repoName, githubUrl } = window.pendingRepoDoc;
+  const filename = document.getElementById('repo-doc-filename').value.trim();
+  const content = document.getElementById('repo-doc-content').value;
+
+  if (!filename) {
+    alert('Please enter a filename');
+    return;
+  }
+
+  // Validate filename extension
+  const validExtensions = ['.md', '.txt', '.rst', '.adoc', '.asciidoc', '.org'];
+  const hasValidExt = validExtensions.some(ext => filename.toLowerCase().endsWith(ext));
+  if (!hasValidExt) {
+    alert('Please use a supported file extension: ' + validExtensions.join(', '));
+    return;
+  }
+
+  const saveBtn = document.getElementById('repo-doc-save');
+  const status = document.getElementById('repo-doc-status');
+
+  if (saveBtn) {
+    saveBtn.disabled = true;
+    saveBtn.textContent = 'Saving...';
+  }
+  if (status) {
+    status.className = 'editor-status loading';
+    status.textContent = 'Committing to repository...';
+  }
+
+  try {
+    const response = await fetch('/.netlify/functions/save-repo-doc', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      credentials: 'include',
+      body: JSON.stringify({
+        repoName,
+        githubUrl,
+        filename,
+        content,
+      }),
+    });
+
+    const result = await response.json();
+
+    if (response.ok && result.success) {
+      if (status) {
+        status.className = 'editor-status success';
+        status.textContent = `Created ${filename}! Commit: ${result.commit.sha.slice(0, 7)}`;
+      }
+
+      // Update local index to add the new file
+      if (wikiIndex) {
+        const repo = wikiIndex.repos.find(r => r.name === repoName);
+        if (repo) {
+          if (!repo.markdownFiles) repo.markdownFiles = [];
+          repo.markdownFiles.push({
+            relativePath: filename,
+            name: filename,
+            fileType: filename.split('.').pop()
+          });
+        }
+      }
+
+      // Close modal and refresh table after delay
+      setTimeout(() => {
+        closeRepoDocModal();
+        loadQuickView();
+      }, 1500);
+    } else {
+      if (status) {
+        status.className = 'editor-status error';
+        status.textContent = result.error || 'Failed to save';
+      }
+    }
+  } catch (err) {
+    console.error('Error saving repo doc:', err);
+    if (status) {
+      status.className = 'editor-status error';
+      status.textContent = 'Network error. Please try again.';
+    }
+  } finally {
+    if (saveBtn) {
+      saveBtn.disabled = false;
+      saveBtn.textContent = 'Save & Commit';
+    }
+  }
+}
+
+// Make functions available globally
+window.openRepoDocEditor = openRepoDocEditor;
+window.closeRepoDocModal = closeRepoDocModal;
+window.saveRepoDoc = saveRepoDoc;
 
 // ============================================
 // EDITABLE NOTES MODULE
