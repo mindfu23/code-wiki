@@ -8,8 +8,6 @@
 
 import { Handler, HandlerEvent, HandlerContext } from '@netlify/functions';
 import * as crypto from 'crypto';
-import * as fs from 'fs/promises';
-import * as path from 'path';
 import { Octokit } from '@octokit/rest';
 
 const SESSION_SECRET = process.env.SESSION_SECRET;
@@ -176,10 +174,16 @@ const handler: Handler = async (event: HandlerEvent, context: HandlerContext) =>
   }
 
   try {
-    // Read the full index file
-    const indexPath = path.join(process.cwd(), 'public', 'data', 'index-full.json');
-    const indexContent = await fs.readFile(indexPath, 'utf-8');
-    const fullIndex: WikiIndex = JSON.parse(indexContent);
+    // Fetch the full index from the CDN (functions can't access static files directly)
+    const host = event.headers.host || 'localhost';
+    const protocol = host.includes('localhost') ? 'http' : 'https';
+    const indexUrl = `${protocol}://${host}/data/index-full.json`;
+
+    const indexResponse = await fetch(indexUrl);
+    if (!indexResponse.ok) {
+      throw { code: 'ENOENT', message: `Failed to fetch index: ${indexResponse.status}` };
+    }
+    const fullIndex: WikiIndex = await indexResponse.json();
 
     // Determine which repos to include based on access mode
     if (PRIVATE_REPO_ACCESS === 'github-permissions') {
