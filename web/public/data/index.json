@@ -1,7 +1,7 @@
 {
   "documents": [
     {
-      "path": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/code-wiki/wiki/AGENTS.md",
+      "path": "/home/runner/work/code-wiki/code-wiki/wiki/AGENTS.md",
       "relativePath": "AGENTS.md",
       "title": "AGENTS",
       "tags": [],
@@ -10,7 +10,7 @@
       "category": "general"
     },
     {
-      "path": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/code-wiki/wiki/integrations/_index.md",
+      "path": "/home/runner/work/code-wiki/code-wiki/wiki/integrations/_index.md",
       "relativePath": "integrations/_index.md",
       "title": "Integrations Index",
       "description": "Third-party API connectors and service integrations",
@@ -24,7 +24,7 @@
       "category": "integrations"
     },
     {
-      "path": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/code-wiki/wiki/patterns/_index.md",
+      "path": "/home/runner/work/code-wiki/code-wiki/wiki/patterns/_index.md",
       "relativePath": "patterns/_index.md",
       "title": "Patterns Index",
       "description": "Architectural patterns and design approaches",
@@ -37,7 +37,7 @@
       "category": "patterns"
     },
     {
-      "path": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/code-wiki/wiki/preferences/gcp-cloud-run-deployment.md",
+      "path": "/home/runner/work/code-wiki/code-wiki/wiki/preferences/gcp-cloud-run-deployment.md",
       "relativePath": "preferences/gcp-cloud-run-deployment.md",
       "title": "gcp-cloud-run-deployment",
       "tags": [],
@@ -46,7 +46,7 @@
       "category": "preferences"
     },
     {
-      "path": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/code-wiki/wiki/preferences/standard-setups.md",
+      "path": "/home/runner/work/code-wiki/code-wiki/wiki/preferences/standard-setups.md",
       "relativePath": "preferences/standard-setups.md",
       "title": "standard-setups",
       "tags": [],
@@ -55,7 +55,7 @@
       "category": "preferences"
     },
     {
-      "path": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/code-wiki/wiki/projects/_index.md",
+      "path": "/home/runner/work/code-wiki/code-wiki/wiki/projects/_index.md",
       "relativePath": "projects/_index.md",
       "title": "Projects Index",
       "description": "Documentation for active repositories",
@@ -68,7 +68,7 @@
       "category": "projects"
     },
     {
-      "path": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/code-wiki/wiki/projects/overall-next-steps.md",
+      "path": "/home/runner/work/code-wiki/code-wiki/wiki/projects/overall-next-steps.md",
       "relativePath": "projects/overall-next-steps.md",
       "title": "Overall next steps",
       "tags": [],
@@ -78,7 +78,7 @@
       "category": "projects"
     },
     {
-      "path": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/code-wiki/wiki/projects/overall-to-do.md",
+      "path": "/home/runner/work/code-wiki/code-wiki/wiki/projects/overall-to-do.md",
       "relativePath": "projects/overall-to-do.md",
       "title": "Overall to do",
       "tags": [],
@@ -88,7 +88,7 @@
       "category": "projects"
     },
     {
-      "path": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/code-wiki/wiki/projects/repo-locations.md",
+      "path": "/home/runner/work/code-wiki/code-wiki/wiki/projects/repo-locations.md",
       "relativePath": "projects/repo-locations.md",
       "title": "Repository Locations",
       "description": "Mapping of repositories to local file system paths and GitHub URLs",
@@ -103,7 +103,7 @@
       "category": "projects"
     },
     {
-      "path": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/code-wiki/wiki/snippets/_index.md",
+      "path": "/home/runner/work/code-wiki/code-wiki/wiki/snippets/_index.md",
       "relativePath": "snippets/_index.md",
       "title": "Snippets Index",
       "description": "Small, focused code pieces",
@@ -116,7 +116,7 @@
       "category": "snippets"
     },
     {
-      "path": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/code-wiki/wiki/snippets/code-wiki-overview.md",
+      "path": "/home/runner/work/code-wiki/code-wiki/wiki/snippets/code-wiki-overview.md",
       "relativePath": "snippets/code-wiki-overview.md",
       "title": "Code wiki overview",
       "tags": [],
@@ -126,7 +126,7 @@
       "category": "snippets"
     },
     {
-      "path": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/code-wiki/wiki/templates/_index.md",
+      "path": "/home/runner/work/code-wiki/code-wiki/wiki/templates/_index.md",
       "relativePath": "templates/_index.md",
       "title": "Templates Index",
       "description": "Project and file starters",
@@ -140,7 +140,7 @@
       "category": "templates"
     },
     {
-      "path": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/code-wiki/wiki/utilities/_index.md",
+      "path": "/home/runner/work/code-wiki/code-wiki/wiki/utilities/_index.md",
       "relativePath": "utilities/_index.md",
       "title": "Utilities Index",
       "description": "Standalone helper functions and utilities",
@@ -195,11 +195,6 @@
         {
           "relativePath": "platforms/README.md",
           "name": "README.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "TODO.md",
-          "name": "TODO.md",
           "fileType": "md"
         }
       ]
@@ -387,16 +382,6 @@
           "fileType": "md"
         },
         {
-          "relativePath": "q2/Synthesized_Migration_Guide_Draft.md",
-          "name": "Synthesized_Migration_Guide_Draft.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "q3/Synthesized_Model_Evaluation_Framework.md",
-          "name": "Synthesized_Model_Evaluation_Framework.md",
-          "fileType": "md"
-        },
-        {
           "relativePath": "README.md",
           "name": "README.md",
           "fileType": "md"
@@ -464,33 +449,8 @@
       "lastCommitDate": "2026-01-21T18:12:40-08:00",
       "markdownFiles": [
         {
-          "relativePath": "agent_router/crew/README.md",
-          "name": "README.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "agent_router/mayor/rig/CLAUDE.md",
-          "name": "CLAUDE.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "agent_router/mayor/rig/README.md",
-          "name": "README.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "agent_router/refinery/rig/CLAUDE.md",
-          "name": "CLAUDE.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "agent_router/refinery/rig/PR-MULTI-MODEL-ROUTER.md",
-          "name": "PR-MULTI-MODEL-ROUTER.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "agent_router/refinery/rig/README.md",
-          "name": "README.md",
+          "relativePath": "agent_router/AGENTS.md",
+          "name": "AGENTS.md",
           "fileType": "md"
         },
         {
@@ -499,342 +459,47 @@
           "fileType": "md"
         },
         {
-          "relativePath": "CHANGELOG.md",
-          "name": "CHANGELOG.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "CODE_OF_CONDUCT.md",
-          "name": "CODE_OF_CONDUCT.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "CONTRIBUTING.md",
-          "name": "CONTRIBUTING.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "docs/beads-native-messaging.md",
-          "name": "beads-native-messaging.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "docs/concepts/convoy.md",
-          "name": "convoy.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "docs/concepts/identity.md",
-          "name": "identity.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "docs/concepts/molecules.md",
-          "name": "molecules.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "docs/concepts/polecat-lifecycle.md",
-          "name": "polecat-lifecycle.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "docs/concepts/propulsion-principle.md",
-          "name": "propulsion-principle.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "docs/design/architecture.md",
-          "name": "architecture.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "docs/design/convoy-lifecycle.md",
-          "name": "convoy-lifecycle.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "docs/design/dog-pool-architecture.md",
-          "name": "dog-pool-architecture.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "docs/design/escalation-system.md",
-          "name": "escalation-system.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "docs/design/escalation.md",
-          "name": "escalation.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "docs/design/federation.md",
-          "name": "federation.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "docs/design/mail-protocol.md",
-          "name": "mail-protocol.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "docs/design/operational-state.md",
-          "name": "operational-state.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "docs/design/plugin-system.md",
-          "name": "plugin-system.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "docs/design/property-layers.md",
-          "name": "property-layers.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "docs/design/watchdog-chain.md",
-          "name": "watchdog-chain.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "docs/examples/hanoi-demo.md",
-          "name": "hanoi-demo.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "docs/formula-resolution.md",
-          "name": "formula-resolution.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "docs/glossary.md",
-          "name": "glossary.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "docs/INSTALLING.md",
-          "name": "INSTALLING.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "docs/mol-mall-design.md",
-          "name": "mol-mall-design.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "docs/overview.md",
-          "name": "overview.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "docs/reference.md",
-          "name": "reference.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "docs/why-these-features.md",
-          "name": "why-these-features.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "fractasy/crew/james/ios/Runner/Assets.xcassets/LaunchImage.imageset/README.md",
+          "relativePath": "agents/lib/imagen-projects/README.md",
           "name": "README.md",
           "fileType": "md"
         },
         {
-          "relativePath": "fractasy/crew/james/linux/CMakeLists.txt",
-          "name": "CMakeLists.txt",
-          "fileType": "txt"
-        },
-        {
-          "relativePath": "fractasy/crew/james/linux/flutter/CMakeLists.txt",
-          "name": "CMakeLists.txt",
-          "fileType": "txt"
-        },
-        {
-          "relativePath": "fractasy/crew/james/linux/runner/CMakeLists.txt",
-          "name": "CMakeLists.txt",
-          "fileType": "txt"
-        },
-        {
-          "relativePath": "fractasy/crew/james/README.md",
-          "name": "README.md",
+          "relativePath": "docs/IMAGEN.md",
+          "name": "IMAGEN.md",
           "fileType": "md"
         },
         {
-          "relativePath": "fractasy/crew/james/windows/CMakeLists.txt",
-          "name": "CMakeLists.txt",
-          "fileType": "txt"
-        },
-        {
-          "relativePath": "fractasy/crew/james/windows/flutter/CMakeLists.txt",
-          "name": "CMakeLists.txt",
-          "fileType": "txt"
-        },
-        {
-          "relativePath": "fractasy/crew/james/windows/runner/CMakeLists.txt",
-          "name": "CMakeLists.txt",
-          "fileType": "txt"
-        },
-        {
-          "relativePath": "fractasy/crew/README.md",
-          "name": "README.md",
+          "relativePath": "docs/MULTI-MODEL-AGENTS.md",
+          "name": "MULTI-MODEL-AGENTS.md",
           "fileType": "md"
         },
         {
-          "relativePath": "fractasy/mayor/rig/CLAUDE.md",
-          "name": "CLAUDE.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "fractasy/mayor/rig/README.md",
-          "name": "README.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "fractasy/refinery/rig/CLAUDE.md",
-          "name": "CLAUDE.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "fractasy/refinery/rig/ios/Runner/Assets.xcassets/LaunchImage.imageset/README.md",
-          "name": "README.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "fractasy/refinery/rig/linux/CMakeLists.txt",
-          "name": "CMakeLists.txt",
-          "fileType": "txt"
-        },
-        {
-          "relativePath": "fractasy/refinery/rig/linux/flutter/CMakeLists.txt",
-          "name": "CMakeLists.txt",
-          "fileType": "txt"
-        },
-        {
-          "relativePath": "fractasy/refinery/rig/linux/runner/CMakeLists.txt",
-          "name": "CMakeLists.txt",
-          "fileType": "txt"
-        },
-        {
-          "relativePath": "fractasy/refinery/rig/README.md",
-          "name": "README.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "fractasy/refinery/rig/windows/CMakeLists.txt",
-          "name": "CMakeLists.txt",
-          "fileType": "txt"
-        },
-        {
-          "relativePath": "fractasy/refinery/rig/windows/flutter/CMakeLists.txt",
-          "name": "CMakeLists.txt",
-          "fileType": "txt"
-        },
-        {
-          "relativePath": "fractasy/refinery/rig/windows/runner/CMakeLists.txt",
-          "name": "CMakeLists.txt",
-          "fileType": "txt"
-        },
-        {
-          "relativePath": "internal/formula/README.md",
-          "name": "README.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "internal/templates/commands/handoff.md",
-          "name": "handoff.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "npm-package/README.md",
-          "name": "README.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "OVERNIGHT-CRON-SETUP.md",
-          "name": "OVERNIGHT-CRON-SETUP.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "README.md",
-          "name": "README.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "RELEASING.md",
-          "name": "RELEASING.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "SECURITY.md",
-          "name": "SECURITY.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "templates/polecat-CLAUDE.md",
-          "name": "polecat-CLAUDE.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "templates/witness-CLAUDE.md",
-          "name": "witness-CLAUDE.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "weirdchess/AGENTS.md",
+          "relativePath": "fractasy/AGENTS.md",
           "name": "AGENTS.md",
           "fileType": "md"
         },
         {
-          "relativePath": "weirdchess/crew/james/MAYOR-PROMPT.md",
-          "name": "MAYOR-PROMPT.md",
+          "relativePath": "GEMINI-SETUP.md",
+          "name": "GEMINI-SETUP.md",
           "fileType": "md"
         },
         {
-          "relativePath": "weirdchess/crew/james/README.md",
-          "name": "README.md",
+          "relativePath": "GETTING-STARTED.md",
+          "name": "GETTING-STARTED.md",
           "fileType": "md"
         },
         {
-          "relativePath": "weirdchess/crew/james/WEIRDCHESS-SPEC.md",
-          "name": "WEIRDCHESS-SPEC.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "weirdchess/crew/james/weirdchess/ios/Runner/Assets.xcassets/LaunchImage.imageset/README.md",
-          "name": "README.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "weirdchess/crew/james/weirdchess/README.md",
-          "name": "README.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "weirdchess/crew/README.md",
-          "name": "README.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "weirdchess/mayor/rig/CLAUDE.md",
+          "relativePath": "mayor/CLAUDE.md",
           "name": "CLAUDE.md",
           "fileType": "md"
         },
         {
-          "relativePath": "weirdchess/mayor/rig/README.md",
+          "relativePath": "plugins/README.md",
           "name": "README.md",
           "fileType": "md"
         },
         {
-          "relativePath": "weirdchess/refinery/rig/CLAUDE.md",
-          "name": "CLAUDE.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "weirdchess/refinery/rig/README.md",
+          "relativePath": "README.md",
           "name": "README.md",
           "fileType": "md"
         }
@@ -1052,11 +717,6 @@
           "relativePath": "README.md",
           "name": "README.md",
           "fileType": "md"
-        },
-        {
-          "relativePath": "TODO.txt",
-          "name": "TODO.txt",
-          "fileType": "txt"
         }
       ]
     },
@@ -1178,16 +838,6 @@
           "fileType": "txt"
         },
         {
-          "relativePath": "STORE_CHECKLIST.md",
-          "name": "STORE_CHECKLIST.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "TODO.md",
-          "name": "TODO.md",
-          "fileType": "md"
-        },
-        {
           "relativePath": "UNIFIED_WORKFLOW.md",
           "name": "UNIFIED_WORKFLOW.md",
           "fileType": "md"
@@ -1243,33 +893,8 @@
       "lastCommitDate": "2025-12-14T14:29:09-08:00",
       "markdownFiles": [
         {
-          "relativePath": "ANDROID_DEPLOYMENT.md",
-          "name": "ANDROID_DEPLOYMENT.md",
-          "fileType": "md"
-        },
-        {
           "relativePath": "ARCHITECTURE.md",
           "name": "ARCHITECTURE.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "CAPACITOR_INTEGRATION.md",
-          "name": "CAPACITOR_INTEGRATION.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "conference-search/android/app/src/main/assets/public/robots.txt",
-          "name": "robots.txt",
-          "fileType": "txt"
-        },
-        {
-          "relativePath": "conference-search/android/app/src/main/assets/public/static/js/main.b06bd0a7.js.LICENSE.txt",
-          "name": "main.b06bd0a7.js.LICENSE.txt",
-          "fileType": "txt"
-        },
-        {
-          "relativePath": "conference-search/android/app/src/main/res/ICON_README.md",
-          "name": "ICON_README.md",
           "fileType": "md"
         },
         {
@@ -1280,6 +905,11 @@
         {
           "relativePath": "conference-search/README.md",
           "name": "README.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "IMPLEMENTATION_SUMMARY.md",
+          "name": "IMPLEMENTATION_SUMMARY.md",
           "fileType": "md"
         },
         {
@@ -1301,6 +931,11 @@
           "relativePath": "requirements.txt",
           "name": "requirements.txt",
           "fileType": "txt"
+        },
+        {
+          "relativePath": "SEARCHBARD_DOCS.md",
+          "name": "SEARCHBARD_DOCS.md",
+          "fileType": "md"
         }
       ]
     },
@@ -1321,11 +956,6 @@
         {
           "relativePath": "ARCHITECTURE.md",
           "name": "ARCHITECTURE.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "CODE_REVIEW.md",
-          "name": "CODE_REVIEW.md",
           "fileType": "md"
         },
         {
@@ -1427,6 +1057,11 @@
       "lastCommitDate": "2026-01-16T20:05:54-08:00",
       "markdownFiles": [
         {
+          "relativePath": "ios/Runner/Assets.xcassets/LaunchImage.imageset/README.md",
+          "name": "README.md",
+          "fileType": "md"
+        },
+        {
           "relativePath": "README.md",
           "name": "README.md",
           "fileType": "md"
@@ -1444,6 +1079,6 @@
     "templates",
     "utilities"
   ],
-  "buildTime": "2026-02-17T17:27:37.911Z",
+  "buildTime": "2026-02-17T17:29:41.069Z",
   "version": "1.0.0"
 }
