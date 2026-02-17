@@ -66,12 +66,13 @@
               <tr>
                 <th>Repository</th>
                 <th>Staging</th>
+                <th>Docs</th>
                 <th>Notes <span class="header-hint">(click to add)</span></th>
               </tr>
             </thead>
             <tbody id="search-quickview-tbody">
               <tr>
-                <td colspan="3" class="loading">Loading deployment data...</td>
+                <td colspan="4" class="loading">Loading deployment data...</td>
               </tr>
             </tbody>
           </table>
@@ -262,6 +263,29 @@
       <div class="modal-actions">
         <button id="new-doc-cancel" class="btn btn-secondary">Cancel</button>
         <button id="new-doc-create" class="btn btn-primary">Create</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Repo Doc Modal -->
+  <div id="repo-doc-modal" class="modal" style="display: none;">
+    <div class="modal-backdrop" onclick="closeRepoDocModal()"></div>
+    <div class="modal-content repo-doc-modal-content">
+      <h3>Create Documentation</h3>
+      <p class="repo-doc-subtitle">for <strong id="repo-doc-repo-name"></strong></p>
+      <div class="form-group">
+        <label for="repo-doc-filename">Filename</label>
+        <input type="text" id="repo-doc-filename" value="README.md" autocomplete="off">
+        <small class="form-hint">Supported: .md, .txt, .rst, .adoc, .org</small>
+      </div>
+      <div class="form-group">
+        <label for="repo-doc-content">Content</label>
+        <textarea id="repo-doc-content" rows="12" placeholder="Write your documentation..."></textarea>
+      </div>
+      <div id="repo-doc-status" class="editor-status"></div>
+      <div class="modal-actions">
+        <button onclick="closeRepoDocModal()" class="btn btn-secondary">Cancel</button>
+        <button id="repo-doc-save" onclick="saveRepoDoc()" class="btn btn-primary">Save & Commit</button>
       </div>
     </div>
   </div>
