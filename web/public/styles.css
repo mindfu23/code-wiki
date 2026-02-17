@@ -1312,3 +1312,16 @@ footer a:hover {
   color: var(--text-muted);
   padding: 2rem;
 }
+
+/* Quick View Section on Search Page */
+.quickview-section {
+  margin-top: 2rem;
+  padding-top: 2rem;
+  border-top: 1px solid var(--border);
+}
+
+.quickview-section h3 {
+  font-size: 1.25rem;
+  margin-bottom: 0.5rem;
+  color: var(--text);
+}
