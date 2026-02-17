@@ -284,6 +284,28 @@ function parseGitHubUrl(url: string): { owner: string; repo: string } | null {
   return null;
 }
 
+/**
+ * Fetch repo visibility from GitHub API
+ * Returns 'public' or 'private'
+ */
+async function fetchRepoVisibility(
+  octokit: Octokit,
+  owner: string,
+  repo: string
+): Promise<'public' | 'private'> {
+  try {
+    const { data } = await octokit.repos.get({ owner, repo });
+    // GitHub API returns visibility as 'public', 'private', or 'internal'
+    return data.visibility === 'public' ? 'public' : 'private';
+  } catch (err: any) {
+    if (err.status === 404) {
+      // Repo not found or not accessible - treat as private
+      return 'private';
+    }
+    throw err;
+  }
+}
+
 async function buildIndex(): Promise<void> {
   console.log('Building Code Wiki index...');
   console.log(`Wiki directory: ${WIKI_DIR}`);
@@ -331,6 +353,8 @@ async function buildIndex(): Promise<void> {
         const parsed = parseGitHubUrl(repo.githubUrl);
         if (parsed) {
           console.log(`  Fetching ${parsed.owner}/${parsed.repo}...`);
+          // Fetch visibility from GitHub API (overrides any manual setting in repo-locations.md)
+          repo.visibility = await fetchRepoVisibility(octokit, parsed.owner, parsed.repo);
           repo.markdownFiles = await fetchRepoDocFilesFromGitHub(octokit, parsed.owner, parsed.repo);
           totalDocFiles += repo.markdownFiles.length;
         }
@@ -340,10 +364,26 @@ async function buildIndex(): Promise<void> {
     // Local mode - scan local filesystem
     console.log('Scanning local filesystem for documentation files...');
 
+    // Create Octokit for visibility checks if token is available
+    const octokit = GITHUB_TOKEN ? new Octokit({ auth: GITHUB_TOKEN }) : null;
+    if (octokit) {
+      console.log('GitHub token available - will fetch visibility from GitHub API');
+    } else {
+      console.log('No GitHub token - using visibility from repo-locations.md (default: public)');
+    }
+
     for (const repo of repos) {
       if (repo.localPath) {
         repo.markdownFiles = await scanRepoForDocFiles(repo.localPath);
         totalDocFiles += repo.markdownFiles.length;
+      }
+
+      // Fetch visibility from GitHub if we have a token and URL
+      if (octokit && repo.githubUrl) {
+        const parsed = parseGitHubUrl(repo.githubUrl);
+        if (parsed) {
+          repo.visibility = await fetchRepoVisibility(octokit, parsed.owner, parsed.repo);
+        }
       }
     }
   }

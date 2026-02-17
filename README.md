@@ -103,17 +103,28 @@ The indexer finds these documentation file types in your repos:
 
 ### Private Repository Visibility
 
-You can mark repositories as private so they're only visible when you're logged in.
+Private repositories are automatically hidden from unauthenticated visitors.
 
-1. **Mark repos as private** in `repo-locations.md`:
-   ```markdown
-   ### my-private-project
-   - **Status:** synced
-   - **GitHub:** https://github.com/username/my-private-project
-   - **Visibility:** private
-   ```
+**Automatic Detection (Recommended):**
 
-2. **Choose an access mode** via `PRIVATE_REPO_ACCESS` env var:
+When `GITHUB_TOKEN` is set, the index builder automatically detects each repo's visibility from the GitHub API. This means:
+- No manual marking required
+- Changes to repo visibility on GitHub sync automatically
+- Works in both local builds and GitHub Actions
+
+**Manual Override:**
+
+You can optionally mark repos as private in `repo-locations.md`:
+```markdown
+### my-private-project
+- **Status:** synced
+- **GitHub:** https://github.com/username/my-private-project
+- **Visibility:** private
+```
+
+Note: When `GITHUB_TOKEN` is set, the API-detected visibility overrides manual settings.
+
+**Choose an access mode** via `PRIVATE_REPO_ACCESS` env var:
 
    | Mode | Description |
    |------|-------------|
