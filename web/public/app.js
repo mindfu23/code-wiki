@@ -1397,8 +1397,11 @@ async function loadQuickView(forceRefresh = false) {
   if (!searchBody) return;
 
   // Use cached HTML if available and not forcing refresh
+  // Also check if content is already displayed to avoid unnecessary DOM updates
   if (quickViewCache && !forceRefresh) {
-    searchBody.innerHTML = quickViewCache;
+    if (searchBody.innerHTML !== quickViewCache) {
+      searchBody.innerHTML = quickViewCache;
+    }
     return;
   }
 
