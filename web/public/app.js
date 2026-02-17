@@ -1290,8 +1290,8 @@ async function saveDocument() {
       const isNew = editingDocument.isNew;
       showEditorStatus('success', `${isNew ? 'Created' : 'Saved'}! Commit: ${result.commit.sha.slice(0, 7)}`);
 
-      // Update local index
-      editingDocument.content = content;
+      // Update local index - store body only (without frontmatter)
+      editingDocument.content = extractContentBody(content);
       editingDocument.title = title;
       editingDocument.description = document.getElementById('edit-description').value.trim();
       editingDocument.updated = new Date().toISOString().split('T')[0];
@@ -1299,7 +1299,8 @@ async function saveDocument() {
       // Add to index if new
       if (isNew && wikiIndex) {
         editingDocument.isNew = false;
-        editingDocument.contentPreview = content.slice(0, 200);
+        const bodyContent = extractContentBody(content);
+        editingDocument.contentPreview = bodyContent.slice(0, 200).replace(/\n/g, ' ').trim();
         wikiIndex.documents.push(editingDocument);
       }
 
