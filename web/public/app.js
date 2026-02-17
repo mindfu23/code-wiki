@@ -37,16 +37,39 @@ const categoryIcons = {
 
 // Initialize
 async function init() {
-  await loadIndex();
-  await checkAuth();
+  await checkAuth();  // Check auth first so we know if user can see private repos
+  await loadIndex();  // Load index based on auth state
   setupEventListeners();
   setupEditor();
   handleNavigation();
 }
 
 // Load the wiki index
+// If user is authenticated, try to load full index (includes private repos)
+// Otherwise, load public index
 async function loadIndex() {
   try {
+    // If user is logged in, try to get full index with private repos
+    if (currentUser) {
+      try {
+        const fullResponse = await fetch('/.netlify/functions/full-index', {
+          credentials: 'include'
+        });
+        if (fullResponse.ok) {
+          const result = await fullResponse.json();
+          if (result.success && result.data) {
+            wikiIndex = result.data;
+            console.log(`Loaded full index (${result.accessMode}, isOwner: ${result.isOwner})`);
+            populateFilters();
+            return;
+          }
+        }
+      } catch (fullError) {
+        console.log('Full index not available, falling back to public index');
+      }
+    }
+
+    // Fall back to public index
     const response = await fetch('/data/index.json');
     if (!response.ok) throw new Error('Failed to load index');
     wikiIndex = await response.json();

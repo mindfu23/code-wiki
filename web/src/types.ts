@@ -33,6 +33,7 @@ export interface RepoInfo {
   languages: string[];
   lastCommitDate?: string;
   status: 'synced' | 'local-only' | 'github-only';
+  visibility?: 'public' | 'private';  // Repo visibility (default: public)
   markdownFiles?: RepoDocFile[];  // Documentation files in the repo (.md, .txt, .rst, .adoc, .org)
   notes?: string;  // User-added notes about the repo
 }
