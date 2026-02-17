@@ -1,4 +1,4 @@
-# Code Wiki
+# Docsy McDocsface
 
 A personal code wiki with MCP server integration for AI agents. Provides searchable documentation across GitHub repositories with curated wiki content.
 
@@ -65,17 +65,75 @@ The indexer finds these documentation file types in your repos:
    - **GitHub:** https://github.com/username/my-project
    - **Description:** My awesome project
    - **Languages:** TypeScript, Python
+   - **Visibility:** private  <!-- Optional: hide from public view -->
    ```
 
-3. **Set environment variables** in Netlify (optional, for GitHub OAuth editing):
-   - `GITHUB_CLIENT_ID` - GitHub OAuth app client ID
-   - `GITHUB_CLIENT_SECRET` - GitHub OAuth app secret
-   - `SESSION_SECRET` - Random string for session encryption
+3. **Set environment variables** in Netlify Dashboard → Site settings → Environment variables:
+
+   **Required for editing features:**
+   | Variable | Description |
+   |----------|-------------|
+   | `GITHUB_REPO_OWNER` | Your GitHub username (e.g., `myusername`) |
+   | `GITHUB_CLIENT_ID` | GitHub OAuth App client ID |
+   | `GITHUB_CLIENT_SECRET` | GitHub OAuth App secret |
+   | `SESSION_SECRET` | Random 32+ character string for session encryption |
+
+   **Optional:**
+   | Variable | Description |
+   |----------|-------------|
+   | `GITHUB_REPO_NAME` | Repository name (default: `code-wiki`) |
+   | `NETLIFY_ACCESS_TOKEN` | For Netlify site listing in Quick View |
+   | `NETLIFY_BUILD_HOOK` | Trigger rebuild after edits |
+   | `PRIVATE_REPO_ACCESS` | Access mode for private repos (see below) |
+
+   **Generate a session secret:**
+   ```bash
+   openssl rand -hex 32
+   ```
+
+   **Create a GitHub OAuth App:**
+   1. Go to GitHub → Settings → Developer settings → OAuth Apps → New
+   2. Set Homepage URL to your Netlify site URL
+   3. Set Authorization callback URL to: `https://your-site.netlify.app/.netlify/functions/oauth-callback`
 
 4. **GitHub Actions** automatically rebuilds the index:
    - Daily at midnight UTC
    - When `repo-locations.md` changes
    - Or trigger manually from the Actions tab
+
+### Private Repository Visibility
+
+You can mark repositories as private so they're only visible when you're logged in.
+
+1. **Mark repos as private** in `repo-locations.md`:
+   ```markdown
+   ### my-private-project
+   - **Status:** synced
+   - **GitHub:** https://github.com/username/my-private-project
+   - **Visibility:** private
+   ```
+
+2. **Choose an access mode** via `PRIVATE_REPO_ACCESS` env var:
+
+   | Mode | Description |
+   |------|-------------|
+   | `owner-only` (default) | Only the wiki owner (`GITHUB_REPO_OWNER`) sees private repos |
+   | `github-permissions` | Users see private repos they have GitHub access to |
+
+   **owner-only** (recommended):
+   - Fast - no API calls needed
+   - Simple - you control visibility via `GITHUB_REPO_OWNER`
+   - Best for personal wikis
+
+   **github-permissions**:
+   - Dynamic - respects GitHub collaborator permissions
+   - Slower - requires GitHub API calls on each page load
+   - Best for team wikis where multiple people need access
+
+3. **How it works**:
+   - Public visitors see only public repos (from static `index.json`)
+   - When logged in, the app fetches from `/.netlify/functions/full-index`
+   - The endpoint filters repos based on the access mode
 
 ### MCP Server Setup (Optional)
 

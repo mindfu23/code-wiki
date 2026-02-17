@@ -8,9 +8,20 @@ import { Octokit } from '@octokit/rest';
 import * as crypto from 'crypto';
 
 const SESSION_SECRET = process.env.SESSION_SECRET;
-const GITHUB_REPO_OWNER = process.env.GITHUB_REPO_OWNER || 'mindfu23';
+const GITHUB_REPO_OWNER = process.env.GITHUB_REPO_OWNER || '';
 const GITHUB_REPO_NAME = process.env.GITHUB_REPO_NAME || 'code-wiki';
 const WIKI_PATH_PREFIX = 'wiki/';
+
+// Validate required configuration
+function validateConfig(): string | null {
+  if (!GITHUB_REPO_OWNER) {
+    return 'GITHUB_REPO_OWNER environment variable is not configured. Please set it in your Netlify dashboard.';
+  }
+  if (!SESSION_SECRET || SESSION_SECRET.length < 32) {
+    return 'SESSION_SECRET environment variable is not configured or too short (min 32 chars).';
+  }
+  return null;
+}
 
 interface SessionData {
   access_token: string;
@@ -121,6 +132,16 @@ const handler: Handler = async (event: HandlerEvent, context: HandlerContext) =>
   // Handle OPTIONS preflight
   if (event.httpMethod === 'OPTIONS') {
     return { statusCode: 204, headers, body: '' };
+  }
+
+  // Validate configuration
+  const configError = validateConfig();
+  if (configError) {
+    return {
+      statusCode: 500,
+      headers,
+      body: JSON.stringify({ error: configError }),
+    };
   }
 
   // Only allow POST

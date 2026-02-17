@@ -133,6 +133,7 @@ async function parseRepoLocations(wikiDir: string): Promise<RepoInfo[]> {
         name,
         languages: [],
         status: 'local-only',
+        visibility: 'public',  // Default to public
       };
 
       for (const line of lines.slice(1)) {
@@ -151,6 +152,9 @@ async function parseRepoLocations(wikiDir: string): Promise<RepoInfo[]> {
           repo.lastCommitDate = line.replace('- **Last Commit:**', '').trim();
         } else if (line.startsWith('- **Notes:**')) {
           repo.notes = line.replace('- **Notes:**', '').trim();
+        } else if (line.startsWith('- **Visibility:**')) {
+          const vis = line.replace('- **Visibility:**', '').trim().toLowerCase();
+          repo.visibility = vis === 'private' ? 'private' : 'public';
         }
       }
 
@@ -346,8 +350,14 @@ async function buildIndex(): Promise<void> {
 
   console.log(`Found ${totalDocFiles} documentation files across all repos`);
 
-  // Build index
-  const index: WikiIndex = {
+  // Separate public and private repos
+  const publicRepos = repos.filter(r => r.visibility !== 'private');
+  const privateRepos = repos.filter(r => r.visibility === 'private');
+
+  console.log(`Repos: ${publicRepos.length} public, ${privateRepos.length} private`);
+
+  // Build full index (includes all repos - for authenticated owner)
+  const fullIndex: WikiIndex = {
     documents,
     repos,
     categories: Array.from(categories).sort(),
@@ -355,10 +365,24 @@ async function buildIndex(): Promise<void> {
     version: '1.0.0',
   };
 
-  // Write index
+  // Build public index (excludes private repos - for public access)
+  const publicIndex: WikiIndex = {
+    documents,
+    repos: publicRepos,
+    categories: Array.from(categories).sort(),
+    buildTime: new Date().toISOString(),
+    version: '1.0.0',
+  };
+
+  // Write public index (served statically)
   const indexPath = path.join(OUTPUT_DIR, 'index.json');
-  await fs.writeFile(indexPath, JSON.stringify(index, null, 2));
-  console.log(`Index written to ${indexPath}`);
+  await fs.writeFile(indexPath, JSON.stringify(publicIndex, null, 2));
+  console.log(`Public index written to ${indexPath}`);
+
+  // Write full index (served via authenticated endpoint)
+  const fullIndexPath = path.join(OUTPUT_DIR, 'index-full.json');
+  await fs.writeFile(fullIndexPath, JSON.stringify(fullIndex, null, 2));
+  console.log(`Full index written to ${fullIndexPath}`);
 
   // Write individual category files for faster loading
   for (const category of categories) {
@@ -367,7 +391,7 @@ async function buildIndex(): Promise<void> {
     await fs.writeFile(categoryPath, JSON.stringify(categoryDocs, null, 2));
   }
 
-  console.log(`Build complete: ${documents.length} documents, ${repos.length} repos, ${categories.size} categories`);
+  console.log(`Build complete: ${documents.length} documents, ${repos.length} total repos (${publicRepos.length} public, ${privateRepos.length} private), ${categories.size} categories`);
 }
 
 buildIndex().catch(console.error);
