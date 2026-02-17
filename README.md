@@ -103,6 +103,15 @@ The indexer finds these documentation file types in your repos:
    - When `repo-locations.md` changes
    - Or trigger manually from the Actions tab
 
+5. **(Optional) Enable auto-discovery in GitHub Actions** - Add a Personal Access Token as a repository secret:
+
+   1. Create a classic PAT at GitHub → Settings → Developer settings → Personal access tokens → Tokens (classic)
+   2. Give it `repo` scope (required to list all your repos including private ones)
+   3. Add it as a secret: Your repo → Settings → Secrets and variables → Actions → New repository secret
+   4. Name it `REPO_ACCESS_TOKEN`
+
+   Without this secret, GitHub Actions will use `repo-locations.md` instead of auto-discovery.
+
 ### Private Repository Visibility
 
 Private repositories are **automatically detected** and hidden from unauthenticated visitors. When you set `GITHUB_REPO_OWNER` and `GITHUB_TOKEN`:
@@ -131,6 +140,18 @@ Private repositories are **automatically detected** and hidden from unauthentica
 - Public visitors see only public repos (from static `index.json`)
 - When logged in, the app fetches from `/.netlify/functions/full-index`
 - The endpoint filters repos based on the access mode
+
+**Troubleshooting: Private repos not appearing when logged in**
+
+Open your browser's developer console (F12) and look for the log message:
+```
+Loaded full index (owner-only, isOwner: true)
+```
+
+If `isOwner: false`, your GitHub username doesn't match `GITHUB_REPO_OWNER`:
+1. Check `GITHUB_REPO_OWNER` in Netlify environment variables
+2. Ensure it matches your GitHub login exactly (case-insensitive)
+3. Redeploy after changing
 
 ### MCP Server Setup (Optional)
 
