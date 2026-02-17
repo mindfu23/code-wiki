@@ -1395,21 +1395,36 @@ async function loadQuickView() {
     }
   });
 
-  // Render the table
-  const rows = wikiIndex.repos.map(repo => {
+  // Build repo data with Netlify info
+  const repoData = wikiIndex.repos.map(repo => {
     const githubUrl = repo.githubUrl?.replace(/\.git$/, '') || '';
     const normalizedGithub = githubUrl.toLowerCase();
     const netlifySite = netlifyByRepoUrl.get(normalizedGithub);
+    return { repo, githubUrl, netlifySite };
+  });
 
+  // Sort: deployed repos first (alphabetically), then non-deployed (alphabetically)
+  repoData.sort((a, b) => {
+    const aDeployed = !!a.netlifySite;
+    const bDeployed = !!b.netlifySite;
+    if (aDeployed !== bDeployed) {
+      return bDeployed - aDeployed; // Deployed first
+    }
+    return a.repo.name.localeCompare(b.repo.name); // Alphabetical within group
+  });
+
+  // Render the table
+  const rows = repoData.map(({ repo, githubUrl, netlifySite }) => {
     // GitHub link
     const githubLink = githubUrl
       ? `<a href="${escapeHtml(githubUrl)}" target="_blank" title="View on GitHub">${escapeHtml(repo.name)}</a>`
       : escapeHtml(repo.name);
 
-    // Netlify link
-    let netlifyCell = '<span class="no-deploy">-</span>';
+    // Staging link - show URL without https://
+    let stagingCell = '<span class="no-deploy">-</span>';
     if (netlifySite) {
-      netlifyCell = `<a href="${escapeHtml(netlifySite.url)}" target="_blank" class="netlify-link" title="View live site">${escapeHtml(netlifySite.name)}</a>`;
+      const displayUrl = netlifySite.url.replace(/^https?:\/\//, '');
+      stagingCell = `<a href="${escapeHtml(netlifySite.url)}" target="_blank" class="netlify-link" title="View live site">${escapeHtml(displayUrl)}</a>`;
     }
 
     // Notes
@@ -1418,7 +1433,7 @@ async function loadQuickView() {
     return `
       <tr>
         <td>${githubLink}</td>
-        <td>${netlifyCell}</td>
+        <td>${stagingCell}</td>
         <td class="notes-cell">${notes}</td>
       </tr>
     `;

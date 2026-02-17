@@ -1243,13 +1243,14 @@ footer a:hover {
   background: var(--bg-card);
   border-radius: var(--radius);
   border: 1px solid var(--border);
-  overflow: hidden;
+  overflow-x: auto;
+  display: inline-block;
+  max-width: 100%;
 }
 
 .quickview-table {
-  width: 100%;
   border-collapse: collapse;
-  font-size: 0.95rem;
+  font-size: 0.9rem;
 }
 
 .quickview-table thead {
@@ -1258,14 +1259,14 @@ footer a:hover {
 }
 
 .quickview-table th {
-  padding: 0.875rem 1rem;
+  padding: 0.5rem 0.75rem;
   text-align: left;
   font-weight: 600;
   color: var(--text);
 }
 
 .quickview-table td {
-  padding: 0.75rem 1rem;
+  padding: 0.4rem 0.75rem;
   border-bottom: 1px solid var(--border);
   vertical-align: middle;
 }
