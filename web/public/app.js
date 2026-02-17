@@ -1675,11 +1675,11 @@ function startEditNote(repoName) {
     const form = document.createElement('div');
     form.className = 'notes-edit-form';
 
-    const input = document.createElement('input');
-    input.type = 'text';
-    input.className = 'notes-edit-input';
-    input.value = currentNote;
-    input.placeholder = 'Add a note...';
+    const textarea = document.createElement('textarea');
+    textarea.className = 'notes-edit-input';
+    textarea.value = currentNote;
+    textarea.placeholder = 'Add a note...';
+    textarea.rows = 2;
 
     const saveBtn = document.createElement('button');
     saveBtn.className = 'notes-save-btn';
@@ -1697,23 +1697,25 @@ function startEditNote(repoName) {
       cancelEditNote(repoName);
     });
 
-    form.appendChild(input);
+    form.appendChild(textarea);
     form.appendChild(saveBtn);
     form.appendChild(cancelBtn);
 
     container.innerHTML = '';
     container.appendChild(form);
 
-    // Focus input and handle keyboard
-    input.focus();
-    input.addEventListener('keydown', (e) => {
-      if (e.key === 'Enter') {
+    // Focus textarea and handle keyboard
+    textarea.focus();
+    textarea.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter' && !e.shiftKey) {
+        // Enter without Shift saves
         e.preventDefault();
         saveNote(repoName);
       } else if (e.key === 'Escape') {
         e.preventDefault();
         cancelEditNote(repoName);
       }
+      // Shift+Enter allows normal newline behavior
     });
   });
 }
@@ -1735,11 +1737,11 @@ async function saveNote(repoName) {
   const notesContents = document.querySelectorAll(`.notes-content[data-repo="${repoName}"]`);
   if (notesContents.length === 0) return;
 
-  // Get the new note value from the first input found
-  const input = notesContents[0].querySelector('.notes-edit-input');
-  if (!input) return;
+  // Get the new note value from the textarea
+  const textarea = notesContents[0].querySelector('.notes-edit-input');
+  if (!textarea) return;
 
-  const newNote = input.value.trim();
+  const newNote = textarea.value.trim();
 
   // Show saving state in all matching cells
   notesContents.forEach(container => {
