@@ -158,8 +158,8 @@
       "title": "Docsy to do",
       "tags": [],
       "updated": "2026-02-17",
-      "content": "Still need to resolve the index for the main page rebuilding every time someone goes to \"Browse\" and then returns to the main page.",
-      "contentPreview": "Still need to resolve the index for the main page rebuilding every time someone goes to \"Browse\" and then returns to the main page.",
+      "content": "X - Still need to resolve the index for the main page rebuilding every time someone goes to \"Browse\" and then returns to the main page.\n\nActually appears complete now.",
+      "contentPreview": "X - Still need to resolve the index for the main page rebuilding every time someone goes to \"Browse\" and then returns to the main page.  Actually appears complete now.",
       "category": "projects"
     }
   ],
@@ -1231,6 +1231,6 @@
     "templates",
     "utilities"
   ],
-  "buildTime": "2026-02-17T20:22:33.223Z",
+  "buildTime": "2026-02-17T20:23:34.570Z",
   "version": "1.0.0"
 }
