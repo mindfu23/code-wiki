@@ -1306,6 +1306,96 @@ footer a:hover {
 .quickview-table .notes-cell {
   max-width: 400px;
   color: var(--text-muted);
+  position: relative;
+}
+
+/* Editable notes */
+.notes-content {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.notes-text {
+  flex: 1;
+}
+
+.notes-edit-btn {
+  background: transparent;
+  border: none;
+  color: var(--text-muted);
+  cursor: pointer;
+  padding: 0.2rem;
+  font-size: 0.85rem;
+  opacity: 0.5;
+  transition: opacity 0.2s;
+  flex-shrink: 0;
+}
+
+.notes-content:hover .notes-edit-btn {
+  opacity: 1;
+}
+
+.notes-edit-btn:hover {
+  color: var(--primary);
+}
+
+/* Edit mode */
+.notes-edit-form {
+  display: flex;
+  gap: 0.25rem;
+  align-items: center;
+}
+
+.notes-edit-input {
+  flex: 1;
+  padding: 0.25rem 0.5rem;
+  font-size: 0.85rem;
+  border: 1px solid var(--primary);
+  border-radius: 4px;
+  min-width: 150px;
+}
+
+.notes-edit-input:focus {
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.2);
+}
+
+.notes-save-btn,
+.notes-cancel-btn {
+  background: transparent;
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  padding: 0.2rem 0.4rem;
+  font-size: 0.75rem;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.notes-save-btn {
+  background: var(--primary);
+  border-color: var(--primary);
+  color: white;
+}
+
+.notes-save-btn:hover {
+  background: var(--primary-dark);
+}
+
+.notes-cancel-btn:hover {
+  background: var(--bg);
+}
+
+.notes-saving {
+  color: var(--text-muted);
+  font-style: italic;
+  font-size: 0.85rem;
+}
+
+.notes-login-hint {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  font-style: italic;
 }
 
 .quickview-table .loading {
@@ -1319,10 +1409,30 @@ footer a:hover {
   margin-top: 2rem;
   padding-top: 2rem;
   border-top: 1px solid var(--border);
+  text-align: center;
 }
 
 .quickview-section h3 {
   font-size: 1.25rem;
   margin-bottom: 0.5rem;
   color: var(--text);
+}
+
+/* Quick View on Browse page - also center */
+#repo-quickview-view {
+  text-align: center;
+}
+
+#repo-quickview-view .quickview-description {
+  text-align: center;
+}
+
+/* Separator row in quickview table */
+.quickview-table .separator-row td {
+  background: var(--bg);
+  padding: 0.6rem 0.75rem;
+  font-weight: 600;
+  color: var(--text-muted);
+  border-bottom: 2px solid var(--border);
+  border-top: 2px solid var(--border);
 }
