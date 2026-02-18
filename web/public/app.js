@@ -194,6 +194,7 @@ function handleNavigation() {
   const pageParams = {};
   if (params.get('doc')) pageParams.doc = params.get('doc');
   if (params.get('category')) pageParams.category = params.get('category');
+  if (params.get('tab')) pageParams.tab = params.get('tab');
 
   showPage(page, pageParams);
 }
@@ -220,12 +221,16 @@ function showPage(page, params = {}) {
   switch (page) {
     case 'search':
       loadQuickView();
+      renderRecentDocs();
       break;
     case 'browse':
       renderCategories();
       renderRepos();
       loadRepoFilesView();
       loadRepoListView();
+      if (params.tab) {
+        switchRepoTab(params.tab);
+      }
       if (params.category) {
         selectCategory(params.category);
       }
@@ -537,6 +542,11 @@ function switchRepoTab(tabName) {
   const activeView = document.getElementById(`repo-${tabName}-view`);
   if (activeView) {
     activeView.classList.add('active');
+  }
+
+  // Render docs view on demand
+  if (tabName === 'docs') {
+    renderDocsView();
   }
 }
 
@@ -1743,6 +1753,214 @@ async function saveRepoDoc() {
 window.openRepoDocEditor = openRepoDocEditor;
 window.closeRepoDocModal = closeRepoDocModal;
 window.saveRepoDoc = saveRepoDoc;
+
+// ============================================
+// DOCS FILES MODULE
+// ============================================
+
+// Get all doc files from both wiki documents and repo markdown files
+function getAllDocFiles() {
+  if (!wikiIndex) return [];
+  const files = [];
+
+  // Wiki documents
+  wikiIndex.documents.forEach(doc => {
+    files.push({
+      name: doc.title,
+      path: doc.relativePath,
+      date: doc.updated || '',
+      type: 'wiki',
+      source: doc.category,
+    });
+  });
+
+  // Repo markdown files
+  wikiIndex.repos.forEach(repo => {
+    if (!repo.markdownFiles) return;
+    const repoDate = repo.lastCommitDate
+      ? repo.lastCommitDate.split('T')[0]
+      : '';
+    const githubBaseUrl = repo.githubUrl ? repo.githubUrl.replace(/\.git$/, '') : null;
+    repo.markdownFiles.forEach(file => {
+      files.push({
+        name: file.name,
+        path: file.relativePath,
+        date: repoDate,
+        type: 'repo-file',
+        source: repo.name,
+        githubUrl: githubBaseUrl,
+      });
+    });
+  });
+
+  return files;
+}
+
+// Render "Recently Modified Docs" section on the main page
+function renderRecentDocs() {
+  const container = document.getElementById('recent-docs-container');
+  if (!container || !wikiIndex) return;
+
+  const files = getAllDocFiles()
+    .filter(f => f.date)
+    .sort((a, b) => b.date.localeCompare(a.date))
+    .slice(0, 5);
+
+  if (files.length === 0) {
+    container.innerHTML = '<p class="placeholder-text">No recent documents found</p>';
+    return;
+  }
+
+  let html = '<table class="recent-docs-table"><thead><tr><th>File</th><th>Date</th></tr></thead><tbody>';
+
+  files.forEach(file => {
+    const dateDisplay = file.date || '-';
+    if (file.type === 'wiki') {
+      html += `<tr class="recent-doc-row" data-type="wiki" data-path="${escapeHtml(file.path)}">`;
+      html += `<td><span class="recent-doc-name">${escapeHtml(file.name)}</span> <span class="recent-doc-source">${escapeHtml(file.source)}</span></td>`;
+    } else {
+      const fileUrl = file.githubUrl ? `${file.githubUrl}/blob/main/${file.path}` : '#';
+      html += `<tr class="recent-doc-row" data-type="repo-file" data-url="${escapeHtml(fileUrl)}">`;
+      html += `<td><span class="recent-doc-name">${escapeHtml(file.name)}</span> <span class="recent-doc-source">${escapeHtml(file.source)}</span></td>`;
+    }
+    html += `<td class="recent-doc-date">${escapeHtml(dateDisplay)}</td>`;
+    html += '</tr>';
+  });
+
+  html += '</tbody></table>';
+  html += '<div class="recent-docs-footer"><a href="/browse?tab=docs" class="recent-docs-link" id="view-all-docs-link">View all docs &rarr;</a></div>';
+
+  container.innerHTML = html;
+
+  // Click handlers for rows
+  container.querySelectorAll('.recent-doc-row').forEach(row => {
+    row.addEventListener('click', () => {
+      if (row.dataset.type === 'wiki') {
+        navigateTo('document', { doc: row.dataset.path });
+      } else if (row.dataset.url && row.dataset.url !== '#') {
+        window.open(row.dataset.url, '_blank');
+      }
+    });
+  });
+
+  // "View all docs" link handler
+  const viewAllLink = document.getElementById('view-all-docs-link');
+  if (viewAllLink) {
+    viewAllLink.addEventListener('click', (e) => {
+      e.preventDefault();
+      history.pushState({ page: 'browse', tab: 'docs' }, '', '/browse?tab=docs');
+      showPage('browse', { tab: 'docs' });
+    });
+  }
+}
+
+// Docs View state
+let docsViewSort = { field: 'date', direction: 'desc' };
+let docsViewPage = 1;
+const DOCS_PER_PAGE = 100;
+
+// Render full Docs View tab on Browse page
+function renderDocsView() {
+  const container = document.getElementById('repo-docs-content');
+  if (!container || !wikiIndex) return;
+
+  const allFiles = getAllDocFiles();
+
+  // Sort
+  const sorted = [...allFiles].sort((a, b) => {
+    let cmp = 0;
+    if (docsViewSort.field === 'name') {
+      cmp = a.name.toLowerCase().localeCompare(b.name.toLowerCase());
+    } else if (docsViewSort.field === 'date') {
+      cmp = (a.date || '').localeCompare(b.date || '');
+    }
+    return docsViewSort.direction === 'asc' ? cmp : -cmp;
+  });
+
+  // Pagination
+  const totalPages = Math.max(1, Math.ceil(sorted.length / DOCS_PER_PAGE));
+  docsViewPage = Math.min(docsViewPage, totalPages);
+  const start = (docsViewPage - 1) * DOCS_PER_PAGE;
+  const pageFiles = sorted.slice(start, start + DOCS_PER_PAGE);
+
+  // Sort controls
+  const nameArrow = docsViewSort.field === 'name' ? (docsViewSort.direction === 'asc' ? ' &#9650;' : ' &#9660;') : '';
+  const dateArrow = docsViewSort.field === 'date' ? (docsViewSort.direction === 'asc' ? ' &#9650;' : ' &#9660;') : '';
+
+  let html = `<div class="docs-view-header"><span class="docs-view-count">${sorted.length} doc files</span></div>`;
+
+  html += '<table class="docs-view-table"><thead><tr>';
+  html += `<th class="sortable" data-sort="name">File${nameArrow}</th>`;
+  html += '<th>Source</th>';
+  html += `<th class="sortable" data-sort="date">Date${dateArrow}</th>`;
+  html += '</tr></thead><tbody>';
+
+  pageFiles.forEach(file => {
+    const dateDisplay = file.date || '-';
+    const icon = file.type === 'wiki' ? '📝' : getFileTypeIcon(file.path.split('.').pop() || 'md');
+
+    html += '<tr>';
+    if (file.type === 'wiki') {
+      html += `<td><span class="file-icon">${icon}</span> <a href="#" class="docs-view-link" data-type="wiki" data-path="${escapeHtml(file.path)}">${escapeHtml(file.name)}</a></td>`;
+    } else {
+      const fileUrl = file.githubUrl ? `${file.githubUrl}/blob/main/${file.path}` : '#';
+      html += `<td><span class="file-icon">${icon}</span> <a href="${escapeHtml(fileUrl)}" target="_blank">${escapeHtml(file.name)}</a></td>`;
+    }
+    html += `<td class="docs-view-source">${escapeHtml(file.source)}</td>`;
+    html += `<td class="docs-view-date">${escapeHtml(dateDisplay)}</td>`;
+    html += '</tr>';
+  });
+
+  html += '</tbody></table>';
+
+  // Pagination controls
+  if (totalPages > 1) {
+    html += '<div class="pagination">';
+    html += `<button class="btn btn-sm btn-secondary" id="docs-prev-page" ${docsViewPage <= 1 ? 'disabled' : ''}>Previous</button>`;
+    html += `<span class="pagination-info">Page ${docsViewPage} of ${totalPages}</span>`;
+    html += `<button class="btn btn-sm btn-secondary" id="docs-next-page" ${docsViewPage >= totalPages ? 'disabled' : ''}>Next</button>`;
+    html += '</div>';
+  }
+
+  container.innerHTML = html;
+
+  // Sort click handlers
+  container.querySelectorAll('.sortable').forEach(th => {
+    th.addEventListener('click', () => {
+      const field = th.dataset.sort;
+      if (docsViewSort.field === field) {
+        docsViewSort.direction = docsViewSort.direction === 'asc' ? 'desc' : 'asc';
+      } else {
+        docsViewSort.field = field;
+        docsViewSort.direction = field === 'date' ? 'desc' : 'asc';
+      }
+      docsViewPage = 1;
+      renderDocsView();
+    });
+  });
+
+  // Wiki doc link handlers
+  container.querySelectorAll('.docs-view-link[data-type="wiki"]').forEach(link => {
+    link.addEventListener('click', (e) => {
+      e.preventDefault();
+      navigateTo('document', { doc: link.dataset.path });
+    });
+  });
+
+  // Pagination handlers
+  const prevBtn = document.getElementById('docs-prev-page');
+  const nextBtn = document.getElementById('docs-next-page');
+  if (prevBtn) {
+    prevBtn.addEventListener('click', () => {
+      if (docsViewPage > 1) { docsViewPage--; renderDocsView(); }
+    });
+  }
+  if (nextBtn) {
+    nextBtn.addEventListener('click', () => {
+      if (docsViewPage < totalPages) { docsViewPage++; renderDocsView(); }
+    });
+  }
+}
 
 // ============================================
 // EDITABLE NOTES MODULE

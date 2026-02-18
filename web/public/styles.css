@@ -1530,3 +1530,182 @@ footer a:hover {
 .repo-doc-modal-content .editor-status {
   margin-bottom: 1rem;
 }
+
+/* Recently Modified Docs Section */
+.recent-docs-section {
+  margin-top: 1.5rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--border);
+  text-align: center;
+}
+
+.recent-docs-section h3 {
+  font-size: 1.25rem;
+  margin-bottom: 0.75rem;
+  color: var(--text);
+}
+
+.recent-docs-table {
+  border-collapse: collapse;
+  font-size: 0.9rem;
+  margin: 0 auto;
+  text-align: left;
+}
+
+.recent-docs-table thead {
+  background: var(--bg);
+  border-bottom: 2px solid var(--border);
+}
+
+.recent-docs-table th {
+  padding: 0.5rem 1rem;
+  font-weight: 600;
+  color: var(--text);
+}
+
+.recent-docs-table td {
+  padding: 0.4rem 1rem;
+  border-bottom: 1px solid var(--border);
+}
+
+.recent-docs-table tbody tr:last-child td {
+  border-bottom: none;
+}
+
+.recent-doc-row {
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.recent-doc-row:hover {
+  background: var(--bg);
+}
+
+.recent-doc-name {
+  color: var(--primary);
+  font-weight: 500;
+}
+
+.recent-doc-source {
+  color: var(--text-muted);
+  font-size: 0.8rem;
+  margin-left: 0.5rem;
+}
+
+.recent-doc-date {
+  color: var(--text-muted);
+  font-size: 0.85rem;
+  white-space: nowrap;
+}
+
+.recent-docs-footer {
+  margin-top: 0.75rem;
+}
+
+.recent-docs-link {
+  color: var(--primary);
+  text-decoration: none;
+  font-weight: 500;
+  font-size: 0.9rem;
+}
+
+.recent-docs-link:hover {
+  text-decoration: underline;
+}
+
+/* Docs View Tab */
+#repo-docs-content {
+  max-height: 700px;
+  overflow-y: auto;
+  padding: 1rem;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+}
+
+.docs-view-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.75rem;
+}
+
+.docs-view-count {
+  font-size: 0.9rem;
+  color: var(--text-muted);
+}
+
+.docs-view-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.9rem;
+}
+
+.docs-view-table thead {
+  background: var(--bg);
+  border-bottom: 2px solid var(--border);
+  position: sticky;
+  top: 0;
+}
+
+.docs-view-table th {
+  padding: 0.6rem 0.75rem;
+  font-weight: 600;
+  color: var(--text);
+  text-align: left;
+}
+
+.docs-view-table th.sortable {
+  cursor: pointer;
+  user-select: none;
+}
+
+.docs-view-table th.sortable:hover {
+  background: var(--border);
+}
+
+.docs-view-table td {
+  padding: 0.4rem 0.75rem;
+  border-bottom: 1px solid var(--border);
+  vertical-align: middle;
+}
+
+.docs-view-table tbody tr:hover {
+  background: var(--bg);
+}
+
+.docs-view-table a {
+  color: var(--primary);
+  text-decoration: none;
+}
+
+.docs-view-table a:hover {
+  text-decoration: underline;
+}
+
+.docs-view-source {
+  color: var(--text-muted);
+  font-size: 0.85rem;
+}
+
+.docs-view-date {
+  color: var(--text-muted);
+  font-size: 0.85rem;
+  white-space: nowrap;
+}
+
+/* Pagination */
+.pagination {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 1rem;
+  margin-top: 1rem;
+  padding-top: 0.75rem;
+  border-top: 1px solid var(--border);
+}
+
+.pagination-info {
+  font-size: 0.9rem;
+  color: var(--text-muted);
+}
