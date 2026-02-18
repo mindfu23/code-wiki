@@ -41,7 +41,7 @@
       "relativePath": "preferences/gcp-cloud-run-deployment.md",
       "title": "gcp-cloud-run-deployment",
       "tags": [],
-      "content": "# Google Cloud Run Deployment Guide\n\nA comprehensive guide for deploying Python/FastAPI backends to Google Cloud Run via GitHub Actions.\n\n## Prerequisites\n\n- Google Cloud account with billing enabled\n- GitHub repository\n- `gcloud` CLI installed locally\n\n## Initial GCP Setup\n\n### 1. Create or Select a Project\n\n```bash\n# List existing projects\ngcloud projects list\n\n# Create a new project (optional)\ngcloud projects create YOUR_PROJECT_ID --name=\"Your Project Name\"\n\n# Set active project\ngcloud config set project YOUR_PROJECT_ID\n```\n\n### 2. Enable Required APIs\n\n```bash\ngcloud services enable \\\n  run.googleapis.com \\\n  artifactregistry.googleapis.com \\\n  cloudbuild.googleapis.com \\\n  --project=YOUR_PROJECT_ID\n```\n\n### 3. Create Artifact Registry Repository\n\n```bash\ngcloud artifacts repositories create YOUR_REPO_NAME \\\n  --repository-format=docker \\\n  --location=us-central1 \\\n  --description=\"Docker images for your app\" \\\n  --project=YOUR_PROJECT_ID\n```\n\n### 4. Create Service Account for GitHub Actions\n\n```bash\n# Create the service account\ngcloud iam service-accounts create github-actions \\\n  --display-name=\"GitHub Actions\" \\\n  --project=YOUR_PROJECT_ID\n\n# Store the email for convenience\nSA_EMAIL=\"github-actions@YOUR_PROJECT_ID.iam.gserviceaccount.com\"\n```\n\n### 5. Grant Required Permissions\n\n```bash\n# Cloud Run Admin - deploy services\ngcloud projects add-iam-policy-binding YOUR_PROJECT_ID \\\n  --member=\"serviceAccount:$SA_EMAIL\" \\\n  --role=\"roles/run.admin\"\n\n# Artifact Registry Writer - push Docker images\ngcloud projects add-iam-policy-binding YOUR_PROJECT_ID \\\n  --member=\"serviceAccount:$SA_EMAIL\" \\\n  --role=\"roles/artifactregistry.writer\"\n\n# Service Account User - deploy as compute service account\n# First, find your compute service account number:\ngcloud projects describe YOUR_PROJECT_ID --format=\"value(projectNumber)\"\n# Then grant permission (replace PROJECT_NUMBER):\ngcloud iam service-accounts add-iam-policy-binding \\\n  PROJECT_NUMBER-compute@developer.gserviceaccount.com \\\n  --member=\"serviceAccount:$SA_EMAIL\" \\\n  --role=\"roles/iam.serviceAccountUser\" \\\n  --project=YOUR_PROJECT_ID\n```\n\n### 6. Create and Download Service Account Key\n\n```bash\ngcloud iam service-accounts keys create ~/github-actions-key.json \\\n  --iam-account=github-actions@YOUR_PROJECT_ID.iam.gserviceaccount.com \\\n  --project=YOUR_PROJECT_ID\n\n# View the key (copy this for GitHub secrets)\ncat ~/github-actions-key.json\n\n# IMPORTANT: Delete the local key file after copying to GitHub\nrm ~/github-actions-key.json\n```\n\n## GitHub Repository Setup\n\n### Required Secrets\n\nGo to GitHub \u2192 Repository \u2192 Settings \u2192 Secrets and variables \u2192 Actions\n\nAdd these secrets:\n\n| Secret Name | Value |\n|-------------|-------|\n| `GCP_PROJECT_ID` | Your GCP project ID (e.g., `my-project-123`) |\n| `GCP_SA_KEY` | The entire JSON content of the service account key |\n| `ANTHROPIC_API_KEY` | (Optional) API key for Anthropic |\n| `GOOGLE_API_KEY` | (Optional) API key for Google AI |\n| `OPENAI_API_KEY` | (Optional) API key for OpenAI |\n| `PERPLEXITY_API_KEY` | (Optional) API key for Perplexity |\n\n## GitHub Actions Workflow\n\nCreate `.github/workflows/deploy-backend.yml`:\n\n```yaml\nname: Deploy Backend to Cloud Run\n\non:\n  push:\n    branches:\n      - main\n    paths:\n      - 'src/**'\n      - 'pyproject.toml'\n      - 'Dockerfile'\n      - '.github/workflows/deploy-backend.yml'\n  workflow_dispatch:  # Allow manual trigger\n\nenv:\n  PROJECT_ID: ${{ secrets.GCP_PROJECT_ID }}\n  SERVICE_NAME: your-api-name\n  ARTIFACT_REPO: your-repo-name\n  REGION: us-central1\n\njobs:\n  deploy:\n    runs-on: ubuntu-latest\n\n    permissions:\n      contents: read\n      id-token: write\n\n    steps:\n      - name: Checkout code\n        uses: actions/checkout@v4\n\n      - name: Authenticate to Google Cloud\n        uses: google-github-actions/auth@v2\n        with:\n          credentials_json: ${{ secrets.GCP_SA_KEY }}\n\n      - name: Set up Cloud SDK\n        uses: google-github-actions/setup-gcloud@v2\n        with:\n          project_id: ${{ env.PROJECT_ID }}\n\n      - name: Configure Docker for Artifact Registry\n        run: |\n          gcloud auth configure-docker ${{ env.REGION }}-docker.pkg.dev --quiet\n\n      - name: Build and push Docker image\n        run: |\n          docker build -t ${{ env.REGION }}-docker.pkg.dev/${{ env.PROJECT_ID }}/${{ env.ARTIFACT_REPO }}/${{ env.SERVICE_NAME }}:${{ github.sha }} .\n          docker push ${{ env.REGION }}-docker.pkg.dev/${{ env.PROJECT_ID }}/${{ env.ARTIFACT_REPO }}/${{ env.SERVICE_NAME }}:${{ github.sha }}\n\n      - name: Deploy to Cloud Run\n        env:\n          ANTHROPIC_KEY: ${{ secrets.ANTHROPIC_API_KEY }}\n          GOOGLE_KEY: ${{ secrets.GOOGLE_API_KEY }}\n        run: |\n          gcloud run deploy ${{ env.SERVICE_NAME }} \\\n            --image ${{ env.REGION }}-docker.pkg.dev/${{ env.PROJECT_ID }}/${{ env.ARTIFACT_REPO }}/${{ env.SERVICE_NAME }}:${{ github.sha }} \\\n            --platform managed \\\n            --region ${{ env.REGION }} \\\n            --allow-unauthenticated \\\n            --set-env-vars \"ANTHROPIC_API_KEY=${ANTHROPIC_KEY},GOOGLE_API_KEY=${GOOGLE_KEY}\" \\\n            --memory 2Gi \\\n            --cpu 1 \\\n            --min-instances 0 \\\n            --max-instances 3 \\\n            --timeout 300 \\\n            --cpu-boost\n\n      - name: Get Cloud Run URL\n        id: get-url\n        run: |\n          URL=$(gcloud run services describe ${{ env.SERVICE_NAME }} --region ${{ env.REGION }} --format 'value(status.url)')\n          echo \"service_url=$URL\" >> $GITHUB_OUTPUT\n          echo \"Backend deployed to: $URL\"\n```\n\n## Dockerfile for FastAPI\n\n```dockerfile\nFROM python:3.11-slim\n\nWORKDIR /app\n\n# Install system dependencies\nRUN apt-get update && apt-get install -y \\\n    gcc \\\n    && rm -rf /var/lib/apt/lists/*\n\n# Copy project files\nCOPY pyproject.toml .\nCOPY src/ ./src/\nCOPY config.yaml .  # If you have a config file\n\n# Install Python dependencies\nRUN pip install --no-cache-dir -e .\n\n# Download spaCy model if using NER\nRUN python -m spacy download en_core_web_sm\n\n# Create any needed directories\nRUN mkdir -p ./data\n\n# Expose port (Cloud Run uses PORT env var)\nEXPOSE 8080\n\n# Set Python path\nENV PYTHONPATH=/app\n\n# Disable Python buffering for better logging\nENV PYTHONUNBUFFERED=1\n\n# Run the API server - use shell form to respect PORT env var\nCMD uvicorn src.api:app --host 0.0.0.0 --port ${PORT:-8080}\n```\n\n## Common Dependencies (pyproject.toml)\n\nFor FastAPI with file uploads:\n\n```toml\ndependencies = [\n    \"fastapi>=0.109.0\",\n    \"uvicorn[standard]>=0.27.0\",\n    \"pydantic>=2.0.0\",\n    \"python-multipart>=0.0.6\",  # REQUIRED for file uploads (UploadFile)\n]\n```\n\n---\n\n## Troubleshooting Guide\n\n### Error: \"Container failed to start on port 8080\"\n\n**Symptoms:**\n- Deployment fails with timeout\n- \"Container failed to start and listen on the port\"\n\n**Solutions:**\n\n1. **Check logs for the actual error:**\n   ```bash\n   gcloud logging read \"resource.type=cloud_run_revision AND resource.labels.service_name=YOUR_SERVICE\" \\\n     --project=YOUR_PROJECT_ID \\\n     --limit=50 \\\n     --format=\"table(timestamp,severity,textPayload)\"\n   ```\n\n2. **Missing dependency:** Look for `RuntimeError` or `ImportError` in logs\n   - Common: `python-multipart` required for `UploadFile`\n   - Common: spaCy model not downloaded\n\n3. **Use lazy imports:** Heavy imports at module level can cause startup timeout\n   ```python\n   # Bad - imports at module level\n   from .heavy_module import HeavyClass\n\n   # Good - lazy import when needed\n   def get_heavy_class():\n       from .heavy_module import HeavyClass\n       return HeavyClass\n   ```\n\n4. **Increase memory/CPU:**\n   ```yaml\n   --memory 2Gi \\\n   --cpu 1 \\\n   --cpu-boost\n   ```\n\n### Error: \"Permission denied on Artifact Registry\"\n\n**Symptoms:**\n- `artifactregistry.repositories.uploadArtifacts denied`\n- `artifactregistry.repositories.downloadArtifacts denied`\n\n**Solution:**\n```bash\n# Grant Artifact Registry Writer role\ngcloud artifacts repositories add-iam-policy-binding YOUR_REPO_NAME \\\n  --location=us-central1 \\\n  --member=\"serviceAccount:github-actions@YOUR_PROJECT_ID.iam.gserviceaccount.com\" \\\n  --role=\"roles/artifactregistry.writer\" \\\n  --project=YOUR_PROJECT_ID\n```\n\n### Error: \"Project does not exist\" or Wrong Project\n\n**Symptoms:**\n- Deploys to wrong project\n- \"projects/XXX does not exist\"\n\n**Root Cause:** The service account key (`GCP_SA_KEY`) contains a `project_id` field that determines which project gcloud authenticates to.\n\n**Solution:**\n1. Verify the project in your key matches `GCP_PROJECT_ID`:\n   ```bash\n   # Check project in your key\n   cat your-key.json | grep project_id\n   ```\n\n2. If mismatched, create a NEW service account in the CORRECT project and update `GCP_SA_KEY`\n\n3. After updating secrets, push a new commit (re-running old workflows uses cached secrets)\n\n### Error: \"Cloud Run Service Agent must have permission to read image\"\n\n**Symptoms:**\n- Image pushed successfully\n- Deploy fails with 403 Forbidden on image pull\n\n**Root Cause:** Cross-project deployment - image in Project A, deploying to Project B\n\n**Solution:** Keep everything in one project. Create service account in the same project as Artifact Registry.\n\n### GitHub Actions Not Picking Up New Secrets\n\n**Symptoms:**\n- Updated secret but workflow still uses old value\n- Same error after changing secrets\n\n**Solution:**\n1. Push a new commit (don't just re-run workflow)\n2. The commit must change a file in the `paths` filter\n3. Or use `workflow_dispatch` and click \"Run workflow\" (after fresh page load)\n\n---\n\n## Useful Commands\n\n### View Cloud Run Logs\n```bash\ngcloud logging read \"resource.type=cloud_run_revision AND resource.labels.service_name=YOUR_SERVICE\" \\\n  --project=YOUR_PROJECT_ID \\\n  --limit=100\n```\n\n### List Cloud Run Services\n```bash\ngcloud run services list --project=YOUR_PROJECT_ID\n```\n\n### Get Service URL\n```bash\ngcloud run services describe YOUR_SERVICE \\\n  --region=us-central1 \\\n  --project=YOUR_PROJECT_ID \\\n  --format='value(status.url)'\n```\n\n### Delete a Service\n```bash\ngcloud run services delete YOUR_SERVICE \\\n  --region=us-central1 \\\n  --project=YOUR_PROJECT_ID\n```\n\n### List Artifact Registry Images\n```bash\ngcloud artifacts docker images list \\\n  us-central1-docker.pkg.dev/YOUR_PROJECT_ID/YOUR_REPO_NAME\n```\n\n### Check IAM Permissions\n```bash\ngcloud projects get-iam-policy YOUR_PROJECT_ID \\\n  --flatten=\"bindings[].members\" \\\n  --filter=\"bindings.members:serviceAccount:github-actions@YOUR_PROJECT_ID.iam.gserviceaccount.com\"\n```\n\n---\n\n## Connecting Frontend (Netlify)\n\nAfter successful deployment, connect your frontend to the Cloud Run backend:\n\n### 1. Get the Cloud Run URL\n\n```bash\ngcloud run services describe YOUR_SERVICE \\\n  --region=us-central1 \\\n  --project=YOUR_PROJECT_ID \\\n  --format='value(status.url)'\n```\n\nThis returns a URL like: `https://your-service-abc123-uc.a.run.app`\n\n### 2. Set Netlify Environment Variable\n\n1. Go to **Netlify** \u2192 Your Site \u2192 **Site configuration** \u2192 **Environment variables**\n2. Add a new variable:\n   - **Key:** `VITE_API_URL`\n   - **Value:** Your Cloud Run URL (e.g., `https://your-service-abc123-uc.a.run.app`)\n3. **Redeploy** your site for the change to take effect (Deploys \u2192 Trigger deploy \u2192 Deploy site)\n\n### 3. Use in Frontend Code\n\n```typescript\n// In your frontend code\nconst API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000';\n\n// Make API calls\nconst response = await fetch(`${API_URL}/health`);\n```\n\n### 4. Verify Connection\n\nTest the health endpoint directly:\n```bash\ncurl https://your-service-abc123-uc.a.run.app/health\n```\n\nShould return: `{\"status\":\"healthy\"}`\n\n---\n\n## Checklist for New Projects\n\n- [ ] GCP project created with billing enabled\n- [ ] APIs enabled (Cloud Run, Artifact Registry, Cloud Build)\n- [ ] Artifact Registry repository created\n- [ ] Service account created in the SAME project\n- [ ] Service account has: `run.admin`, `artifactregistry.writer`, `iam.serviceAccountUser`\n- [ ] Service account key generated and added to GitHub as `GCP_SA_KEY`\n- [ ] `GCP_PROJECT_ID` secret matches the project in the service account key\n- [ ] Dockerfile uses `PORT` environment variable (Cloud Run requirement)\n- [ ] `python-multipart` included if using file uploads\n- [ ] Heavy imports are lazy-loaded to avoid startup timeout\n",
+      "content": "# Google Cloud Run Deployment Guide\n\nA comprehensive guide for deploying Python/FastAPI backends to Google Cloud Run via GitHub Actions.\n\n## Prerequisites\n\n- Google Cloud account with billing enabled\n- GitHub repository\n- `gcloud` CLI installed locally\n\n## Initial GCP Setup\n\n### 1. Create or Select a Project\n\n```bash\n# List existing projects\ngcloud projects list\n\n# Create a new project (optional)\ngcloud projects create YOUR_PROJECT_ID --name=\"Your Project Name\"\n\n# Set active project\ngcloud config set project YOUR_PROJECT_ID\n```\n\n### 2. Enable Required APIs\n\n```bash\ngcloud services enable \\\n  run.googleapis.com \\\n  artifactregistry.googleapis.com \\\n  cloudbuild.googleapis.com \\\n  --project=YOUR_PROJECT_ID\n```\n\n### 3. Create Artifact Registry Repository\n\n```bash\ngcloud artifacts repositories create YOUR_REPO_NAME \\\n  --repository-format=docker \\\n  --location=us-central1 \\\n  --description=\"Docker images for your app\" \\\n  --project=YOUR_PROJECT_ID\n```\n\n### 4. Create Service Account for GitHub Actions\n\n```bash\n# Create the service account\ngcloud iam service-accounts create github-actions \\\n  --display-name=\"GitHub Actions\" \\\n  --project=YOUR_PROJECT_ID\n\n# Store the email for convenience\nSA_EMAIL=\"github-actions@YOUR_PROJECT_ID.iam.gserviceaccount.com\"\n```\n\n### 5. Grant Required Permissions\n\n```bash\n# Cloud Run Admin - deploy services\ngcloud projects add-iam-policy-binding YOUR_PROJECT_ID \\\n  --member=\"serviceAccount:$SA_EMAIL\" \\\n  --role=\"roles/run.admin\"\n\n# Artifact Registry Writer - push Docker images\ngcloud projects add-iam-policy-binding YOUR_PROJECT_ID \\\n  --member=\"serviceAccount:$SA_EMAIL\" \\\n  --role=\"roles/artifactregistry.writer\"\n\n# Service Account User - deploy as compute service account\n# First, find your compute service account number:\ngcloud projects describe YOUR_PROJECT_ID --format=\"value(projectNumber)\"\n# Then grant permission (replace PROJECT_NUMBER):\ngcloud iam service-accounts add-iam-policy-binding \\\n  PROJECT_NUMBER-compute@developer.gserviceaccount.com \\\n  --member=\"serviceAccount:$SA_EMAIL\" \\\n  --role=\"roles/iam.serviceAccountUser\" \\\n  --project=YOUR_PROJECT_ID\n```\n\n### 6. Create and Download Service Account Key\n\n```bash\ngcloud iam service-accounts keys create ~/github-actions-key.json \\\n  --iam-account=github-actions@YOUR_PROJECT_ID.iam.gserviceaccount.com \\\n  --project=YOUR_PROJECT_ID\n\n# View the key (copy this for GitHub secrets)\ncat ~/github-actions-key.json\n\n# IMPORTANT: Delete the local key file after copying to GitHub\nrm ~/github-actions-key.json\n```\n\n## GitHub Repository Setup\n\n### Required Secrets\n\nGo to GitHub → Repository → Settings → Secrets and variables → Actions\n\nAdd these secrets:\n\n| Secret Name | Value |\n|-------------|-------|\n| `GCP_PROJECT_ID` | Your GCP project ID (e.g., `my-project-123`) |\n| `GCP_SA_KEY` | The entire JSON content of the service account key |\n| `ANTHROPIC_API_KEY` | (Optional) API key for Anthropic |\n| `GOOGLE_API_KEY` | (Optional) API key for Google AI |\n| `OPENAI_API_KEY` | (Optional) API key for OpenAI |\n| `PERPLEXITY_API_KEY` | (Optional) API key for Perplexity |\n\n## GitHub Actions Workflow\n\nCreate `.github/workflows/deploy-backend.yml`:\n\n```yaml\nname: Deploy Backend to Cloud Run\n\non:\n  push:\n    branches:\n      - main\n    paths:\n      - 'src/**'\n      - 'pyproject.toml'\n      - 'Dockerfile'\n      - '.github/workflows/deploy-backend.yml'\n  workflow_dispatch:  # Allow manual trigger\n\nenv:\n  PROJECT_ID: ${{ secrets.GCP_PROJECT_ID }}\n  SERVICE_NAME: your-api-name\n  ARTIFACT_REPO: your-repo-name\n  REGION: us-central1\n\njobs:\n  deploy:\n    runs-on: ubuntu-latest\n\n    permissions:\n      contents: read\n      id-token: write\n\n    steps:\n      - name: Checkout code\n        uses: actions/checkout@v4\n\n      - name: Authenticate to Google Cloud\n        uses: google-github-actions/auth@v2\n        with:\n          credentials_json: ${{ secrets.GCP_SA_KEY }}\n\n      - name: Set up Cloud SDK\n        uses: google-github-actions/setup-gcloud@v2\n        with:\n          project_id: ${{ env.PROJECT_ID }}\n\n      - name: Configure Docker for Artifact Registry\n        run: |\n          gcloud auth configure-docker ${{ env.REGION }}-docker.pkg.dev --quiet\n\n      - name: Build and push Docker image\n        run: |\n          docker build -t ${{ env.REGION }}-docker.pkg.dev/${{ env.PROJECT_ID }}/${{ env.ARTIFACT_REPO }}/${{ env.SERVICE_NAME }}:${{ github.sha }} .\n          docker push ${{ env.REGION }}-docker.pkg.dev/${{ env.PROJECT_ID }}/${{ env.ARTIFACT_REPO }}/${{ env.SERVICE_NAME }}:${{ github.sha }}\n\n      - name: Deploy to Cloud Run\n        env:\n          ANTHROPIC_KEY: ${{ secrets.ANTHROPIC_API_KEY }}\n          GOOGLE_KEY: ${{ secrets.GOOGLE_API_KEY }}\n        run: |\n          gcloud run deploy ${{ env.SERVICE_NAME }} \\\n            --image ${{ env.REGION }}-docker.pkg.dev/${{ env.PROJECT_ID }}/${{ env.ARTIFACT_REPO }}/${{ env.SERVICE_NAME }}:${{ github.sha }} \\\n            --platform managed \\\n            --region ${{ env.REGION }} \\\n            --allow-unauthenticated \\\n            --set-env-vars \"ANTHROPIC_API_KEY=${ANTHROPIC_KEY},GOOGLE_API_KEY=${GOOGLE_KEY}\" \\\n            --memory 2Gi \\\n            --cpu 1 \\\n            --min-instances 0 \\\n            --max-instances 3 \\\n            --timeout 300 \\\n            --cpu-boost\n\n      - name: Get Cloud Run URL\n        id: get-url\n        run: |\n          URL=$(gcloud run services describe ${{ env.SERVICE_NAME }} --region ${{ env.REGION }} --format 'value(status.url)')\n          echo \"service_url=$URL\" >> $GITHUB_OUTPUT\n          echo \"Backend deployed to: $URL\"\n```\n\n## Dockerfile for FastAPI\n\n```dockerfile\nFROM python:3.11-slim\n\nWORKDIR /app\n\n# Install system dependencies\nRUN apt-get update && apt-get install -y \\\n    gcc \\\n    && rm -rf /var/lib/apt/lists/*\n\n# Copy project files\nCOPY pyproject.toml .\nCOPY src/ ./src/\nCOPY config.yaml .  # If you have a config file\n\n# Install Python dependencies\nRUN pip install --no-cache-dir -e .\n\n# Download spaCy model if using NER\nRUN python -m spacy download en_core_web_sm\n\n# Create any needed directories\nRUN mkdir -p ./data\n\n# Expose port (Cloud Run uses PORT env var)\nEXPOSE 8080\n\n# Set Python path\nENV PYTHONPATH=/app\n\n# Disable Python buffering for better logging\nENV PYTHONUNBUFFERED=1\n\n# Run the API server - use shell form to respect PORT env var\nCMD uvicorn src.api:app --host 0.0.0.0 --port ${PORT:-8080}\n```\n\n## Common Dependencies (pyproject.toml)\n\nFor FastAPI with file uploads:\n\n```toml\ndependencies = [\n    \"fastapi>=0.109.0\",\n    \"uvicorn[standard]>=0.27.0\",\n    \"pydantic>=2.0.0\",\n    \"python-multipart>=0.0.6\",  # REQUIRED for file uploads (UploadFile)\n]\n```\n\n---\n\n## Troubleshooting Guide\n\n### Error: \"Container failed to start on port 8080\"\n\n**Symptoms:**\n- Deployment fails with timeout\n- \"Container failed to start and listen on the port\"\n\n**Solutions:**\n\n1. **Check logs for the actual error:**\n   ```bash\n   gcloud logging read \"resource.type=cloud_run_revision AND resource.labels.service_name=YOUR_SERVICE\" \\\n     --project=YOUR_PROJECT_ID \\\n     --limit=50 \\\n     --format=\"table(timestamp,severity,textPayload)\"\n   ```\n\n2. **Missing dependency:** Look for `RuntimeError` or `ImportError` in logs\n   - Common: `python-multipart` required for `UploadFile`\n   - Common: spaCy model not downloaded\n\n3. **Use lazy imports:** Heavy imports at module level can cause startup timeout\n   ```python\n   # Bad - imports at module level\n   from .heavy_module import HeavyClass\n\n   # Good - lazy import when needed\n   def get_heavy_class():\n       from .heavy_module import HeavyClass\n       return HeavyClass\n   ```\n\n4. **Increase memory/CPU:**\n   ```yaml\n   --memory 2Gi \\\n   --cpu 1 \\\n   --cpu-boost\n   ```\n\n### Error: \"Permission denied on Artifact Registry\"\n\n**Symptoms:**\n- `artifactregistry.repositories.uploadArtifacts denied`\n- `artifactregistry.repositories.downloadArtifacts denied`\n\n**Solution:**\n```bash\n# Grant Artifact Registry Writer role\ngcloud artifacts repositories add-iam-policy-binding YOUR_REPO_NAME \\\n  --location=us-central1 \\\n  --member=\"serviceAccount:github-actions@YOUR_PROJECT_ID.iam.gserviceaccount.com\" \\\n  --role=\"roles/artifactregistry.writer\" \\\n  --project=YOUR_PROJECT_ID\n```\n\n### Error: \"Project does not exist\" or Wrong Project\n\n**Symptoms:**\n- Deploys to wrong project\n- \"projects/XXX does not exist\"\n\n**Root Cause:** The service account key (`GCP_SA_KEY`) contains a `project_id` field that determines which project gcloud authenticates to.\n\n**Solution:**\n1. Verify the project in your key matches `GCP_PROJECT_ID`:\n   ```bash\n   # Check project in your key\n   cat your-key.json | grep project_id\n   ```\n\n2. If mismatched, create a NEW service account in the CORRECT project and update `GCP_SA_KEY`\n\n3. After updating secrets, push a new commit (re-running old workflows uses cached secrets)\n\n### Error: \"Cloud Run Service Agent must have permission to read image\"\n\n**Symptoms:**\n- Image pushed successfully\n- Deploy fails with 403 Forbidden on image pull\n\n**Root Cause:** Cross-project deployment - image in Project A, deploying to Project B\n\n**Solution:** Keep everything in one project. Create service account in the same project as Artifact Registry.\n\n### GitHub Actions Not Picking Up New Secrets\n\n**Symptoms:**\n- Updated secret but workflow still uses old value\n- Same error after changing secrets\n\n**Solution:**\n1. Push a new commit (don't just re-run workflow)\n2. The commit must change a file in the `paths` filter\n3. Or use `workflow_dispatch` and click \"Run workflow\" (after fresh page load)\n\n---\n\n## Useful Commands\n\n### View Cloud Run Logs\n```bash\ngcloud logging read \"resource.type=cloud_run_revision AND resource.labels.service_name=YOUR_SERVICE\" \\\n  --project=YOUR_PROJECT_ID \\\n  --limit=100\n```\n\n### List Cloud Run Services\n```bash\ngcloud run services list --project=YOUR_PROJECT_ID\n```\n\n### Get Service URL\n```bash\ngcloud run services describe YOUR_SERVICE \\\n  --region=us-central1 \\\n  --project=YOUR_PROJECT_ID \\\n  --format='value(status.url)'\n```\n\n### Delete a Service\n```bash\ngcloud run services delete YOUR_SERVICE \\\n  --region=us-central1 \\\n  --project=YOUR_PROJECT_ID\n```\n\n### List Artifact Registry Images\n```bash\ngcloud artifacts docker images list \\\n  us-central1-docker.pkg.dev/YOUR_PROJECT_ID/YOUR_REPO_NAME\n```\n\n### Check IAM Permissions\n```bash\ngcloud projects get-iam-policy YOUR_PROJECT_ID \\\n  --flatten=\"bindings[].members\" \\\n  --filter=\"bindings.members:serviceAccount:github-actions@YOUR_PROJECT_ID.iam.gserviceaccount.com\"\n```\n\n---\n\n## Connecting Frontend (Netlify)\n\nAfter successful deployment, connect your frontend to the Cloud Run backend:\n\n### 1. Get the Cloud Run URL\n\n```bash\ngcloud run services describe YOUR_SERVICE \\\n  --region=us-central1 \\\n  --project=YOUR_PROJECT_ID \\\n  --format='value(status.url)'\n```\n\nThis returns a URL like: `https://your-service-abc123-uc.a.run.app`\n\n### 2. Set Netlify Environment Variable\n\n1. Go to **Netlify** → Your Site → **Site configuration** → **Environment variables**\n2. Add a new variable:\n   - **Key:** `VITE_API_URL`\n   - **Value:** Your Cloud Run URL (e.g., `https://your-service-abc123-uc.a.run.app`)\n3. **Redeploy** your site for the change to take effect (Deploys → Trigger deploy → Deploy site)\n\n### 3. Use in Frontend Code\n\n```typescript\n// In your frontend code\nconst API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000';\n\n// Make API calls\nconst response = await fetch(`${API_URL}/health`);\n```\n\n### 4. Verify Connection\n\nTest the health endpoint directly:\n```bash\ncurl https://your-service-abc123-uc.a.run.app/health\n```\n\nShould return: `{\"status\":\"healthy\"}`\n\n---\n\n## Checklist for New Projects\n\n- [ ] GCP project created with billing enabled\n- [ ] APIs enabled (Cloud Run, Artifact Registry, Cloud Build)\n- [ ] Artifact Registry repository created\n- [ ] Service account created in the SAME project\n- [ ] Service account has: `run.admin`, `artifactregistry.writer`, `iam.serviceAccountUser`\n- [ ] Service account key generated and added to GitHub as `GCP_SA_KEY`\n- [ ] `GCP_PROJECT_ID` secret matches the project in the service account key\n- [ ] Dockerfile uses `PORT` environment variable (Cloud Run requirement)\n- [ ] `python-multipart` included if using file uploads\n- [ ] Heavy imports are lazy-loaded to avoid startup timeout\n",
       "contentPreview": "# Google Cloud Run Deployment Guide  A comprehensive guide for deploying Python/FastAPI backends to Google Cloud Run via GitHub Actions.  ## Prerequisites  - Google Cloud account with billing enabled - GitHub repository - `gcloud` CLI installed locally  ## Initial GCP Setup  ### 1. Create or Select",
       "category": "preferences"
     },
@@ -88,13 +88,13 @@
       "category": "projects"
     },
     {
-      "path": "wiki/projects/n8n-todo.md",
+      "path": "/home/runner/work/code-wiki/code-wiki/wiki/projects/n8n-todo.md",
       "relativePath": "projects/n8n-todo.md",
       "title": "n8n To Do",
       "tags": [],
       "updated": "2026-02-18",
-      "content": "create or assign a domain name to the current IP address, as currently stored in Google Compute:\n\nhttp://35.188.141.23:5678\n\nworkflows here, created for ValueApe, Metabot, ShamAIn, and novel orchestration via n8n, and 1 demo article generator from LinkedIn.\n\nhttp://35.188.141.23:5678/projects/0xV2ERXR2IwHi5lk/workflows",
-      "contentPreview": "create or assign a domain name to the current IP address, as currently stored in Google Compute:  http://35.188.141.23:5678  workflows here, created for ValueApe, Metabot, ShamAIn, and novel orchestration via n8n, and 1 demo article generator from LinkedIn.  http://35.188.141.23:5678/projects/0xV2ER",
+      "content": "\n\ncreate or assign a domain name to the current IP address, as currently stored in Google Compute:\n\nhttp://35.188.141.23:5678\n\nworkflows here, created for ValueApe, Metabot, ShamAIn, and novel orchestration via n8n, and 1 demo article generator from LinkedIn.\n\nhttp://35.188.141.23:5678/projects/0xV2ERXR2IwHi5lk/workflows",
+      "contentPreview": "create or assign a domain name to the current IP address, as currently stored in Google Compute:  http://35.188.141.23:5678  workflows here, created for ValueApe, Metabot, ShamAIn, and novel orchestration via n8n, and 1 demo article generator from LinkedIn.  http://35.188.141.23:5678/projects/0xV2",
       "category": "projects"
     },
     {
@@ -128,7 +128,7 @@
         "auto-generated"
       ],
       "updated": "2026-01-27",
-      "content": "\n# Repository Locations\n\nThis page is **auto-generated** during indexing. Do not edit manually.\n\n**Last updated:** 2026-01-27T18:36:17.624Z\n\n## Summary\n\n| Status | Count |\n|--------|-------|\n| Synced (local + GitHub) | 23 |\n| Local only | 14 |\n| GitHub only (not cloned) | 0 |\n| **Total** | **37** |\n\n---\n\n## Synced Repositories\n\nThese repositories exist both locally and on GitHub.\n\n| Repository | Local Path | GitHub | Languages |\n|------------|------------|--------|-----------|\n| **apiTracker** | `/Users/jamesbeach/Documents/visual-studio-code/github-copilot/apiTracker` | [GitHub](https://github.com/mindfu23/apiTracker.git) | markdown, javascript, html, json, python, css |\n| **BookLarner** | `/Users/jamesbeach/Documents/visual-studio-code/github-copilot/BookLarner` | [GitHub](https://github.com/mindfu23/BookLarner.git) | markdown, javascript, html, json |\n| **Create** | `/Users/jamesbeach/Documents/visual-studio-code/github-copilot/Create` | [GitHub](https://github.com/mindfu23/Create) | markdown, html, json, typescript, javascript |\n| **EthicalAIditor** | `/Users/jamesbeach/Documents/visual-studio-code/github-copilot/EthicalAIditor` | [GitHub](https://github.com/mindfu23/EthicalAIditor) | markdown, html, json, typescript, javascript, python, yaml, sql, css |\n| **FreeWillEstimator** | `/Users/jamesbeach/Documents/visual-studio-code/github-copilot/FreeWillEstimator` | [GitHub](https://github.com/mindfu23/FreeWillEstimator.git) | markdown, javascript, html, css |\n| **FutureSketch** | `/Users/jamesbeach/Documents/visual-studio-code/github-copilot/FutureSketch` | [GitHub](https://github.com/mindfu23/FutureSketch.git) | python, markdown |\n| **gastown** | `/Users/jamesbeach/Documents/visual-studio-code/github-copilot/gastown` | [GitHub](https://github.com/mindfu23/gastown-mission-district.git) | markdown, json, shell, python |\n| **gastown-mission-district** | `/Users/jamesbeach/Documents/visual-studio-code/github-copilot/gastown-mission-district` | [GitHub](https://github.com/mindfu23/gastown-mission-district.git) | markdown, json, shell |\n| **GNN** | `/Users/jamesbeach/Documents/visual-studio-code/github-copilot/GNN` | [GitHub](https://github.com/mindfu23/GNN.git) | javascript, markdown, json, html, css |\n| **IsHe** | `/Users/jamesbeach/Documents/visual-studio-code/github-copilot/IsHe` | [GitHub](https://github.com/mindfu23/IsHe.git) | markdown, javascript, json, typescript |\n| **KorassViewer** | `/Users/jamesbeach/Documents/visual-studio-code/github-copilot/KorassViewer` | [GitHub](https://github.com/mindfu23/KorassViewer.git) | - |\n| **meme-renamer** | `/Users/jamesbeach/Documents/visual-studio-code/github-copilot/meme-renamer` | [GitHub](https://github.com/mindfu23/meme-renamer.git) | markdown, python |\n| **Musix** | `/Users/jamesbeach/Documents/visual-studio-code/github-copilot/Musix` | [GitHub](https://github.com/mindfu23/Musix.git) | markdown, html, json, javascript |\n| **n8n_workflows** | `/Users/jamesbeach/Documents/visual-studio-code/github-copilot/n8n_workflows` | [GitHub](https://github.com/mindfu23/n8n_workflows.git) | markdown, yaml, shell |\n| **plottoxml** | `/Users/jamesbeach/Documents/visual-studio-code/github-copilot/plottoxml` | [GitHub](https://github.com/mindfu23/plottoxml.git) | markdown |\n| **Postboi** | `/Users/jamesbeach/Documents/visual-studio-code/github-copilot/Postboi` | [GitHub](https://github.com/mindfu23/Postboi.git) | markdown, kotlin, python, swift, html |\n| **SacredGeometryOutliner** | `/Users/jamesbeach/Documents/visual-studio-code/github-copilot/SacredGeometryOutliner` | [GitHub](https://github.com/mindfu23/SacredGeometryOutliner.git) | markdown, javascript, html, css |\n| **SearchBard** | `/Users/jamesbeach/Documents/visual-studio-code/github-copilot/SearchBard` | [GitHub](https://github.com/mindfu23/SearchBard) | markdown, typescript, json, html, python |\n| **SierraTrails** | `/Users/jamesbeach/Documents/visual-studio-code/github-copilot/SierraTrails` | [GitHub](https://github.com/mindfu23/SierraTrails.git) | markdown, javascript, json |\n| **StoryPlot** | `/Users/jamesbeach/Documents/visual-studio-code/github-copilot/StoryPlot` | [GitHub](https://github.com/mindfu23/StoryPlot) | html, json, javascript, python |\n| **takehome_q** | `/Users/jamesbeach/Documents/visual-studio-code/github-copilot/takehome_q` | [GitHub](https://github.com/mindfu23/takehome_q.git) | markdown, python |\n| **Theorazine** | `/Users/jamesbeach/Documents/visual-studio-code/github-copilot/Theorazine` | [GitHub](https://github.com/mindfu23/Theorazine.git) | markdown, css, html, javascript, json |\n| **weirdchess** | `/Users/jamesbeach/Documents/visual-studio-code/github-copilot/weirdchess` | [GitHub](https://github.com/mindfu23/weirdchess) | markdown |\n\n---\n\n## Local Only Repositories\n\nThese repositories exist locally but are not linked to a GitHub remote.\n\n| Repository | Local Path | Languages |\n|------------|------------|-----------|\n| **agent-router** | `/Users/jamesbeach/Documents/visual-studio-code/github-copilot/agent-router` | markdown, yaml |\n| **antigravity-and-others** | `/Users/jamesbeach/Documents/visual-studio-code/antigravity-and-others` | markdown, html, json, javascript, python |\n| **Fractasy** | `/Users/jamesbeach/Documents/visual-studio-code/github-copilot/Fractasy` | markdown |\n| **friendli-assessment** | `/Users/jamesbeach/Documents/visual-studio-code/github-copilot/friendli-assessment` | markdown, python |\n| **GPTWrapper** | `/Users/jamesbeach/Documents/visual-studio-code/github-copilot/GPTWrapper` | markdown, shell, javascript, json, html |\n| **JBWordPressTheme** | `/Users/jamesbeach/Documents/visual-studio-code/github-copilot/JBWordPressTheme` | markdown, html, css, json |\n| **manuscript-editor** | `/Users/jamesbeach/Documents/visual-studio-code/antigravity-and-others/manuscript-editor` | markdown, html, json, javascript |\n| **Metabot** | `/Users/jamesbeach/Documents/visual-studio-code/github-copilot/Metabot` | markdown, json, yaml, html, typescript, javascript, shell |\n| **n8n** | `/Users/jamesbeach/Documents/visual-studio-code/github-copilot/n8n` | markdown, yaml, shell |\n| **Novelizer** | `/Users/jamesbeach/Documents/visual-studio-code/github-copilot/Novelizer` | markdown, python, yaml, html, json, javascript, typescript |\n| **ShamAIn** | `/Users/jamesbeach/Documents/visual-studio-code/github-copilot/ShamAIn` | markdown, shell, javascript, json, html |\n| **StoryCircle-dev** | `/Users/jamesbeach/Documents/visual-studio-code/github-copilot/StoryCircle-dev` | markdown, html, json, javascript, typescript, css |\n| **ValueApe** | `/Users/jamesbeach/Documents/visual-studio-code/github-copilot/ValueApe` | markdown, json, sql, html, python, typescript, css, javascript |\n| **WeirdTarot** | `/Users/jamesbeach/Documents/visual-studio-code/github-copilot/WeirdTarot` | markdown, json, javascript, html, css |\n\n---\n\n## GitHub Only Repositories\n\nThese repositories exist on GitHub but are not cloned locally.\nUse `sync_repos` to clone them, or clone manually.\n\n| Repository | GitHub URL | Language | Last Updated |\n|------------|------------|----------|--------------|\n| _All GitHub repositories are cloned locally_ | | | |\n\n---\n\n## Full Repository Details\n\n### agent-router\n\n- **Status:** local-only\n- **Local Path:** `/Users/jamesbeach/Documents/visual-studio-code/github-copilot/agent-router`\n- **Description:** Multi-model routing layer for Gas Town agents.\n- **Languages:** markdown, yaml\n- **Last Commit:** 2026-01-15T20:54:41-08:00\n\n### antigravity-and-others\n\n- **Status:** local-only\n- **Local Path:** `/Users/jamesbeach/Documents/visual-studio-code/antigravity-and-others`\n- **GitHub:** https://github.com/mindfu23/antigravity-and-others.git\n- **Languages:** markdown, html, json, javascript, python\n- **Last Commit:** 2026-01-26T12:21:41-08:00\n\n### apiTracker\n- **Notes:** also implemented as a browser extension, and further developed there.\n\n- **Status:** synced\n- **Local Path:** `/Users/jamesbeach/Documents/visual-studio-code/github-copilot/apiTracker`\n- **GitHub:** https://github.com/mindfu23/apiTracker.git\n- **Description:** A simple GUI tracker for health and number of remaining calls for my various APIs used in my other apps.\n- **Languages:** markdown, javascript, html, json, python, css\n- **Last Commit:** 2026-01-27T00:18:57+00:00\n\n### BookLarner\n\n- **Status:** synced\n- **Local Path:** `/Users/jamesbeach/Documents/visual-studio-code/github-copilot/BookLarner`\n- **GitHub:** https://github.com/mindfu23/BookLarner.git\n- **Description:** A cross-platform application (website, iOS, and Android) that allows users to scan book covers or provide URLs to get book information and AI-generated summaries, with affiliate links for purchasing.\n- **Languages:** markdown, javascript, html, json\n- **Last Commit:** 2025-12-20T18:15:32-08:00\n\n### Create\n\n- **Status:** synced\n- **Local Path:** `/Users/jamesbeach/Documents/visual-studio-code/github-copilot/Create`\n- **GitHub:** https://github.com/mindfu23/Create\n- **Description:** This is an app and also a proof of concept for a way to introduce kids of all ages to the power and fun of creating.\n- **Languages:** markdown, html, json, typescript, javascript\n- **Last Commit:** 2026-01-05T09:12:42-08:00\n\n### EthicalAIditor\n\n- **Status:** synced\n- **Local Path:** `/Users/jamesbeach/Documents/visual-studio-code/github-copilot/EthicalAIditor`\n- **GitHub:** https://github.com/mindfu23/EthicalAIditor\n- **Description:** An interface and AI wrapper for writers and editors, that's linked to LLMs trained only on legally and publicly available writing materials.\n- **Languages:** markdown, html, json, typescript, javascript, python, yaml, sql, css\n- **Last Commit:** 2026-01-16T13:50:17-08:00\n\n### Fractasy\n\n- **Status:** local-only\n- **Local Path:** `/Users/jamesbeach/Documents/visual-studio-code/github-copilot/Fractasy`\n- **Description:** A cross-platform fractal visualization app combining Fractint and Fragmentarium capabilities.\n- **Languages:** markdown\n- **Last Commit:** 2026-01-15T13:45:57-08:00\n\n### FreeWillEstimator\n\n- **Status:** synced\n- **Local Path:** `/Users/jamesbeach/Documents/visual-studio-code/github-copilot/FreeWillEstimator`\n- **GitHub:** https://github.com/mindfu23/FreeWillEstimator.git\n- **Description:** A web application for assessing your current level of autonomy and decision-making freedom through a psychology-based questionnaire.\n- **Languages:** markdown, javascript, html, css\n- **Last Commit:** 2025-12-08T13:55:50-08:00\n\n### friendli-assessment\n\n- **Status:** local-only\n- **Local Path:** `/Users/jamesbeach/Documents/visual-studio-code/github-copilot/friendli-assessment`\n- **GitHub:** https://github.com/mindfu23/takehome_q.git\n- **Description:** **Author:** James Beach\n- **Languages:** markdown, python\n- **Last Commit:** 2026-01-21T17:49:46-08:00\n\n### FutureSketch\n\n- **Status:** synced\n- **Local Path:** `/Users/jamesbeach/Documents/visual-studio-code/github-copilot/FutureSketch`\n- **GitHub:** https://github.com/mindfu23/FutureSketch.git\n- **Description:** Repo for scripts to control the LEDs for my interactive sculpture Future Sketch.\n- **Languages:** python, markdown\n- **Last Commit:** 2025-08-10T16:48:28-07:00\n\n### gastown\n\n- **Status:** synced\n- **Local Path:** `/Users/jamesbeach/Documents/visual-studio-code/github-copilot/gastown`\n- **GitHub:** https://github.com/mindfu23/gastown-mission-district.git\n- **Description:** **Multi-agent orchestration system for Claude Code with persistent work tracking**\n- **Languages:** markdown, json, shell, python\n- **Last Commit:** 2026-01-21T18:12:40-08:00\n\n### gastown-mission-district\n\n- **Status:** synced\n- **Local Path:** `/Users/jamesbeach/Documents/visual-studio-code/github-copilot/gastown-mission-district`\n- **GitHub:** https://github.com/mindfu23/gastown-mission-district.git\n- **Description:** This is a forked update to Gastown that adds multi-model agents, and also specifically integrates Gemini pro for rapid generation of style assets.\n- **Languages:** markdown, json, shell\n- **Last Commit:** 2026-01-17T11:41:45-08:00\n\n### GNN\n- **Notes:** TBD, mobile dev versions need UX. future track for this is \"my good news\" or similar, where the user picks their good news and it's formatted how they want it. TBD\n\n- **Status:** synced\n- **Local Path:** `/Users/jamesbeach/Documents/visual-studio-code/github-copilot/GNN`\n- **GitHub:** https://github.com/mindfu23/GNN.git\n- **Description:** A cross-platform mobile and web application that searches for and delivers positive news to users. Built with React Native and Expo, GNN provides a unified codebase for iOS, Android, and web platforms\n- **Languages:** javascript, markdown, json, html, css\n- **Last Commit:** 2025-12-25T12:15:42-08:00\n\n### GPTWrapper\n\n- **Status:** local-only\n- **Local Path:** `/Users/jamesbeach/Documents/visual-studio-code/github-copilot/GPTWrapper`\n- **GitHub:** https://github.com/mindfu23/GPTWrapper.git\n- **Description:** Basic wrapper for GPTs to make them Android or iOS capable apps.\n- **Languages:** markdown, shell, javascript, json, html\n- **Last Commit:** 2025-12-24T17:08:25-08:00\n\n### IsHe\n- **Notes:** TBD\n\n- **Status:** synced\n- **Local Path:** `/Users/jamesbeach/Documents/visual-studio-code/github-copilot/IsHe`\n- **GitHub:** https://github.com/mindfu23/IsHe.git\n- **Description:** Initial working version for an application that searches the names of specific famous people to see if they're deceased.\n- **Languages:** markdown, javascript, json, typescript\n- **Last Commit:** 2025-12-10T09:50:58-08:00\n\n### JBWordPressTheme\n\n- **Status:** local-only\n- **Local Path:** `/Users/jamesbeach/Documents/visual-studio-code/github-copilot/JBWordPressTheme`\n- **Description:** A modern WordPress Block Theme designed for jamesmbeach.com - featuring a dual-purpose design that showcases creative works (fiction, games, music) alongside IT consulting services.\n- **Languages:** markdown, html, css, json\n- **Last Commit:** 2025-12-22T12:02:02-08:00\n\n### KorassViewer\n\n- **Status:** synced\n- **Local Path:** `/Users/jamesbeach/Documents/visual-studio-code/github-copilot/KorassViewer`\n- **GitHub:** https://github.com/mindfu23/KorassViewer.git\n- **Description:** A viewer of images for the people in this korass. (See also: Cat's Cradle)\n- **Last Commit:** 2026-01-27T18:36:16.508Z\n\n### manuscript-editor\n\n- **Status:** local-only\n- **Local Path:** `/Users/jamesbeach/Documents/visual-studio-code/antigravity-and-others/manuscript-editor`\n- **GitHub:** https://github.com/mindfu23/manuscript-editor.git\n- **Description:** A Progressive Web App for editing markdown manuscripts stored in GitHub repositories. Designed for use on iPad and desktop browsers.\n- **Languages:** markdown, html, json, javascript\n- **Last Commit:** 2026-01-26T12:56:03-08:00\n\n### meme-renamer\n\n- **Status:** synced\n- **Local Path:** `/Users/jamesbeach/Documents/visual-studio-code/github-copilot/meme-renamer`\n- **GitHub:** https://github.com/mindfu23/meme-renamer.git\n- **Description:** AI-powered image renaming tool that analyzes images and renames files based on their content, including any visible text. Also includes a powerful duplicate image finder with visual comparison GUI.\n- **Languages:** markdown, python\n- **Last Commit:** 2025-12-27T15:12:00-08:00\n\n### Metabot\n\n- **Status:** local-only\n- **Local Path:** `/Users/jamesbeach/Documents/visual-studio-code/github-copilot/Metabot`\n- **GitHub:** https://github.com/mindfu23/Metabot.git\n- **Description:** Multi-AI query aggregation and synthesis application\n- **Languages:** markdown, json, yaml, html, typescript, javascript, shell\n- **Last Commit:** 2026-01-21T13:08:17-08:00\n\n### Musix\n\n- **Status:** synced\n- **Local Path:** `/Users/jamesbeach/Documents/visual-studio-code/github-copilot/Musix`\n- **GitHub:** https://github.com/mindfu23/Musix.git\n- **Description:** A music composition tool based on the Joseph Schillinger method\n- **Languages:** markdown, html, json, javascript\n- **Last Commit:** 2025-12-09T09:28:38-08:00\n\n### n8n\n\n- **Status:** local-only\n- **Local Path:** `/Users/jamesbeach/Documents/visual-studio-code/github-copilot/n8n`\n- **Description:** Self-hosted n8n workflow automation on GCP's Always Free tier.\n- **Languages:** markdown, yaml, shell\n- **Last Commit:** 2026-01-24T16:40:29-08:00\n\n### n8n_workflows\n- **Notes:** Not deployed directly, will put URL in once it's set up.\n\n- **Status:** synced\n- **Local Path:** `/Users/jamesbeach/Documents/visual-studio-code/github-copilot/n8n_workflows`\n- **GitHub:** https://github.com/mindfu23/n8n_workflows.git\n- **Description:** Self-hosted n8n workflow automation on GCP's Always Free tier.\n- **Languages:** markdown, yaml, shell\n- **Last Commit:** 2026-01-24T16:40:29-08:00\n\n### Novelizer\n\n- **Status:** local-only\n- **Local Path:** `/Users/jamesbeach/Documents/visual-studio-code/github-copilot/Novelizer`\n- **GitHub:** https://github.com/mindfu23/Novelizer\n- **Description:** AI-powered multi-agent novel writing and editing system.\n- **Languages:** markdown, python, yaml, html, json, javascript, typescript\n- **Last Commit:** 2026-01-19T11:10:44-08:00\n\n### plottoxml\n\n- **Status:** synced\n- **Local Path:** `/Users/jamesbeach/Documents/visual-studio-code/github-copilot/plottoxml`\n- **GitHub:** https://github.com/mindfu23/plottoxml.git\n- **Description:** Plotto\u2014A new method of plot suggestion for writers of creative fiction\n- **Languages:** markdown\n- **Last Commit:** 2025-12-08T11:26:48-08:00\n\n### Postboi\n\n- **Status:** synced\n- **Local Path:** `/Users/jamesbeach/Documents/visual-studio-code/github-copilot/Postboi`\n- **GitHub:** https://github.com/mindfu23/Postboi.git\n- **Description:** Cross-platform mobile app (iOS & Android) for sharing images and text to Instagram, Facebook, and WordPress simultaneously. Built with Python and Kivy.\n- **Languages:** markdown, kotlin, python, swift, html\n- **Last Commit:** 2025-12-25T12:29:45-08:00\n\n### SacredGeometryOutliner\n\n- **Status:** synced\n- **Local Path:** `/Users/jamesbeach/Documents/visual-studio-code/github-copilot/SacredGeometryOutliner`\n- **GitHub:** https://github.com/mindfu23/SacredGeometryOutliner.git\n- **Description:** Transform images into sacred geometric line art with real-time controls.\n- **Languages:** markdown, javascript, html, css\n- **Last Commit:** 2025-12-22T09:43:57-08:00\n\n### SearchBard\n\n- **Status:** synced\n- **Local Path:** `/Users/jamesbeach/Documents/visual-studio-code/github-copilot/SearchBard`\n- **GitHub:** https://github.com/mindfu23/SearchBard\n- **Description:** A React-based web application that aggregates conference and event data from multiple sources to help users discover professional conferences across various subjects, locations, and date ranges.\n- **Languages:** markdown, typescript, json, html, python\n- **Last Commit:** 2025-12-14T14:29:09-08:00\n\n### ShamAIn\n\n- **Status:** local-only\n- **Local Path:** `/Users/jamesbeach/Documents/visual-studio-code/github-copilot/ShamAIn`\n- **GitHub:** https://github.com/mindfu23/ShamAIn.git\n- **Description:** An Android/iOS app wrapper for the ShamAIn custom GPT, built on the GPTWrapper framework.\n- **Languages:** markdown, shell, javascript, json, html\n- **Last Commit:** 2025-12-24T17:00:50-08:00\n\n### SierraTrails\n\n- **Status:** synced\n- **Local Path:** `/Users/jamesbeach/Documents/visual-studio-code/github-copilot/SierraTrails`\n- **GitHub:** https://github.com/mindfu23/SierraTrails.git\n- **Description:** Repo for a demo hiking and biking trailfinder app.\n- **Languages:** markdown, javascript, json\n- **Last Commit:** 2025-12-20T18:18:19-08:00\n\n### StoryCircle-dev\n\n- **Status:** local-only\n- **Local Path:** `/Users/jamesbeach/Documents/visual-studio-code/github-copilot/StoryCircle-dev`\n- **Description:** Interactive Story Circle visualization tool based on Dan Harmon's 8-step method\n- **Languages:** markdown, html, json, javascript, typescript, css\n- **Last Commit:** 2026-01-20T16:22:16-08:00\n\n### StoryPlot\n\n- **Status:** synced\n- **Local Path:** `/Users/jamesbeach/Documents/visual-studio-code/github-copilot/StoryPlot`\n- **GitHub:** https://github.com/mindfu23/StoryPlot\n- **Description:** A fiction story plot generator. Work in progress.\n- **Languages:** html, json, javascript, python\n- **Last Commit:** 2026-01-12T08:33:11-08:00\n\n### takehome_q\n\n- **Status:** synced\n- **Local Path:** `/Users/jamesbeach/Documents/visual-studio-code/github-copilot/takehome_q`\n- **GitHub:** https://github.com/mindfu23/takehome_q.git\n- **Description:** **Author:** James Beach\n- **Languages:** markdown, python\n- **Last Commit:** 2026-01-21T17:49:46-08:00\n\n### Theorazine\n\n- **Status:** synced\n- **Local Path:** `/Users/jamesbeach/Documents/visual-studio-code/github-copilot/Theorazine`\n- **GitHub:** https://github.com/mindfu23/Theorazine.git\n- **Description:** The Conspiracy Calculator - A mathematical tool for analyzing conspiracy theory viability\n- **Languages:** markdown, css, html, javascript, json\n- **Last Commit:** 2026-01-10T13:33:40-08:00\n\n### ValueApe\n\n- **Status:** local-only\n- **Local Path:** `/Users/jamesbeach/Documents/visual-studio-code/github-copilot/ValueApe`\n- **GitHub:** https://github.com/mindfu23/ValueApe\n- **Visibility:** private\n- **Description:** A professional-grade research aide and stock prediction web application with a clean, extensible architecture designed for Phase 1 research capabilities and future Phase 2 live trading integration.\n- **Languages:** markdown, json, sql, html, python, typescript, css, javascript\n- **Last Commit:** 2026-01-27T06:14:51+00:00\n\n### weirdchess\n\n- **Status:** synced\n- **Local Path:** `/Users/jamesbeach/Documents/visual-studio-code/github-copilot/weirdchess`\n- **GitHub:** https://github.com/mindfu23/weirdchess\n- **Description:** Hyderabad Decimal Chess and other variants\n- **Languages:** markdown\n- **Last Commit:** 2026-01-16T20:05:54-08:00\n\n### WeirdTarot\n\n- **Status:** local-only\n- **Local Path:** `/Users/jamesbeach/Documents/visual-studio-code/github-copilot/WeirdTarot`\n- **GitHub:** https://github.com/mindfu23/WeirdTarot\n- **Description:** An integrative divination platform that unifies multiple oracle systems through cross-correspondences. Explore Tarot, I Ching, Zodiac, and MBTI layers to reveal deeper patterns.\n- **Languages:** markdown, json, javascript, html, css\n- **Last Commit:** 2025-12-28T19:23:09-08:00\n\n",
+      "content": "\n# Repository Locations\n\nThis page is **auto-generated** during indexing. Do not edit manually.\n\n**Last updated:** 2026-01-27T18:36:17.624Z\n\n## Summary\n\n| Status | Count |\n|--------|-------|\n| Synced (local + GitHub) | 23 |\n| Local only | 14 |\n| GitHub only (not cloned) | 0 |\n| **Total** | **37** |\n\n---\n\n## Synced Repositories\n\nThese repositories exist both locally and on GitHub.\n\n| Repository | Local Path | GitHub | Languages |\n|------------|------------|--------|-----------|\n| **apiTracker** | `/Users/jamesbeach/Documents/visual-studio-code/github-copilot/apiTracker` | [GitHub](https://github.com/mindfu23/apiTracker.git) | markdown, javascript, html, json, python, css |\n| **BookLarner** | `/Users/jamesbeach/Documents/visual-studio-code/github-copilot/BookLarner` | [GitHub](https://github.com/mindfu23/BookLarner.git) | markdown, javascript, html, json |\n| **Create** | `/Users/jamesbeach/Documents/visual-studio-code/github-copilot/Create` | [GitHub](https://github.com/mindfu23/Create) | markdown, html, json, typescript, javascript |\n| **EthicalAIditor** | `/Users/jamesbeach/Documents/visual-studio-code/github-copilot/EthicalAIditor` | [GitHub](https://github.com/mindfu23/EthicalAIditor) | markdown, html, json, typescript, javascript, python, yaml, sql, css |\n| **FreeWillEstimator** | `/Users/jamesbeach/Documents/visual-studio-code/github-copilot/FreeWillEstimator` | [GitHub](https://github.com/mindfu23/FreeWillEstimator.git) | markdown, javascript, html, css |\n| **FutureSketch** | `/Users/jamesbeach/Documents/visual-studio-code/github-copilot/FutureSketch` | [GitHub](https://github.com/mindfu23/FutureSketch.git) | python, markdown |\n| **gastown** | `/Users/jamesbeach/Documents/visual-studio-code/github-copilot/gastown` | [GitHub](https://github.com/mindfu23/gastown-mission-district.git) | markdown, json, shell, python |\n| **gastown-mission-district** | `/Users/jamesbeach/Documents/visual-studio-code/github-copilot/gastown-mission-district` | [GitHub](https://github.com/mindfu23/gastown-mission-district.git) | markdown, json, shell |\n| **GNN** | `/Users/jamesbeach/Documents/visual-studio-code/github-copilot/GNN` | [GitHub](https://github.com/mindfu23/GNN.git) | javascript, markdown, json, html, css |\n| **IsHe** | `/Users/jamesbeach/Documents/visual-studio-code/github-copilot/IsHe` | [GitHub](https://github.com/mindfu23/IsHe.git) | markdown, javascript, json, typescript |\n| **KorassViewer** | `/Users/jamesbeach/Documents/visual-studio-code/github-copilot/KorassViewer` | [GitHub](https://github.com/mindfu23/KorassViewer.git) | - |\n| **meme-renamer** | `/Users/jamesbeach/Documents/visual-studio-code/github-copilot/meme-renamer` | [GitHub](https://github.com/mindfu23/meme-renamer.git) | markdown, python |\n| **Musix** | `/Users/jamesbeach/Documents/visual-studio-code/github-copilot/Musix` | [GitHub](https://github.com/mindfu23/Musix.git) | markdown, html, json, javascript |\n| **n8n_workflows** | `/Users/jamesbeach/Documents/visual-studio-code/github-copilot/n8n_workflows` | [GitHub](https://github.com/mindfu23/n8n_workflows.git) | markdown, yaml, shell |\n| **plottoxml** | `/Users/jamesbeach/Documents/visual-studio-code/github-copilot/plottoxml` | [GitHub](https://github.com/mindfu23/plottoxml.git) | markdown |\n| **Postboi** | `/Users/jamesbeach/Documents/visual-studio-code/github-copilot/Postboi` | [GitHub](https://github.com/mindfu23/Postboi.git) | markdown, kotlin, python, swift, html |\n| **SacredGeometryOutliner** | `/Users/jamesbeach/Documents/visual-studio-code/github-copilot/SacredGeometryOutliner` | [GitHub](https://github.com/mindfu23/SacredGeometryOutliner.git) | markdown, javascript, html, css |\n| **SearchBard** | `/Users/jamesbeach/Documents/visual-studio-code/github-copilot/SearchBard` | [GitHub](https://github.com/mindfu23/SearchBard) | markdown, typescript, json, html, python |\n| **SierraTrails** | `/Users/jamesbeach/Documents/visual-studio-code/github-copilot/SierraTrails` | [GitHub](https://github.com/mindfu23/SierraTrails.git) | markdown, javascript, json |\n| **StoryPlot** | `/Users/jamesbeach/Documents/visual-studio-code/github-copilot/StoryPlot` | [GitHub](https://github.com/mindfu23/StoryPlot) | html, json, javascript, python |\n| **takehome_q** | `/Users/jamesbeach/Documents/visual-studio-code/github-copilot/takehome_q` | [GitHub](https://github.com/mindfu23/takehome_q.git) | markdown, python |\n| **Theorazine** | `/Users/jamesbeach/Documents/visual-studio-code/github-copilot/Theorazine` | [GitHub](https://github.com/mindfu23/Theorazine.git) | markdown, css, html, javascript, json |\n| **weirdchess** | `/Users/jamesbeach/Documents/visual-studio-code/github-copilot/weirdchess` | [GitHub](https://github.com/mindfu23/weirdchess) | markdown |\n\n---\n\n## Local Only Repositories\n\nThese repositories exist locally but are not linked to a GitHub remote.\n\n| Repository | Local Path | Languages |\n|------------|------------|-----------|\n| **agent-router** | `/Users/jamesbeach/Documents/visual-studio-code/github-copilot/agent-router` | markdown, yaml |\n| **antigravity-and-others** | `/Users/jamesbeach/Documents/visual-studio-code/antigravity-and-others` | markdown, html, json, javascript, python |\n| **Fractasy** | `/Users/jamesbeach/Documents/visual-studio-code/github-copilot/Fractasy` | markdown |\n| **friendli-assessment** | `/Users/jamesbeach/Documents/visual-studio-code/github-copilot/friendli-assessment` | markdown, python |\n| **GPTWrapper** | `/Users/jamesbeach/Documents/visual-studio-code/github-copilot/GPTWrapper` | markdown, shell, javascript, json, html |\n| **JBWordPressTheme** | `/Users/jamesbeach/Documents/visual-studio-code/github-copilot/JBWordPressTheme` | markdown, html, css, json |\n| **manuscript-editor** | `/Users/jamesbeach/Documents/visual-studio-code/antigravity-and-others/manuscript-editor` | markdown, html, json, javascript |\n| **Metabot** | `/Users/jamesbeach/Documents/visual-studio-code/github-copilot/Metabot` | markdown, json, yaml, html, typescript, javascript, shell |\n| **n8n** | `/Users/jamesbeach/Documents/visual-studio-code/github-copilot/n8n` | markdown, yaml, shell |\n| **Novelizer** | `/Users/jamesbeach/Documents/visual-studio-code/github-copilot/Novelizer` | markdown, python, yaml, html, json, javascript, typescript |\n| **ShamAIn** | `/Users/jamesbeach/Documents/visual-studio-code/github-copilot/ShamAIn` | markdown, shell, javascript, json, html |\n| **StoryCircle-dev** | `/Users/jamesbeach/Documents/visual-studio-code/github-copilot/StoryCircle-dev` | markdown, html, json, javascript, typescript, css |\n| **ValueApe** | `/Users/jamesbeach/Documents/visual-studio-code/github-copilot/ValueApe` | markdown, json, sql, html, python, typescript, css, javascript |\n| **WeirdTarot** | `/Users/jamesbeach/Documents/visual-studio-code/github-copilot/WeirdTarot` | markdown, json, javascript, html, css |\n\n---\n\n## GitHub Only Repositories\n\nThese repositories exist on GitHub but are not cloned locally.\nUse `sync_repos` to clone them, or clone manually.\n\n| Repository | GitHub URL | Language | Last Updated |\n|------------|------------|----------|--------------|\n| _All GitHub repositories are cloned locally_ | | | |\n\n---\n\n## Full Repository Details\n\n### agent-router\n\n- **Status:** local-only\n- **Local Path:** `/Users/jamesbeach/Documents/visual-studio-code/github-copilot/agent-router`\n- **Description:** Multi-model routing layer for Gas Town agents.\n- **Languages:** markdown, yaml\n- **Last Commit:** 2026-01-15T20:54:41-08:00\n\n### antigravity-and-others\n\n- **Status:** local-only\n- **Local Path:** `/Users/jamesbeach/Documents/visual-studio-code/antigravity-and-others`\n- **GitHub:** https://github.com/mindfu23/antigravity-and-others.git\n- **Languages:** markdown, html, json, javascript, python\n- **Last Commit:** 2026-01-26T12:21:41-08:00\n\n### apiTracker\n- **Notes:** also implemented as a browser extension, and further developed there.\n\n- **Status:** synced\n- **Local Path:** `/Users/jamesbeach/Documents/visual-studio-code/github-copilot/apiTracker`\n- **GitHub:** https://github.com/mindfu23/apiTracker.git\n- **Description:** A simple GUI tracker for health and number of remaining calls for my various APIs used in my other apps.\n- **Languages:** markdown, javascript, html, json, python, css\n- **Last Commit:** 2026-01-27T00:18:57+00:00\n\n### BookLarner\n\n- **Status:** synced\n- **Local Path:** `/Users/jamesbeach/Documents/visual-studio-code/github-copilot/BookLarner`\n- **GitHub:** https://github.com/mindfu23/BookLarner.git\n- **Description:** A cross-platform application (website, iOS, and Android) that allows users to scan book covers or provide URLs to get book information and AI-generated summaries, with affiliate links for purchasing.\n- **Languages:** markdown, javascript, html, json\n- **Last Commit:** 2025-12-20T18:15:32-08:00\n\n### Create\n\n- **Status:** synced\n- **Local Path:** `/Users/jamesbeach/Documents/visual-studio-code/github-copilot/Create`\n- **GitHub:** https://github.com/mindfu23/Create\n- **Description:** This is an app and also a proof of concept for a way to introduce kids of all ages to the power and fun of creating.\n- **Languages:** markdown, html, json, typescript, javascript\n- **Last Commit:** 2026-01-05T09:12:42-08:00\n\n### EthicalAIditor\n\n- **Status:** synced\n- **Local Path:** `/Users/jamesbeach/Documents/visual-studio-code/github-copilot/EthicalAIditor`\n- **GitHub:** https://github.com/mindfu23/EthicalAIditor\n- **Description:** An interface and AI wrapper for writers and editors, that's linked to LLMs trained only on legally and publicly available writing materials.\n- **Languages:** markdown, html, json, typescript, javascript, python, yaml, sql, css\n- **Last Commit:** 2026-01-16T13:50:17-08:00\n\n### Fractasy\n\n- **Status:** local-only\n- **Local Path:** `/Users/jamesbeach/Documents/visual-studio-code/github-copilot/Fractasy`\n- **Description:** A cross-platform fractal visualization app combining Fractint and Fragmentarium capabilities.\n- **Languages:** markdown\n- **Last Commit:** 2026-01-15T13:45:57-08:00\n\n### FreeWillEstimator\n\n- **Status:** synced\n- **Local Path:** `/Users/jamesbeach/Documents/visual-studio-code/github-copilot/FreeWillEstimator`\n- **GitHub:** https://github.com/mindfu23/FreeWillEstimator.git\n- **Description:** A web application for assessing your current level of autonomy and decision-making freedom through a psychology-based questionnaire.\n- **Languages:** markdown, javascript, html, css\n- **Last Commit:** 2025-12-08T13:55:50-08:00\n\n### friendli-assessment\n\n- **Status:** local-only\n- **Local Path:** `/Users/jamesbeach/Documents/visual-studio-code/github-copilot/friendli-assessment`\n- **GitHub:** https://github.com/mindfu23/takehome_q.git\n- **Description:** **Author:** James Beach\n- **Languages:** markdown, python\n- **Last Commit:** 2026-01-21T17:49:46-08:00\n\n### FutureSketch\n\n- **Status:** synced\n- **Local Path:** `/Users/jamesbeach/Documents/visual-studio-code/github-copilot/FutureSketch`\n- **GitHub:** https://github.com/mindfu23/FutureSketch.git\n- **Description:** Repo for scripts to control the LEDs for my interactive sculpture Future Sketch.\n- **Languages:** python, markdown\n- **Last Commit:** 2025-08-10T16:48:28-07:00\n\n### gastown\n\n- **Status:** synced\n- **Local Path:** `/Users/jamesbeach/Documents/visual-studio-code/github-copilot/gastown`\n- **GitHub:** https://github.com/mindfu23/gastown-mission-district.git\n- **Description:** **Multi-agent orchestration system for Claude Code with persistent work tracking**\n- **Languages:** markdown, json, shell, python\n- **Last Commit:** 2026-01-21T18:12:40-08:00\n\n### gastown-mission-district\n\n- **Status:** synced\n- **Local Path:** `/Users/jamesbeach/Documents/visual-studio-code/github-copilot/gastown-mission-district`\n- **GitHub:** https://github.com/mindfu23/gastown-mission-district.git\n- **Description:** This is a forked update to Gastown that adds multi-model agents, and also specifically integrates Gemini pro for rapid generation of style assets.\n- **Languages:** markdown, json, shell\n- **Last Commit:** 2026-01-17T11:41:45-08:00\n\n### GNN\n- **Notes:** TBD, mobile dev versions need UX. future track for this is \"my good news\" or similar, where the user picks their good news and it's formatted how they want it. TBD\n\n- **Status:** synced\n- **Local Path:** `/Users/jamesbeach/Documents/visual-studio-code/github-copilot/GNN`\n- **GitHub:** https://github.com/mindfu23/GNN.git\n- **Description:** A cross-platform mobile and web application that searches for and delivers positive news to users. Built with React Native and Expo, GNN provides a unified codebase for iOS, Android, and web platforms\n- **Languages:** javascript, markdown, json, html, css\n- **Last Commit:** 2025-12-25T12:15:42-08:00\n\n### GPTWrapper\n\n- **Status:** local-only\n- **Local Path:** `/Users/jamesbeach/Documents/visual-studio-code/github-copilot/GPTWrapper`\n- **GitHub:** https://github.com/mindfu23/GPTWrapper.git\n- **Description:** Basic wrapper for GPTs to make them Android or iOS capable apps.\n- **Languages:** markdown, shell, javascript, json, html\n- **Last Commit:** 2025-12-24T17:08:25-08:00\n\n### IsHe\n- **Notes:** TBD\n\n- **Status:** synced\n- **Local Path:** `/Users/jamesbeach/Documents/visual-studio-code/github-copilot/IsHe`\n- **GitHub:** https://github.com/mindfu23/IsHe.git\n- **Description:** Initial working version for an application that searches the names of specific famous people to see if they're deceased.\n- **Languages:** markdown, javascript, json, typescript\n- **Last Commit:** 2025-12-10T09:50:58-08:00\n\n### JBWordPressTheme\n\n- **Status:** local-only\n- **Local Path:** `/Users/jamesbeach/Documents/visual-studio-code/github-copilot/JBWordPressTheme`\n- **Description:** A modern WordPress Block Theme designed for jamesmbeach.com - featuring a dual-purpose design that showcases creative works (fiction, games, music) alongside IT consulting services.\n- **Languages:** markdown, html, css, json\n- **Last Commit:** 2025-12-22T12:02:02-08:00\n\n### KorassViewer\n\n- **Status:** synced\n- **Local Path:** `/Users/jamesbeach/Documents/visual-studio-code/github-copilot/KorassViewer`\n- **GitHub:** https://github.com/mindfu23/KorassViewer.git\n- **Description:** A viewer of images for the people in this korass. (See also: Cat's Cradle)\n- **Last Commit:** 2026-01-27T18:36:16.508Z\n\n### manuscript-editor\n\n- **Status:** local-only\n- **Local Path:** `/Users/jamesbeach/Documents/visual-studio-code/antigravity-and-others/manuscript-editor`\n- **GitHub:** https://github.com/mindfu23/manuscript-editor.git\n- **Description:** A Progressive Web App for editing markdown manuscripts stored in GitHub repositories. Designed for use on iPad and desktop browsers.\n- **Languages:** markdown, html, json, javascript\n- **Last Commit:** 2026-01-26T12:56:03-08:00\n\n### meme-renamer\n\n- **Status:** synced\n- **Local Path:** `/Users/jamesbeach/Documents/visual-studio-code/github-copilot/meme-renamer`\n- **GitHub:** https://github.com/mindfu23/meme-renamer.git\n- **Description:** AI-powered image renaming tool that analyzes images and renames files based on their content, including any visible text. Also includes a powerful duplicate image finder with visual comparison GUI.\n- **Languages:** markdown, python\n- **Last Commit:** 2025-12-27T15:12:00-08:00\n\n### Metabot\n\n- **Status:** local-only\n- **Local Path:** `/Users/jamesbeach/Documents/visual-studio-code/github-copilot/Metabot`\n- **GitHub:** https://github.com/mindfu23/Metabot.git\n- **Description:** Multi-AI query aggregation and synthesis application\n- **Languages:** markdown, json, yaml, html, typescript, javascript, shell\n- **Last Commit:** 2026-01-21T13:08:17-08:00\n\n### Musix\n\n- **Status:** synced\n- **Local Path:** `/Users/jamesbeach/Documents/visual-studio-code/github-copilot/Musix`\n- **GitHub:** https://github.com/mindfu23/Musix.git\n- **Description:** A music composition tool based on the Joseph Schillinger method\n- **Languages:** markdown, html, json, javascript\n- **Last Commit:** 2025-12-09T09:28:38-08:00\n\n### n8n\n\n- **Status:** local-only\n- **Local Path:** `/Users/jamesbeach/Documents/visual-studio-code/github-copilot/n8n`\n- **Description:** Self-hosted n8n workflow automation on GCP's Always Free tier.\n- **Languages:** markdown, yaml, shell\n- **Last Commit:** 2026-01-24T16:40:29-08:00\n\n### n8n_workflows\n- **Notes:** Not deployed directly, will put URL in once it's set up.\n\n- **Status:** synced\n- **Local Path:** `/Users/jamesbeach/Documents/visual-studio-code/github-copilot/n8n_workflows`\n- **GitHub:** https://github.com/mindfu23/n8n_workflows.git\n- **Description:** Self-hosted n8n workflow automation on GCP's Always Free tier.\n- **Languages:** markdown, yaml, shell\n- **Last Commit:** 2026-01-24T16:40:29-08:00\n\n### Novelizer\n\n- **Status:** local-only\n- **Local Path:** `/Users/jamesbeach/Documents/visual-studio-code/github-copilot/Novelizer`\n- **GitHub:** https://github.com/mindfu23/Novelizer\n- **Description:** AI-powered multi-agent novel writing and editing system.\n- **Languages:** markdown, python, yaml, html, json, javascript, typescript\n- **Last Commit:** 2026-01-19T11:10:44-08:00\n\n### plottoxml\n\n- **Status:** synced\n- **Local Path:** `/Users/jamesbeach/Documents/visual-studio-code/github-copilot/plottoxml`\n- **GitHub:** https://github.com/mindfu23/plottoxml.git\n- **Description:** Plotto—A new method of plot suggestion for writers of creative fiction\n- **Languages:** markdown\n- **Last Commit:** 2025-12-08T11:26:48-08:00\n\n### Postboi\n\n- **Status:** synced\n- **Local Path:** `/Users/jamesbeach/Documents/visual-studio-code/github-copilot/Postboi`\n- **GitHub:** https://github.com/mindfu23/Postboi.git\n- **Description:** Cross-platform mobile app (iOS & Android) for sharing images and text to Instagram, Facebook, and WordPress simultaneously. Built with Python and Kivy.\n- **Languages:** markdown, kotlin, python, swift, html\n- **Last Commit:** 2025-12-25T12:29:45-08:00\n\n### SacredGeometryOutliner\n\n- **Status:** synced\n- **Local Path:** `/Users/jamesbeach/Documents/visual-studio-code/github-copilot/SacredGeometryOutliner`\n- **GitHub:** https://github.com/mindfu23/SacredGeometryOutliner.git\n- **Description:** Transform images into sacred geometric line art with real-time controls.\n- **Languages:** markdown, javascript, html, css\n- **Last Commit:** 2025-12-22T09:43:57-08:00\n\n### SearchBard\n\n- **Status:** synced\n- **Local Path:** `/Users/jamesbeach/Documents/visual-studio-code/github-copilot/SearchBard`\n- **GitHub:** https://github.com/mindfu23/SearchBard\n- **Description:** A React-based web application that aggregates conference and event data from multiple sources to help users discover professional conferences across various subjects, locations, and date ranges.\n- **Languages:** markdown, typescript, json, html, python\n- **Last Commit:** 2025-12-14T14:29:09-08:00\n\n### ShamAIn\n\n- **Status:** local-only\n- **Local Path:** `/Users/jamesbeach/Documents/visual-studio-code/github-copilot/ShamAIn`\n- **GitHub:** https://github.com/mindfu23/ShamAIn.git\n- **Description:** An Android/iOS app wrapper for the ShamAIn custom GPT, built on the GPTWrapper framework.\n- **Languages:** markdown, shell, javascript, json, html\n- **Last Commit:** 2025-12-24T17:00:50-08:00\n\n### SierraTrails\n\n- **Status:** synced\n- **Local Path:** `/Users/jamesbeach/Documents/visual-studio-code/github-copilot/SierraTrails`\n- **GitHub:** https://github.com/mindfu23/SierraTrails.git\n- **Description:** Repo for a demo hiking and biking trailfinder app.\n- **Languages:** markdown, javascript, json\n- **Last Commit:** 2025-12-20T18:18:19-08:00\n\n### StoryCircle-dev\n\n- **Status:** local-only\n- **Local Path:** `/Users/jamesbeach/Documents/visual-studio-code/github-copilot/StoryCircle-dev`\n- **Description:** Interactive Story Circle visualization tool based on Dan Harmon's 8-step method\n- **Languages:** markdown, html, json, javascript, typescript, css\n- **Last Commit:** 2026-01-20T16:22:16-08:00\n\n### StoryPlot\n\n- **Status:** synced\n- **Local Path:** `/Users/jamesbeach/Documents/visual-studio-code/github-copilot/StoryPlot`\n- **GitHub:** https://github.com/mindfu23/StoryPlot\n- **Description:** A fiction story plot generator. Work in progress.\n- **Languages:** html, json, javascript, python\n- **Last Commit:** 2026-01-12T08:33:11-08:00\n\n### takehome_q\n\n- **Status:** synced\n- **Local Path:** `/Users/jamesbeach/Documents/visual-studio-code/github-copilot/takehome_q`\n- **GitHub:** https://github.com/mindfu23/takehome_q.git\n- **Description:** **Author:** James Beach\n- **Languages:** markdown, python\n- **Last Commit:** 2026-01-21T17:49:46-08:00\n\n### Theorazine\n\n- **Status:** synced\n- **Local Path:** `/Users/jamesbeach/Documents/visual-studio-code/github-copilot/Theorazine`\n- **GitHub:** https://github.com/mindfu23/Theorazine.git\n- **Description:** The Conspiracy Calculator - A mathematical tool for analyzing conspiracy theory viability\n- **Languages:** markdown, css, html, javascript, json\n- **Last Commit:** 2026-01-10T13:33:40-08:00\n\n### ValueApe\n\n- **Status:** local-only\n- **Local Path:** `/Users/jamesbeach/Documents/visual-studio-code/github-copilot/ValueApe`\n- **GitHub:** https://github.com/mindfu23/ValueApe\n- **Visibility:** private\n- **Description:** A professional-grade research aide and stock prediction web application with a clean, extensible architecture designed for Phase 1 research capabilities and future Phase 2 live trading integration.\n- **Languages:** markdown, json, sql, html, python, typescript, css, javascript\n- **Last Commit:** 2026-01-27T06:14:51+00:00\n\n### weirdchess\n\n- **Status:** synced\n- **Local Path:** `/Users/jamesbeach/Documents/visual-studio-code/github-copilot/weirdchess`\n- **GitHub:** https://github.com/mindfu23/weirdchess\n- **Description:** Hyderabad Decimal Chess and other variants\n- **Languages:** markdown\n- **Last Commit:** 2026-01-16T20:05:54-08:00\n\n### WeirdTarot\n\n- **Status:** local-only\n- **Local Path:** `/Users/jamesbeach/Documents/visual-studio-code/github-copilot/WeirdTarot`\n- **GitHub:** https://github.com/mindfu23/WeirdTarot\n- **Description:** An integrative divination platform that unifies multiple oracle systems through cross-correspondences. Explore Tarot, I Ching, Zodiac, and MBTI layers to reveal deeper patterns.\n- **Languages:** markdown, json, javascript, html, css\n- **Last Commit:** 2025-12-28T19:23:09-08:00\n\n",
       "contentPreview": "# Repository Locations  This page is **auto-generated** during indexing. Do not edit manually.  **Last updated:** 2026-01-27T18:36:17.624Z  ## Summary  | Status | Count | |--------|-------| | Synced (local + GitHub) | 23 | | Local only | 14 | | GitHub only (not cloned) | 0 | | **Total** | **37** |",
       "category": "projects"
     },
@@ -185,22 +185,124 @@
   ],
   "repos": [
     {
-      "name": "apiTracker",
+      "name": "code-wiki",
+      "githubUrl": "https://github.com/mindfu23/code-wiki",
       "languages": [
-        "markdown",
-        "javascript",
-        "html",
-        "json",
-        "python",
-        "css"
+        "TypeScript"
       ],
+      "lastCommitDate": "2026-02-18T15:43:41Z",
+      "status": "github-only",
+      "visibility": "public",
+      "markdownFiles": [
+        {
+          "relativePath": "code-wiki-mcp-plan.md",
+          "name": "code-wiki-mcp-plan.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "README.md",
+          "name": "README.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "TODO.md",
+          "name": "TODO.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "wiki/AGENTS.md",
+          "name": "AGENTS.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "wiki/integrations/_index.md",
+          "name": "_index.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "wiki/patterns/_index.md",
+          "name": "_index.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "wiki/preferences/gcp-cloud-run-deployment.md",
+          "name": "gcp-cloud-run-deployment.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "wiki/preferences/standard-setups.md",
+          "name": "standard-setups.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "wiki/projects/_index.md",
+          "name": "_index.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "wiki/projects/docsy-to-do.md",
+          "name": "docsy-to-do.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "wiki/projects/docsy-todo-md.md",
+          "name": "docsy-todo-md.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "wiki/projects/n8n-todo.md",
+          "name": "n8n-todo.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "wiki/projects/overall-next-steps.md",
+          "name": "overall-next-steps.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "wiki/projects/overall-to-do.md",
+          "name": "overall-to-do.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "wiki/projects/repo-locations.md",
+          "name": "repo-locations.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "wiki/snippets/_index.md",
+          "name": "_index.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "wiki/snippets/code-wiki-overview.md",
+          "name": "code-wiki-overview.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "wiki/templates/_index.md",
+          "name": "_index.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "wiki/utilities/_index.md",
+          "name": "_index.md",
+          "fileType": "md"
+        }
+      ]
+    },
+    {
+      "name": "apiTracker",
+      "description": "A simple GUI tracker for health and number of remaining calls for my various APIs used in my other apps.",
+      "githubUrl": "https://github.com/mindfu23/apiTracker",
+      "languages": [
+        "JavaScript"
+      ],
+      "lastCommitDate": "2026-02-18T00:22:57Z",
       "status": "synced",
       "visibility": "public",
-      "notes": "also implemented as a browser extension, and further developed there.",
       "localPath": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/apiTracker",
-      "githubUrl": "https://github.com/mindfu23/apiTracker.git",
-      "description": "A simple GUI tracker for health and number of remaining calls for my various APIs used in my other apps.",
-      "lastCommitDate": "2026-01-27T00:18:57+00:00",
+      "notes": "also implemented as a browser extension, and further developed there.",
       "markdownFiles": [
         {
           "relativePath": "browser-extension/README.md",
@@ -230,104 +332,396 @@
       ]
     },
     {
-      "name": "BookLarner",
+      "name": "gastown-mission-district",
+      "description": "An alternate setup for Gastown that enables different LLM models as agents, and also includes test and full image generation through one of those models.",
+      "githubUrl": "https://github.com/mindfu23/gastown-mission-district",
       "languages": [
-        "markdown",
-        "javascript",
-        "html",
-        "json"
+        "Shell"
       ],
+      "lastCommitDate": "2026-01-17T19:41:45Z",
       "status": "synced",
       "visibility": "public",
-      "localPath": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/BookLarner",
-      "githubUrl": "https://github.com/mindfu23/BookLarner.git",
-      "description": "A cross-platform application (website, iOS, and Android) that allows users to scan book covers or provide URLs to get book information and AI-generated summaries, with affiliate links for purchasing.",
-      "lastCommitDate": "2025-12-20T18:15:32-08:00",
+      "localPath": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/gastown-mission-district",
       "markdownFiles": [
         {
-          "relativePath": "docs/adding-ai-provider.md",
-          "name": "adding-ai-provider.md",
+          "relativePath": "agent_router/AGENTS.md",
+          "name": "AGENTS.md",
           "fileType": "md"
         },
         {
-          "relativePath": "docs/adding-retailer.md",
-          "name": "adding-retailer.md",
+          "relativePath": "AGENTS.md",
+          "name": "AGENTS.md",
           "fileType": "md"
         },
         {
-          "relativePath": "docs/deployment-guide.md",
-          "name": "deployment-guide.md",
+          "relativePath": "agents/lib/imagen-projects/README.md",
+          "name": "README.md",
           "fileType": "md"
         },
         {
-          "relativePath": "mobile/README.md",
+          "relativePath": "docs/IMAGEN.md",
+          "name": "IMAGEN.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "docs/MULTI-MODEL-AGENTS.md",
+          "name": "MULTI-MODEL-AGENTS.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "fractasy/AGENTS.md",
+          "name": "AGENTS.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "GEMINI-SETUP.md",
+          "name": "GEMINI-SETUP.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "GETTING-STARTED.md",
+          "name": "GETTING-STARTED.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "mayor/CLAUDE.md",
+          "name": "CLAUDE.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "plugins/README.md",
           "name": "README.md",
           "fileType": "md"
         },
         {
           "relativePath": "README.md",
-          "name": "README.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "web/README.md",
           "name": "README.md",
           "fileType": "md"
         }
       ]
     },
     {
-      "name": "Create",
+      "name": "takehome_q",
+      "description": "The repo for the response to a take-home assessment question, regarding creating a a Python 3.11+ decorator that ensures only variables of type dict[str, int] are passed to the wrapped function.",
+      "githubUrl": "https://github.com/mindfu23/takehome_q",
       "languages": [
-        "markdown",
-        "html",
-        "json",
-        "typescript",
-        "javascript"
+        "Python"
       ],
+      "lastCommitDate": "2026-02-02T20:49:32Z",
       "status": "synced",
       "visibility": "public",
-      "localPath": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/Create",
-      "githubUrl": "https://github.com/mindfu23/Create",
-      "description": "This is an app and also a proof of concept for a way to introduce kids of all ages to the power and fun of creating.",
-      "lastCommitDate": "2026-01-05T09:12:42-08:00",
+      "localPath": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/takehome_q",
       "markdownFiles": [
         {
-          "relativePath": "client/src/lib/auth/README.md",
+          "relativePath": "ANALYSIS.md",
+          "name": "ANALYSIS.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "README.md",
+          "name": "README.md",
+          "fileType": "md"
+        }
+      ]
+    },
+    {
+      "name": "ManuscriptReview",
+      "githubUrl": "https://github.com/mindfu23/ManuscriptReview",
+      "languages": [
+        "TypeScript"
+      ],
+      "lastCommitDate": "2026-02-02T14:32:15Z",
+      "status": "github-only",
+      "visibility": "public",
+      "markdownFiles": [
+        {
+          "relativePath": "README.md",
           "name": "README.md",
           "fileType": "md"
         },
         {
-          "relativePath": "client/src/lib/cloudStorage/README.md",
+          "relativePath": "TODO.md",
+          "name": "TODO.md",
+          "fileType": "md"
+        }
+      ]
+    },
+    {
+      "name": "weirdchess",
+      "description": "A game with 5 variants of 10x10 chess.",
+      "githubUrl": "https://github.com/mindfu23/weirdchess",
+      "languages": [
+        "JavaScript"
+      ],
+      "lastCommitDate": "2026-01-31T18:35:30Z",
+      "status": "synced",
+      "visibility": "public",
+      "localPath": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/weirdchess",
+      "markdownFiles": [
+        {
+          "relativePath": "ios/Runner/Assets.xcassets/LaunchImage.imageset/README.md",
           "name": "README.md",
           "fileType": "md"
         },
         {
           "relativePath": "README.md",
           "name": "README.md",
+          "fileType": "md"
+        }
+      ]
+    },
+    {
+      "name": "FreeWillEstimator",
+      "description": "A way for people to estimate the amount of free will they currently have available.",
+      "githubUrl": "https://github.com/mindfu23/FreeWillEstimator",
+      "languages": [
+        "JavaScript"
+      ],
+      "lastCommitDate": "2026-01-27T23:58:51Z",
+      "status": "synced",
+      "visibility": "public",
+      "localPath": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/FreeWillEstimator",
+      "markdownFiles": [
+        {
+          "relativePath": "README.md",
+          "name": "README.md",
+          "fileType": "md"
+        }
+      ]
+    },
+    {
+      "name": "n8n_workflows",
+      "description": "Private repo for n8n workflows",
+      "githubUrl": "https://github.com/mindfu23/n8n_workflows",
+      "languages": [
+        "Shell"
+      ],
+      "lastCommitDate": "2026-01-25T00:40:30Z",
+      "status": "synced",
+      "visibility": "public",
+      "localPath": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/n8n_workflows",
+      "notes": "Not deployed directly, will put URL in once it's set up.",
+      "markdownFiles": [
+        {
+          "relativePath": "docs/N8N_GCP_SETUP_GUIDE.md",
+          "name": "N8N_GCP_SETUP_GUIDE.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "README.md",
+          "name": "README.md",
+          "fileType": "md"
+        }
+      ]
+    },
+    {
+      "name": "gastown",
+      "description": "Gas Town - multi-agent workspace manager",
+      "githubUrl": "https://github.com/mindfu23/gastown",
+      "languages": [],
+      "lastCommitDate": "2026-01-17T20:21:56Z",
+      "status": "synced",
+      "visibility": "public",
+      "localPath": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/gastown",
+      "markdownFiles": [
+        {
+          "relativePath": "AGENTS.md",
+          "name": "AGENTS.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "CHANGELOG.md",
+          "name": "CHANGELOG.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "CODE_OF_CONDUCT.md",
+          "name": "CODE_OF_CONDUCT.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "CONTRIBUTING.md",
+          "name": "CONTRIBUTING.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "docs/beads-native-messaging.md",
+          "name": "beads-native-messaging.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "docs/concepts/convoy.md",
+          "name": "convoy.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "docs/concepts/identity.md",
+          "name": "identity.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "docs/concepts/molecules.md",
+          "name": "molecules.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "docs/concepts/polecat-lifecycle.md",
+          "name": "polecat-lifecycle.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "docs/concepts/propulsion-principle.md",
+          "name": "propulsion-principle.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "docs/design/architecture.md",
+          "name": "architecture.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "docs/design/convoy-lifecycle.md",
+          "name": "convoy-lifecycle.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "docs/design/dog-pool-architecture.md",
+          "name": "dog-pool-architecture.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "docs/design/escalation-system.md",
+          "name": "escalation-system.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "docs/design/escalation.md",
+          "name": "escalation.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "docs/design/federation.md",
+          "name": "federation.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "docs/design/mail-protocol.md",
+          "name": "mail-protocol.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "docs/design/operational-state.md",
+          "name": "operational-state.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "docs/design/plugin-system.md",
+          "name": "plugin-system.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "docs/design/property-layers.md",
+          "name": "property-layers.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "docs/design/watchdog-chain.md",
+          "name": "watchdog-chain.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "docs/examples/hanoi-demo.md",
+          "name": "hanoi-demo.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "docs/formula-resolution.md",
+          "name": "formula-resolution.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "docs/glossary.md",
+          "name": "glossary.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "docs/INSTALLING.md",
+          "name": "INSTALLING.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "docs/mol-mall-design.md",
+          "name": "mol-mall-design.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "docs/overview.md",
+          "name": "overview.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "docs/reference.md",
+          "name": "reference.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "docs/why-these-features.md",
+          "name": "why-these-features.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "internal/formula/README.md",
+          "name": "README.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "internal/templates/commands/handoff.md",
+          "name": "handoff.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "npm-package/README.md",
+          "name": "README.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "README.md",
+          "name": "README.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "RELEASING.md",
+          "name": "RELEASING.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "SECURITY.md",
+          "name": "SECURITY.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "templates/polecat-CLAUDE.md",
+          "name": "polecat-CLAUDE.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "templates/witness-CLAUDE.md",
+          "name": "witness-CLAUDE.md",
           "fileType": "md"
         }
       ]
     },
     {
       "name": "EthicalAIditor",
+      "description": "An interface and AI wrapper for writers and editors, that's linked to LLMs trained only on legally and publicly available writing materials. ",
+      "githubUrl": "https://github.com/mindfu23/EthicalAIditor",
       "languages": [
-        "markdown",
-        "html",
-        "json",
-        "typescript",
-        "javascript",
-        "python",
-        "yaml",
-        "sql",
-        "css"
+        "JavaScript"
       ],
+      "lastCommitDate": "2026-01-16T21:50:18Z",
       "status": "synced",
       "visibility": "public",
       "localPath": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/EthicalAIditor",
-      "githubUrl": "https://github.com/mindfu23/EthicalAIditor",
-      "description": "An interface and AI wrapper for writers and editors, that's linked to LLMs trained only on legally and publicly available writing materials.",
-      "lastCommitDate": "2026-01-16T13:50:17-08:00",
       "markdownFiles": [
         {
           "relativePath": "DEPLOYMENT.md",
@@ -372,403 +766,25 @@
       ]
     },
     {
-      "name": "FreeWillEstimator",
+      "name": "Create",
+      "description": "An app to introduce kids to some methods of creating and encourage them in doing it. ",
+      "githubUrl": "https://github.com/mindfu23/Create",
       "languages": [
-        "markdown",
-        "javascript",
-        "html",
-        "css"
+        "TypeScript"
       ],
+      "lastCommitDate": "2026-01-05T17:15:05Z",
       "status": "synced",
       "visibility": "public",
-      "localPath": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/FreeWillEstimator",
-      "githubUrl": "https://github.com/mindfu23/FreeWillEstimator.git",
-      "description": "A web application for assessing your current level of autonomy and decision-making freedom through a psychology-based questionnaire.",
-      "lastCommitDate": "2025-12-08T13:55:50-08:00",
+      "localPath": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/Create",
       "markdownFiles": [
         {
-          "relativePath": "README.md",
-          "name": "README.md",
-          "fileType": "md"
-        }
-      ]
-    },
-    {
-      "name": "friendli-assessment",
-      "languages": [
-        "markdown",
-        "python"
-      ],
-      "status": "local-only",
-      "visibility": "public",
-      "localPath": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/friendli-assessment",
-      "githubUrl": "https://github.com/mindfu23/takehome_q.git",
-      "description": "**Author:** James Beach",
-      "lastCommitDate": "2026-01-21T17:49:46-08:00",
-      "markdownFiles": [
-        {
-          "relativePath": "ANALYSIS.md",
-          "name": "ANALYSIS.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "README.md",
-          "name": "README.md",
-          "fileType": "md"
-        }
-      ]
-    },
-    {
-      "name": "FutureSketch",
-      "languages": [
-        "python",
-        "markdown"
-      ],
-      "status": "synced",
-      "visibility": "public",
-      "localPath": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/FutureSketch",
-      "githubUrl": "https://github.com/mindfu23/FutureSketch.git",
-      "description": "Repo for scripts to control the LEDs for my interactive sculpture Future Sketch.",
-      "lastCommitDate": "2025-08-10T16:48:28-07:00",
-      "markdownFiles": [
-        {
-          "relativePath": "info.txt",
-          "name": "info.txt",
-          "fileType": "txt"
-        },
-        {
-          "relativePath": "layout.txt",
-          "name": "layout.txt",
-          "fileType": "txt"
-        },
-        {
-          "relativePath": "README.md",
+          "relativePath": "client/src/lib/auth/README.md",
           "name": "README.md",
           "fileType": "md"
         },
         {
-          "relativePath": "serviceinfo.txt",
-          "name": "serviceinfo.txt",
-          "fileType": "txt"
-        },
-        {
-          "relativePath": "Unit1.txt",
-          "name": "Unit1.txt",
-          "fileType": "txt"
-        },
-        {
-          "relativePath": "UnitA.txt",
-          "name": "UnitA.txt",
-          "fileType": "txt"
-        }
-      ]
-    },
-    {
-      "name": "gastown",
-      "languages": [
-        "markdown",
-        "json",
-        "shell",
-        "python"
-      ],
-      "status": "synced",
-      "visibility": "public",
-      "localPath": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/gastown",
-      "githubUrl": "https://github.com/mindfu23/gastown-mission-district.git",
-      "description": "**Multi-agent orchestration system for Claude Code with persistent work tracking**",
-      "lastCommitDate": "2026-01-21T18:12:40-08:00",
-      "markdownFiles": [
-        {
-          "relativePath": "agent_router/AGENTS.md",
-          "name": "AGENTS.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "AGENTS.md",
-          "name": "AGENTS.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "agents/lib/imagen-projects/README.md",
+          "relativePath": "client/src/lib/cloudStorage/README.md",
           "name": "README.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "docs/IMAGEN.md",
-          "name": "IMAGEN.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "docs/MULTI-MODEL-AGENTS.md",
-          "name": "MULTI-MODEL-AGENTS.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "fractasy/AGENTS.md",
-          "name": "AGENTS.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "GEMINI-SETUP.md",
-          "name": "GEMINI-SETUP.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "GETTING-STARTED.md",
-          "name": "GETTING-STARTED.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "mayor/CLAUDE.md",
-          "name": "CLAUDE.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "plugins/README.md",
-          "name": "README.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "README.md",
-          "name": "README.md",
-          "fileType": "md"
-        }
-      ]
-    },
-    {
-      "name": "gastown-mission-district",
-      "languages": [
-        "markdown",
-        "json",
-        "shell"
-      ],
-      "status": "synced",
-      "visibility": "public",
-      "localPath": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/gastown-mission-district",
-      "githubUrl": "https://github.com/mindfu23/gastown-mission-district.git",
-      "description": "This is a forked update to Gastown that adds multi-model agents, and also specifically integrates Gemini pro for rapid generation of style assets.",
-      "lastCommitDate": "2026-01-17T11:41:45-08:00",
-      "markdownFiles": [
-        {
-          "relativePath": "agent_router/AGENTS.md",
-          "name": "AGENTS.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "AGENTS.md",
-          "name": "AGENTS.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "agents/lib/imagen-projects/README.md",
-          "name": "README.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "docs/IMAGEN.md",
-          "name": "IMAGEN.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "docs/MULTI-MODEL-AGENTS.md",
-          "name": "MULTI-MODEL-AGENTS.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "fractasy/AGENTS.md",
-          "name": "AGENTS.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "GEMINI-SETUP.md",
-          "name": "GEMINI-SETUP.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "GETTING-STARTED.md",
-          "name": "GETTING-STARTED.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "mayor/CLAUDE.md",
-          "name": "CLAUDE.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "plugins/README.md",
-          "name": "README.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "README.md",
-          "name": "README.md",
-          "fileType": "md"
-        }
-      ]
-    },
-    {
-      "name": "GNN",
-      "languages": [
-        "javascript",
-        "markdown",
-        "json",
-        "html",
-        "css"
-      ],
-      "status": "synced",
-      "visibility": "public",
-      "notes": "TBD, mobile dev versions need UX. future track for this is \"my good news\" or similar, where the user picks their good news and it's formatted how they want it. TBD",
-      "localPath": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/GNN",
-      "githubUrl": "https://github.com/mindfu23/GNN.git",
-      "description": "A cross-platform mobile and web application that searches for and delivers positive news to users. Built with React Native and Expo, GNN provides a unified codebase for iOS, Android, and web platforms",
-      "lastCommitDate": "2025-12-25T12:15:42-08:00",
-      "markdownFiles": [
-        {
-          "relativePath": "DEPLOYMENT.md",
-          "name": "DEPLOYMENT.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "gnn_template/INTEGRATION_GUIDE.md",
-          "name": "INTEGRATION_GUIDE.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "gnn_template/README.md",
-          "name": "README.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "README.md",
-          "name": "README.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "USER_GUIDE.md",
-          "name": "USER_GUIDE.md",
-          "fileType": "md"
-        }
-      ]
-    },
-    {
-      "name": "IsHe",
-      "languages": [
-        "markdown",
-        "javascript",
-        "json",
-        "typescript"
-      ],
-      "status": "synced",
-      "visibility": "public",
-      "notes": "TBD",
-      "localPath": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/IsHe",
-      "githubUrl": "https://github.com/mindfu23/IsHe.git",
-      "description": "Initial working version for an application that searches the names of specific famous people to see if they're deceased.",
-      "lastCommitDate": "2025-12-10T09:50:58-08:00",
-      "markdownFiles": [
-        {
-          "relativePath": "app/README.md",
-          "name": "README.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "README.md",
-          "name": "README.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "scratch/copilot.txt",
-          "name": "copilot.txt",
-          "fileType": "txt"
-        },
-        {
-          "relativePath": "web/DEPLOYMENT.md",
-          "name": "DEPLOYMENT.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "web/README.md",
-          "name": "README.md",
-          "fileType": "md"
-        }
-      ]
-    },
-    {
-      "name": "KorassViewer",
-      "languages": [],
-      "status": "synced",
-      "visibility": "public",
-      "localPath": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/KorassViewer",
-      "githubUrl": "https://github.com/mindfu23/KorassViewer.git",
-      "description": "A viewer of images for the people in this korass. (See also: Cat's Cradle)",
-      "lastCommitDate": "2026-01-27T18:36:16.508Z",
-      "markdownFiles": []
-    },
-    {
-      "name": "meme-renamer",
-      "languages": [
-        "markdown",
-        "python"
-      ],
-      "status": "synced",
-      "visibility": "public",
-      "localPath": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/meme-renamer",
-      "githubUrl": "https://github.com/mindfu23/meme-renamer.git",
-      "description": "AI-powered image renaming tool that analyzes images and renames files based on their content, including any visible text. Also includes a powerful duplicate image finder with visual comparison GUI.",
-      "lastCommitDate": "2025-12-27T15:12:00-08:00",
-      "markdownFiles": [
-        {
-          "relativePath": "README.md",
-          "name": "README.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "requirements.txt",
-          "name": "requirements.txt",
-          "fileType": "txt"
-        }
-      ]
-    },
-    {
-      "name": "Musix",
-      "languages": [
-        "markdown",
-        "html",
-        "json",
-        "javascript"
-      ],
-      "status": "synced",
-      "visibility": "public",
-      "localPath": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/Musix",
-      "githubUrl": "https://github.com/mindfu23/Musix.git",
-      "description": "A music composition tool based on the Joseph Schillinger method",
-      "lastCommitDate": "2025-12-09T09:28:38-08:00",
-      "markdownFiles": [
-        {
-          "relativePath": "README.md",
-          "name": "README.md",
-          "fileType": "md"
-        }
-      ]
-    },
-    {
-      "name": "n8n_workflows",
-      "languages": [
-        "markdown",
-        "yaml",
-        "shell"
-      ],
-      "status": "synced",
-      "visibility": "public",
-      "notes": "Not deployed directly, will put URL in once it's set up.",
-      "localPath": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/n8n_workflows",
-      "githubUrl": "https://github.com/mindfu23/n8n_workflows.git",
-      "description": "Self-hosted n8n workflow automation on GCP's Always Free tier.",
-      "lastCommitDate": "2026-01-24T16:40:29-08:00",
-      "markdownFiles": [
-        {
-          "relativePath": "docs/N8N_GCP_SETUP_GUIDE.md",
-          "name": "N8N_GCP_SETUP_GUIDE.md",
           "fileType": "md"
         },
         {
@@ -780,15 +796,15 @@
     },
     {
       "name": "plottoxml",
+      "description": "Plotto—A new method of plot suggestion for writers of creative fiction by William Wallace Cook, 1867-1933",
+      "githubUrl": "https://github.com/mindfu23/plottoxml",
       "languages": [
-        "markdown"
+        "Makefile"
       ],
+      "lastCommitDate": "2025-12-28T06:35:23Z",
       "status": "synced",
       "visibility": "public",
       "localPath": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/plottoxml",
-      "githubUrl": "https://github.com/mindfu23/plottoxml.git",
-      "description": "Plotto\u2014A new method of plot suggestion for writers of creative fiction",
-      "lastCommitDate": "2025-12-08T11:26:48-08:00",
       "markdownFiles": [
         {
           "relativePath": "LICENSE.md",
@@ -803,20 +819,98 @@
       ]
     },
     {
-      "name": "Postboi",
+      "name": "meme-renamer",
+      "description": "A set of python scripts to read all the filenames in a directory of images, find any filenames that aren't descriptive, and then send those for review to an AI of your choice for subject detection and renaming.",
+      "githubUrl": "https://github.com/mindfu23/meme-renamer",
       "languages": [
-        "markdown",
-        "kotlin",
-        "python",
-        "swift",
-        "html"
+        "Python"
       ],
+      "lastCommitDate": "2025-12-27T23:12:00Z",
+      "status": "synced",
+      "visibility": "public",
+      "localPath": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/meme-renamer",
+      "markdownFiles": [
+        {
+          "relativePath": "README.md",
+          "name": "README.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "requirements.txt",
+          "name": "requirements.txt",
+          "fileType": "txt"
+        }
+      ]
+    },
+    {
+      "name": "SearchBard",
+      "githubUrl": "https://github.com/mindfu23/SearchBard",
+      "languages": [
+        "TypeScript"
+      ],
+      "lastCommitDate": "2025-12-27T17:17:53Z",
+      "status": "synced",
+      "visibility": "public",
+      "localPath": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/SearchBard",
+      "markdownFiles": [
+        {
+          "relativePath": "ARCHITECTURE.md",
+          "name": "ARCHITECTURE.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "conference-search/public/robots.txt",
+          "name": "robots.txt",
+          "fileType": "txt"
+        },
+        {
+          "relativePath": "conference-search/README.md",
+          "name": "README.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "IMPLEMENTATION_SUMMARY.md",
+          "name": "IMPLEMENTATION_SUMMARY.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "LEGACY_FILES.md",
+          "name": "LEGACY_FILES.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "README_v2.md",
+          "name": "README_v2.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "README.md",
+          "name": "README.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "requirements.txt",
+          "name": "requirements.txt",
+          "fileType": "txt"
+        },
+        {
+          "relativePath": "SEARCHBARD_DOCS.md",
+          "name": "SEARCHBARD_DOCS.md",
+          "fileType": "md"
+        }
+      ]
+    },
+    {
+      "name": "Postboi",
+      "description": "A test app for cross-platform and cross-site posting. ",
+      "githubUrl": "https://github.com/mindfu23/Postboi",
+      "languages": [
+        "Python"
+      ],
+      "lastCommitDate": "2025-12-25T20:30:08Z",
       "status": "synced",
       "visibility": "public",
       "localPath": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/Postboi",
-      "githubUrl": "https://github.com/mindfu23/Postboi.git",
-      "description": "Cross-platform mobile app (iOS & Android) for sharing images and text to Instagram, Facebook, and WordPress simultaneously. Built with Python and Kivy.",
-      "lastCommitDate": "2025-12-25T12:29:45-08:00",
       "markdownFiles": [
         {
           "relativePath": "android/README.md",
@@ -886,103 +980,75 @@
       ]
     },
     {
-      "name": "SacredGeometryOutliner",
+      "name": "GNN",
+      "description": "Good News Network (GNN) - an app that searches for positive news only and sends that to users. ",
+      "githubUrl": "https://github.com/mindfu23/GNN",
       "languages": [
-        "markdown",
-        "javascript",
-        "html",
-        "css"
+        "JavaScript"
       ],
+      "lastCommitDate": "2025-12-25T20:15:43Z",
       "status": "synced",
       "visibility": "public",
-      "localPath": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/SacredGeometryOutliner",
-      "githubUrl": "https://github.com/mindfu23/SacredGeometryOutliner.git",
-      "description": "Transform images into sacred geometric line art with real-time controls.",
-      "lastCommitDate": "2025-12-22T09:43:57-08:00",
+      "localPath": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/GNN",
+      "notes": "TBD, mobile dev versions need UX. future track for this is \"my good news\" or similar, where the user picks their good news and it's formatted how they want it. TBD",
       "markdownFiles": [
+        {
+          "relativePath": "DEPLOYMENT.md",
+          "name": "DEPLOYMENT.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "gnn_template/INTEGRATION_GUIDE.md",
+          "name": "INTEGRATION_GUIDE.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "gnn_template/README.md",
+          "name": "README.md",
+          "fileType": "md"
+        },
         {
           "relativePath": "README.md",
           "name": "README.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "USER_GUIDE.md",
+          "name": "USER_GUIDE.md",
           "fileType": "md"
         }
       ]
     },
     {
-      "name": "SearchBard",
+      "name": "SacredGeometryOutliner",
+      "description": "An app that will take uploaded pictures and turn them into sacred geometry designs, based on principles of visual symmetry and geometric harmony.",
+      "githubUrl": "https://github.com/mindfu23/SacredGeometryOutliner",
       "languages": [
-        "markdown",
-        "typescript",
-        "json",
-        "html",
-        "python"
+        "JavaScript"
       ],
+      "lastCommitDate": "2025-12-22T17:47:44Z",
       "status": "synced",
       "visibility": "public",
-      "localPath": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/SearchBard",
-      "githubUrl": "https://github.com/mindfu23/SearchBard",
-      "description": "A React-based web application that aggregates conference and event data from multiple sources to help users discover professional conferences across various subjects, locations, and date ranges.",
-      "lastCommitDate": "2025-12-14T14:29:09-08:00",
+      "localPath": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/SacredGeometryOutliner",
       "markdownFiles": [
-        {
-          "relativePath": "ARCHITECTURE.md",
-          "name": "ARCHITECTURE.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "conference-search/public/robots.txt",
-          "name": "robots.txt",
-          "fileType": "txt"
-        },
-        {
-          "relativePath": "conference-search/README.md",
-          "name": "README.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "IMPLEMENTATION_SUMMARY.md",
-          "name": "IMPLEMENTATION_SUMMARY.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "LEGACY_FILES.md",
-          "name": "LEGACY_FILES.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "README_v2.md",
-          "name": "README_v2.md",
-          "fileType": "md"
-        },
         {
           "relativePath": "README.md",
           "name": "README.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "requirements.txt",
-          "name": "requirements.txt",
-          "fileType": "txt"
-        },
-        {
-          "relativePath": "SEARCHBARD_DOCS.md",
-          "name": "SEARCHBARD_DOCS.md",
           "fileType": "md"
         }
       ]
     },
     {
       "name": "SierraTrails",
+      "description": "Repo for a demo hiking and biking trailfinder app. ",
+      "githubUrl": "https://github.com/mindfu23/SierraTrails",
       "languages": [
-        "markdown",
-        "javascript",
-        "json"
+        "JavaScript"
       ],
+      "lastCommitDate": "2025-12-21T02:18:19Z",
       "status": "synced",
       "visibility": "public",
       "localPath": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/SierraTrails",
-      "githubUrl": "https://github.com/mindfu23/SierraTrails.git",
-      "description": "Repo for a demo hiking and biking trailfinder app.",
-      "lastCommitDate": "2025-12-20T18:18:19-08:00",
       "markdownFiles": [
         {
           "relativePath": "ARCHITECTURE.md",
@@ -1002,41 +1068,83 @@
       ]
     },
     {
-      "name": "StoryPlot",
+      "name": "BookLarner",
+      "description": "A website, iOS and Android app that will:",
+      "githubUrl": "https://github.com/mindfu23/BookLarner",
       "languages": [
-        "html",
-        "json",
-        "javascript",
-        "python"
+        "JavaScript"
       ],
+      "lastCommitDate": "2025-12-21T02:15:32Z",
       "status": "synced",
       "visibility": "public",
-      "localPath": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/StoryPlot",
-      "githubUrl": "https://github.com/mindfu23/StoryPlot",
-      "description": "A fiction story plot generator. Work in progress.",
-      "lastCommitDate": "2026-01-12T08:33:11-08:00",
-      "markdownFiles": []
-    },
-    {
-      "name": "takehome_q",
-      "languages": [
-        "markdown",
-        "python"
-      ],
-      "status": "synced",
-      "visibility": "public",
-      "localPath": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/takehome_q",
-      "githubUrl": "https://github.com/mindfu23/takehome_q.git",
-      "description": "**Author:** James Beach",
-      "lastCommitDate": "2026-01-21T17:49:46-08:00",
+      "localPath": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/BookLarner",
       "markdownFiles": [
         {
-          "relativePath": "ANALYSIS.md",
-          "name": "ANALYSIS.md",
+          "relativePath": "docs/adding-ai-provider.md",
+          "name": "adding-ai-provider.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "docs/adding-retailer.md",
+          "name": "adding-retailer.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "docs/deployment-guide.md",
+          "name": "deployment-guide.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "mobile/README.md",
+          "name": "README.md",
           "fileType": "md"
         },
         {
           "relativePath": "README.md",
+          "name": "README.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "web/README.md",
+          "name": "README.md",
+          "fileType": "md"
+        }
+      ]
+    },
+    {
+      "name": "IsHe",
+      "githubUrl": "https://github.com/mindfu23/IsHe",
+      "languages": [
+        "JavaScript"
+      ],
+      "lastCommitDate": "2025-12-10T17:51:44Z",
+      "status": "synced",
+      "visibility": "public",
+      "localPath": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/IsHe",
+      "notes": "TBD",
+      "markdownFiles": [
+        {
+          "relativePath": "app/README.md",
+          "name": "README.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "README.md",
+          "name": "README.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "scratch/copilot.txt",
+          "name": "copilot.txt",
+          "fileType": "txt"
+        },
+        {
+          "relativePath": "web/DEPLOYMENT.md",
+          "name": "DEPLOYMENT.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "web/README.md",
           "name": "README.md",
           "fileType": "md"
         }
@@ -1044,19 +1152,15 @@
     },
     {
       "name": "Theorazine",
+      "description": "An app to estimate the likelihood that a conspiracy theory a user adds is actually real. ",
+      "githubUrl": "https://github.com/mindfu23/Theorazine",
       "languages": [
-        "markdown",
-        "css",
-        "html",
-        "javascript",
-        "json"
+        "JavaScript"
       ],
+      "lastCommitDate": "2025-12-09T21:15:05Z",
       "status": "synced",
       "visibility": "public",
       "localPath": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/Theorazine",
-      "githubUrl": "https://github.com/mindfu23/Theorazine.git",
-      "description": "The Conspiracy Calculator - A mathematical tool for analyzing conspiracy theory viability",
-      "lastCommitDate": "2026-01-10T13:33:40-08:00",
       "markdownFiles": [
         {
           "relativePath": "DEPLOYMENT.md",
@@ -1076,26 +1180,89 @@
       ]
     },
     {
-      "name": "weirdchess",
+      "name": "Musix",
+      "description": "An application that can generate music in accordance with the Schillinger System, and potentially other generative music systems, via GUI and command line.",
+      "githubUrl": "https://github.com/mindfu23/Musix",
       "languages": [
-        "markdown"
+        "JavaScript"
       ],
+      "lastCommitDate": "2025-12-08T22:22:32Z",
       "status": "synced",
       "visibility": "public",
-      "localPath": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/weirdchess",
-      "githubUrl": "https://github.com/mindfu23/weirdchess",
-      "description": "Hyderabad Decimal Chess and other variants",
-      "lastCommitDate": "2026-01-16T20:05:54-08:00",
+      "localPath": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/Musix",
       "markdownFiles": [
         {
-          "relativePath": "ios/Runner/Assets.xcassets/LaunchImage.imageset/README.md",
+          "relativePath": "README.md",
           "name": "README.md",
           "fileType": "md"
+        }
+      ]
+    },
+    {
+      "name": "StoryPlot",
+      "description": "A fiction story plot generator. Work in progress.",
+      "githubUrl": "https://github.com/mindfu23/StoryPlot",
+      "languages": [
+        "JavaScript"
+      ],
+      "lastCommitDate": "2025-12-08T21:17:21Z",
+      "status": "synced",
+      "visibility": "public",
+      "localPath": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/StoryPlot",
+      "markdownFiles": []
+    },
+    {
+      "name": "KorassViewer",
+      "description": "A viewer of images for the people in this korass. (See also: Cat's Cradle)",
+      "githubUrl": "https://github.com/mindfu23/KorassViewer",
+      "languages": [],
+      "lastCommitDate": "2025-09-18T07:46:25Z",
+      "status": "synced",
+      "visibility": "public",
+      "localPath": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/KorassViewer",
+      "markdownFiles": []
+    },
+    {
+      "name": "FutureSketch",
+      "description": "Repo for scripts to control the LEDs for my interactive sculpture Future Sketch",
+      "githubUrl": "https://github.com/mindfu23/FutureSketch",
+      "languages": [
+        "Python"
+      ],
+      "lastCommitDate": "2025-08-10T23:49:19Z",
+      "status": "synced",
+      "visibility": "public",
+      "localPath": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/FutureSketch",
+      "markdownFiles": [
+        {
+          "relativePath": "info.txt",
+          "name": "info.txt",
+          "fileType": "txt"
+        },
+        {
+          "relativePath": "layout.txt",
+          "name": "layout.txt",
+          "fileType": "txt"
         },
         {
           "relativePath": "README.md",
           "name": "README.md",
           "fileType": "md"
+        },
+        {
+          "relativePath": "serviceinfo.txt",
+          "name": "serviceinfo.txt",
+          "fileType": "txt"
+        },
+        {
+          "relativePath": "Unit1.txt",
+          "name": "Unit1.txt",
+          "fileType": "txt"
+        },
+        {
+          "relativePath": "UnitA.txt",
+          "name": "UnitA.txt",
+          "fileType": "txt"
         }
       ]
     }
@@ -1110,6 +1277,6 @@
     "templates",
     "utilities"
   ],
-  "buildTime": "2026-02-18T15:39:21.186Z",
+  "buildTime": "2026-02-18T15:59:46.451Z",
   "version": "1.0.0"
 }
