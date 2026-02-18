@@ -67,11 +67,13 @@ The indexer finds these documentation file types in your repos:
 
 3. **Set environment variables** in Netlify Dashboard → Site settings → Environment variables:
 
+   > **Note:** These Netlify environment variables are different from GitHub repository secrets (step 5). Netlify vars are used by the web app; GitHub secrets are used by GitHub Actions.
+
    **Required:**
    | Variable | Description |
    |----------|-------------|
    | `GITHUB_REPO_OWNER` | Your GitHub username - used for repo discovery AND edit authorization |
-   | `GITHUB_TOKEN` | Personal access token with `repo` scope - enables auto-discovery of all your repos |
+   | `GITHUB_TOKEN` | Personal access token with `repo` scope - enables auto-discovery of all your repos. Create at [GitHub Developer Settings](https://github.com/settings/tokens). |
 
    **Required for editing features:**
    | Variable | Description |
@@ -103,14 +105,27 @@ The indexer finds these documentation file types in your repos:
    - When `repo-locations.md` changes
    - Or trigger manually from the Actions tab
 
-5. **(Optional) Enable auto-discovery in GitHub Actions** - Add a Personal Access Token as a repository secret:
+5. **(Recommended) Enable auto-discovery in GitHub Actions** - Add a Personal Access Token as a repository secret:
 
-   1. Create a classic PAT at GitHub → Settings → Developer settings → Personal access tokens → Tokens (classic)
-   2. Give it `repo` scope (required to list all your repos including private ones)
-   3. Add it as a secret: Your repo → Settings → Secrets and variables → Actions → New repository secret
-   4. Name it `REPO_ACCESS_TOKEN`
+   **Create the token:**
+   1. Go to [GitHub Developer Settings → Personal Access Tokens](https://github.com/settings/tokens)
+   2. Click **"Generate new token"** → **"Generate new token (classic)"**
+   3. Give it a descriptive name (e.g., "code-wiki auto-discovery")
+   4. Select the **`repo`** scope (full control) - this is required to discover ALL your repos including private ones
+   5. Click "Generate token" and copy it immediately
 
-   Without this secret, GitHub Actions will use `repo-locations.md` instead of auto-discovery.
+   **Verify your token:** A correct fine-grained PAT starts with `github_pat_`. Classic tokens start with `ghp_`.
+
+   **Add as a repository secret:**
+   1. Go to your code-wiki repo → **Settings** → **Secrets and variables** → **Actions**
+   2. Click **"New repository secret"**
+   3. Name: `REPO_ACCESS_TOKEN`
+   4. Value: Paste your token (starting with `github_pat_` or `ghp_`)
+   5. Click "Add secret"
+
+   **Why this is needed:** The default `GITHUB_TOKEN` in Actions only has access to the current repository. `REPO_ACCESS_TOKEN` allows the workflow to list ALL your repositories for auto-discovery.
+
+   Without this secret, GitHub Actions will fall back to using repos listed in `repo-locations.md`.
 
 ### Private Repository Visibility
 
