@@ -88,13 +88,13 @@
       "category": "projects"
     },
     {
-      "path": "/home/runner/work/code-wiki/code-wiki/wiki/projects/n8n-todo.md",
+      "path": "wiki/projects/n8n-todo.md",
       "relativePath": "projects/n8n-todo.md",
       "title": "n8n To Do",
       "tags": [],
-      "updated": "2026-02-17",
-      "content": "\ncreate or assign a domain name to the current IP address, as currently stored in Google Compute:\n\nhttp://35.188.141.23:5678",
-      "contentPreview": "create or assign a domain name to the current IP address, as currently stored in Google Compute:  http://35.188.141.23:5678",
+      "updated": "2026-02-18",
+      "content": "create or assign a domain name to the current IP address, as currently stored in Google Compute:\n\nhttp://35.188.141.23:5678\n\nworkflows here, created for ValueApe, Metabot, ShamAIn, and novel orchestration via n8n, and 1 demo article generator from LinkedIn.\n\nhttp://35.188.141.23:5678/projects/0xV2ERXR2IwHi5lk/workflows",
+      "contentPreview": "create or assign a domain name to the current IP address, as currently stored in Google Compute:  http://35.188.141.23:5678  workflows here, created for ValueApe, Metabot, ShamAIn, and novel orchestration via n8n, and 1 demo article generator from LinkedIn.  http://35.188.141.23:5678/projects/0xV2ER",
       "category": "projects"
     },
     {
@@ -194,6 +194,6 @@
     "templates",
     "utilities"
   ],
-  "buildTime": "2026-02-18T00:20:05.674Z",
+  "buildTime": "2026-02-18T15:39:22.107Z",
   "version": "1.0.0"
 }
