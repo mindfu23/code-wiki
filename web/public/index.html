@@ -80,6 +80,14 @@
           </table>
         </div>
       </div>
+
+      <!-- Recently Modified Docs -->
+      <div class="recent-docs-section">
+        <h3>Recently Modified Docs</h3>
+        <div id="recent-docs-container">
+          <p class="loading">Loading recent docs...</p>
+        </div>
+      </div>
     </section>
 
     <!-- Browse Page -->
@@ -98,6 +106,7 @@
           <button class="repo-tab active" data-tab="files">Files View</button>
           <button class="repo-tab" data-tab="list">List View</button>
           <button class="repo-tab" data-tab="card">Card View</button>
+          <button class="repo-tab" data-tab="docs">Docs View</button>
         </div>
 
         <!-- Files View (Repos with .md files) -->
@@ -111,6 +120,13 @@
         <div id="repo-list-view" class="repo-view">
           <div id="repo-list-content" class="document-content">
             <p class="loading">Loading repository index...</p>
+          </div>
+        </div>
+
+        <!-- Docs View (All doc files with sort/pagination) -->
+        <div id="repo-docs-view" class="repo-view">
+          <div id="repo-docs-content">
+            <p class="loading">Loading doc files...</p>
           </div>
         </div>
 

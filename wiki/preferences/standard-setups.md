@@ -56,9 +56,7 @@ Health checks are currently monitored in the free tier of Uptime Robot.
 -> For UI and UX, I typically prefer the app to provide some feedback to the user when a user's input search returns no info, or when the user inputs information that does not work for some reason.
 
 // ignore this for now, until the next double slashes. 
--> Pay attention to if the app being designed, redesigned or used is using real-world data or is creating new / mock / simulation data. Unless the app is for creating art such as fiction, or fill-in data for historical simulations, let the user know if and when this will be part of the design. 
-
-Use cases where creating data will work include creative efforts such as generating fiction text or creating a historical simulation. Use cases where creating data most likely will not work include generating predictions about stock market prices and money. //
+-> Pay attention to if the app being designed, redesigned or used is using real-world data or is creating new / mock / simulation data. Unless the app is for creating art such as fiction, or fill-in data for historical simulations, let the user know if and when this will be part of the design. //
 
 ##Some standard features
 
