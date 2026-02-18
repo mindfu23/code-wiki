@@ -453,9 +453,16 @@ async function buildIndex(): Promise<void> {
     // Fetch all repos from GitHub
     const githubRepos = await fetchAllGitHubRepos(octokit, GITHUB_USERNAME);
 
-    // Merge with local repo data (for paths, notes)
-    repos = mergeRepoData(githubRepos, localRepoData);
-    console.log(`Total repos after merge: ${repos.length} (${repos.filter(r => r.visibility === 'public').length} public, ${repos.filter(r => r.visibility === 'private').length} private)`);
+    // If auto-discovery returned results, merge with local data
+    // Otherwise fall back to repo-locations.md (auto-discovery may fail with repo-scoped tokens)
+    if (githubRepos.length > 0) {
+      repos = mergeRepoData(githubRepos, localRepoData);
+      console.log(`Total repos after merge: ${repos.length} (${repos.filter(r => r.visibility === 'public').length} public, ${repos.filter(r => r.visibility === 'private').length} private)`);
+    } else {
+      console.log('Auto-discovery returned no repos (token may not have user scope). Falling back to repo-locations.md...');
+      repos = localRepoData.filter(r => r.githubUrl);
+      console.log(`Using ${repos.length} repos from repo-locations.md`);
+    }
 
     // Fetch documentation files for each repo
     console.log('\nFetching documentation files...');
