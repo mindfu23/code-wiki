@@ -13,7 +13,6 @@ const ENABLE_CARD_VIEW = false;
 // State
 let wikiIndex = null;
 let currentPage = 'search';
-let currentCategory = null;
 let currentDocument = null;
 let currentUser = null;
 let editingDocument = null;
@@ -26,8 +25,6 @@ const searchBtn = document.getElementById('search-btn');
 const searchResults = document.getElementById('search-results');
 const filterCategory = document.getElementById('filter-category');
 const filterLanguage = document.getElementById('filter-language');
-const categoriesContainer = document.getElementById('categories-container');
-const categoryContent = document.getElementById('category-content');
 const reposContainer = document.getElementById('repos-container');
 const repoStatusFilter = document.getElementById('repo-status-filter');
 const repoSearch = document.getElementById('repo-search');
@@ -238,15 +235,12 @@ function showPage(page, params = {}) {
       renderRecentDocs();
       break;
     case 'browse':
-      renderCategories();
+      renderContents();
       if (ENABLE_CARD_VIEW) renderRepos();
       loadRepoFilesView();
       loadRepoListView();
       // Activate the requested tab, or default to docs
       switchRepoTab(params.tab || 'docs');
-      if (params.category) {
-        selectCategory(params.category);
-      }
       break;
     case 'repos':
       // Redirect /repos to /browse
@@ -427,69 +421,84 @@ function renderSearchResults(results) {
   });
 }
 
-// Render categories
-function renderCategories() {
+// Render wiki contents outline
+function renderContents() {
+  const container = document.getElementById('contents-outline');
+  if (!container) return;
+
   if (!wikiIndex) {
-    categoriesContainer.innerHTML = '<p class="loading">Loading</p>';
+    container.innerHTML = '<p class="loading">Loading</p>';
     return;
   }
 
-  const categoryCounts = {};
+  // Group documents by category, excluding _index.md files from child lists
+  const categoryDocs = {};
+  const categoryIndexDocs = {};
   wikiIndex.documents.forEach(doc => {
-    categoryCounts[doc.category] = (categoryCounts[doc.category] || 0) + 1;
+    const cat = doc.category;
+    if (!cat || cat === 'general') return; // skip root-level docs like AGENTS.md
+    if (doc.relativePath.endsWith('/_index.md')) {
+      categoryIndexDocs[cat] = doc;
+    } else {
+      if (!categoryDocs[cat]) categoryDocs[cat] = [];
+      categoryDocs[cat].push(doc);
+    }
   });
 
-  categoriesContainer.innerHTML = wikiIndex.categories.map(cat => `
-    <div class="category-card" data-category="${cat}">
-      <div class="category-icon">${categoryIcons[cat] || '📁'}</div>
-      <div class="category-name">${cat}</div>
-      <div class="category-count">${categoryCounts[cat] || 0} documents</div>
-    </div>
-  `).join('');
+  // Use the index categories order, filtering to ones that have content
+  const categories = (wikiIndex.categories || []).filter(cat =>
+    cat !== 'general' && (categoryIndexDocs[cat] || (categoryDocs[cat] && categoryDocs[cat].length > 0))
+  );
 
-  // Add click handlers
-  categoriesContainer.querySelectorAll('.category-card').forEach(card => {
-    card.addEventListener('click', () => {
-      selectCategory(card.dataset.category);
+  if (categories.length === 0) {
+    container.innerHTML = '<p class="placeholder-text">No wiki content yet</p>';
+    return;
+  }
+
+  let html = '<ul class="contents-list">';
+
+  categories.forEach(cat => {
+    const icon = categoryIcons[cat] || '📁';
+    const indexDoc = categoryIndexDocs[cat];
+    const docs = categoryDocs[cat] || [];
+    const displayName = cat.charAt(0).toUpperCase() + cat.slice(1);
+
+    // Level 1: category heading (links to _index.md if it exists)
+    html += '<li class="contents-category">';
+    if (indexDoc) {
+      html += `<a href="#" class="contents-category-link" data-path="${escapeHtml(indexDoc.relativePath)}"><span class="contents-icon">${icon}</span> ${escapeHtml(displayName)}</a>`;
+    } else {
+      html += `<span class="contents-category-name"><span class="contents-icon">${icon}</span> ${escapeHtml(displayName)}</span>`;
+    }
+
+    // Level 2: documents within the category
+    if (docs.length > 0) {
+      html += '<ul class="contents-docs">';
+      docs.forEach(doc => {
+        html += `<li><a href="#" class="contents-doc-link" data-path="${escapeHtml(doc.relativePath)}">${escapeHtml(doc.title)}</a></li>`;
+      });
+      html += '</ul>';
+    }
+
+    html += '</li>';
+  });
+
+  html += '</ul>';
+  container.innerHTML = html;
+
+  // Click handlers for category links
+  container.querySelectorAll('.contents-category-link').forEach(link => {
+    link.addEventListener('click', (e) => {
+      e.preventDefault();
+      navigateTo('document', { doc: link.dataset.path });
     });
   });
-}
 
-// Select a category
-function selectCategory(category) {
-  currentCategory = category;
-
-  // Update active state
-  categoriesContainer.querySelectorAll('.category-card').forEach(card => {
-    card.classList.toggle('active', card.dataset.category === category);
-  });
-
-  // Show category documents
-  if (!wikiIndex) return;
-
-  const docs = wikiIndex.documents.filter(d => d.category === category);
-
-  if (docs.length === 0) {
-    categoryContent.innerHTML = '<p class="placeholder-text">No documents in this category</p>';
-    return;
-  }
-
-  categoryContent.innerHTML = `
-    <h3>${category.charAt(0).toUpperCase() + category.slice(1)}</h3>
-    <ul class="doc-list">
-      ${docs.map(doc => `
-        <li class="doc-list-item" data-path="${doc.relativePath}">
-          <div class="doc-list-title">${escapeHtml(doc.title)}</div>
-          ${doc.description ? `<div class="doc-list-desc">${escapeHtml(doc.description)}</div>` : ''}
-        </li>
-      `).join('')}
-    </ul>
-  `;
-
-  // Add click handlers
-  categoryContent.querySelectorAll('.doc-list-item').forEach(item => {
-    item.addEventListener('click', () => {
-      navigateTo('document', { doc: item.dataset.path });
+  // Click handlers for document links
+  container.querySelectorAll('.contents-doc-link').forEach(link => {
+    link.addEventListener('click', (e) => {
+      e.preventDefault();
+      navigateTo('document', { doc: link.dataset.path });
     });
   });
 }
