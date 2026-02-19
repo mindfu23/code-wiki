@@ -431,6 +431,20 @@ function renderContents() {
     return;
   }
 
+  // Find root _index.md for editable contents page
+  const rootIndex = wikiIndex.documents.find(d => d.relativePath === '_index.md');
+
+  // Show/hide edit button based on auth
+  const editBtn = document.getElementById('contents-edit-btn');
+  if (editBtn) {
+    if (currentUser && rootIndex) {
+      editBtn.style.display = 'inline-block';
+      editBtn.onclick = () => openEditor(rootIndex.relativePath);
+    } else {
+      editBtn.style.display = 'none';
+    }
+  }
+
   // Group documents by category, excluding _index.md files from child lists
   const categoryDocs = {};
   const categoryIndexDocs = {};
@@ -455,10 +469,21 @@ function renderContents() {
     return;
   }
 
-  let html = '<ul class="contents-list">';
+  let html = '';
+
+  // Render body content from root _index.md (if it has content beyond the heading)
+  if (rootIndex && rootIndex.content) {
+    const body = extractContentBody(rootIndex.content);
+    // Strip the "# Contents" heading since we already have the h2
+    const bodyWithoutHeading = body.replace(/^#\s+Contents\s*\n*/i, '').trim();
+    if (bodyWithoutHeading) {
+      html += `<div class="contents-body">${renderMarkdown(bodyWithoutHeading)}</div>`;
+    }
+  }
+
+  html += '<ul class="contents-list">';
 
   categories.forEach(cat => {
-    const icon = categoryIcons[cat] || '📁';
     const indexDoc = categoryIndexDocs[cat];
     const docs = categoryDocs[cat] || [];
     const displayName = cat.charAt(0).toUpperCase() + cat.slice(1);
@@ -466,9 +491,9 @@ function renderContents() {
     // Level 1: category heading (links to _index.md if it exists)
     html += '<li class="contents-category">';
     if (indexDoc) {
-      html += `<a href="#" class="contents-category-link" data-path="${escapeHtml(indexDoc.relativePath)}"><span class="contents-icon">${icon}</span> ${escapeHtml(displayName)}</a>`;
+      html += `<a href="#" class="contents-category-link" data-path="${escapeHtml(indexDoc.relativePath)}">${escapeHtml(displayName)}</a>`;
     } else {
-      html += `<span class="contents-category-name"><span class="contents-icon">${icon}</span> ${escapeHtml(displayName)}</span>`;
+      html += `<span class="contents-category-name">${escapeHtml(displayName)}</span>`;
     }
 
     // Level 2: documents within the category
