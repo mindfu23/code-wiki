@@ -91,10 +91,6 @@
 
     <!-- Browse Page -->
     <section id="page-browse" class="page">
-      <div class="contents-header">
-        <h2>Contents</h2>
-        <button id="contents-edit-btn" class="edit-btn" style="display: none;">Edit</button>
-      </div>
       <div id="contents-outline" class="contents-outline">
         <!-- Wiki contents outline loaded dynamically -->
       </div>
@@ -153,12 +149,13 @@
     <section id="page-document" class="page">
       <div class="document-header">
         <a href="#" id="back-link" class="back-link">&larr; Back</a>
-        <h2 id="document-title">Document Title</h2>
         <div id="document-meta" class="document-meta"></div>
-        <button id="edit-btn" class="edit-btn" style="display: none;">Edit</button>
       </div>
       <article id="document-content" class="document-content">
-        <!-- Document content loaded here -->
+        <button id="edit-btn" class="edit-btn content-edit-btn" style="display: none;">Edit</button>
+        <div id="document-body">
+          <!-- Document content loaded here -->
+        </div>
       </article>
     </section>
 

@@ -434,17 +434,6 @@ function renderContents() {
   // Find root _index.md for editable contents page
   const rootIndex = wikiIndex.documents.find(d => d.relativePath === '_index.md');
 
-  // Show/hide edit button based on auth
-  const editBtn = document.getElementById('contents-edit-btn');
-  if (editBtn) {
-    if (currentUser && rootIndex) {
-      editBtn.style.display = 'inline-block';
-      editBtn.onclick = () => openEditor(rootIndex.relativePath);
-    } else {
-      editBtn.style.display = 'none';
-    }
-  }
-
   // Group documents by category, excluding _index.md files from child lists
   const categoryDocs = {};
   const categoryIndexDocs = {};
@@ -471,13 +460,16 @@ function renderContents() {
 
   let html = '';
 
-  // Render body content from root _index.md (if it has content beyond the heading)
+  // Edit button inside the panel (visible when logged in)
+  if (currentUser && rootIndex) {
+    html += `<button class="edit-btn content-edit-btn" id="contents-edit-btn">Edit</button>`;
+  }
+
+  // Render body content from root _index.md
   if (rootIndex && rootIndex.content) {
     const body = extractContentBody(rootIndex.content);
-    // Strip the "# Contents" heading since we already have the h2
-    const bodyWithoutHeading = body.replace(/^#\s+Contents\s*\n*/i, '').trim();
-    if (bodyWithoutHeading) {
-      html += `<div class="contents-body">${renderMarkdown(bodyWithoutHeading)}</div>`;
+    if (body.trim()) {
+      html += `<div class="contents-body">${renderMarkdown(body)}</div>`;
     }
   }
 
@@ -526,6 +518,12 @@ function renderContents() {
       navigateTo('document', { doc: link.dataset.path });
     });
   });
+
+  // Click handler for contents edit button
+  const contentsEditBtn = document.getElementById('contents-edit-btn');
+  if (contentsEditBtn && rootIndex) {
+    contentsEditBtn.addEventListener('click', () => openEditor(rootIndex.relativePath));
+  }
 }
 
 // Render repos
@@ -686,12 +684,11 @@ function loadRepoFilesView() {
 
 // Show document
 async function showDocument(docPath) {
-  const documentTitle = document.getElementById('document-title');
   const documentMeta = document.getElementById('document-meta');
-  const documentContent = document.getElementById('document-content');
+  const documentBody = document.getElementById('document-body');
   const backLink = document.getElementById('back-link');
 
-  documentContent.innerHTML = '<p class="loading">Loading</p>';
+  documentBody.innerHTML = '<p class="loading">Loading</p>';
 
   // Set back link
   backLink.onclick = (e) => {
@@ -701,31 +698,32 @@ async function showDocument(docPath) {
 
   // Find document in index
   if (!wikiIndex) {
-    documentContent.innerHTML = '<p>Error: Index not loaded</p>';
+    documentBody.innerHTML = '<p>Error: Index not loaded</p>';
     return;
   }
 
   const doc = wikiIndex.documents.find(d => d.relativePath === docPath);
 
   if (!doc) {
-    documentTitle.textContent = 'Document Not Found';
     documentMeta.innerHTML = '';
-    documentContent.innerHTML = '<p>The requested document could not be found.</p>';
+    documentBody.innerHTML = '<h1>Document Not Found</h1><p>The requested document could not be found.</p>';
     return;
   }
 
   currentDocument = doc;
-  documentTitle.textContent = doc.title;
 
-  // Meta info
+  // Meta info (capitalize category)
   const metaParts = [];
-  if (doc.category) metaParts.push(`Category: ${doc.category}`);
+  if (doc.category) {
+    const capitalizedCategory = doc.category.charAt(0).toUpperCase() + doc.category.slice(1);
+    metaParts.push(`Category: ${capitalizedCategory}`);
+  }
   if (doc.language) metaParts.push(`Language: ${doc.language}`);
   if (doc.updated) metaParts.push(`Updated: ${doc.updated}`);
   documentMeta.innerHTML = metaParts.join(' | ');
 
-  // Render content (basic markdown to HTML)
-  documentContent.innerHTML = renderMarkdown(doc.content);
+  // Render content into the body wrapper (preserves edit button in article)
+  documentBody.innerHTML = renderMarkdown(doc.content);
 
   // Show edit button if logged in AND document is editable (not auto-generated)
   const editBtn = document.getElementById('edit-btn');
