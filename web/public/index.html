@@ -56,6 +56,14 @@
       </div>
       <div id="search-results" class="results-container"></div>
 
+      <!-- Recently Modified Docs -->
+      <div class="recent-docs-section">
+        <h3>Recently Modified Docs</h3>
+        <div id="recent-docs-container">
+          <p class="loading">Loading recent docs...</p>
+        </div>
+      </div>
+
       <!-- Quick View Table on Search Page -->
       <div class="quickview-section">
         <div class="quickview-header">
@@ -80,14 +88,6 @@
           </table>
         </div>
       </div>
-
-      <!-- Recently Modified Docs -->
-      <div class="recent-docs-section">
-        <h3>Recently Modified Docs</h3>
-        <div id="recent-docs-container">
-          <p class="loading">Loading recent docs...</p>
-        </div>
-      </div>
     </section>
 
     <!-- Browse Page -->
@@ -102,15 +102,23 @@
 
       <div class="browse-repos-section">
         <h2>Browse Repos</h2>
-        <div class="repo-tabs">
-          <button class="repo-tab active" data-tab="files">Files View</button>
+        <div class="repo-tabs" id="repo-tabs">
+          <button class="repo-tab active" data-tab="docs">Docs View</button>
+          <button class="repo-tab" data-tab="files">Locations</button>
           <button class="repo-tab" data-tab="list">List View</button>
-          <button class="repo-tab" data-tab="card">Card View</button>
-          <button class="repo-tab" data-tab="docs">Docs View</button>
+          <!-- Card View: hidden by default. To enable, set ENABLE_CARD_VIEW = true in app.js -->
+          <button class="repo-tab" data-tab="card" data-optional="card-view" style="display: none;">Card View</button>
         </div>
 
-        <!-- Files View (Repos with .md files) -->
-        <div id="repo-files-view" class="repo-view active">
+        <!-- Docs View (All doc files with sort/pagination) - default tab -->
+        <div id="repo-docs-view" class="repo-view active">
+          <div id="repo-docs-content">
+            <p class="loading">Loading doc files...</p>
+          </div>
+        </div>
+
+        <!-- Locations (Repos with .md files, formerly "Files View") -->
+        <div id="repo-files-view" class="repo-view">
           <div id="repo-files-content" class="repo-files-list">
             <p class="loading">Loading repository files...</p>
           </div>
@@ -123,14 +131,7 @@
           </div>
         </div>
 
-        <!-- Docs View (All doc files with sort/pagination) -->
-        <div id="repo-docs-view" class="repo-view">
-          <div id="repo-docs-content">
-            <p class="loading">Loading doc files...</p>
-          </div>
-        </div>
-
-        <!-- Card View -->
+        <!-- Card View (optional, hidden by default) -->
         <div id="repo-card-view" class="repo-view">
           <div class="repo-filters">
             <select id="repo-status-filter">
