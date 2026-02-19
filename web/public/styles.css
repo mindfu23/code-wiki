@@ -1588,8 +1588,7 @@ footer a:hover {
 
 .recent-doc-source {
   color: var(--text-muted);
-  font-size: 0.8rem;
-  margin-left: 0.5rem;
+  font-size: 0.85rem;
 }
 
 .recent-doc-date {
