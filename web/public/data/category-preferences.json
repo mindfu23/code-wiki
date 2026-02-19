@@ -1,6 +1,20 @@
 [
   {
-    "path": "/home/runner/work/code-wiki/code-wiki/wiki/preferences/gcp-cloud-run-deployment.md",
+    "path": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/code-wiki/wiki/preferences/_index.md",
+    "relativePath": "preferences/_index.md",
+    "title": "Preferences Index",
+    "description": "User and project preference configurations",
+    "tags": [
+      "index",
+      "preferences",
+      "configuration"
+    ],
+    "content": "\n# Preferences\n\nThis category contains user and project preference configurations.\n\n## What belongs here\n\n- Tech stack preferences\n- UI/UX guidelines\n- Deployment configurations\n- Development environment setups\n- Architectural conventions\n- Tool and library choices\n\n## Adding new preferences\n\nCreate a new `.md` file in this directory for each preference set you want to document.\n",
+    "contentPreview": "# Preferences  This category contains user and project preference configurations.  ## What belongs here  - Tech stack preferences - UI/UX guidelines - Deployment configurations - Development environment setups - Architectural conventions - Tool and library choices  ## Adding new preferences  Create",
+    "category": "preferences"
+  },
+  {
+    "path": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/code-wiki/wiki/preferences/gcp-cloud-run-deployment.md",
     "relativePath": "preferences/gcp-cloud-run-deployment.md",
     "title": "gcp-cloud-run-deployment",
     "tags": [],
@@ -9,7 +23,7 @@
     "category": "preferences"
   },
   {
-    "path": "/home/runner/work/code-wiki/code-wiki/wiki/preferences/standard-setups.md",
+    "path": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/code-wiki/wiki/preferences/standard-setups.md",
     "relativePath": "preferences/standard-setups.md",
     "title": "standard-setups",
     "tags": [],

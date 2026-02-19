@@ -288,6 +288,28 @@ main {
 }
 
 /* Browse Page - Contents Outline */
+.contents-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.contents-header h2 {
+  margin: 0;
+}
+
+.contents-header .edit-btn {
+  font-size: 0.8rem;
+  padding: 0.35rem 0.75rem;
+}
+
+.contents-body {
+  margin-bottom: 1.25rem;
+  line-height: 1.6;
+  color: var(--text-muted);
+}
+
 .contents-outline {
   background: var(--bg-card);
   border: 1px solid var(--border);
@@ -314,9 +336,7 @@ main {
 .contents-category-name {
   font-size: 1.1rem;
   font-weight: 600;
-  display: inline-flex;
-  align-items: center;
-  gap: 0.4rem;
+  display: inline-block;
   padding: 0.3rem 0;
 }
 
@@ -333,10 +353,6 @@ main {
 
 .contents-category-name {
   color: var(--text);
-}
-
-.contents-icon {
-  font-size: 1.1rem;
 }
 
 .contents-docs {
