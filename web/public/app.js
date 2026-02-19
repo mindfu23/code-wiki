@@ -2,6 +2,14 @@
  * Code Wiki - Frontend Application
  */
 
+// ============================================
+// CONFIGURATION
+// ============================================
+// Set to true to show the Card View tab on the Browse page.
+// Card View displays repos as filterable cards with status badges and language tags.
+// When false, repos are browsable via the Locations tab instead.
+const ENABLE_CARD_VIEW = false;
+
 // State
 let wikiIndex = null;
 let currentPage = 'search';
@@ -37,6 +45,12 @@ const categoryIcons = {
 
 // Initialize
 async function init() {
+  // Show optional tabs based on config
+  if (ENABLE_CARD_VIEW) {
+    const cardTab = document.querySelector('.repo-tab[data-optional="card-view"]');
+    if (cardTab) cardTab.style.display = '';
+  }
+
   await checkAuth();  // Check auth first so we know if user can see private repos
   await loadIndex();  // Load index based on auth state
   setupEventListeners();
@@ -225,12 +239,11 @@ function showPage(page, params = {}) {
       break;
     case 'browse':
       renderCategories();
-      renderRepos();
+      if (ENABLE_CARD_VIEW) renderRepos();
       loadRepoFilesView();
       loadRepoListView();
-      if (params.tab) {
-        switchRepoTab(params.tab);
-      }
+      // Activate the requested tab, or default to docs
+      switchRepoTab(params.tab || 'docs');
       if (params.category) {
         selectCategory(params.category);
       }
@@ -1811,18 +1824,18 @@ function renderRecentDocs() {
     return;
   }
 
-  let html = '<table class="recent-docs-table"><thead><tr><th>File</th><th>Date</th></tr></thead><tbody>';
+  let html = '<table class="recent-docs-table"><thead><tr><th>File</th><th>Source</th><th>Date</th></tr></thead><tbody>';
 
   files.forEach(file => {
     const dateDisplay = file.date || '-';
     if (file.type === 'wiki') {
       html += `<tr class="recent-doc-row" data-type="wiki" data-path="${escapeHtml(file.path)}">`;
-      html += `<td><span class="recent-doc-name">${escapeHtml(file.name)}</span> <span class="recent-doc-source">${escapeHtml(file.source)}</span></td>`;
     } else {
       const fileUrl = file.githubUrl ? `${file.githubUrl}/blob/main/${file.path}` : '#';
       html += `<tr class="recent-doc-row" data-type="repo-file" data-url="${escapeHtml(fileUrl)}">`;
-      html += `<td><span class="recent-doc-name">${escapeHtml(file.name)}</span> <span class="recent-doc-source">${escapeHtml(file.source)}</span></td>`;
     }
+    html += `<td><span class="recent-doc-name">${escapeHtml(file.name)}</span></td>`;
+    html += `<td class="recent-doc-source">${escapeHtml(file.source)}</td>`;
     html += `<td class="recent-doc-date">${escapeHtml(dateDisplay)}</td>`;
     html += '</tr>';
   });
