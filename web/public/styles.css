@@ -287,30 +287,28 @@ main {
   font-size: 0.75rem;
 }
 
-/* Browse Page - Contents Outline */
-.contents-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 1rem;
-}
-
-.contents-header h2 {
-  margin: 0;
-}
-
-.contents-header .edit-btn {
+/* Edit button inside content panels */
+.content-edit-btn {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
   font-size: 0.8rem;
   padding: 0.35rem 0.75rem;
+  z-index: 1;
 }
 
+/* Browse Page - Contents Outline */
 .contents-body {
   margin-bottom: 1.25rem;
   line-height: 1.6;
-  color: var(--text-muted);
+}
+
+.contents-body h1:first-child {
+  margin-top: 0;
 }
 
 .contents-outline {
+  position: relative;
   background: var(--bg-card);
   border: 1px solid var(--border);
   border-radius: var(--radius);
@@ -633,11 +631,6 @@ span.repo-files-name {
   text-decoration: underline;
 }
 
-#document-title {
-  font-size: 2rem;
-  margin-bottom: 0.5rem;
-}
-
 .document-meta {
   display: flex;
   gap: 1rem;
@@ -646,6 +639,7 @@ span.repo-files-name {
 }
 
 .document-content {
+  position: relative;
   background: var(--bg-card);
   border: 1px solid var(--border);
   border-radius: var(--radius);
@@ -658,6 +652,11 @@ span.repo-files-name {
 .document-content h3 {
   margin-top: 1.5rem;
   margin-bottom: 0.75rem;
+}
+
+.document-content h1:first-child,
+.document-content > div > h1:first-child {
+  margin-top: 0;
 }
 
 .document-content p {
