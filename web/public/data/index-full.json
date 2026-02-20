@@ -1,7 +1,7 @@
 {
   "documents": [
     {
-      "path": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/code-wiki/wiki/AGENTS.md",
+      "path": "/home/runner/work/code-wiki/code-wiki/wiki/AGENTS.md",
       "relativePath": "AGENTS.md",
       "title": "AGENTS",
       "tags": [],
@@ -10,7 +10,7 @@
       "category": "general"
     },
     {
-      "path": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/code-wiki/wiki/_index.md",
+      "path": "/home/runner/work/code-wiki/code-wiki/wiki/_index.md",
       "relativePath": "_index.md",
       "title": "Contents",
       "description": "Wiki table of contents",
@@ -23,7 +23,7 @@
       "category": "general"
     },
     {
-      "path": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/code-wiki/wiki/integrations/_index.md",
+      "path": "/home/runner/work/code-wiki/code-wiki/wiki/integrations/_index.md",
       "relativePath": "integrations/_index.md",
       "title": "Integrations Index",
       "description": "Third-party API connectors and service integrations",
@@ -38,7 +38,7 @@
       "category": "integrations"
     },
     {
-      "path": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/code-wiki/wiki/patterns/_index.md",
+      "path": "/home/runner/work/code-wiki/code-wiki/wiki/patterns/_index.md",
       "relativePath": "patterns/_index.md",
       "title": "Patterns Index",
       "description": "Architectural patterns and design approaches",
@@ -51,7 +51,7 @@
       "category": "patterns"
     },
     {
-      "path": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/code-wiki/wiki/preferences/_index.md",
+      "path": "/home/runner/work/code-wiki/code-wiki/wiki/preferences/_index.md",
       "relativePath": "preferences/_index.md",
       "title": "Preferences Index",
       "description": "User and project preference configurations",
@@ -65,7 +65,7 @@
       "category": "preferences"
     },
     {
-      "path": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/code-wiki/wiki/preferences/gcp-cloud-run-deployment.md",
+      "path": "/home/runner/work/code-wiki/code-wiki/wiki/preferences/gcp-cloud-run-deployment.md",
       "relativePath": "preferences/gcp-cloud-run-deployment.md",
       "title": "gcp-cloud-run-deployment",
       "tags": [],
@@ -74,7 +74,7 @@
       "category": "preferences"
     },
     {
-      "path": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/code-wiki/wiki/preferences/standard-setups.md",
+      "path": "/home/runner/work/code-wiki/code-wiki/wiki/preferences/standard-setups.md",
       "relativePath": "preferences/standard-setups.md",
       "title": "standard-setups",
       "tags": [],
@@ -83,7 +83,7 @@
       "category": "preferences"
     },
     {
-      "path": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/code-wiki/wiki/projects/_index.md",
+      "path": "/home/runner/work/code-wiki/code-wiki/wiki/projects/_index.md",
       "relativePath": "projects/_index.md",
       "title": "Projects Index",
       "description": "Documentation for active repositories",
@@ -96,7 +96,7 @@
       "category": "projects"
     },
     {
-      "path": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/code-wiki/wiki/projects/docsy-to-do.md",
+      "path": "/home/runner/work/code-wiki/code-wiki/wiki/projects/docsy-to-do.md",
       "relativePath": "projects/docsy-to-do.md",
       "title": "Docsy to do 1",
       "tags": [],
@@ -106,7 +106,7 @@
       "category": "projects"
     },
     {
-      "path": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/code-wiki/wiki/projects/docsy-todo-md.md",
+      "path": "/home/runner/work/code-wiki/code-wiki/wiki/projects/docsy-todo-md.md",
       "relativePath": "projects/docsy-todo-md.md",
       "title": "Job Searcher",
       "tags": [],
@@ -116,7 +116,7 @@
       "category": "projects"
     },
     {
-      "path": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/code-wiki/wiki/projects/n8n-todo.md",
+      "path": "/home/runner/work/code-wiki/code-wiki/wiki/projects/n8n-todo.md",
       "relativePath": "projects/n8n-todo.md",
       "title": "n8n To Do",
       "tags": [],
@@ -126,7 +126,7 @@
       "category": "projects"
     },
     {
-      "path": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/code-wiki/wiki/projects/overall-next-steps.md",
+      "path": "/home/runner/work/code-wiki/code-wiki/wiki/projects/overall-next-steps.md",
       "relativePath": "projects/overall-next-steps.md",
       "title": "Overall next steps",
       "tags": [],
@@ -136,7 +136,7 @@
       "category": "projects"
     },
     {
-      "path": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/code-wiki/wiki/projects/overall-to-do.md",
+      "path": "/home/runner/work/code-wiki/code-wiki/wiki/projects/overall-to-do.md",
       "relativePath": "projects/overall-to-do.md",
       "title": "Overall to do",
       "tags": [],
@@ -146,7 +146,7 @@
       "category": "projects"
     },
     {
-      "path": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/code-wiki/wiki/projects/repo-locations.md",
+      "path": "/home/runner/work/code-wiki/code-wiki/wiki/projects/repo-locations.md",
       "relativePath": "projects/repo-locations.md",
       "title": "Repository Locations",
       "description": "Mapping of repositories to local file system paths and GitHub URLs",
@@ -161,7 +161,7 @@
       "category": "projects"
     },
     {
-      "path": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/code-wiki/wiki/snippets/_index.md",
+      "path": "/home/runner/work/code-wiki/code-wiki/wiki/snippets/_index.md",
       "relativePath": "snippets/_index.md",
       "title": "Snippets Index",
       "description": "Small, focused code pieces",
@@ -174,7 +174,7 @@
       "category": "snippets"
     },
     {
-      "path": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/code-wiki/wiki/snippets/code-wiki-overview.md",
+      "path": "/home/runner/work/code-wiki/code-wiki/wiki/snippets/code-wiki-overview.md",
       "relativePath": "snippets/code-wiki-overview.md",
       "title": "Code wiki overview",
       "tags": [],
@@ -184,7 +184,7 @@
       "category": "snippets"
     },
     {
-      "path": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/code-wiki/wiki/templates/_index.md",
+      "path": "/home/runner/work/code-wiki/code-wiki/wiki/templates/_index.md",
       "relativePath": "templates/_index.md",
       "title": "Templates Index",
       "description": "Project and file starters",
@@ -198,7 +198,7 @@
       "category": "templates"
     },
     {
-      "path": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/code-wiki/wiki/utilities/_index.md",
+      "path": "/home/runner/work/code-wiki/code-wiki/wiki/utilities/_index.md",
       "relativePath": "utilities/_index.md",
       "title": "Utilities Index",
       "description": "Standalone helper functions and utilities",
@@ -218,7 +218,7 @@
       "languages": [
         "TypeScript"
       ],
-      "lastCommitDate": "2026-02-20T19:16:29Z",
+      "lastCommitDate": "2026-02-20T19:27:34Z",
       "status": "github-only",
       "visibility": "public",
       "markdownFiles": [
@@ -2546,6 +2546,6 @@
     "templates",
     "utilities"
   ],
-  "buildTime": "2026-02-20T19:22:32.392Z",
+  "buildTime": "2026-02-20T19:29:19.681Z",
   "version": "1.0.0"
 }
