@@ -690,10 +690,10 @@ async function showDocument(docPath) {
 
   documentBody.innerHTML = '<p class="loading">Loading</p>';
 
-  // Set back link
+  // Set back link to Browse page
   backLink.onclick = (e) => {
     e.preventDefault();
-    history.back();
+    navigateTo('browse');
   };
 
   // Find document in index
