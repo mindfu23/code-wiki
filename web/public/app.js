@@ -1613,10 +1613,31 @@ async function refreshQuickView() {
   const btn = document.getElementById('refresh-quickview-btn');
   if (btn) {
     btn.disabled = true;
-    btn.textContent = 'Refreshing...';
+    btn.textContent = 'Rebuilding...';
   }
 
-  // Also reload the index to get latest data
+  // Trigger a full index rebuild via GitHub Actions
+  let rebuildTriggered = false;
+  if (currentUser) {
+    try {
+      const resp = await fetch('/api/rebuild-index', {
+        method: 'POST',
+        credentials: 'include',
+      });
+      const data = await resp.json();
+      if (data.success) {
+        rebuildTriggered = true;
+        if (btn) btn.textContent = 'Rebuilding (~1 min)...';
+        // Wait for the workflow to complete and Netlify to redeploy
+        await new Promise(resolve => setTimeout(resolve, 60000));
+      }
+    } catch (err) {
+      console.error('Failed to trigger rebuild:', err);
+    }
+  }
+
+  // Reload the index to get latest data
+  if (btn) btn.textContent = 'Loading...';
   await loadIndex();
   await loadQuickView(true);
 
