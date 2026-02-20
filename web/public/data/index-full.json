@@ -115,15 +115,15 @@
       "visibility": "public"
     },
     {
-      "path": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/code-wiki/wiki/projects/docsy-todo-md.md",
+      "path": "wiki/projects/docsy-todo-md.md",
       "relativePath": "projects/docsy-todo-md.md",
       "title": "Job Searcher",
       "tags": [],
       "updated": "2026-02-20",
-      "content": "\nHomegrown API currently replaced by n8n workflow. n8n workflow here: http://35.188.141.23:5678/home/workflows",
+      "content": "Homegrown API currently replaced by n8n workflow. n8n workflow here: http://35.188.141.23:5678/home/workflows",
       "contentPreview": "Homegrown API currently replaced by n8n workflow. n8n workflow here: http://35.188.141.23:5678/home/workflows",
       "category": "projects",
-      "visibility": "public"
+      "visibility": "private"
     },
     {
       "path": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/code-wiki/wiki/projects/n8n-todo.md",
@@ -2564,6 +2564,6 @@
     "templates",
     "utilities"
   ],
-  "buildTime": "2026-02-20T20:15:41.937Z",
+  "buildTime": "2026-02-20T20:22:35.834Z",
   "version": "1.0.0"
 }
