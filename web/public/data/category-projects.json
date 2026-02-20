@@ -1,6 +1,6 @@
 [
   {
-    "path": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/code-wiki/wiki/projects/_index.md",
+    "path": "/home/runner/work/code-wiki/code-wiki/wiki/projects/_index.md",
     "relativePath": "projects/_index.md",
     "title": "Projects Index",
     "description": "Documentation for active repositories",
@@ -13,7 +13,7 @@
     "category": "projects"
   },
   {
-    "path": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/code-wiki/wiki/projects/docsy-to-do.md",
+    "path": "/home/runner/work/code-wiki/code-wiki/wiki/projects/docsy-to-do.md",
     "relativePath": "projects/docsy-to-do.md",
     "title": "Docsy to do 1",
     "tags": [],
@@ -23,7 +23,7 @@
     "category": "projects"
   },
   {
-    "path": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/code-wiki/wiki/projects/docsy-todo-md.md",
+    "path": "/home/runner/work/code-wiki/code-wiki/wiki/projects/docsy-todo-md.md",
     "relativePath": "projects/docsy-todo-md.md",
     "title": "Job Searcher",
     "tags": [],
@@ -33,7 +33,7 @@
     "category": "projects"
   },
   {
-    "path": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/code-wiki/wiki/projects/n8n-todo.md",
+    "path": "/home/runner/work/code-wiki/code-wiki/wiki/projects/n8n-todo.md",
     "relativePath": "projects/n8n-todo.md",
     "title": "n8n To Do",
     "tags": [],
@@ -43,7 +43,7 @@
     "category": "projects"
   },
   {
-    "path": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/code-wiki/wiki/projects/overall-next-steps.md",
+    "path": "/home/runner/work/code-wiki/code-wiki/wiki/projects/overall-next-steps.md",
     "relativePath": "projects/overall-next-steps.md",
     "title": "Overall next steps",
     "tags": [],
@@ -53,7 +53,7 @@
     "category": "projects"
   },
   {
-    "path": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/code-wiki/wiki/projects/overall-to-do.md",
+    "path": "/home/runner/work/code-wiki/code-wiki/wiki/projects/overall-to-do.md",
     "relativePath": "projects/overall-to-do.md",
     "title": "Overall to do",
     "tags": [],
@@ -63,7 +63,7 @@
     "category": "projects"
   },
   {
-    "path": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/code-wiki/wiki/projects/repo-locations.md",
+    "path": "/home/runner/work/code-wiki/code-wiki/wiki/projects/repo-locations.md",
     "relativePath": "projects/repo-locations.md",
     "title": "Repository Locations",
     "description": "Mapping of repositories to local file system paths and GitHub URLs",
