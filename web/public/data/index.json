@@ -96,12 +96,12 @@
       "category": "projects"
     },
     {
-      "path": "/home/runner/work/code-wiki/code-wiki/wiki/projects/docsy-to-do.md",
+      "path": "wiki/projects/docsy-to-do.md",
       "relativePath": "projects/docsy-to-do.md",
-      "title": "Docsy to do",
+      "title": "Docsy to do 1",
       "tags": [],
-      "updated": "2026-02-17",
-      "content": "\nStill need to resolve the index for the main page rebuilding every time someone goes to \"Browse\" and then returns to the main page.",
+      "updated": "2026-02-20",
+      "content": "Still need to resolve the index for the main page rebuilding every time someone goes to \"Browse\" and then returns to the main page.",
       "contentPreview": "Still need to resolve the index for the main page rebuilding every time someone goes to \"Browse\" and then returns to the main page.",
       "category": "projects"
     },
@@ -1340,6 +1340,6 @@
     "templates",
     "utilities"
   ],
-  "buildTime": "2026-02-20T00:17:48.747Z",
+  "buildTime": "2026-02-20T18:16:36.288Z",
   "version": "1.0.0"
 }
