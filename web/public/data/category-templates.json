@@ -1,6 +1,6 @@
 [
   {
-    "path": "/home/runner/work/code-wiki/code-wiki/wiki/templates/_index.md",
+    "path": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/code-wiki/wiki/templates/_index.md",
     "relativePath": "templates/_index.md",
     "title": "Templates Index",
     "description": "Project and file starters",
@@ -11,6 +11,7 @@
     ],
     "content": "\n# Templates\n\nThis category contains project and file starters.\n\n## What belongs here\n\n- Project scaffolds\n- Component templates\n- Configuration file templates\n- CI/CD pipeline templates\n- Docker configurations\n- Common file structures\n\n## Adding new templates\n\nCreate a new `.md` file in this directory following the document template in AGENTS.md.\n",
     "contentPreview": "# Templates  This category contains project and file starters.  ## What belongs here  - Project scaffolds - Component templates - Configuration file templates - CI/CD pipeline templates - Docker configurations - Common file structures  ## Adding new templates  Create a new `.md` file in this direct",
-    "category": "templates"
+    "category": "templates",
+    "visibility": "public"
   }
 ]

@@ -712,8 +712,24 @@ async function showDocument(docPath) {
 
   currentDocument = doc;
 
-  // Meta info (capitalize category)
+  // Manage noindex meta tag for private documents
+  let noindexMeta = document.querySelector('meta[name="robots"]');
+  if (doc.visibility === 'private') {
+    if (!noindexMeta) {
+      noindexMeta = document.createElement('meta');
+      noindexMeta.setAttribute('name', 'robots');
+      noindexMeta.setAttribute('content', 'noindex, nofollow');
+      document.head.appendChild(noindexMeta);
+    }
+  } else if (noindexMeta) {
+    noindexMeta.remove();
+  }
+
+  // Meta info (capitalize category, show private badge)
   const metaParts = [];
+  if (doc.visibility === 'private') {
+    metaParts.push('<span class="visibility-badge private">Private</span>');
+  }
   if (doc.category) {
     const capitalizedCategory = doc.category.charAt(0).toUpperCase() + doc.category.slice(1);
     metaParts.push(`Category: ${capitalizedCategory}`);
@@ -1148,6 +1164,7 @@ function openEditorForNew(category, filename) {
     return;
   }
 
+  const visibility = document.getElementById('new-doc-visibility')?.value || 'public';
   const relativePath = `${category}/${filename}.md`;
 
   // Create a temporary document object for new doc
@@ -1159,6 +1176,7 @@ function openEditorForNew(category, filename) {
     tags: [],
     language: '',
     content: '',
+    visibility,
     isNew: true,
   };
   isDirty = false;
@@ -1168,6 +1186,7 @@ function openEditorForNew(category, filename) {
   document.getElementById('edit-description').value = '';
   document.getElementById('edit-tags').value = '';
   document.getElementById('edit-language').value = '';
+  document.getElementById('edit-visibility').value = visibility;
   document.getElementById('editor-content').value = '';
   document.getElementById('commit-message').value = `Add ${filename}`;
 
@@ -1244,6 +1263,7 @@ function openEditor(docPath) {
   document.getElementById('edit-description').value = doc.description || '';
   document.getElementById('edit-tags').value = (doc.tags || []).join(', ');
   document.getElementById('edit-language').value = doc.language || '';
+  document.getElementById('edit-visibility').value = doc.visibility || 'public';
   document.getElementById('editor-content').value = extractContentBody(doc.content);
   document.getElementById('commit-message').value = `Update ${doc.title}`;
 
@@ -1289,6 +1309,7 @@ function buildFrontmatter() {
     .map(t => t.trim())
     .filter(Boolean);
   const language = document.getElementById('edit-language').value;
+  const visibility = document.getElementById('edit-visibility')?.value || 'public';
 
   // Build YAML frontmatter
   let yaml = '---\n';
@@ -1297,6 +1318,7 @@ function buildFrontmatter() {
   if (tags.length > 0) yaml += `tags: [${tags.map(t => `"${t}"`).join(', ')}]\n`;
   if (language) yaml += `language: "${language}"\n`;
   yaml += `updated: "${new Date().toISOString().split('T')[0]}"\n`;
+  if (visibility === 'private') yaml += `visibility: "private"\n`;
   yaml += '---\n\n';
 
   return yaml;
