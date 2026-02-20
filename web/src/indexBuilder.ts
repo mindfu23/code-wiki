@@ -433,17 +433,23 @@ function mergeRepoData(
     }
   }
 
-  // Add any local-only repos (not on GitHub)
+  // Add remaining local repos not found via GitHub API
   for (const localRepo of localRepoMap.values()) {
     if (!localRepo.githubUrl) {
-      // Truly local-only
+      // Truly local-only (no GitHub URL)
       merged.push({
         ...localRepo,
         status: 'local-only',
-        visibility: 'private', // Local-only repos are treated as private
+        visibility: 'private',
+      });
+    } else {
+      // Has a GitHub URL but wasn't returned by API - likely a private repo
+      // the token can't see. Keep it in the index rather than dropping it.
+      merged.push({
+        ...localRepo,
+        visibility: 'private',
       });
     }
-    // Skip local repos with GitHub URLs that weren't found - they may have been deleted
   }
 
   return merged;
