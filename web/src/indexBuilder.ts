@@ -10,11 +10,47 @@
  */
 
 import * as fs from 'fs/promises';
+import { readFileSync } from 'fs';
 import * as path from 'path';
 import { fileURLToPath } from 'url';
 import matter from 'gray-matter';
 import { Octokit } from '@octokit/rest';
 import { WikiDocument, RepoInfo, RepoDocFile, WikiIndex } from './types.js';
+
+/**
+ * Load environment variables from a .env file if they're not already set.
+ * Falls back to ../mcp-server/.env so local builds pick up GitHub credentials
+ * without needing a separate web/.env file.
+ */
+function loadEnvFallback(): void {
+  const envPaths = [
+    path.resolve(process.cwd(), '.env'),
+    path.resolve(process.cwd(), '../mcp-server/.env'),
+  ];
+
+  for (const envPath of envPaths) {
+    try {
+      const content = readFileSync(envPath, 'utf-8');
+      for (const line of content.split('\n')) {
+        const trimmed = line.trim();
+        if (!trimmed || trimmed.startsWith('#')) continue;
+        const eqIndex = trimmed.indexOf('=');
+        if (eqIndex === -1) continue;
+        const key = trimmed.slice(0, eqIndex).trim();
+        const value = trimmed.slice(eqIndex + 1).trim();
+        // Only set if not already defined in environment
+        if (!process.env[key]) {
+          process.env[key] = value;
+        }
+      }
+      console.log(`Loaded env fallback from ${envPath}`);
+    } catch {
+      // File doesn't exist, skip
+    }
+  }
+}
+
+loadEnvFallback();
 
 // Supported documentation file extensions
 const DOC_EXTENSIONS = ['.md', '.txt', '.rst', '.adoc', '.asciidoc', '.org'] as const;
