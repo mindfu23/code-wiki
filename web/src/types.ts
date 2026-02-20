@@ -14,6 +14,7 @@ export interface WikiDocument {
   content: string;
   contentPreview: string;
   category: string;
+  visibility?: 'public' | 'private';  // Document visibility (default: public)
 }
 
 export interface RepoDocFile {

@@ -1,15 +1,16 @@
 [
   {
-    "path": "/home/runner/work/code-wiki/code-wiki/wiki/AGENTS.md",
+    "path": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/code-wiki/wiki/AGENTS.md",
     "relativePath": "AGENTS.md",
     "title": "AGENTS",
     "tags": [],
     "content": "# AI Agent Instructions\n\nThis repository is a personal code wiki containing documented, reusable code patterns and utilities.\n\n## How to Use This Wiki\n\n1. **Search first**: Use the `search_wiki` tool to find relevant code before writing new implementations\n2. **Check categories**: Use `list_category` to browse available content by topic\n3. **Respect existing patterns**: Code in this wiki has been tested and refined - prefer it over generating new code\n4. **Suggest additions**: If you create useful new code, suggest adding it to the wiki\n\n## Available Tools\n\n| Tool | Purpose |\n|------|---------|\n| `search_wiki` | Search curated wiki content (highest priority) |\n| `search_repos` | Full-text search across all local repositories |\n| `get_document` | Fetch a specific wiki document with frontmatter |\n| `get_file` | Fetch any file from any local repository |\n| `list_repos` | List all indexed repositories |\n| `list_category` | List documents in a wiki category |\n| `sync_repos` | Trigger GitHub sync for updates |\n| `get_preferences` | Get user coding preferences and recommendations |\n\n## User Preferences\n\n**Important**: Before making technology choices, architecture recommendations, or suggesting tools/libraries, agents should check the user's preferences using `get_preferences`.\n\nThe preferences directory contains:\n- Coding standards and style guides\n- Preferred technologies and frameworks\n- Development environment setup notes\n- Tool and library recommendations\n\nUsage:\n- `get_preferences` with no arguments lists all available preference files\n- `get_preferences` with a `file` argument returns the content of that specific file\n\n## Categories\n\n- **patterns/** - Architectural patterns and design approaches\n- **utilities/** - Standalone helper functions and utilities\n- **integrations/** - Third-party API connectors and service integrations\n- **templates/** - Project and file starters\n- **snippets/** - Small, focused code pieces\n- **projects/** - Documentation for active repositories\n\n## Document Structure\n\nWiki documents use YAML frontmatter for metadata:\n\n```yaml\n---\ntitle: \"Document Title\"\ntags: [\"tag1\", \"tag2\"]\nlanguage: \"typescript\"\nupdated: \"2025-01-27\"\nsource_repo: \"repo-name\"\ndescription: \"Brief description\"\n---\n```\n\n## Best Practices\n\n1. **Check preferences first**: Before recommending technologies or architectures, use `get_preferences` to understand user standards\n2. When asked to implement something, search the wiki first\n3. Wiki results are boosted in relevance - they represent curated, tested code\n4. If wiki doesn't have what's needed, search repos for similar patterns\n5. Prefer existing patterns over creating new ones\n6. When creating new code worth preserving, suggest adding to the wiki\n",
     "contentPreview": "# AI Agent Instructions  This repository is a personal code wiki containing documented, reusable code patterns and utilities.  ## How to Use This Wiki  1. **Search first**: Use the `search_wiki` tool to find relevant code before writing new implementations 2. **Check categories**: Use `list_category",
-    "category": "general"
+    "category": "general",
+    "visibility": "public"
   },
   {
-    "path": "/home/runner/work/code-wiki/code-wiki/wiki/_index.md",
+    "path": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/code-wiki/wiki/_index.md",
     "relativePath": "_index.md",
     "title": "Contents",
     "description": "Wiki table of contents",
@@ -19,6 +20,7 @@
     ],
     "content": "\n# Contents\n\nBrowse the wiki by category below. Each category links to an overview page, with individual documents listed underneath.\n",
     "contentPreview": "# Contents  Browse the wiki by category below. Each category links to an overview page, with individual documents listed underneath.",
-    "category": "general"
+    "category": "general",
+    "visibility": "public"
   }
 ]
