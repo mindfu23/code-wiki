@@ -41,8 +41,13 @@ interface RepoInfo {
   notes?: string;
 }
 
+interface WikiDocument {
+  visibility?: 'public' | 'private';
+  [key: string]: unknown;
+}
+
 interface WikiIndex {
-  documents: unknown[];
+  documents: WikiDocument[];
   repos: RepoInfo[];
   categories: string[];
   buildTime: string;
@@ -208,6 +213,7 @@ const handler: Handler = async (event: HandlerEvent, context: HandlerContext) =>
         }
       }
 
+      const publicDocuments = fullIndex.documents.filter(d => d.visibility !== 'private');
       return {
         statusCode: 200,
         headers,
@@ -216,6 +222,7 @@ const handler: Handler = async (event: HandlerEvent, context: HandlerContext) =>
           data: {
             ...fullIndex,
             repos: accessibleRepos,
+            documents: publicDocuments,
           },
           accessMode: 'github-permissions',
           user: session.login,
@@ -247,8 +254,9 @@ const handler: Handler = async (event: HandlerEvent, context: HandlerContext) =>
           }),
         };
       } else {
-        // Non-owner gets public repos only
+        // Non-owner gets public repos and documents only
         const publicRepos = fullIndex.repos.filter(r => r.visibility !== 'private');
+        const publicDocuments = fullIndex.documents.filter(d => d.visibility !== 'private');
         return {
           statusCode: 200,
           headers,
@@ -257,6 +265,7 @@ const handler: Handler = async (event: HandlerEvent, context: HandlerContext) =>
             data: {
               ...fullIndex,
               repos: publicRepos,
+              documents: publicDocuments,
             },
             accessMode: 'owner-only',
             user: session.login,

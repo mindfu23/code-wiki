@@ -1,6 +1,6 @@
 [
   {
-    "path": "/home/runner/work/code-wiki/code-wiki/wiki/utilities/_index.md",
+    "path": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/code-wiki/wiki/utilities/_index.md",
     "relativePath": "utilities/_index.md",
     "title": "Utilities Index",
     "description": "Standalone helper functions and utilities",
@@ -10,6 +10,7 @@
     ],
     "content": "\n# Utilities\n\nThis category contains standalone helper functions and utilities.\n\n## What belongs here\n\n- Date/time helpers\n- String manipulation utilities\n- Array/object utilities\n- Validation functions\n- Formatting utilities\n- Type guards and type utilities\n- Math/calculation helpers\n\n## Adding new utilities\n\nCreate a new `.md` file in this directory following the document template in AGENTS.md.\n",
     "contentPreview": "# Utilities  This category contains standalone helper functions and utilities.  ## What belongs here  - Date/time helpers - String manipulation utilities - Array/object utilities - Validation functions - Formatting utilities - Type guards and type utilities - Math/calculation helpers  ## Adding new",
-    "category": "utilities"
+    "category": "utilities",
+    "visibility": "public"
   }
 ]

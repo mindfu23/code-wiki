@@ -91,6 +91,7 @@ interface Frontmatter {
   language?: string;
   updated?: string;
   source_repo?: string;
+  visibility?: string;
 }
 
 async function findMarkdownFiles(dir: string, baseDir: string = dir): Promise<string[]> {
@@ -141,6 +142,7 @@ async function parseWikiDocument(filePath: string, wikiDir: string): Promise<Wik
       content: body,
       contentPreview: body.slice(0, 300).replace(/\n/g, ' ').trim(),
       category,
+      visibility: frontmatter.visibility === 'private' ? 'private' : 'public',
     };
   } catch (error) {
     console.error(`Error parsing ${filePath}:`, error);
@@ -578,9 +580,14 @@ async function buildIndex(): Promise<void> {
   const publicRepos = repos.filter(r => r.visibility !== 'private');
   const privateRepos = repos.filter(r => r.visibility === 'private');
 
-  console.log(`Repos: ${publicRepos.length} public, ${privateRepos.length} private`);
+  // Separate public and private documents
+  const publicDocuments = documents.filter(d => d.visibility !== 'private');
+  const privateDocuments = documents.filter(d => d.visibility === 'private');
 
-  // Build full index (includes all repos - for authenticated owner)
+  console.log(`Repos: ${publicRepos.length} public, ${privateRepos.length} private`);
+  console.log(`Docs: ${publicDocuments.length} public, ${privateDocuments.length} private`);
+
+  // Build full index (includes all repos and docs - for authenticated owner)
   const fullIndex: WikiIndex = {
     documents,
     repos,
@@ -589,9 +596,9 @@ async function buildIndex(): Promise<void> {
     version: '1.0.0',
   };
 
-  // Build public index (excludes private repos - for public access)
+  // Build public index (excludes private repos and docs - for public access)
   const publicIndex: WikiIndex = {
-    documents,
+    documents: publicDocuments,
     repos: publicRepos,
     categories: Array.from(categories).sort(),
     buildTime: new Date().toISOString(),
@@ -615,7 +622,7 @@ async function buildIndex(): Promise<void> {
     await fs.writeFile(categoryPath, JSON.stringify(categoryDocs, null, 2));
   }
 
-  console.log(`Build complete: ${documents.length} documents, ${repos.length} total repos (${publicRepos.length} public, ${privateRepos.length} private), ${categories.size} categories`);
+  console.log(`Build complete: ${documents.length} documents (${publicDocuments.length} public, ${privateDocuments.length} private), ${repos.length} total repos (${publicRepos.length} public, ${privateRepos.length} private), ${categories.size} categories`);
 }
 
 buildIndex().catch(console.error);

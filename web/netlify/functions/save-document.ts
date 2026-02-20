@@ -25,6 +25,7 @@ interface WikiDocument {
   content: string;
   contentPreview: string;
   category: string;
+  visibility?: 'public' | 'private';
 }
 
 interface WikiIndex {
@@ -333,6 +334,8 @@ const handler: Handler = async (event: HandlerEvent, context: HandlerContext) =>
       const category = sanitizedPath.split('/')[0] || 'uncategorized';
       const fileName = sanitizedPath.split('/').pop()?.replace('.md', '') || '';
 
+      const visibility = (frontmatter.visibility as string)?.toLowerCase() === 'private' ? 'private' as const : 'public' as const;
+
       const docEntry: WikiDocument = {
         path: fullPath,
         relativePath: sanitizedPath,
@@ -344,10 +347,14 @@ const handler: Handler = async (event: HandlerEvent, context: HandlerContext) =>
         content: body,
         contentPreview: body.slice(0, 300).replace(/\n/g, ' ').trim(),
         category,
+        visibility,
       };
 
-      // Update both index.json and index-full.json
+      // Update index files
+      // Private docs: only in index-full.json (remove from index.json if previously public)
+      // Public docs: in both index.json and index-full.json
       for (const indexPath of ['web/public/data/index.json', 'web/public/data/index-full.json']) {
+        const isPublicIndex = !indexPath.includes('index-full');
         try {
           // Fetch current index
           const { data: indexFile } = await octokit.repos.getContent({
@@ -363,8 +370,28 @@ const handler: Handler = async (event: HandlerEvent, context: HandlerContext) =>
           const indexContent = Buffer.from(indexFile.content, 'base64').toString('utf-8');
           const index: WikiIndex = JSON.parse(indexContent);
 
-          // Find existing document or add new one
           const existingIndex = index.documents.findIndex(d => d.relativePath === sanitizedPath);
+
+          if (isPublicIndex && visibility === 'private') {
+            // Private doc should NOT be in public index — remove if present
+            if (existingIndex >= 0) {
+              index.documents.splice(existingIndex, 1);
+              index.buildTime = new Date().toISOString();
+              await octokit.repos.createOrUpdateFileContents({
+                owner: GITHUB_REPO_OWNER,
+                repo: GITHUB_REPO_NAME,
+                path: indexPath,
+                message: `Update index: remove private doc ${sanitizedPath}`,
+                content: Buffer.from(JSON.stringify(index, null, 2)).toString('base64'),
+                sha: indexFile.sha,
+                committer: { name: 'Docsy McDocsface', email: 'docsy@users.noreply.github.com' },
+              });
+              indexUpdated = true;
+            }
+            continue;
+          }
+
+          // Public doc or full index — add/update normally
           if (existingIndex >= 0) {
             index.documents[existingIndex] = docEntry;
           } else {

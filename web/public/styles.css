@@ -636,6 +636,22 @@ span.repo-files-name {
   gap: 1rem;
   color: var(--text-muted);
   font-size: 0.9rem;
+  align-items: center;
+}
+
+.visibility-badge {
+  font-size: 0.75rem;
+  padding: 0.15rem 0.5rem;
+  border-radius: 4px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+
+.visibility-badge.private {
+  background: #fef2f2;
+  color: #991b1b;
+  border: 1px solid #fecaca;
 }
 
 .document-content {
@@ -955,7 +971,7 @@ span.repo-files-name {
 
 .form-row {
   display: grid;
-  grid-template-columns: 2fr 1fr;
+  grid-template-columns: 2fr 1fr 1fr;
   gap: 1rem;
   margin-bottom: 1rem;
 }

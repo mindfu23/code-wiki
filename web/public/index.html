@@ -191,6 +191,13 @@
                 <option value="csharp">C#</option>
               </select>
             </div>
+            <div class="form-group">
+              <label for="edit-visibility">Visibility</label>
+              <select id="edit-visibility">
+                <option value="public">Public</option>
+                <option value="private">Private</option>
+              </select>
+            </div>
           </div>
           <div class="form-group">
             <label for="edit-description">Description</label>
@@ -274,6 +281,13 @@
         <label for="new-doc-filename">Filename</label>
         <input type="text" id="new-doc-filename" placeholder="my-document" autocomplete="off">
         <small class="form-hint">.md extension added automatically</small>
+      </div>
+      <div class="form-group">
+        <label for="new-doc-visibility">Visibility</label>
+        <select id="new-doc-visibility">
+          <option value="public">Public</option>
+          <option value="private">Private</option>
+        </select>
       </div>
       <div class="modal-actions">
         <button id="new-doc-cancel" class="btn btn-secondary">Cancel</button>
