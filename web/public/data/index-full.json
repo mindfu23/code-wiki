@@ -1,7 +1,7 @@
 {
   "documents": [
     {
-      "path": "/home/runner/work/code-wiki/code-wiki/wiki/AGENTS.md",
+      "path": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/code-wiki/wiki/AGENTS.md",
       "relativePath": "AGENTS.md",
       "title": "AGENTS",
       "tags": [],
@@ -10,7 +10,7 @@
       "category": "general"
     },
     {
-      "path": "/home/runner/work/code-wiki/code-wiki/wiki/_index.md",
+      "path": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/code-wiki/wiki/_index.md",
       "relativePath": "_index.md",
       "title": "Contents",
       "description": "Wiki table of contents",
@@ -23,7 +23,7 @@
       "category": "general"
     },
     {
-      "path": "/home/runner/work/code-wiki/code-wiki/wiki/integrations/_index.md",
+      "path": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/code-wiki/wiki/integrations/_index.md",
       "relativePath": "integrations/_index.md",
       "title": "Integrations Index",
       "description": "Third-party API connectors and service integrations",
@@ -38,7 +38,7 @@
       "category": "integrations"
     },
     {
-      "path": "/home/runner/work/code-wiki/code-wiki/wiki/patterns/_index.md",
+      "path": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/code-wiki/wiki/patterns/_index.md",
       "relativePath": "patterns/_index.md",
       "title": "Patterns Index",
       "description": "Architectural patterns and design approaches",
@@ -51,7 +51,7 @@
       "category": "patterns"
     },
     {
-      "path": "/home/runner/work/code-wiki/code-wiki/wiki/preferences/_index.md",
+      "path": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/code-wiki/wiki/preferences/_index.md",
       "relativePath": "preferences/_index.md",
       "title": "Preferences Index",
       "description": "User and project preference configurations",
@@ -65,7 +65,7 @@
       "category": "preferences"
     },
     {
-      "path": "/home/runner/work/code-wiki/code-wiki/wiki/preferences/gcp-cloud-run-deployment.md",
+      "path": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/code-wiki/wiki/preferences/gcp-cloud-run-deployment.md",
       "relativePath": "preferences/gcp-cloud-run-deployment.md",
       "title": "gcp-cloud-run-deployment",
       "tags": [],
@@ -74,7 +74,7 @@
       "category": "preferences"
     },
     {
-      "path": "/home/runner/work/code-wiki/code-wiki/wiki/preferences/standard-setups.md",
+      "path": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/code-wiki/wiki/preferences/standard-setups.md",
       "relativePath": "preferences/standard-setups.md",
       "title": "standard-setups",
       "tags": [],
@@ -83,7 +83,7 @@
       "category": "preferences"
     },
     {
-      "path": "/home/runner/work/code-wiki/code-wiki/wiki/projects/_index.md",
+      "path": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/code-wiki/wiki/projects/_index.md",
       "relativePath": "projects/_index.md",
       "title": "Projects Index",
       "description": "Documentation for active repositories",
@@ -96,27 +96,27 @@
       "category": "projects"
     },
     {
-      "path": "wiki/projects/docsy-to-do.md",
+      "path": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/code-wiki/wiki/projects/docsy-to-do.md",
       "relativePath": "projects/docsy-to-do.md",
       "title": "Docsy to do 1",
       "tags": [],
       "updated": "2026-02-20",
-      "content": "Still need to resolve the index for the main page rebuilding every time someone goes to \"Browse\" and then returns to the main page.",
+      "content": "\n\nStill need to resolve the index for the main page rebuilding every time someone goes to \"Browse\" and then returns to the main page.",
       "contentPreview": "Still need to resolve the index for the main page rebuilding every time someone goes to \"Browse\" and then returns to the main page.",
       "category": "projects"
     },
     {
-      "path": "wiki/projects/docsy-todo-md.md",
+      "path": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/code-wiki/wiki/projects/docsy-todo-md.md",
       "relativePath": "projects/docsy-todo-md.md",
       "title": "Job Searcher",
       "tags": [],
       "updated": "2026-02-20",
-      "content": "Homegrown API currently replaced by n8n workflow. n8n workflow here: http://35.188.141.23:5678/home/workflows",
+      "content": "\nHomegrown API currently replaced by n8n workflow. n8n workflow here: http://35.188.141.23:5678/home/workflows",
       "contentPreview": "Homegrown API currently replaced by n8n workflow. n8n workflow here: http://35.188.141.23:5678/home/workflows",
       "category": "projects"
     },
     {
-      "path": "/home/runner/work/code-wiki/code-wiki/wiki/projects/n8n-todo.md",
+      "path": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/code-wiki/wiki/projects/n8n-todo.md",
       "relativePath": "projects/n8n-todo.md",
       "title": "n8n To Do",
       "tags": [],
@@ -126,7 +126,7 @@
       "category": "projects"
     },
     {
-      "path": "/home/runner/work/code-wiki/code-wiki/wiki/projects/overall-next-steps.md",
+      "path": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/code-wiki/wiki/projects/overall-next-steps.md",
       "relativePath": "projects/overall-next-steps.md",
       "title": "Overall next steps",
       "tags": [],
@@ -136,7 +136,7 @@
       "category": "projects"
     },
     {
-      "path": "/home/runner/work/code-wiki/code-wiki/wiki/projects/overall-to-do.md",
+      "path": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/code-wiki/wiki/projects/overall-to-do.md",
       "relativePath": "projects/overall-to-do.md",
       "title": "Overall to do",
       "tags": [],
@@ -146,7 +146,7 @@
       "category": "projects"
     },
     {
-      "path": "/home/runner/work/code-wiki/code-wiki/wiki/projects/repo-locations.md",
+      "path": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/code-wiki/wiki/projects/repo-locations.md",
       "relativePath": "projects/repo-locations.md",
       "title": "Repository Locations",
       "description": "Mapping of repositories to local file system paths and GitHub URLs",
@@ -161,7 +161,7 @@
       "category": "projects"
     },
     {
-      "path": "/home/runner/work/code-wiki/code-wiki/wiki/snippets/_index.md",
+      "path": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/code-wiki/wiki/snippets/_index.md",
       "relativePath": "snippets/_index.md",
       "title": "Snippets Index",
       "description": "Small, focused code pieces",
@@ -174,7 +174,7 @@
       "category": "snippets"
     },
     {
-      "path": "/home/runner/work/code-wiki/code-wiki/wiki/snippets/code-wiki-overview.md",
+      "path": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/code-wiki/wiki/snippets/code-wiki-overview.md",
       "relativePath": "snippets/code-wiki-overview.md",
       "title": "Code wiki overview",
       "tags": [],
@@ -184,7 +184,7 @@
       "category": "snippets"
     },
     {
-      "path": "/home/runner/work/code-wiki/code-wiki/wiki/templates/_index.md",
+      "path": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/code-wiki/wiki/templates/_index.md",
       "relativePath": "templates/_index.md",
       "title": "Templates Index",
       "description": "Project and file starters",
@@ -198,7 +198,7 @@
       "category": "templates"
     },
     {
-      "path": "/home/runner/work/code-wiki/code-wiki/wiki/utilities/_index.md",
+      "path": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/code-wiki/wiki/utilities/_index.md",
       "relativePath": "utilities/_index.md",
       "title": "Utilities Index",
       "description": "Standalone helper functions and utilities",
@@ -218,7 +218,7 @@
       "languages": [
         "TypeScript"
       ],
-      "lastCommitDate": "2026-02-19T21:40:13Z",
+      "lastCommitDate": "2026-02-20T18:23:58Z",
       "status": "github-only",
       "visibility": "public",
       "markdownFiles": [
@@ -330,13 +330,149 @@
       ]
     },
     {
+      "name": "JobSearcher",
+      "description": "Automated daily job search using Claude AI with web search",
+      "githubUrl": "https://github.com/mindfu23/JobSearcher",
+      "languages": [
+        "Python"
+      ],
+      "lastCommitDate": "2026-02-20T15:16:06Z",
+      "status": "github-only",
+      "visibility": "private",
+      "markdownFiles": [
+        {
+          "relativePath": "README.md",
+          "name": "README.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "results/job-search-2026-02-13.md",
+          "name": "job-search-2026-02-13.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "results/job-search-2026-02-14.md",
+          "name": "job-search-2026-02-14.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "results/job-search-2026-02-15.md",
+          "name": "job-search-2026-02-15.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "results/job-search-2026-02-16.md",
+          "name": "job-search-2026-02-16.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "results/job-search-2026-02-17.md",
+          "name": "job-search-2026-02-17.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "results/job-search-2026-02-18.md",
+          "name": "job-search-2026-02-18.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "results/job-search-2026-02-19.md",
+          "name": "job-search-2026-02-19.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "results/job-search-2026-02-20.md",
+          "name": "job-search-2026-02-20.md",
+          "fileType": "md"
+        }
+      ]
+    },
+    {
+      "name": "ValueApe",
+      "githubUrl": "https://github.com/mindfu23/ValueApe",
+      "languages": [
+        "TypeScript"
+      ],
+      "lastCommitDate": "2026-02-20T06:27:37Z",
+      "status": "synced",
+      "visibility": "private",
+      "localPath": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/ValueApe",
+      "markdownFiles": [
+        {
+          "relativePath": "autotrade-proposed-code.md",
+          "name": "autotrade-proposed-code.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "docs/architecture.md",
+          "name": "architecture.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "docs/DATA_PROVIDERS.md",
+          "name": "DATA_PROVIDERS.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "docs/finrl-integration.md",
+          "name": "finrl-integration.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "docs/INTEGRATION_EXAMPLES.md",
+          "name": "INTEGRATION_EXAMPLES.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "docs/REAL_TIME_DATA.md",
+          "name": "REAL_TIME_DATA.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "docs/schwab-integration.md",
+          "name": "schwab-integration.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "docs/SUPABASE_SETUP.md",
+          "name": "SUPABASE_SETUP.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "netlify/functions/requirements.txt",
+          "name": "requirements.txt",
+          "fileType": "txt"
+        },
+        {
+          "relativePath": "PRD.md",
+          "name": "PRD.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "README.md",
+          "name": "README.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "SECURITY.md",
+          "name": "SECURITY.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "webscraper/README.md",
+          "name": "README.md",
+          "fileType": "md"
+        }
+      ]
+    },
+    {
       "name": "apiTracker",
       "description": "A simple GUI tracker for health and number of remaining calls for my various APIs used in my other apps.",
       "githubUrl": "https://github.com/mindfu23/apiTracker",
       "languages": [
         "JavaScript"
       ],
-      "lastCommitDate": "2026-02-19T00:22:49Z",
+      "lastCommitDate": "2026-02-20T00:19:48Z",
       "status": "synced",
       "visibility": "public",
       "localPath": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/apiTracker",
@@ -364,6 +500,670 @@
         },
         {
           "relativePath": "platforms/README.md",
+          "name": "README.md",
+          "fileType": "md"
+        }
+      ]
+    },
+    {
+      "name": "antigravity-and-others",
+      "description": "Private repo for working on docs",
+      "githubUrl": "https://github.com/mindfu23/antigravity-and-others",
+      "languages": [
+        "Python"
+      ],
+      "lastCommitDate": "2026-02-19T20:42:54Z",
+      "status": "synced",
+      "visibility": "private",
+      "localPath": "/Users/jamesbeach/Documents/visual-studio-code/antigravity-and-others",
+      "markdownFiles": [
+        {
+          "relativePath": "initial-notes.md",
+          "name": "initial-notes.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "novel-editing-tools/AI-MODEL-ANALYSIS.md",
+          "name": "AI-MODEL-ANALYSIS.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "novel-editing-tools/antigravity-mission-config.md",
+          "name": "antigravity-mission-config.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "novel-editing-tools/antigravity-prompts.md",
+          "name": "antigravity-prompts.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "novel-editing-tools/lined-editor-personal-1.md",
+          "name": "lined-editor-personal-1.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "novel-editing-tools/novel-ingestion-notes.MD",
+          "name": "novel-ingestion-notes.MD",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "novel-editing-tools/PORTABLE-EDITING-WORKFLOW.md",
+          "name": "PORTABLE-EDITING-WORKFLOW.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "novel-editing-tools/requirements.txt",
+          "name": "requirements.txt",
+          "fileType": "txt"
+        },
+        {
+          "relativePath": "novel-workspace/2fjt2/2fjt2-revision-workflow-steps.txt",
+          "name": "2fjt2-revision-workflow-steps.txt",
+          "fileType": "txt"
+        },
+        {
+          "relativePath": "novel-workspace/2fjt2/manuscript/chapters/00-front-matter.md",
+          "name": "00-front-matter.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "novel-workspace/2fjt2/manuscript/chapters/01-arrival-in-hell.md",
+          "name": "01-arrival-in-hell.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "novel-workspace/2fjt2/manuscript/chapters/02-the-woman-he-must-be-here-to-save.md",
+          "name": "02-the-woman-he-must-be-here-to-save.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "novel-workspace/2fjt2/manuscript/chapters/03-the-devil-you-think-you-know.md",
+          "name": "03-the-devil-you-think-you-know.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "novel-workspace/2fjt2/manuscript/chapters/04-frisbee-duel-with-the-devil.md",
+          "name": "04-frisbee-duel-with-the-devil.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "novel-workspace/2fjt2/manuscript/chapters/05-jesus-signs-a-contract-with-the-devil-an.md",
+          "name": "05-jesus-signs-a-contract-with-the-devil-an.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "novel-workspace/2fjt2/manuscript/chapters/06-jesus-returns-to-earth-in-st-louis-and-r.md",
+          "name": "06-jesus-returns-to-earth-in-st-louis-and-r.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "novel-workspace/2fjt2/manuscript/chapters/07-jesus-recruits-followers-in-a-small-miss.md",
+          "name": "07-jesus-recruits-followers-in-a-small-miss.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "novel-workspace/2fjt2/manuscript/chapters/08-marci-and-the-new-disciples-hide-in-colo.md",
+          "name": "08-marci-and-the-new-disciples-hide-in-colo.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "novel-workspace/2fjt2/manuscript/chapters/09-the-new-disciples-are-attacked-by-bomrak.md",
+          "name": "09-the-new-disciples-are-attacked-by-bomrak.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "novel-workspace/2fjt2/manuscript/chapters/10-jesus-and-the-disciples-survive-an-attac.md",
+          "name": "10-jesus-and-the-disciples-survive-an-attac.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "novel-workspace/2fjt2/manuscript/chapters/11-jesus-and-disciples-plan-to-reach-colora.md",
+          "name": "11-jesus-and-disciples-plan-to-reach-colora.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "novel-workspace/2fjt2/manuscript/chapters/12-the-new-disciples-move-forward-in-the-en.md",
+          "name": "12-the-new-disciples-move-forward-in-the-en.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "novel-workspace/2fjt2/manuscript/chapters/13-the-new-disciples-fight-and-defeat-the-s.md",
+          "name": "13-the-new-disciples-fight-and-defeat-the-s.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "novel-workspace/2fjt2/manuscript/chapters/14-jesus-decides-they-will-next-attack-los.md",
+          "name": "14-jesus-decides-they-will-next-attack-los.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "novel-workspace/2fjt2/manuscript/chapters/15-the-new-disciples-and-jesus-leave-the-ba.md",
+          "name": "15-the-new-disciples-and-jesus-leave-the-ba.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "novel-workspace/2fjt2/manuscript/chapters/16-bomraka-has-a-meeting.md",
+          "name": "16-bomraka-has-a-meeting.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "novel-workspace/2fjt2/manuscript/chapters/17-the-team-is-attacked-by-black-helicopter.md",
+          "name": "17-the-team-is-attacked-by-black-helicopter.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "novel-workspace/2fjt2/manuscript/chapters/18-jesus-shoots-the-governor-of-utah-dead-t.md",
+          "name": "18-jesus-shoots-the-governor-of-utah-dead-t.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "novel-workspace/2fjt2/manuscript/chapters/19-the-new-disciples-and-jesus-make-it-to-o.md",
+          "name": "19-the-new-disciples-and-jesus-make-it-to-o.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "novel-workspace/2fjt2/manuscript/chapters/20-the-new-disciples-plan-their-attack.md",
+          "name": "20-the-new-disciples-plan-their-attack.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "novel-workspace/2fjt2/manuscript/chapters/21-jesus-attacks-a-feminist-research-center.md",
+          "name": "21-jesus-attacks-a-feminist-research-center.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "novel-workspace/2fjt2/manuscript/chapters/22-continuing-the-fight-inside-the-liberal.md",
+          "name": "22-continuing-the-fight-inside-the-liberal.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "novel-workspace/2fjt2/manuscript/chapters/23-fighting-the-monster-blabber-strident-an.md",
+          "name": "23-fighting-the-monster-blabber-strident-an.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "novel-workspace/2fjt2/manuscript/chapters/24-jesus-et-all-battle-further-against-the.md",
+          "name": "24-jesus-et-all-battle-further-against-the.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "novel-workspace/2fjt2/manuscript/chapters/25-jesus-fights-and-rescues-lily.md",
+          "name": "25-jesus-fights-and-rescues-lily.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "novel-workspace/2fjt2/manuscript/chapters/26-jesus-fight-against-lily-continues.md",
+          "name": "26-jesus-fight-against-lily-continues.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "novel-workspace/2fjt2/manuscript/chapters/27-this-is-jesus-christ-speaking.md",
+          "name": "27-this-is-jesus-christ-speaking.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "novel-workspace/2fjt2/manuscript/chapters/28-jesus-christ-speaks-cont.md",
+          "name": "28-jesus-christ-speaks-cont.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "novel-workspace/2fjt2/manuscript/chapters/29-jesus-checks-in-with-reagan-and-sasquatc.md",
+          "name": "29-jesus-checks-in-with-reagan-and-sasquatc.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "novel-workspace/2fjt2/manuscript/chapters/30-situation-outside-los-angeles.md",
+          "name": "30-situation-outside-los-angeles.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "novel-workspace/2fjt2/manuscript/chapters/31-flight-to-stanford-reagan-helping.md",
+          "name": "31-flight-to-stanford-reagan-helping.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "novel-workspace/2fjt2/manuscript/chapters/32-the-next-morning-in-stanford-making-plan.md",
+          "name": "32-the-next-morning-in-stanford-making-plan.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "novel-workspace/2fjt2/manuscript/chapters/33-war-continues-is-fought-after-stanford-t.md",
+          "name": "33-war-continues-is-fought-after-stanford-t.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "novel-workspace/2fjt2/manuscript/chapters/34-steve-is-selected-to-infiltrate-and-is-s.md",
+          "name": "34-steve-is-selected-to-infiltrate-and-is-s.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "novel-workspace/2fjt2/manuscript/chapters/35-steve-floats-back-to-san-francisco.md",
+          "name": "35-steve-floats-back-to-san-francisco.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "novel-workspace/2fjt2/manuscript/chapters/36-jesus-prays-for-guidance-he-finds-some-i.md",
+          "name": "36-jesus-prays-for-guidance-he-finds-some-i.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "novel-workspace/2fjt2/manuscript/chapters/37-flashback-to-jesus-with-his-parents-jose.md",
+          "name": "37-flashback-to-jesus-with-his-parents-jose.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "novel-workspace/2fjt2/manuscript/chapters/38-steve-in-san-francisco.md",
+          "name": "38-steve-in-san-francisco.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "novel-workspace/2fjt2/manuscript/chapters/39-jesus-discusses-his-football-epiphany-wi.md",
+          "name": "39-jesus-discusses-his-football-epiphany-wi.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "novel-workspace/2fjt2/manuscript/chapters/40-jesus-ministers-to-lily-and-admits-priva.md",
+          "name": "40-jesus-ministers-to-lily-and-admits-priva.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "novel-workspace/2fjt2/manuscript/chapters/41-steve-in-san-francisco.md",
+          "name": "41-steve-in-san-francisco.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "novel-workspace/2fjt2/manuscript/chapters/42-jesus-reconvenes-the-new-disciples-to-mo.md",
+          "name": "42-jesus-reconvenes-the-new-disciples-to-mo.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "novel-workspace/2fjt2/manuscript/chapters/43-steve-struggles-with-doubt-in-san-franci.md",
+          "name": "43-steve-struggles-with-doubt-in-san-franci.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "novel-workspace/2fjt2/manuscript/chapters/44-bomraka-conference.md",
+          "name": "44-bomraka-conference.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "novel-workspace/2fjt2/manuscript/chapters/45-steve-discovers-the-rainbow-shield-gener.md",
+          "name": "45-steve-discovers-the-rainbow-shield-gener.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "novel-workspace/2fjt2/manuscript/chapters/46-the-rainbow-dome-falls-and-jesus-mobiliz.md",
+          "name": "46-the-rainbow-dome-falls-and-jesus-mobiliz.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "novel-workspace/2fjt2/manuscript/chapters/47-san-francisco-offers-unexpected-surrende.md",
+          "name": "47-san-francisco-offers-unexpected-surrende.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "novel-workspace/2fjt2/manuscript/chapters/48-jesus-commands-norad-and-prepares-his-ad.md",
+          "name": "48-jesus-commands-norad-and-prepares-his-ad.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "novel-workspace/2fjt2/manuscript/chapters/49-theo-hardwicke-celebrates-the-great-floo.md",
+          "name": "49-theo-hardwicke-celebrates-the-great-floo.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "novel-workspace/2fjt2/manuscript/chapters/50-media-marvels-at-the-miracle-of-the-floo.md",
+          "name": "50-media-marvels-at-the-miracle-of-the-floo.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "novel-workspace/2fjt2/manuscript/chapters/51-securing-san-francisco-and-los-angeles.md",
+          "name": "51-securing-san-francisco-and-los-angeles.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "novel-workspace/2fjt2/manuscript/chapters/52-bomraka-slays-his-generals-in-rage.md",
+          "name": "52-bomraka-slays-his-generals-in-rage.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "novel-workspace/2fjt2/manuscript/chapters/53-aaron-confides-his-worries-to-jesus.md",
+          "name": "53-aaron-confides-his-worries-to-jesus.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "novel-workspace/2fjt2/manuscript/chapters/54-jesus-prepares-for-the-final-confrontati.md",
+          "name": "54-jesus-prepares-for-the-final-confrontati.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "novel-workspace/2fjt2/manuscript/chapters/55-jesus-challenges-bomraka-to-the-crucibow.md",
+          "name": "55-jesus-challenges-bomraka-to-the-crucibow.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "novel-workspace/2fjt2/manuscript/chapters/56-jesus-secretly-modifies-his-motorcycle.md",
+          "name": "56-jesus-secretly-modifies-his-motorcycle.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "novel-workspace/2fjt2/manuscript/chapters/57-jesus-departs-in-the-tyrannoslayer.md",
+          "name": "57-jesus-departs-in-the-tyrannoslayer.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "novel-workspace/2fjt2/manuscript/chapters/58-into-the-crucibowl.md",
+          "name": "58-into-the-crucibowl.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "novel-workspace/2fjt2/manuscript/chapters/59-aaron-watches-jesuss-defeat-on-msnbc.md",
+          "name": "59-aaron-watches-jesuss-defeat-on-msnbc.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "novel-workspace/2fjt2/manuscript/chapters/60-bomraka-declares-victory-over-christs-fo.md",
+          "name": "60-bomraka-declares-victory-over-christs-fo.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "novel-workspace/2fjt2/manuscript/chapters/61-jesus-has-broken-into-the-oval-office.md",
+          "name": "61-jesus-has-broken-into-the-oval-office.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "novel-workspace/2fjt2/manuscript/chapters/62-jesus-hunts-bomraka-in-the-white-house-b.md",
+          "name": "62-jesus-hunts-bomraka-in-the-white-house-b.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "novel-workspace/2fjt2/manuscript/chapters/63-aaron-confronts-bomraka-at-gunpoint.md",
+          "name": "63-aaron-confronts-bomraka-at-gunpoint.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "novel-workspace/2fjt2/manuscript/chapters/64-jesus-scans-bomrakas-palm-for-the-nuclea.md",
+          "name": "64-jesus-scans-bomrakas-palm-for-the-nuclea.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "novel-workspace/2fjt2/manuscript/chapters/65-jesus-threatens-governors-with-nuclear-s.md",
+          "name": "65-jesus-threatens-governors-with-nuclear-s.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "novel-workspace/2fjt2/manuscript/chapters/66-jesus-holds-his-first-press-conference.md",
+          "name": "66-jesus-holds-his-first-press-conference.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "novel-workspace/2fjt2/manuscript/chapters/67-jesus-plans-to-end-abortion-nationwide.md",
+          "name": "67-jesus-plans-to-end-abortion-nationwide.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "novel-workspace/2fjt2/manuscript/chapters/68-a-secret-celebration-at-the-kennedy-cent.md",
+          "name": "68-a-secret-celebration-at-the-kennedy-cent.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "novel-workspace/2fjt2/manuscript/chapters/69-aaron-reveals-the-betrayal-to-jesus.md",
+          "name": "69-aaron-reveals-the-betrayal-to-jesus.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "novel-workspace/2fjt2/manuscript/chapters/70-jesus-learns-the-truth-about-his-creatio.md",
+          "name": "70-jesus-learns-the-truth-about-his-creatio.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "novel-workspace/2fjt2/manuscript/chapters/71-closing-quotes.md",
+          "name": "71-closing-quotes.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "novel-workspace/2fjt2/manuscript/chapters/72-author-note.md",
+          "name": "72-author-note.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "novel-workspace/2fjt2/manuscript/chapters/INDEX.md",
+          "name": "INDEX.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "novel-workspace/2fjt2/manuscript/high-level/2fjt_author_notes.md",
+          "name": "2fjt_author_notes.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "novel-workspace/2fjt2/manuscript/high-level/2FJT2_dev-review.md",
+          "name": "2FJT2_dev-review.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "novel-workspace/2fjt2/manuscript/high-level/2FJT2_summary_v1.md",
+          "name": "2FJT2_summary_v1.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "novel-workspace/2fjt2/manuscript/high-level/2FJT2-character-and-plot-arcs.md",
+          "name": "2FJT2-character-and-plot-arcs.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "novel-workspace/2fjt2/manuscript/high-level/author-notes.md",
+          "name": "author-notes.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "novel-workspace/2fjt2/manuscript/high-level/chapter-revisions.md",
+          "name": "chapter-revisions.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "novel-workspace/2fjt2/manuscript/high-level/notebookLM_notes-plot-threads.md",
+          "name": "notebookLM_notes-plot-threads.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "novel-workspace/2fjt2/manuscript/high-level/notebookLM_summary.md",
+          "name": "notebookLM_summary.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "novel-workspace/abc/ABC - eDGEforce_-_military_SF_-_v3_complete-compile_76_7.md",
+          "name": "ABC - eDGEforce_-_military_SF_-_v3_complete-compile_76_7.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "novel-workspace/abc/ABC - eDGEforce_-_military_SF_-_v3_complete-compile_77_7.md",
+          "name": "ABC - eDGEforce_-_military_SF_-_v3_complete-compile_77_7.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "novel-workspace/EDGEforce/EDGEforce-preview-report.md",
+          "name": "EDGEforce-preview-report.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "novel-workspace/EDGEforce/nano-scriv-orig-consolidated/_consolidation-report.md",
+          "name": "_consolidation-report.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "novel-workspace/EDGEforce/nano-scriv-orig-consolidated/journal/eDGEforce_-_military_SF_alt-to-diff-at-end-of-nano.md",
+          "name": "eDGEforce_-_military_SF_alt-to-diff-at-end-of-nano.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "novel-workspace/EDGEforce/nano-scriv-orig-consolidated/main-story/_source-files.md",
+          "name": "_source-files.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "novel-workspace/EDGEforce/nano-scriv-orig-consolidated/main-story/scenes/eDGEforce_-_military_SF_alt-to-diff-at-end-of-nano.md",
+          "name": "eDGEforce_-_military_SF_alt-to-diff-at-end-of-nano.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "novel-workspace/EDGEforce/nano-scriv-orig-consolidated/main-story/scenes/edgeforce-book1-2022-nano-rewrite_10_8.md",
+          "name": "edgeforce-book1-2022-nano-rewrite_10_8.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "novel-workspace/EDGEforce/nano-scriv-orig-consolidated/main-story/scenes/edgeforce-book1-2022-nano-rewrite_11_9.md",
+          "name": "edgeforce-book1-2022-nano-rewrite_11_9.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "novel-workspace/EDGEforce/nano-scriv-orig-consolidated/main-story/scenes/edgeforce-book1-2022-nano-rewrite_12_10.md",
+          "name": "edgeforce-book1-2022-nano-rewrite_12_10.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "novel-workspace/EDGEforce/nano-scriv-orig-consolidated/main-story/scenes/edgeforce-book1-2022-nano-rewrite_13_11.md",
+          "name": "edgeforce-book1-2022-nano-rewrite_13_11.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "novel-workspace/EDGEforce/nano-scriv-orig-consolidated/main-story/scenes/edgeforce-book1-2022-nano-rewrite_16_14.md",
+          "name": "edgeforce-book1-2022-nano-rewrite_16_14.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "novel-workspace/EDGEforce/nano-scriv-orig-consolidated/main-story/scenes/edgeforce-book1-2022-nano-rewrite_2_0.md",
+          "name": "edgeforce-book1-2022-nano-rewrite_2_0.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "novel-workspace/EDGEforce/nano-scriv-orig-consolidated/main-story/scenes/edgeforce-book1-2022-nano-rewrite_21_19.md",
+          "name": "edgeforce-book1-2022-nano-rewrite_21_19.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "novel-workspace/EDGEforce/nano-scriv-orig-consolidated/main-story/scenes/edgeforce-book1-2022-nano-rewrite_3_1.md",
+          "name": "edgeforce-book1-2022-nano-rewrite_3_1.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "novel-workspace/EDGEforce/nano-scriv-orig-consolidated/main-story/scenes/edgeforce-book1-2022-nano-rewrite_4_2.md",
+          "name": "edgeforce-book1-2022-nano-rewrite_4_2.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "novel-workspace/EDGEforce/nano-scriv-orig-consolidated/main-story/scenes/edgeforce-book1-2022-nano-rewrite_5_3.md",
+          "name": "edgeforce-book1-2022-nano-rewrite_5_3.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "novel-workspace/EDGEforce/nano-scriv-orig-consolidated/main-story/scenes/edgeforce-book1-2022-nano-rewrite_7_5.md",
+          "name": "edgeforce-book1-2022-nano-rewrite_7_5.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "novel-workspace/EDGEforce/nano-scriv-orig-consolidated/main-story/scenes/edgeforce-book1-2022-nano-rewrite_8_6.md",
+          "name": "edgeforce-book1-2022-nano-rewrite_8_6.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "novel-workspace/EDGEforce/nano-scriv-orig-consolidated/main-story/scenes/edgeforce-book1-2022-nano-rewrite_9_7.md",
+          "name": "edgeforce-book1-2022-nano-rewrite_9_7.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "novel-workspace/EDGEforce/nano-scriv-orig-consolidated/notes/eDGEforce_-_military_SF_alt-to-diff-at-end-of-nano.md",
+          "name": "eDGEforce_-_military_SF_alt-to-diff-at-end-of-nano.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "novel-workspace/EDGEforce/nano-scriv-orig-consolidated/templates/eDGEforce_-_military_SF_alt-to-diff-at-end-of-nano.md",
+          "name": "eDGEforce_-_military_SF_alt-to-diff-at-end-of-nano.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "novel-workspace/EDGEforce/nano-scriv-orig-consolidated/templates/EDGEforce_Military_SF-book_2_rough-plot-outline_sc.md",
+          "name": "EDGEforce_Military_SF-book_2_rough-plot-outline_sc.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "novel-workspace/EDGEforce/nano-scriv-orig-consolidated/unsorted/eDGEforce_-_military_SF_-_v3_complete-compile_68_6.md",
+          "name": "eDGEforce_-_military_SF_-_v3_complete-compile_68_6.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "novel-workspace/EDGEforce/nano-scriv-orig-consolidated/unsorted/eDGEforce_-_military_SF_-_v3_complete-compile_75_7.md",
+          "name": "eDGEforce_-_military_SF_-_v3_complete-compile_75_7.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "novel-workspace/EDGEforce/nano-scriv-orig-consolidated/unsorted/eDGEforce_-_military_SF_alt-to-diff-at-end-of-nano.md",
+          "name": "eDGEforce_-_military_SF_alt-to-diff-at-end-of-nano.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "novel-workspace/hyperspace-radio/grammar_review.txt",
+          "name": "grammar_review.txt",
+          "fileType": "txt"
+        },
+        {
+          "relativePath": "novel-workspace/Karsh_heroic_fantasy/long-note.txt",
+          "name": "long-note.txt",
+          "fileType": "txt"
+        },
+        {
+          "relativePath": "novel-workspace/porn-star-pi/book2/Rough outline - sleazy cozy 2.txt",
+          "name": "Rough outline - sleazy cozy 2.txt",
+          "fileType": "txt"
+        },
+        {
+          "relativePath": "novel-workspace/shorter-story-drafts/hunted by sadness - eDGEforce_-_military_SF_-_v3_complete-compile_63_5.md",
+          "name": "hunted by sadness - eDGEforce_-_military_SF_-_v3_complete-compile_63_5.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "novel-workspace/shorter-story-drafts/Night math - eDGEforce_-_military_SF_-_v3_complete-compile_74_6.md",
+          "name": "Night math - eDGEforce_-_military_SF_-_v3_complete-compile_74_6.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "novel-workspace/shorter-story-drafts/the beautiful creation - eDGEforce_-_military_SF_-_v3_complete-compile_65_6.md",
+          "name": "the beautiful creation - eDGEforce_-_military_SF_-_v3_complete-compile_65_6.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "novel-workspace/shorter-story-drafts/The three stoners and the muscle van from outerspace - eDGEforce_-_military_SF_-_v3_complete-compile_73_6.md",
+          "name": "The three stoners and the muscle van from outerspace - eDGEforce_-_military_SF_-_v3_complete-compile_73_6.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "novel-workspace/shorter-story-drafts/UUUsi- ending eDGEforce_-_military_SF_-_v3_complete-compile_72_6.md",
+          "name": "UUUsi- ending eDGEforce_-_military_SF_-_v3_complete-compile_72_6.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "novel-workspace/simple-plot-template.docx/possible plot- horizontal - eDGEforce 1 MetaData.txt",
+          "name": "possible plot- horizontal - eDGEforce 1 MetaData.txt",
+          "fileType": "txt"
+        },
+        {
+          "relativePath": "novel-workspace/vampirium/vampirium_furthernotes.md",
+          "name": "vampirium_furthernotes.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "possible-workflows/ai-fiction-writing-workflows.md",
+          "name": "ai-fiction-writing-workflows.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "possible-workflows/n8n-workflows-summary.md",
+          "name": "n8n-workflows-summary.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "resources/potential-gastown-rig/README.md",
           "name": "README.md",
           "fileType": "md"
         }
@@ -415,6 +1215,82 @@
         {
           "relativePath": "workflows/VALUEAPE_INTEGRATION_GUIDE.md",
           "name": "VALUEAPE_INTEGRATION_GUIDE.md",
+          "fileType": "md"
+        }
+      ]
+    },
+    {
+      "name": "NewsJuicer",
+      "description": "Script to run via Google to assemble and summarize the news from various emailed newsletters.",
+      "githubUrl": "https://github.com/mindfu23/NewsJuicer",
+      "languages": [
+        "JavaScript"
+      ],
+      "lastCommitDate": "2026-02-13T18:32:51Z",
+      "status": "github-only",
+      "visibility": "private",
+      "markdownFiles": [
+        {
+          "relativePath": "NewsJuicer_SETUP_GUIDE.md",
+          "name": "NewsJuicer_SETUP_GUIDE.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "README.md",
+          "name": "README.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "Unsubscribe_Guide.md",
+          "name": "Unsubscribe_Guide.md",
+          "fileType": "md"
+        }
+      ]
+    },
+    {
+      "name": "TrollJar",
+      "description": "A web browser extension to turn negative internet interactions into positive charitable outcomes.",
+      "githubUrl": "https://github.com/mindfu23/TrollJar",
+      "languages": [
+        "JavaScript"
+      ],
+      "lastCommitDate": "2026-02-10T17:24:39Z",
+      "status": "github-only",
+      "visibility": "private",
+      "markdownFiles": [
+        {
+          "relativePath": "extension/src/assets/icons/README.md",
+          "name": "README.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "IMPLEMENTATION_SUMMARY.md",
+          "name": "IMPLEMENTATION_SUMMARY.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "init.md",
+          "name": "init.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "README.md",
+          "name": "README.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "standard-setups.md",
+          "name": "standard-setups.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "TESTING.md",
+          "name": "TESTING.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "TrollJar_claude.md",
+          "name": "TrollJar_claude.md",
           "fileType": "md"
         }
       ]
@@ -572,6 +1448,148 @@
       "markdownFiles": [
         {
           "relativePath": "README.md",
+          "name": "README.md",
+          "fileType": "md"
+        }
+      ]
+    },
+    {
+      "name": "manuscript-editor",
+      "description": "web app for editing .md files as part of my workflow for revising manuscrips. ",
+      "githubUrl": "https://github.com/mindfu23/manuscript-editor",
+      "languages": [
+        "JavaScript"
+      ],
+      "lastCommitDate": "2026-01-26T20:56:07Z",
+      "status": "synced",
+      "visibility": "private",
+      "localPath": "/Users/jamesbeach/Documents/visual-studio-code/antigravity-and-others/manuscript-editor",
+      "markdownFiles": [
+        {
+          "relativePath": "README.md",
+          "name": "README.md",
+          "fileType": "md"
+        }
+      ]
+    },
+    {
+      "name": "Metabot",
+      "description": "A bot that will take any query and send it to at least 4 different current AIs. This currently is Chat GPT, Anthropic's Claude, Google's Gemini and Perplexity AI. It will then provide a synthesis and summary of the received information, by default via Perplexity but also user-configurable for any other AI to be the summary agent.",
+      "githubUrl": "https://github.com/mindfu23/Metabot",
+      "languages": [
+        "TypeScript"
+      ],
+      "lastCommitDate": "2026-01-21T21:08:18Z",
+      "status": "synced",
+      "visibility": "private",
+      "localPath": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/Metabot",
+      "markdownFiles": [
+        {
+          "relativePath": "API.md",
+          "name": "API.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "ARCHITECTURE.md",
+          "name": "ARCHITECTURE.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "CONTRIBUTING.md",
+          "name": "CONTRIBUTING.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "DEPLOYMENT.md",
+          "name": "DEPLOYMENT.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "DOCKER.md",
+          "name": "DOCKER.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "figma-export/README.md",
+          "name": "README.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "figma-export/src/Attributions.md",
+          "name": "Attributions.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "figma-export/src/guidelines/Guidelines.md",
+          "name": "Guidelines.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "IMPLEMENTATION_SUMMARY.md",
+          "name": "IMPLEMENTATION_SUMMARY.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "MCP_INTEGRATION.md",
+          "name": "MCP_INTEGRATION.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "README.md",
+          "name": "README.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "VERIFICATION.md",
+          "name": "VERIFICATION.md",
+          "fileType": "md"
+        }
+      ]
+    },
+    {
+      "name": "Novelizer",
+      "description": "My own personal multi-agentic app for creative novel writing and editing ",
+      "githubUrl": "https://github.com/mindfu23/Novelizer",
+      "languages": [
+        "TypeScript"
+      ],
+      "lastCommitDate": "2026-01-19T19:10:45Z",
+      "status": "synced",
+      "visibility": "private",
+      "localPath": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/Novelizer",
+      "markdownFiles": [
+        {
+          "relativePath": "DEVELOPMENT_PLAN.md",
+          "name": "DEVELOPMENT_PLAN.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "NOTES.md",
+          "name": "NOTES.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "NOVELIZER-ENHANCEMENTS.md",
+          "name": "NOVELIZER-ENHANCEMENTS.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "POSSIBLE-EXPANSION.md",
+          "name": "POSSIBLE-EXPANSION.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "README.md",
+          "name": "README.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "TODO.md",
+          "name": "TODO.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "web/README.md",
           "name": "README.md",
           "fileType": "md"
         }
@@ -858,6 +1876,23 @@
       ]
     },
     {
+      "name": "WeirdTarot",
+      "description": "App for display of different possible Tarot and other diviniation systems",
+      "githubUrl": "https://github.com/mindfu23/WeirdTarot",
+      "languages": [],
+      "lastCommitDate": "2025-12-28T19:38:19Z",
+      "status": "synced",
+      "visibility": "private",
+      "localPath": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/WeirdTarot",
+      "markdownFiles": [
+        {
+          "relativePath": "README.md",
+          "name": "README.md",
+          "fileType": "md"
+        }
+      ]
+    },
+    {
       "name": "plottoxml",
       "description": "Plotto—A new method of plot suggestion for writers of creative fiction by William Wallace Cook, 1867-1933",
       "githubUrl": "https://github.com/mindfu23/plottoxml",
@@ -902,6 +1937,27 @@
           "relativePath": "requirements.txt",
           "name": "requirements.txt",
           "fileType": "txt"
+        }
+      ]
+    },
+    {
+      "name": "FinGPT",
+      "description": "My experiments with Fin GPT",
+      "githubUrl": "https://github.com/mindfu23/FinGPT",
+      "languages": [],
+      "lastCommitDate": "2025-12-27T18:31:54Z",
+      "status": "github-only",
+      "visibility": "private",
+      "markdownFiles": [
+        {
+          "relativePath": "pre-dev-notes.md",
+          "name": "pre-dev-notes.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "README.md",
+          "name": "README.md",
+          "fileType": "md"
         }
       ]
     },
@@ -1078,6 +2134,79 @@
         {
           "relativePath": "USER_GUIDE.md",
           "name": "USER_GUIDE.md",
+          "fileType": "md"
+        }
+      ]
+    },
+    {
+      "name": "GPTWrapper",
+      "description": "Basic wrapper for GPTs to make them Android or iOS capable apps.",
+      "githubUrl": "https://github.com/mindfu23/GPTWrapper",
+      "languages": [
+        "JavaScript"
+      ],
+      "lastCommitDate": "2025-12-25T01:08:47Z",
+      "status": "synced",
+      "visibility": "private",
+      "localPath": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/GPTWrapper",
+      "markdownFiles": [
+        {
+          "relativePath": "MOBILE_SETUP.md",
+          "name": "MOBILE_SETUP.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "NETLIFY_DEPLOYMENT.md",
+          "name": "NETLIFY_DEPLOYMENT.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "plaintext-megafile.txt",
+          "name": "plaintext-megafile.txt",
+          "fileType": "txt"
+        },
+        {
+          "relativePath": "plaintext-megafile2.txt",
+          "name": "plaintext-megafile2.txt",
+          "fileType": "txt"
+        },
+        {
+          "relativePath": "README.md",
+          "name": "README.md",
+          "fileType": "md"
+        }
+      ]
+    },
+    {
+      "name": "ShamAIn",
+      "description": "Repo for GPT app",
+      "githubUrl": "https://github.com/mindfu23/ShamAIn",
+      "languages": [
+        "JavaScript"
+      ],
+      "lastCommitDate": "2025-12-25T01:00:50Z",
+      "status": "synced",
+      "visibility": "private",
+      "localPath": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/ShamAIn",
+      "markdownFiles": [
+        {
+          "relativePath": "MOBILE_SETUP.md",
+          "name": "MOBILE_SETUP.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "NETLIFY_DEPLOYMENT.md",
+          "name": "NETLIFY_DEPLOYMENT.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "README.md",
+          "name": "README.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "SETUP_STEPS.md",
+          "name": "SETUP_STEPS.md",
           "fileType": "md"
         }
       ]
@@ -1275,6 +2404,58 @@
       "markdownFiles": []
     },
     {
+      "name": "RedditUF",
+      "description": "An intention to provide a free shell for using Reddit",
+      "githubUrl": "https://github.com/mindfu23/RedditUF",
+      "languages": [
+        "JavaScript"
+      ],
+      "lastCommitDate": "2025-12-06T20:33:19Z",
+      "status": "github-only",
+      "visibility": "private",
+      "markdownFiles": [
+        {
+          "relativePath": "CAPACITOR_INSTRUCTIONS.md",
+          "name": "CAPACITOR_INSTRUCTIONS.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "README.md",
+          "name": "README.md",
+          "fileType": "md"
+        }
+      ]
+    },
+    {
+      "name": "hello",
+      "description": "A simple hello script to test what I'm actually doing.",
+      "githubUrl": "https://github.com/mindfu23/hello",
+      "languages": [
+        "Python"
+      ],
+      "lastCommitDate": "2023-03-18T03:45:14Z",
+      "status": "github-only",
+      "visibility": "private",
+      "markdownFiles": []
+    },
+    {
+      "name": "DataScience",
+      "githubUrl": "https://github.com/mindfu23/DataScience",
+      "languages": [
+        "Python"
+      ],
+      "lastCommitDate": "2021-06-07T18:54:50Z",
+      "status": "github-only",
+      "visibility": "private",
+      "markdownFiles": [
+        {
+          "relativePath": "README.md",
+          "name": "README.md",
+          "fileType": "md"
+        }
+      ]
+    },
+    {
       "name": "KorassViewer",
       "description": "A viewer of images for the people in this korass. (See also: Cat's Cradle)",
       "githubUrl": "https://github.com/mindfu23/KorassViewer",
@@ -1340,6 +2521,6 @@
     "templates",
     "utilities"
   ],
-  "buildTime": "2026-02-20T18:17:51.621Z",
+  "buildTime": "2026-02-20T19:13:42.116Z",
   "version": "1.0.0"
 }
