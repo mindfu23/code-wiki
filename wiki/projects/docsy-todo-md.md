@@ -1,8 +1,6 @@
 ---
-title: "Docsy to do"
-updated: "2026-02-17"
+title: "Job Searcher"
+updated: "2026-02-20"
 ---
 
-X - Still need to resolve the index for the main page rebuilding every time someone goes to "Browse" and then returns to the main page.
-
-Actually appears complete now.
+Homegrown API currently replaced by n8n workflow. n8n workflow here: http://35.188.141.23:5678/home/workflows
