@@ -1,6 +1,6 @@
 [
   {
-    "path": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/code-wiki/wiki/snippets/_index.md",
+    "path": "/home/runner/work/code-wiki/code-wiki/wiki/snippets/_index.md",
     "relativePath": "snippets/_index.md",
     "title": "Snippets Index",
     "description": "Small, focused code pieces",
@@ -14,7 +14,7 @@
     "visibility": "public"
   },
   {
-    "path": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/code-wiki/wiki/snippets/code-wiki-overview.md",
+    "path": "/home/runner/work/code-wiki/code-wiki/wiki/snippets/code-wiki-overview.md",
     "relativePath": "snippets/code-wiki-overview.md",
     "title": "Code wiki overview",
     "tags": [],

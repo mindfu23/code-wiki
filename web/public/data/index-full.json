@@ -1,7 +1,7 @@
 {
   "documents": [
     {
-      "path": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/code-wiki/wiki/AGENTS.md",
+      "path": "/home/runner/work/code-wiki/code-wiki/wiki/AGENTS.md",
       "relativePath": "AGENTS.md",
       "title": "AGENTS",
       "tags": [],
@@ -11,7 +11,7 @@
       "visibility": "public"
     },
     {
-      "path": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/code-wiki/wiki/_index.md",
+      "path": "/home/runner/work/code-wiki/code-wiki/wiki/_index.md",
       "relativePath": "_index.md",
       "title": "Contents",
       "description": "Wiki table of contents",
@@ -25,7 +25,7 @@
       "visibility": "public"
     },
     {
-      "path": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/code-wiki/wiki/integrations/_index.md",
+      "path": "/home/runner/work/code-wiki/code-wiki/wiki/integrations/_index.md",
       "relativePath": "integrations/_index.md",
       "title": "Integrations Index",
       "description": "Third-party API connectors and service integrations",
@@ -41,7 +41,7 @@
       "visibility": "public"
     },
     {
-      "path": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/code-wiki/wiki/patterns/_index.md",
+      "path": "/home/runner/work/code-wiki/code-wiki/wiki/patterns/_index.md",
       "relativePath": "patterns/_index.md",
       "title": "Patterns Index",
       "description": "Architectural patterns and design approaches",
@@ -55,7 +55,7 @@
       "visibility": "public"
     },
     {
-      "path": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/code-wiki/wiki/preferences/_index.md",
+      "path": "/home/runner/work/code-wiki/code-wiki/wiki/preferences/_index.md",
       "relativePath": "preferences/_index.md",
       "title": "Preferences Index",
       "description": "User and project preference configurations",
@@ -70,7 +70,7 @@
       "visibility": "public"
     },
     {
-      "path": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/code-wiki/wiki/preferences/gcp-cloud-run-deployment.md",
+      "path": "/home/runner/work/code-wiki/code-wiki/wiki/preferences/gcp-cloud-run-deployment.md",
       "relativePath": "preferences/gcp-cloud-run-deployment.md",
       "title": "gcp-cloud-run-deployment",
       "tags": [],
@@ -80,7 +80,7 @@
       "visibility": "public"
     },
     {
-      "path": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/code-wiki/wiki/preferences/standard-setups.md",
+      "path": "/home/runner/work/code-wiki/code-wiki/wiki/preferences/standard-setups.md",
       "relativePath": "preferences/standard-setups.md",
       "title": "standard-setups",
       "tags": [],
@@ -90,7 +90,7 @@
       "visibility": "public"
     },
     {
-      "path": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/code-wiki/wiki/projects/_index.md",
+      "path": "/home/runner/work/code-wiki/code-wiki/wiki/projects/_index.md",
       "relativePath": "projects/_index.md",
       "title": "Projects Index",
       "description": "Documentation for active repositories",
@@ -104,7 +104,7 @@
       "visibility": "public"
     },
     {
-      "path": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/code-wiki/wiki/projects/docsy-to-do.md",
+      "path": "/home/runner/work/code-wiki/code-wiki/wiki/projects/docsy-to-do.md",
       "relativePath": "projects/docsy-to-do.md",
       "title": "Docsy to do 1",
       "tags": [],
@@ -115,18 +115,18 @@
       "visibility": "public"
     },
     {
-      "path": "wiki/projects/docsy-todo-md.md",
+      "path": "/home/runner/work/code-wiki/code-wiki/wiki/projects/docsy-todo-md.md",
       "relativePath": "projects/docsy-todo-md.md",
       "title": "Job Searcher",
       "tags": [],
       "updated": "2026-02-20",
-      "content": "Homegrown API currently replaced by n8n workflow. n8n workflow here: http://35.188.141.23:5678/home/workflows\n\nHave turned off this github action for the version in the code repo, here. https://github.com/mindfu23/JobSearcher/actions/workflows/daily-search.yml",
+      "content": "\nHomegrown API currently replaced by n8n workflow. n8n workflow here: http://35.188.141.23:5678/home/workflows\n\nHave turned off this github action for the version in the code repo, here. https://github.com/mindfu23/JobSearcher/actions/workflows/daily-search.yml",
       "contentPreview": "Homegrown API currently replaced by n8n workflow. n8n workflow here: http://35.188.141.23:5678/home/workflows  Have turned off this github action for the version in the code repo, here. https://github.com/mindfu23/JobSearcher/actions/workflows/daily-search.yml",
       "category": "projects",
       "visibility": "private"
     },
     {
-      "path": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/code-wiki/wiki/projects/n8n-todo.md",
+      "path": "/home/runner/work/code-wiki/code-wiki/wiki/projects/n8n-todo.md",
       "relativePath": "projects/n8n-todo.md",
       "title": "n8n To Do",
       "tags": [],
@@ -137,7 +137,7 @@
       "visibility": "public"
     },
     {
-      "path": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/code-wiki/wiki/projects/overall-next-steps.md",
+      "path": "/home/runner/work/code-wiki/code-wiki/wiki/projects/overall-next-steps.md",
       "relativePath": "projects/overall-next-steps.md",
       "title": "Overall next steps",
       "tags": [],
@@ -148,7 +148,7 @@
       "visibility": "public"
     },
     {
-      "path": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/code-wiki/wiki/projects/overall-to-do.md",
+      "path": "/home/runner/work/code-wiki/code-wiki/wiki/projects/overall-to-do.md",
       "relativePath": "projects/overall-to-do.md",
       "title": "Overall to do",
       "tags": [],
@@ -159,7 +159,7 @@
       "visibility": "public"
     },
     {
-      "path": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/code-wiki/wiki/projects/repo-locations.md",
+      "path": "/home/runner/work/code-wiki/code-wiki/wiki/projects/repo-locations.md",
       "relativePath": "projects/repo-locations.md",
       "title": "Repository Locations",
       "description": "Mapping of repositories to local file system paths and GitHub URLs",
@@ -175,7 +175,7 @@
       "visibility": "public"
     },
     {
-      "path": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/code-wiki/wiki/snippets/_index.md",
+      "path": "/home/runner/work/code-wiki/code-wiki/wiki/snippets/_index.md",
       "relativePath": "snippets/_index.md",
       "title": "Snippets Index",
       "description": "Small, focused code pieces",
@@ -189,7 +189,7 @@
       "visibility": "public"
     },
     {
-      "path": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/code-wiki/wiki/snippets/code-wiki-overview.md",
+      "path": "/home/runner/work/code-wiki/code-wiki/wiki/snippets/code-wiki-overview.md",
       "relativePath": "snippets/code-wiki-overview.md",
       "title": "Code wiki overview",
       "tags": [],
@@ -200,7 +200,7 @@
       "visibility": "public"
     },
     {
-      "path": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/code-wiki/wiki/templates/_index.md",
+      "path": "/home/runner/work/code-wiki/code-wiki/wiki/templates/_index.md",
       "relativePath": "templates/_index.md",
       "title": "Templates Index",
       "description": "Project and file starters",
@@ -215,7 +215,7 @@
       "visibility": "public"
     },
     {
-      "path": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/code-wiki/wiki/utilities/_index.md",
+      "path": "/home/runner/work/code-wiki/code-wiki/wiki/utilities/_index.md",
       "relativePath": "utilities/_index.md",
       "title": "Utilities Index",
       "description": "Standalone helper functions and utilities",
@@ -236,7 +236,7 @@
       "languages": [
         "TypeScript"
       ],
-      "lastCommitDate": "2026-02-20T19:38:12Z",
+      "lastCommitDate": "2026-02-20T20:52:43Z",
       "status": "github-only",
       "visibility": "public",
       "markdownFiles": [
@@ -2564,6 +2564,6 @@
     "templates",
     "utilities"
   ],
-  "buildTime": "2026-02-20T20:52:42.940Z",
+  "buildTime": "2026-02-21T00:19:19.370Z",
   "version": "1.0.0"
 }
