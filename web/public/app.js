@@ -239,8 +239,8 @@ function showPage(page, params = {}) {
       if (ENABLE_CARD_VIEW) renderRepos();
       loadRepoFilesView();
       loadRepoListView();
-      // Activate the requested tab, or default to docs
-      switchRepoTab(params.tab || 'docs');
+      // Activate the requested tab, the previously selected tab, or default to contents
+      switchRepoTab(params.tab || sessionStorage.getItem('browseTab') || 'contents');
       break;
     case 'repos':
       // Redirect /repos to /browse
@@ -580,6 +580,9 @@ function renderRepos() {
 
 // Switch between repo view tabs
 function switchRepoTab(tabName) {
+  // Persist the selected tab for the session
+  sessionStorage.setItem('browseTab', tabName);
+
   // Update tab buttons
   document.querySelectorAll('.repo-tab').forEach(tab => {
     tab.classList.toggle('active', tab.dataset.tab === tabName);
