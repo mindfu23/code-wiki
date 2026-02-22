@@ -1,6 +1,6 @@
 [
   {
-    "path": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/code-wiki/wiki/projects/_index.md",
+    "path": "/home/runner/work/code-wiki/code-wiki/wiki/projects/_index.md",
     "relativePath": "projects/_index.md",
     "title": "Projects Index",
     "description": "Documentation for active repositories",
@@ -14,7 +14,7 @@
     "visibility": "public"
   },
   {
-    "path": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/code-wiki/wiki/projects/docsy-to-do.md",
+    "path": "/home/runner/work/code-wiki/code-wiki/wiki/projects/docsy-to-do.md",
     "relativePath": "projects/docsy-to-do.md",
     "title": "Docsy to do 1",
     "tags": [],
@@ -25,18 +25,18 @@
     "visibility": "public"
   },
   {
-    "path": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/code-wiki/wiki/projects/docsy-todo-md.md",
+    "path": "/home/runner/work/code-wiki/code-wiki/wiki/projects/docsy-todo-md.md",
     "relativePath": "projects/docsy-todo-md.md",
     "title": "Job Searcher",
     "tags": [],
     "updated": "2026-02-20",
-    "content": "\nHomegrown API currently replaced by n8n workflow. n8n workflow here: http://35.188.141.23:5678/home/workflows",
-    "contentPreview": "Homegrown API currently replaced by n8n workflow. n8n workflow here: http://35.188.141.23:5678/home/workflows",
+    "content": "\nHomegrown API currently replaced by n8n workflow. n8n workflow here: http://35.188.141.23:5678/home/workflows\n\nHave turned off this github action for the version in the code repo, here. https://github.com/mindfu23/JobSearcher/actions/workflows/daily-search.yml",
+    "contentPreview": "Homegrown API currently replaced by n8n workflow. n8n workflow here: http://35.188.141.23:5678/home/workflows  Have turned off this github action for the version in the code repo, here. https://github.com/mindfu23/JobSearcher/actions/workflows/daily-search.yml",
     "category": "projects",
-    "visibility": "public"
+    "visibility": "private"
   },
   {
-    "path": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/code-wiki/wiki/projects/n8n-todo.md",
+    "path": "/home/runner/work/code-wiki/code-wiki/wiki/projects/n8n-todo.md",
     "relativePath": "projects/n8n-todo.md",
     "title": "n8n To Do",
     "tags": [],
@@ -47,7 +47,7 @@
     "visibility": "public"
   },
   {
-    "path": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/code-wiki/wiki/projects/overall-next-steps.md",
+    "path": "/home/runner/work/code-wiki/code-wiki/wiki/projects/overall-next-steps.md",
     "relativePath": "projects/overall-next-steps.md",
     "title": "Overall next steps",
     "tags": [],
@@ -58,7 +58,7 @@
     "visibility": "public"
   },
   {
-    "path": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/code-wiki/wiki/projects/overall-to-do.md",
+    "path": "/home/runner/work/code-wiki/code-wiki/wiki/projects/overall-to-do.md",
     "relativePath": "projects/overall-to-do.md",
     "title": "Overall to do",
     "tags": [],
@@ -69,7 +69,7 @@
     "visibility": "public"
   },
   {
-    "path": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/code-wiki/wiki/projects/repo-locations.md",
+    "path": "/home/runner/work/code-wiki/code-wiki/wiki/projects/repo-locations.md",
     "relativePath": "projects/repo-locations.md",
     "title": "Repository Locations",
     "description": "Mapping of repositories to local file system paths and GitHub URLs",
