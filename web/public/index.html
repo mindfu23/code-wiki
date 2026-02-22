@@ -103,25 +103,29 @@
 
     <!-- Browse Page -->
     <section id="page-browse" class="page">
-      <div id="contents-outline" class="contents-outline">
-        <!-- Wiki contents outline loaded dynamically -->
-      </div>
-
       <div class="browse-repos-section">
         <div class="section-accent-header">
           <div class="cyan-accent-bar"></div>
-          <h2>Browse Repos</h2>
+          <h2>Browse</h2>
         </div>
         <div class="repo-tabs" id="repo-tabs">
-          <button class="repo-tab active" data-tab="docs">Docs View</button>
+          <button class="repo-tab active" data-tab="contents">Contents</button>
+          <button class="repo-tab" data-tab="docs">Docs View</button>
           <button class="repo-tab" data-tab="files">Locations</button>
           <button class="repo-tab" data-tab="list">List View</button>
           <!-- Card View: hidden by default. To enable, set ENABLE_CARD_VIEW = true in app.js -->
           <button class="repo-tab" data-tab="card" data-optional="card-view" style="display: none;">Card View</button>
         </div>
 
-        <!-- Docs View (All doc files with sort/pagination) - default tab -->
-        <div id="repo-docs-view" class="repo-view active">
+        <!-- Contents View (Wiki outline) - default tab -->
+        <div id="repo-contents-view" class="repo-view active">
+          <div id="contents-outline" class="contents-outline">
+            <!-- Wiki contents outline loaded dynamically -->
+          </div>
+        </div>
+
+        <!-- Docs View (All doc files with sort/pagination) -->
+        <div id="repo-docs-view" class="repo-view">
           <div id="repo-docs-content">
             <p class="loading">Loading doc files...</p>
           </div>
