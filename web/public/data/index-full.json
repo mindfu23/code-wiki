@@ -231,12 +231,130 @@
   ],
   "repos": [
     {
+      "name": "ValueApe",
+      "githubUrl": "https://github.com/mindfu23/ValueApe",
+      "languages": [
+        "TypeScript"
+      ],
+      "lastCommitDate": "2026-02-21T06:20:48Z",
+      "status": "synced",
+      "visibility": "private",
+      "localPath": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/ValueApe",
+      "markdownFiles": [
+        {
+          "relativePath": "autotrade-proposed-code.md",
+          "name": "autotrade-proposed-code.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "docs/architecture.md",
+          "name": "architecture.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "docs/DATA_PROVIDERS.md",
+          "name": "DATA_PROVIDERS.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "docs/finrl-integration.md",
+          "name": "finrl-integration.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "docs/INTEGRATION_EXAMPLES.md",
+          "name": "INTEGRATION_EXAMPLES.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "docs/REAL_TIME_DATA.md",
+          "name": "REAL_TIME_DATA.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "docs/schwab-integration.md",
+          "name": "schwab-integration.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "docs/SUPABASE_SETUP.md",
+          "name": "SUPABASE_SETUP.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "netlify/functions/requirements.txt",
+          "name": "requirements.txt",
+          "fileType": "txt"
+        },
+        {
+          "relativePath": "PRD.md",
+          "name": "PRD.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "README.md",
+          "name": "README.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "SECURITY.md",
+          "name": "SECURITY.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "webscraper/README.md",
+          "name": "README.md",
+          "fileType": "md"
+        }
+      ]
+    },
+    {
+      "name": "apiTracker",
+      "description": "A simple GUI tracker for health and number of remaining calls for my various APIs used in my other apps.",
+      "githubUrl": "https://github.com/mindfu23/apiTracker",
+      "languages": [
+        "JavaScript"
+      ],
+      "lastCommitDate": "2026-02-21T00:21:19Z",
+      "status": "synced",
+      "visibility": "public",
+      "localPath": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/apiTracker",
+      "notes": "also implemented as a browser extension, and further developed there.",
+      "markdownFiles": [
+        {
+          "relativePath": "browser-extension/README.md",
+          "name": "README.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "dist-platforms/firefox/README.md",
+          "name": "README.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "dist-platforms/safari/API Usage Scraper Extension/Resources/README.md",
+          "name": "README.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "dist-platforms/safari/README.md",
+          "name": "README.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "platforms/README.md",
+          "name": "README.md",
+          "fileType": "md"
+        }
+      ]
+    },
+    {
       "name": "code-wiki",
       "githubUrl": "https://github.com/mindfu23/code-wiki",
       "languages": [
         "TypeScript"
       ],
-      "lastCommitDate": "2026-02-20T20:52:43Z",
+      "lastCommitDate": "2026-02-21T00:19:19Z",
       "status": "github-only",
       "visibility": "public",
       "markdownFiles": [
@@ -401,124 +519,6 @@
         {
           "relativePath": "results/job-search-2026-02-20.md",
           "name": "job-search-2026-02-20.md",
-          "fileType": "md"
-        }
-      ]
-    },
-    {
-      "name": "ValueApe",
-      "githubUrl": "https://github.com/mindfu23/ValueApe",
-      "languages": [
-        "TypeScript"
-      ],
-      "lastCommitDate": "2026-02-20T06:27:37Z",
-      "status": "synced",
-      "visibility": "private",
-      "localPath": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/ValueApe",
-      "markdownFiles": [
-        {
-          "relativePath": "autotrade-proposed-code.md",
-          "name": "autotrade-proposed-code.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "docs/architecture.md",
-          "name": "architecture.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "docs/DATA_PROVIDERS.md",
-          "name": "DATA_PROVIDERS.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "docs/finrl-integration.md",
-          "name": "finrl-integration.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "docs/INTEGRATION_EXAMPLES.md",
-          "name": "INTEGRATION_EXAMPLES.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "docs/REAL_TIME_DATA.md",
-          "name": "REAL_TIME_DATA.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "docs/schwab-integration.md",
-          "name": "schwab-integration.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "docs/SUPABASE_SETUP.md",
-          "name": "SUPABASE_SETUP.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "netlify/functions/requirements.txt",
-          "name": "requirements.txt",
-          "fileType": "txt"
-        },
-        {
-          "relativePath": "PRD.md",
-          "name": "PRD.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "README.md",
-          "name": "README.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "SECURITY.md",
-          "name": "SECURITY.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "webscraper/README.md",
-          "name": "README.md",
-          "fileType": "md"
-        }
-      ]
-    },
-    {
-      "name": "apiTracker",
-      "description": "A simple GUI tracker for health and number of remaining calls for my various APIs used in my other apps.",
-      "githubUrl": "https://github.com/mindfu23/apiTracker",
-      "languages": [
-        "JavaScript"
-      ],
-      "lastCommitDate": "2026-02-20T00:19:48Z",
-      "status": "synced",
-      "visibility": "public",
-      "localPath": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/apiTracker",
-      "notes": "also implemented as a browser extension, and further developed there.",
-      "markdownFiles": [
-        {
-          "relativePath": "browser-extension/README.md",
-          "name": "README.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "dist-platforms/firefox/README.md",
-          "name": "README.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "dist-platforms/safari/API Usage Scraper Extension/Resources/README.md",
-          "name": "README.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "dist-platforms/safari/README.md",
-          "name": "README.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "platforms/README.md",
-          "name": "README.md",
           "fileType": "md"
         }
       ]
@@ -2564,6 +2564,6 @@
     "templates",
     "utilities"
   ],
-  "buildTime": "2026-02-21T00:19:19.370Z",
+  "buildTime": "2026-02-22T00:19:06.635Z",
   "version": "1.0.0"
 }
