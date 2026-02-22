@@ -227,6 +227,17 @@
       "contentPreview": "# Utilities  This category contains standalone helper functions and utilities.  ## What belongs here  - Date/time helpers - String manipulation utilities - Array/object utilities - Validation functions - Formatting utilities - Type guards and type utilities - Math/calculation helpers  ## Adding new",
       "category": "utilities",
       "visibility": "public"
+    },
+    {
+      "path": "wiki/projects/valueapetodo.md",
+      "relativePath": "projects/valueapetodo.md",
+      "title": "Value Ape to do",
+      "tags": [],
+      "updated": "2026-02-22",
+      "content": "Good chat here for some further possible next steps. \n\nAlso a ToDo in the repo of course.\n\nhttps://claude.ai/chat/2d60dea0-141f-4a9e-bc00-751720885646",
+      "contentPreview": "Good chat here for some further possible next steps.   Also a ToDo in the repo of course.  https://claude.ai/chat/2d60dea0-141f-4a9e-bc00-751720885646",
+      "category": "projects",
+      "visibility": "private"
     }
   ],
   "repos": [
@@ -2564,6 +2575,6 @@
     "templates",
     "utilities"
   ],
-  "buildTime": "2026-02-22T00:19:06.635Z",
+  "buildTime": "2026-02-22T18:30:42.188Z",
   "version": "1.0.0"
 }
