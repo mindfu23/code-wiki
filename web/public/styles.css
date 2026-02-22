@@ -844,6 +844,23 @@ main {
    BROWSE REPOS SECTION
 ────────────────────────────────── */
 
+/* Tab view inner header */
+.tab-view-header {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.tab-view-header h3 {
+  font-size: 0.75rem;
+  font-weight: 400;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  margin: 0;
+}
+
 /* Browse breadcrumb */
 .browse-breadcrumb {
   display: flex;
