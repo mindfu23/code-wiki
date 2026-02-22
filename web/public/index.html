@@ -8,15 +8,34 @@
   <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png">
   <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
   <link rel="manifest" href="/manifest.json">
-  <meta name="theme-color" content="#2563eb">
+  <meta name="theme-color" content="#1e293b">
 </head>
 <body>
   <header>
     <div class="header-content">
-      <div class="header-brand">
-        <h1><a href="/"><img src="/logo.png" alt="Docsy" class="header-logo">Docsy McDocsface</a></h1>
-        <p class="header-subtitle">GitHub repo docsmeister</p>
-      </div>
+      <a href="/" class="header-brand">
+        <div class="header-icon-box">
+          <div class="header-icon-grid" aria-hidden="true">
+            <span class="icon-grid-top"></span>
+            <span class="icon-grid-bottom"></span>
+            <span class="icon-grid-left"></span>
+            <span class="icon-grid-right"></span>
+            <span class="icon-grid-h"></span>
+            <span class="icon-grid-v"></span>
+          </div>
+          <svg class="header-icon-svg" viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+            <polyline points="14 2 14 8 20 8"/>
+            <line x1="16" y1="13" x2="8" y2="13"/>
+            <line x1="16" y1="17" x2="8" y2="17"/>
+            <line x1="10" y1="9" x2="8" y2="9"/>
+          </svg>
+        </div>
+        <div class="header-brand-text">
+          <span class="header-title">Docsy McDocsface</span>
+          <span class="header-subtitle">GitHub Repo Docsmeister</span>
+        </div>
+      </a>
       <nav>
         <a href="/browse" class="nav-link" data-page="browse">Browse</a>
         <a href="/login" class="nav-link" data-page="login" id="login-nav-link">Login</a>
@@ -60,7 +79,11 @@
 
       <!-- Recently Modified Docs -->
       <div class="recent-docs-section">
-        <h3>Recently Modified Docs</h3>
+        <div class="section-header-divider">
+          <div class="divider-line"></div>
+          <h3>Recently Modified Docs</h3>
+          <div class="divider-line"></div>
+        </div>
         <div id="recent-docs-container">
           <p class="loading">Loading recent docs...</p>
         </div>
@@ -69,8 +92,11 @@
       <!-- Quick View Table on Search Page -->
       <div class="quickview-section">
         <div class="quickview-header">
-          <h3>Quick View</h3>
-          <button id="refresh-quickview-btn" class="btn btn-sm btn-secondary" title="Refresh index">Refresh</button>
+          <div class="section-header-accent">
+            <div class="cyan-accent-bar"></div>
+            <h3>Quick View</h3>
+          </div>
+          <button id="refresh-quickview-btn" class="btn btn-sm btn-secondary" title="Refresh index">↻ Refresh</button>
         </div>
         <div class="quickview-table-container">
           <table class="quickview-table" id="search-quickview-table">
@@ -99,7 +125,10 @@
       </div>
 
       <div class="browse-repos-section">
-        <h2>Browse Repos</h2>
+        <div class="section-accent-header">
+          <div class="cyan-accent-bar"></div>
+          <h2>Browse Repos</h2>
+        </div>
         <div class="repo-tabs" id="repo-tabs">
           <button class="repo-tab active" data-tab="docs">Docs View</button>
           <button class="repo-tab" data-tab="files">Locations</button>
