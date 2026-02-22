@@ -844,6 +844,42 @@ main {
    BROWSE REPOS SECTION
 ────────────────────────────────── */
 
+/* Browse breadcrumb */
+.browse-breadcrumb {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1.25rem;
+}
+
+.breadcrumb-nav {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.75rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+}
+
+.breadcrumb-link {
+  color: var(--text-muted);
+  text-decoration: none;
+  transition: color 0.2s;
+}
+
+.breadcrumb-link:hover {
+  color: var(--cyan-dark);
+}
+
+.breadcrumb-sep {
+  color: var(--text-muted);
+  font-size: 0.7rem;
+}
+
+.breadcrumb-current {
+  color: var(--primary);
+}
+
 .browse-repos-section {
   margin-top: 0;
 }

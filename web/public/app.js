@@ -449,9 +449,15 @@ function renderContents() {
   });
 
   // Use the index categories order, filtering to ones that have content
-  const categories = (wikiIndex.categories || []).filter(cat =>
+  const priorityCategories = ['projects', 'preferences'];
+  const filteredCategories = (wikiIndex.categories || []).filter(cat =>
     cat !== 'general' && (categoryIndexDocs[cat] || (categoryDocs[cat] && categoryDocs[cat].length > 0))
   );
+  // Reorder: projects first, preferences second, then remaining in original order
+  const categories = [
+    ...priorityCategories.filter(cat => filteredCategories.includes(cat)),
+    ...filteredCategories.filter(cat => !priorityCategories.includes(cat))
+  ];
 
   if (categories.length === 0) {
     container.innerHTML = '<p class="placeholder-text">No wiki content yet</p>';
