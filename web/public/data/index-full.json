@@ -250,6 +250,17 @@
       "contentPreview": "# Utilities  This category contains standalone helper functions and utilities.  ## What belongs here  - Date/time helpers - String manipulation utilities - Array/object utilities - Validation functions - Formatting utilities - Type guards and type utilities - Math/calculation helpers  ## Adding new",
       "category": "utilities",
       "visibility": "public"
+    },
+    {
+      "path": "wiki/projects/weird-chess-to-do.md",
+      "relativePath": "projects/weird-chess-to-do.md",
+      "title": "Weird Chess To  Do",
+      "tags": [],
+      "updated": "2026-02-23",
+      "content": "App completed and submitted to app store.\n\nUsed ko-fi link, https://ko-fi.com/mindfu/\n\nCreated privacy policy, https://jamesmbeach.com/archives/5604\n\nStore link so far: https://appstoreconnect.apple.com/apps/6759537454/distribution/reviewsubmissions/details/eb044204-305d-4f74-a7a1-3ff67c852527",
+      "contentPreview": "App completed and submitted to app store.  Used ko-fi link, https://ko-fi.com/mindfu/  Created privacy policy, https://jamesmbeach.com/archives/5604  Store link so far: https://appstoreconnect.apple.com/apps/6759537454/distribution/reviewsubmissions/details/eb044204-305d-4f74-a7a1-3ff67c852527",
+      "category": "projects",
+      "visibility": "private"
     }
   ],
   "repos": [
@@ -2597,6 +2608,6 @@
     "templates",
     "utilities"
   ],
-  "buildTime": "2026-02-23T00:19:47.102Z",
+  "buildTime": "2026-02-23T04:49:38.753Z",
   "version": "1.0.0"
 }
