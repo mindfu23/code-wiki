@@ -1519,11 +1519,17 @@ span.repo-files-name {
 }
 
 .editor-header {
+  margin-bottom: 3rem;
+}
+
+.editor-header .back-link {
+  margin-bottom: 0.75rem;
+}
+
+.editor-header-row {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 3rem;
-  flex-wrap: wrap;
   gap: 1rem;
 }
 
@@ -2037,7 +2043,7 @@ footer a:hover {
     border-top: 1px solid var(--border);
   }
 
-  .editor-header {
+  .editor-header-row {
     flex-direction: column;
     align-items: flex-start;
   }
