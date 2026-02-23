@@ -69,50 +69,6 @@
       "visibility": "public"
     },
     {
-      "path": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/code-wiki/wiki/projects/docsy-to-do.md",
-      "relativePath": "projects/docsy-to-do.md",
-      "title": "Docsy to do 1",
-      "tags": [],
-      "updated": "2026-02-20",
-      "content": "\n\nStill need to resolve the index for the main page rebuilding every time someone goes to \"Browse\" and then returns to the main page.",
-      "contentPreview": "Still need to resolve the index for the main page rebuilding every time someone goes to \"Browse\" and then returns to the main page.",
-      "category": "projects",
-      "visibility": "public"
-    },
-    {
-      "path": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/code-wiki/wiki/projects/n8n-todo.md",
-      "relativePath": "projects/n8n-todo.md",
-      "title": "n8n To Do",
-      "tags": [],
-      "updated": "2026-02-18",
-      "content": "\n\ncreate or assign a domain name to the current IP address, as currently stored in Google Compute:\n\nhttp://35.188.141.23:5678\n\nworkflows here, created for ValueApe, Metabot, ShamAIn, and novel orchestration via n8n, and 1 demo article generator from LinkedIn.\n\nhttp://35.188.141.23:5678/projects/0xV2ERXR2IwHi5lk/workflows",
-      "contentPreview": "create or assign a domain name to the current IP address, as currently stored in Google Compute:  http://35.188.141.23:5678  workflows here, created for ValueApe, Metabot, ShamAIn, and novel orchestration via n8n, and 1 demo article generator from LinkedIn.  http://35.188.141.23:5678/projects/0xV2",
-      "category": "projects",
-      "visibility": "public"
-    },
-    {
-      "path": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/code-wiki/wiki/projects/overall-next-steps.md",
-      "relativePath": "projects/overall-next-steps.md",
-      "title": "Overall next steps",
-      "tags": [],
-      "updated": "2026-01-28",
-      "content": "\nContinue setting up n8n so I can explore possible functionality for a) ShamAIn and b) Value Ape\n\nMake an app out of the easiest thing for the app store. \n\nReview all the other to-dos and keep moving them forward. ",
-      "contentPreview": "Continue setting up n8n so I can explore possible functionality for a) ShamAIn and b) Value Ape  Make an app out of the easiest thing for the app store.   Review all the other to-dos and keep moving them forward.",
-      "category": "projects",
-      "visibility": "public"
-    },
-    {
-      "path": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/code-wiki/wiki/projects/overall-to-do.md",
-      "relativePath": "projects/overall-to-do.md",
-      "title": "Overall to do",
-      "tags": [],
-      "updated": "2026-01-28",
-      "content": "\nNext is for me to research n8n and apply it to ShamAIn and Value Ape.\n\nAfter that, continue the novel development workflow.",
-      "contentPreview": "Next is for me to research n8n and apply it to ShamAIn and Value Ape.  After that, continue the novel development workflow.",
-      "category": "projects",
-      "visibility": "public"
-    },
-    {
       "path": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/code-wiki/wiki/projects/repo-locations.md",
       "relativePath": "projects/repo-locations.md",
       "title": "Repository Locations",
@@ -139,17 +95,6 @@
       ],
       "content": "\n# Snippets\n\nThis category contains small, focused code pieces.\n\n## What belongs here\n\n- One-liners and short functions\n- Useful regex patterns\n- Shell commands\n- Quick solutions to common problems\n- Copy-paste ready code blocks\n\n## Adding new snippets\n\nCreate a new `.md` file in this directory following the document template in AGENTS.md.\n",
       "contentPreview": "# Snippets  This category contains small, focused code pieces.  ## What belongs here  - One-liners and short functions - Useful regex patterns - Shell commands - Quick solutions to common problems - Copy-paste ready code blocks  ## Adding new snippets  Create a new `.md` file in this directory foll",
-      "category": "snippets",
-      "visibility": "public"
-    },
-    {
-      "path": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/code-wiki/wiki/snippets/code-wiki-overview.md",
-      "relativePath": "snippets/code-wiki-overview.md",
-      "title": "Code wiki overview",
-      "tags": [],
-      "updated": "2026-01-27",
-      "content": "\nCreating this basic code wiki as a way to search through and understand all of the apps I've been developing in this repo, and also to create a general meta way to view setups like this for possible later creation for writers I'm giving tech services to or similar clients.",
-      "contentPreview": "Creating this basic code wiki as a way to search through and understand all of the apps I've been developing in this repo, and also to create a general meta way to view setups like this for possible later creation for writers I'm giving tech services to or similar clients.",
       "category": "snippets",
       "visibility": "public"
     },
@@ -185,12 +130,81 @@
   ],
   "repos": [
     {
+      "name": "gastown-mission-district",
+      "description": "An alternate setup for the AI orchestration setup Gastown. This version enables different LLM models as agents. It also includes testing and fully automated image generation through one of those models.",
+      "githubUrl": "https://github.com/mindfu23/gastown-mission-district",
+      "languages": [
+        "Shell"
+      ],
+      "lastCommitDate": "2026-01-17T19:41:45Z",
+      "status": "synced",
+      "visibility": "public",
+      "localPath": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/gastown-mission-district",
+      "markdownFiles": [
+        {
+          "relativePath": "agent_router/AGENTS.md",
+          "name": "AGENTS.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "AGENTS.md",
+          "name": "AGENTS.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "agents/lib/imagen-projects/README.md",
+          "name": "README.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "docs/IMAGEN.md",
+          "name": "IMAGEN.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "docs/MULTI-MODEL-AGENTS.md",
+          "name": "MULTI-MODEL-AGENTS.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "fractasy/AGENTS.md",
+          "name": "AGENTS.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "GEMINI-SETUP.md",
+          "name": "GEMINI-SETUP.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "GETTING-STARTED.md",
+          "name": "GETTING-STARTED.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "mayor/CLAUDE.md",
+          "name": "CLAUDE.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "plugins/README.md",
+          "name": "README.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "README.md",
+          "name": "README.md",
+          "fileType": "md"
+        }
+      ]
+    },
+    {
       "name": "code-wiki",
       "githubUrl": "https://github.com/mindfu23/code-wiki",
       "languages": [
         "TypeScript"
       ],
-      "lastCommitDate": "2026-02-23T05:02:47Z",
+      "lastCommitDate": "2026-02-23T21:55:26Z",
       "status": "github-only",
       "visibility": "public",
       "markdownFiles": [
@@ -227,26 +241,6 @@
         {
           "relativePath": "wiki/patterns/_index.md",
           "name": "_index.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "wiki/preferences/_index.md",
-          "name": "_index.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "wiki/preferences/gcp-cloud-run-deployment.md",
-          "name": "gcp-cloud-run-deployment.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "wiki/preferences/mobile-app-store.md",
-          "name": "mobile-app-store.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "wiki/preferences/standard-setups.md",
-          "name": "standard-setups.md",
           "fileType": "md"
         },
         {
@@ -426,75 +420,6 @@
         {
           "relativePath": "workflows/VALUEAPE_INTEGRATION_GUIDE.md",
           "name": "VALUEAPE_INTEGRATION_GUIDE.md",
-          "fileType": "md"
-        }
-      ]
-    },
-    {
-      "name": "gastown-mission-district",
-      "description": "An alternate setup for Gastown that enables different LLM models as agents, and also includes test and full image generation through one of those models.",
-      "githubUrl": "https://github.com/mindfu23/gastown-mission-district",
-      "languages": [
-        "Shell"
-      ],
-      "lastCommitDate": "2026-01-17T19:41:45Z",
-      "status": "synced",
-      "visibility": "public",
-      "localPath": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/gastown-mission-district",
-      "markdownFiles": [
-        {
-          "relativePath": "agent_router/AGENTS.md",
-          "name": "AGENTS.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "AGENTS.md",
-          "name": "AGENTS.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "agents/lib/imagen-projects/README.md",
-          "name": "README.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "docs/IMAGEN.md",
-          "name": "IMAGEN.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "docs/MULTI-MODEL-AGENTS.md",
-          "name": "MULTI-MODEL-AGENTS.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "fractasy/AGENTS.md",
-          "name": "AGENTS.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "GEMINI-SETUP.md",
-          "name": "GEMINI-SETUP.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "GETTING-STARTED.md",
-          "name": "GETTING-STARTED.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "mayor/CLAUDE.md",
-          "name": "CLAUDE.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "plugins/README.md",
-          "name": "README.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "README.md",
-          "name": "README.md",
           "fileType": "md"
         }
       ]
@@ -1327,6 +1252,6 @@
     "templates",
     "utilities"
   ],
-  "buildTime": "2026-02-23T21:40:42.299Z",
+  "buildTime": "2026-02-23T22:45:18.062Z",
   "version": "1.0.0"
 }

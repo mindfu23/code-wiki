@@ -1,6 +1,6 @@
 [
   {
-    "path": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/code-wiki/wiki/preferences/_index.md",
+    "path": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/code-wiki/wiki/personal/preferences/_index.md",
     "relativePath": "preferences/_index.md",
     "title": "Preferences Index",
     "description": "User and project preference configurations",
@@ -15,7 +15,7 @@
     "visibility": "private"
   },
   {
-    "path": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/code-wiki/wiki/preferences/gcp-cloud-run-deployment.md",
+    "path": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/code-wiki/wiki/personal/preferences/gcp-cloud-run-deployment.md",
     "relativePath": "preferences/gcp-cloud-run-deployment.md",
     "title": "gcp-cloud-run-deployment",
     "tags": [],
@@ -26,7 +26,7 @@
     "visibility": "private"
   },
   {
-    "path": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/code-wiki/wiki/preferences/mobile-app-store.md",
+    "path": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/code-wiki/wiki/personal/preferences/mobile-app-store.md",
     "relativePath": "preferences/mobile-app-store.md",
     "title": "mobile-app-store",
     "tags": [],
@@ -36,7 +36,7 @@
     "visibility": "private"
   },
   {
-    "path": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/code-wiki/wiki/preferences/standard-setups.md",
+    "path": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/code-wiki/wiki/personal/preferences/standard-setups.md",
     "relativePath": "preferences/standard-setups.md",
     "title": "standard-setups",
     "tags": [],

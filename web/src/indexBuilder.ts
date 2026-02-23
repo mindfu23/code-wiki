@@ -78,6 +78,11 @@ const __dirname = path.dirname(__filename);
 const WIKI_DIR = process.env.WIKI_DIR || path.resolve(process.cwd(), '../wiki');
 const OUTPUT_DIR = path.resolve(process.cwd(), 'public/data');
 
+// Personal wiki directory - gitignored, tracked in its own local git repo.
+// Contains personal docs in category subdirectories (e.g., personal/preferences/, personal/projects/).
+// Categories are derived from subdirectory names, same as the main wiki.
+const PERSONAL_WIKI_DIR = process.env.PERSONAL_WIKI_DIR || path.join(WIKI_DIR, 'personal');
+
 // GitHub API mode - used in CI when local repos aren't available
 const USE_GITHUB_API = process.env.USE_GITHUB_API === 'true';
 const GITHUB_TOKEN = process.env.GITHUB_TOKEN;
@@ -94,7 +99,7 @@ interface Frontmatter {
   visibility?: string;
 }
 
-async function findMarkdownFiles(dir: string, baseDir: string = dir): Promise<string[]> {
+async function findMarkdownFiles(dir: string, baseDir: string = dir, skipDirs: string[] = []): Promise<string[]> {
   const files: string[] = [];
 
   try {
@@ -103,8 +108,8 @@ async function findMarkdownFiles(dir: string, baseDir: string = dir): Promise<st
     for (const entry of entries) {
       const fullPath = path.join(dir, entry.name);
 
-      if (entry.isDirectory() && !entry.name.startsWith('.')) {
-        const subFiles = await findMarkdownFiles(fullPath, baseDir);
+      if (entry.isDirectory() && !entry.name.startsWith('.') && !skipDirs.includes(entry.name)) {
+        const subFiles = await findMarkdownFiles(fullPath, baseDir, []);
         files.push(...subFiles);
       } else if (entry.isFile() && entry.name.endsWith('.md')) {
         files.push(fullPath);
@@ -464,9 +469,9 @@ async function buildIndex(): Promise<void> {
   // Ensure output directory exists
   await fs.mkdir(OUTPUT_DIR, { recursive: true });
 
-  // Find all markdown files
-  const files = await findMarkdownFiles(WIKI_DIR);
-  console.log(`Found ${files.length} markdown files`);
+  // Find all markdown files in main wiki (skip 'personal' dir — scanned separately)
+  const files = await findMarkdownFiles(WIKI_DIR, WIKI_DIR, ['personal']);
+  console.log(`Found ${files.length} markdown files in wiki`);
 
   // Parse all documents
   const documents: WikiDocument[] = [];
@@ -478,6 +483,31 @@ async function buildIndex(): Promise<void> {
       documents.push(doc);
       categories.add(doc.category);
     }
+  }
+
+  // Scan personal wiki directory (gitignored, only exists locally).
+  // Personal docs use the same category structure (subdirectory = category).
+  // They default to visibility: private so they only appear in the authenticated index.
+  let personalWikiExists = false;
+  try {
+    await fs.access(PERSONAL_WIKI_DIR);
+    personalWikiExists = true;
+    const personalFiles = await findMarkdownFiles(PERSONAL_WIKI_DIR);
+    console.log(`Found ${personalFiles.length} personal markdown files in ${PERSONAL_WIKI_DIR}`);
+
+    for (const file of personalFiles) {
+      const doc = await parseWikiDocument(file, PERSONAL_WIKI_DIR);
+      if (doc) {
+        // Default personal docs to private visibility
+        if (!doc.visibility || doc.visibility === 'public') {
+          doc.visibility = 'private';
+        }
+        documents.push(doc);
+        categories.add(doc.category);
+      }
+    }
+  } catch {
+    // Personal wiki directory doesn't exist (e.g., in CI) — that's fine
   }
 
   // Parse repo-locations.md for local paths and notes
@@ -576,29 +606,32 @@ async function buildIndex(): Promise<void> {
 
   console.log(`Found ${totalDocFiles} documentation files across all repos`);
 
-  // Preserve personal docs from previous build for categories whose source files
-  // are not in the current scan (e.g., wiki/preferences/ is gitignored and only
-  // exists on the developer's local machine, not in CI/GitHub Actions).
+  // Preserve personal (private) docs from previous build when the personal wiki
+  // directory is absent (e.g., in CI/GitHub Actions where gitignored files don't exist).
+  // When the personal directory IS present, its contents are scanned directly above.
   let preservedDocs: WikiDocument[] = [];
   const preservedCategories = new Set<string>();
-  try {
-    const existingFullIndex = JSON.parse(
-      await fs.readFile(path.join(OUTPUT_DIR, 'index-full.json'), 'utf-8')
-    ) as WikiIndex;
+  if (!personalWikiExists) {
+    try {
+      const existingFullIndex = JSON.parse(
+        await fs.readFile(path.join(OUTPUT_DIR, 'index-full.json'), 'utf-8')
+      ) as WikiIndex;
 
-    const scannedCategories = new Set(documents.map(d => d.category));
-    for (const doc of existingFullIndex.documents) {
-      if (!scannedCategories.has(doc.category)) {
-        preservedDocs.push(doc);
-        preservedCategories.add(doc.category);
+      // Preserve individual private docs not found in the current scan
+      const scannedPaths = new Set(documents.map(d => d.relativePath));
+      for (const doc of existingFullIndex.documents) {
+        if (doc.visibility === 'private' && !scannedPaths.has(doc.relativePath)) {
+          preservedDocs.push(doc);
+          preservedCategories.add(doc.category);
+        }
       }
-    }
 
-    if (preservedDocs.length > 0) {
-      console.log(`Preserved ${preservedDocs.length} personal docs from previous build (categories: ${Array.from(preservedCategories).join(', ')})`);
+      if (preservedDocs.length > 0) {
+        console.log(`Preserved ${preservedDocs.length} personal docs from previous build (categories: ${Array.from(preservedCategories).join(', ')})`);
+      }
+    } catch {
+      // No existing full index, nothing to preserve
     }
-  } catch {
-    // No existing full index, nothing to preserve
   }
 
   // Merge preserved docs into the full document set

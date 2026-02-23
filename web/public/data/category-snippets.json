@@ -14,7 +14,7 @@
     "visibility": "public"
   },
   {
-    "path": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/code-wiki/wiki/snippets/code-wiki-overview.md",
+    "path": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/code-wiki/wiki/personal/snippets/code-wiki-overview.md",
     "relativePath": "snippets/code-wiki-overview.md",
     "title": "Code wiki overview",
     "tags": [],
@@ -22,6 +22,6 @@
     "content": "\nCreating this basic code wiki as a way to search through and understand all of the apps I've been developing in this repo, and also to create a general meta way to view setups like this for possible later creation for writers I'm giving tech services to or similar clients.",
     "contentPreview": "Creating this basic code wiki as a way to search through and understand all of the apps I've been developing in this repo, and also to create a general meta way to view setups like this for possible later creation for writers I'm giving tech services to or similar clients.",
     "category": "snippets",
-    "visibility": "public"
+    "visibility": "private"
   }
 ]
