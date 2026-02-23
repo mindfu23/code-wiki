@@ -83,5 +83,16 @@
     "contentPreview": "# Repository Locations  This page is **auto-generated** during indexing. Do not edit manually.  **Last updated:** 2026-01-27T18:36:17.624Z  ## Summary  | Status | Count | |--------|-------| | Synced (local + GitHub) | 23 | | Local only | 14 | | GitHub only (not cloned) | 0 | | **Total** | **37** |",
     "category": "projects",
     "visibility": "public"
+  },
+  {
+    "path": "/home/runner/work/code-wiki/code-wiki/wiki/projects/valueapetodo.md",
+    "relativePath": "projects/valueapetodo.md",
+    "title": "Value Ape to do",
+    "tags": [],
+    "updated": "2026-02-22",
+    "content": "\nGood chat here for some further possible next steps. \n\nAlso a ToDo in the repo of course.\n\nhttps://claude.ai/chat/2d60dea0-141f-4a9e-bc00-751720885646",
+    "contentPreview": "Good chat here for some further possible next steps.   Also a ToDo in the repo of course.  https://claude.ai/chat/2d60dea0-141f-4a9e-bc00-751720885646",
+    "category": "projects",
+    "visibility": "private"
   }
 ]
