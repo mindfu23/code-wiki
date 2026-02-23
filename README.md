@@ -226,7 +226,7 @@ The MCP server provides local code search for AI agents like Claude Code.
 ```
 wiki/
 ├── AGENTS.md          # Instructions for AI agents
-├── preferences/       # Development preferences (symlinked to ~/.claude/preferences)
+├── preferences/       # Personal docs (separate local git repo, gitignored)
 ├── patterns/          # Architectural patterns
 ├── utilities/         # Helper functions
 ├── integrations/      # API connectors
@@ -235,35 +235,90 @@ wiki/
 └── projects/          # Project documentation
 ```
 
-## Preferences Symlink
+## Personal Wiki Documents
 
-The `wiki/preferences/` folder is symlinked to `~/.claude/preferences/` so that:
+The `wiki/preferences/` directory is designed for personal documents (tech stack preferences, deployment guides, etc.) that you don't want included in the public open-source repo. It is:
 
-1. The MCP server can read preferences from the standard Claude location
-2. Editing preferences in this repo automatically updates what Claude sees
-3. Preferences stay version-controlled in git
+- **Gitignored** by the parent repo — your personal docs won't be pushed to your fork's public remote
+- **Its own local git repo** — your docs still have full version control (history, diffs, branching)
+- **Automatically indexed** — the index builder scans the filesystem, so these docs appear in your authenticated wiki view
+- **Preserved across CI rebuilds** — GitHub Actions carries forward personal docs from the previous build
 
-### Setup (one-time)
+### Setting Up Personal Docs (after forking)
 
-```bash
-# Remove existing preferences folder and create symlink
-rm -rf ~/.claude/preferences
-ln -s /Users/jamesbeach/Documents/visual-studio-code/github-copilot/code-wiki/wiki/preferences ~/.claude/preferences
-```
+1. **Create the directory and initialize a local git repo:**
+   ```bash
+   mkdir -p wiki/preferences
+   cd wiki/preferences
+   git init
+   ```
+
+2. **Add your personal docs** with `visibility: "private"` in the frontmatter:
+   ```markdown
+   ---
+   title: "My Tech Stack"
+   visibility: "private"
+   ---
+
+   # My Tech Stack Preferences
+   Your content here...
+   ```
+
+3. **Add a category index file** (`_index.md`):
+   ```markdown
+   ---
+   title: "Preferences Index"
+   tags: ["index", "preferences", "configuration"]
+   description: "User and project preference configurations"
+   visibility: "private"
+   ---
+
+   # Preferences
+
+   This category contains personal preference configurations.
+   ```
+
+4. **Commit in the local preferences repo:**
+   ```bash
+   cd wiki/preferences
+   git add -A
+   git commit -m "Add personal docs"
+   ```
+
+5. **Rebuild the index** to include your personal docs:
+   ```bash
+   cd web
+   npm run build:index
+   ```
+   Then commit the updated index files in the parent repo — this deploys your personal docs to your Netlify site (behind authentication).
 
 ### How It Works
 
-- Edit files in `wiki/preferences/*.md` in this repo
-- Changes are immediately available to Claude Code (no sync needed)
-- The `~/.claude/CLAUDE.md` file instructs Claude to check these preferences
-- The MCP server's `get_preferences` tool reads from this location
+- The `wiki/preferences/` directory is listed in the root `.gitignore`, so the parent repo ignores it
+- The index builder scans `wiki/` recursively via the filesystem — it finds your docs regardless of git tracking
+- Documents with `visibility: "private"` are excluded from the public `index.json` and only appear in `index-full.json` (served behind authentication)
+- When GitHub Actions rebuilds the index (daily or on push), it preserves personal docs from the previous `index-full.json` since the source files aren't in the CI checkout
+- Your personal docs have their own git history inside `wiki/preferences/.git/`
 
-### Current Preference Files
+### Claude Code / MCP Integration
 
-| File | Purpose |
-|------|---------|
-| `standard-setups.md` | Tech stack, UI guidelines, deployment checks |
-| `gcp-cloud-run-deployment.md` | Google Cloud Run deployment guide |
+To make your personal docs available to Claude Code via the MCP server's `get_preferences` tool:
+
+```bash
+# Symlink preferences to Claude's standard location
+rm -rf ~/.claude/preferences
+ln -s /path/to/code-wiki/wiki/preferences ~/.claude/preferences
+```
+
+### Optional: Private Remote Backup
+
+If you want to back up your personal docs to a private GitHub repo:
+
+```bash
+cd wiki/preferences
+git remote add origin git@github.com:your-username/my-wiki-preferences.git
+git push -u origin main
+```
 
 ## Adding Wiki Content
 

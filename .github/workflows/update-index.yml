@@ -48,7 +48,7 @@ jobs:
       - name: Check for changes
         id: changes
         run: |
-          if git diff --quiet web/public/data/index.json; then
+          if git diff --quiet web/public/data/; then
             echo "changed=false" >> $GITHUB_OUTPUT
           else
             echo "changed=true" >> $GITHUB_OUTPUT

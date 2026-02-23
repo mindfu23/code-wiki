@@ -1,7 +1,7 @@
 {
   "documents": [
     {
-      "path": "/home/runner/work/code-wiki/code-wiki/wiki/AGENTS.md",
+      "path": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/code-wiki/wiki/AGENTS.md",
       "relativePath": "AGENTS.md",
       "title": "AGENTS",
       "tags": [],
@@ -11,7 +11,7 @@
       "visibility": "public"
     },
     {
-      "path": "/home/runner/work/code-wiki/code-wiki/wiki/_index.md",
+      "path": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/code-wiki/wiki/_index.md",
       "relativePath": "_index.md",
       "title": "Contents",
       "description": "Wiki table of contents",
@@ -25,7 +25,7 @@
       "visibility": "public"
     },
     {
-      "path": "/home/runner/work/code-wiki/code-wiki/wiki/integrations/_index.md",
+      "path": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/code-wiki/wiki/integrations/_index.md",
       "relativePath": "integrations/_index.md",
       "title": "Integrations Index",
       "description": "Third-party API connectors and service integrations",
@@ -41,7 +41,7 @@
       "visibility": "public"
     },
     {
-      "path": "/home/runner/work/code-wiki/code-wiki/wiki/patterns/_index.md",
+      "path": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/code-wiki/wiki/patterns/_index.md",
       "relativePath": "patterns/_index.md",
       "title": "Patterns Index",
       "description": "Architectural patterns and design approaches",
@@ -55,7 +55,7 @@
       "visibility": "public"
     },
     {
-      "path": "/home/runner/work/code-wiki/code-wiki/wiki/preferences/_index.md",
+      "path": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/code-wiki/wiki/preferences/_index.md",
       "relativePath": "preferences/_index.md",
       "title": "Preferences Index",
       "description": "User and project preference configurations",
@@ -67,10 +67,10 @@
       "content": "\n# Preferences\n\nThis category contains user and project preference configurations.\n\n## What belongs here\n\n- Tech stack preferences\n- UI/UX guidelines\n- Deployment configurations\n- Development environment setups\n- Architectural conventions\n- Tool and library choices\n\n## Adding new preferences\n\nCreate a new `.md` file in this directory for each preference set you want to document.\n",
       "contentPreview": "# Preferences  This category contains user and project preference configurations.  ## What belongs here  - Tech stack preferences - UI/UX guidelines - Deployment configurations - Development environment setups - Architectural conventions - Tool and library choices  ## Adding new preferences  Create",
       "category": "preferences",
-      "visibility": "public"
+      "visibility": "private"
     },
     {
-      "path": "/home/runner/work/code-wiki/code-wiki/wiki/preferences/gcp-cloud-run-deployment.md",
+      "path": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/code-wiki/wiki/preferences/gcp-cloud-run-deployment.md",
       "relativePath": "preferences/gcp-cloud-run-deployment.md",
       "title": "gcp-cloud-run-deployment",
       "tags": [],
@@ -78,20 +78,20 @@
       "content": "\n# Google Cloud Run Deployment Guide\n\nA comprehensive guide for deploying Python/FastAPI backends to Google Cloud Run via GitHub Actions.\n\n## Prerequisites\n\n- Google Cloud account with billing enabled\n- GitHub repository\n- `gcloud` CLI installed locally\n\n## Initial GCP Setup\n\n### 1. Create or Select a Project\n\n```bash\n# List existing projects\ngcloud projects list\n\n# Create a new project (optional)\ngcloud projects create YOUR_PROJECT_ID --name=\"Your Project Name\"\n\n# Set active project\ngcloud config set project YOUR_PROJECT_ID\n```\n\n### 2. Enable Required APIs\n\n```bash\ngcloud services enable \\\n  run.googleapis.com \\\n  artifactregistry.googleapis.com \\\n  cloudbuild.googleapis.com \\\n  --project=YOUR_PROJECT_ID\n```\n\n### 3. Create Artifact Registry Repository\n\n```bash\ngcloud artifacts repositories create YOUR_REPO_NAME \\\n  --repository-format=docker \\\n  --location=us-central1 \\\n  --description=\"Docker images for your app\" \\\n  --project=YOUR_PROJECT_ID\n```\n\n### 4. Create Service Account for GitHub Actions\n\n```bash\n# Create the service account\ngcloud iam service-accounts create github-actions \\\n  --display-name=\"GitHub Actions\" \\\n  --project=YOUR_PROJECT_ID\n\n# Store the email for convenience\nSA_EMAIL=\"github-actions@YOUR_PROJECT_ID.iam.gserviceaccount.com\"\n```\n\n### 5. Grant Required Permissions\n\n```bash\n# Cloud Run Admin - deploy services\ngcloud projects add-iam-policy-binding YOUR_PROJECT_ID \\\n  --member=\"serviceAccount:$SA_EMAIL\" \\\n  --role=\"roles/run.admin\"\n\n# Artifact Registry Writer - push Docker images\ngcloud projects add-iam-policy-binding YOUR_PROJECT_ID \\\n  --member=\"serviceAccount:$SA_EMAIL\" \\\n  --role=\"roles/artifactregistry.writer\"\n\n# Service Account User - deploy as compute service account\n# First, find your compute service account number:\ngcloud projects describe YOUR_PROJECT_ID --format=\"value(projectNumber)\"\n# Then grant permission (replace PROJECT_NUMBER):\ngcloud iam service-accounts add-iam-policy-binding \\\n  PROJECT_NUMBER-compute@developer.gserviceaccount.com \\\n  --member=\"serviceAccount:$SA_EMAIL\" \\\n  --role=\"roles/iam.serviceAccountUser\" \\\n  --project=YOUR_PROJECT_ID\n```\n\n### 6. Create and Download Service Account Key\n\n```bash\ngcloud iam service-accounts keys create ~/github-actions-key.json \\\n  --iam-account=github-actions@YOUR_PROJECT_ID.iam.gserviceaccount.com \\\n  --project=YOUR_PROJECT_ID\n\n# View the key (copy this for GitHub secrets)\ncat ~/github-actions-key.json\n\n# IMPORTANT: Delete the local key file after copying to GitHub\nrm ~/github-actions-key.json\n```\n\n## GitHub Repository Setup\n\n### Required Secrets\n\nGo to GitHub → Repository → Settings → Secrets and variables → Actions\n\nAdd these secrets:\n\n| Secret Name | Value |\n|-------------|-------|\n| `GCP_PROJECT_ID` | Your GCP project ID (e.g., `my-project-123`) |\n| `GCP_SA_KEY` | The entire JSON content of the service account key |\n| `ANTHROPIC_API_KEY` | (Optional) API key for Anthropic |\n| `GOOGLE_API_KEY` | (Optional) API key for Google AI |\n| `OPENAI_API_KEY` | (Optional) API key for OpenAI |\n| `PERPLEXITY_API_KEY` | (Optional) API key for Perplexity |\n\n## GitHub Actions Workflow\n\nCreate `.github/workflows/deploy-backend.yml`:\n\n```yaml\nname: Deploy Backend to Cloud Run\n\non:\n  push:\n    branches:\n      - main\n    paths:\n      - 'src/**'\n      - 'pyproject.toml'\n      - 'Dockerfile'\n      - '.github/workflows/deploy-backend.yml'\n  workflow_dispatch:  # Allow manual trigger\n\nenv:\n  PROJECT_ID: ${{ secrets.GCP_PROJECT_ID }}\n  SERVICE_NAME: your-api-name\n  ARTIFACT_REPO: your-repo-name\n  REGION: us-central1\n\njobs:\n  deploy:\n    runs-on: ubuntu-latest\n\n    permissions:\n      contents: read\n      id-token: write\n\n    steps:\n      - name: Checkout code\n        uses: actions/checkout@v4\n\n      - name: Authenticate to Google Cloud\n        uses: google-github-actions/auth@v2\n        with:\n          credentials_json: ${{ secrets.GCP_SA_KEY }}\n\n      - name: Set up Cloud SDK\n        uses: google-github-actions/setup-gcloud@v2\n        with:\n          project_id: ${{ env.PROJECT_ID }}\n\n      - name: Configure Docker for Artifact Registry\n        run: |\n          gcloud auth configure-docker ${{ env.REGION }}-docker.pkg.dev --quiet\n\n      - name: Build and push Docker image\n        run: |\n          docker build -t ${{ env.REGION }}-docker.pkg.dev/${{ env.PROJECT_ID }}/${{ env.ARTIFACT_REPO }}/${{ env.SERVICE_NAME }}:${{ github.sha }} .\n          docker push ${{ env.REGION }}-docker.pkg.dev/${{ env.PROJECT_ID }}/${{ env.ARTIFACT_REPO }}/${{ env.SERVICE_NAME }}:${{ github.sha }}\n\n      - name: Deploy to Cloud Run\n        env:\n          ANTHROPIC_KEY: ${{ secrets.ANTHROPIC_API_KEY }}\n          GOOGLE_KEY: ${{ secrets.GOOGLE_API_KEY }}\n        run: |\n          gcloud run deploy ${{ env.SERVICE_NAME }} \\\n            --image ${{ env.REGION }}-docker.pkg.dev/${{ env.PROJECT_ID }}/${{ env.ARTIFACT_REPO }}/${{ env.SERVICE_NAME }}:${{ github.sha }} \\\n            --platform managed \\\n            --region ${{ env.REGION }} \\\n            --allow-unauthenticated \\\n            --set-env-vars \"ANTHROPIC_API_KEY=${ANTHROPIC_KEY},GOOGLE_API_KEY=${GOOGLE_KEY}\" \\\n            --memory 2Gi \\\n            --cpu 1 \\\n            --min-instances 0 \\\n            --max-instances 3 \\\n            --timeout 300 \\\n            --cpu-boost\n\n      - name: Get Cloud Run URL\n        id: get-url\n        run: |\n          URL=$(gcloud run services describe ${{ env.SERVICE_NAME }} --region ${{ env.REGION }} --format 'value(status.url)')\n          echo \"service_url=$URL\" >> $GITHUB_OUTPUT\n          echo \"Backend deployed to: $URL\"\n```\n\n## Dockerfile for FastAPI\n\n```dockerfile\nFROM python:3.11-slim\n\nWORKDIR /app\n\n# Install system dependencies\nRUN apt-get update && apt-get install -y \\\n    gcc \\\n    && rm -rf /var/lib/apt/lists/*\n\n# Copy project files\nCOPY pyproject.toml .\nCOPY src/ ./src/\nCOPY config.yaml .  # If you have a config file\n\n# Install Python dependencies\nRUN pip install --no-cache-dir -e .\n\n# Download spaCy model if using NER\nRUN python -m spacy download en_core_web_sm\n\n# Create any needed directories\nRUN mkdir -p ./data\n\n# Expose port (Cloud Run uses PORT env var)\nEXPOSE 8080\n\n# Set Python path\nENV PYTHONPATH=/app\n\n# Disable Python buffering for better logging\nENV PYTHONUNBUFFERED=1\n\n# Run the API server - use shell form to respect PORT env var\nCMD uvicorn src.api:app --host 0.0.0.0 --port ${PORT:-8080}\n```\n\n## Common Dependencies (pyproject.toml)\n\nFor FastAPI with file uploads:\n\n```toml\ndependencies = [\n    \"fastapi>=0.109.0\",\n    \"uvicorn[standard]>=0.27.0\",\n    \"pydantic>=2.0.0\",\n    \"python-multipart>=0.0.6\",  # REQUIRED for file uploads (UploadFile)\n]\n```\n\n---\n\n## Troubleshooting Guide\n\n### Error: \"Container failed to start on port 8080\"\n\n**Symptoms:**\n- Deployment fails with timeout\n- \"Container failed to start and listen on the port\"\n\n**Solutions:**\n\n1. **Check logs for the actual error:**\n   ```bash\n   gcloud logging read \"resource.type=cloud_run_revision AND resource.labels.service_name=YOUR_SERVICE\" \\\n     --project=YOUR_PROJECT_ID \\\n     --limit=50 \\\n     --format=\"table(timestamp,severity,textPayload)\"\n   ```\n\n2. **Missing dependency:** Look for `RuntimeError` or `ImportError` in logs\n   - Common: `python-multipart` required for `UploadFile`\n   - Common: spaCy model not downloaded\n\n3. **Use lazy imports:** Heavy imports at module level can cause startup timeout\n   ```python\n   # Bad - imports at module level\n   from .heavy_module import HeavyClass\n\n   # Good - lazy import when needed\n   def get_heavy_class():\n       from .heavy_module import HeavyClass\n       return HeavyClass\n   ```\n\n4. **Increase memory/CPU:**\n   ```yaml\n   --memory 2Gi \\\n   --cpu 1 \\\n   --cpu-boost\n   ```\n\n### Error: \"Permission denied on Artifact Registry\"\n\n**Symptoms:**\n- `artifactregistry.repositories.uploadArtifacts denied`\n- `artifactregistry.repositories.downloadArtifacts denied`\n\n**Solution:**\n```bash\n# Grant Artifact Registry Writer role\ngcloud artifacts repositories add-iam-policy-binding YOUR_REPO_NAME \\\n  --location=us-central1 \\\n  --member=\"serviceAccount:github-actions@YOUR_PROJECT_ID.iam.gserviceaccount.com\" \\\n  --role=\"roles/artifactregistry.writer\" \\\n  --project=YOUR_PROJECT_ID\n```\n\n### Error: \"Project does not exist\" or Wrong Project\n\n**Symptoms:**\n- Deploys to wrong project\n- \"projects/XXX does not exist\"\n\n**Root Cause:** The service account key (`GCP_SA_KEY`) contains a `project_id` field that determines which project gcloud authenticates to.\n\n**Solution:**\n1. Verify the project in your key matches `GCP_PROJECT_ID`:\n   ```bash\n   # Check project in your key\n   cat your-key.json | grep project_id\n   ```\n\n2. If mismatched, create a NEW service account in the CORRECT project and update `GCP_SA_KEY`\n\n3. After updating secrets, push a new commit (re-running old workflows uses cached secrets)\n\n### Error: \"Cloud Run Service Agent must have permission to read image\"\n\n**Symptoms:**\n- Image pushed successfully\n- Deploy fails with 403 Forbidden on image pull\n\n**Root Cause:** Cross-project deployment - image in Project A, deploying to Project B\n\n**Solution:** Keep everything in one project. Create service account in the same project as Artifact Registry.\n\n### GitHub Actions Not Picking Up New Secrets\n\n**Symptoms:**\n- Updated secret but workflow still uses old value\n- Same error after changing secrets\n\n**Solution:**\n1. Push a new commit (don't just re-run workflow)\n2. The commit must change a file in the `paths` filter\n3. Or use `workflow_dispatch` and click \"Run workflow\" (after fresh page load)\n\n---\n\n## Useful Commands\n\n### View Cloud Run Logs\n```bash\ngcloud logging read \"resource.type=cloud_run_revision AND resource.labels.service_name=YOUR_SERVICE\" \\\n  --project=YOUR_PROJECT_ID \\\n  --limit=100\n```\n\n### List Cloud Run Services\n```bash\ngcloud run services list --project=YOUR_PROJECT_ID\n```\n\n### Get Service URL\n```bash\ngcloud run services describe YOUR_SERVICE \\\n  --region=us-central1 \\\n  --project=YOUR_PROJECT_ID \\\n  --format='value(status.url)'\n```\n\n### Delete a Service\n```bash\ngcloud run services delete YOUR_SERVICE \\\n  --region=us-central1 \\\n  --project=YOUR_PROJECT_ID\n```\n\n### List Artifact Registry Images\n```bash\ngcloud artifacts docker images list \\\n  us-central1-docker.pkg.dev/YOUR_PROJECT_ID/YOUR_REPO_NAME\n```\n\n### Check IAM Permissions\n```bash\ngcloud projects get-iam-policy YOUR_PROJECT_ID \\\n  --flatten=\"bindings[].members\" \\\n  --filter=\"bindings.members:serviceAccount:github-actions@YOUR_PROJECT_ID.iam.gserviceaccount.com\"\n```\n\n---\n\n## Connecting Frontend (Netlify)\n\nAfter successful deployment, connect your frontend to the Cloud Run backend:\n\n### 1. Get the Cloud Run URL\n\n```bash\ngcloud run services describe YOUR_SERVICE \\\n  --region=us-central1 \\\n  --project=YOUR_PROJECT_ID \\\n  --format='value(status.url)'\n```\n\nThis returns a URL like: `https://your-service-abc123-uc.a.run.app`\n\n### 2. Set Netlify Environment Variable\n\n1. Go to **Netlify** → Your Site → **Site configuration** → **Environment variables**\n2. Add a new variable:\n   - **Key:** `VITE_API_URL`\n   - **Value:** Your Cloud Run URL (e.g., `https://your-service-abc123-uc.a.run.app`)\n3. **Redeploy** your site for the change to take effect (Deploys → Trigger deploy → Deploy site)\n\n### 3. Use in Frontend Code\n\n```typescript\n// In your frontend code\nconst API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000';\n\n// Make API calls\nconst response = await fetch(`${API_URL}/health`);\n```\n\n### 4. Verify Connection\n\nTest the health endpoint directly:\n```bash\ncurl https://your-service-abc123-uc.a.run.app/health\n```\n\nShould return: `{\"status\":\"healthy\"}`\n\n---\n\n## Checklist for New Projects\n\n- [ ] GCP project created with billing enabled\n- [ ] APIs enabled (Cloud Run, Artifact Registry, Cloud Build)\n- [ ] Artifact Registry repository created\n- [ ] Service account created in the SAME project\n- [ ] Service account has: `run.admin`, `artifactregistry.writer`, `iam.serviceAccountUser`\n- [ ] Service account key generated and added to GitHub as `GCP_SA_KEY`\n- [ ] `GCP_PROJECT_ID` secret matches the project in the service account key\n- [ ] Dockerfile uses `PORT` environment variable (Cloud Run requirement)\n- [ ] `python-multipart` included if using file uploads\n- [ ] Heavy imports are lazy-loaded to avoid startup timeout\n",
       "contentPreview": "# Google Cloud Run Deployment Guide  A comprehensive guide for deploying Python/FastAPI backends to Google Cloud Run via GitHub Actions.  ## Prerequisites  - Google Cloud account with billing enabled - GitHub repository - `gcloud` CLI installed locally  ## Initial GCP Setup  ### 1. Create or Select",
       "category": "preferences",
-      "visibility": "public"
+      "visibility": "private"
     },
     {
-      "path": "/home/runner/work/code-wiki/code-wiki/wiki/preferences/mobile-app-store.md",
+      "path": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/code-wiki/wiki/preferences/mobile-app-store.md",
       "relativePath": "preferences/mobile-app-store.md",
       "title": "mobile-app-store",
       "tags": [],
-      "content": "# Mobile App Store Preparation\n\nNotes for preparing Flutter apps for iOS App Store and Android Play Store submission.\nValidated against: Flutter 3.38.7 stable, Xcode 26.2, macOS 26.3, CocoaPods 1.16.2 (Homebrew).\n\n---\n\n## iOS App Store — Required Code Changes\n\nBefore submitting a Flutter app to the iOS App Store, make these changes in the repo:\n\n### 1. Bundle ID\nReplace the default `com.example.<appname>` with your real bundle ID everywhere:\n\n- `android/app/build.gradle.kts` — `namespace` and `applicationId`\n- `ios/Runner.xcodeproj/project.pbxproj` — all occurrences of `PRODUCT_BUNDLE_IDENTIFIER`\n  (typically 5 times: 2× for Runner, 3× for RunnerTests)\n\nUse lowercase for bundle IDs: `com.anideasmith.weirdchess` not `com.AnIdeaSmith.WeirdChess`.\n\n### 2. iOS Deployment Target\nApple requires iOS 16.0+ for new App Store submissions (as of 2025/2026).\n\nIn `ios/Runner.xcodeproj/project.pbxproj`, set all occurrences of:\n```\nIPHONEOS_DEPLOYMENT_TARGET = 13.0;\n```\nto `16.0` (typically 3 occurrences at the project level).\n\nAlso uncomment/set in `ios/Podfile`:\n```ruby\nplatform :ios, '16.0'\n```\n\n### 3. Display Name\n- `ios/Runner/Info.plist` — set `CFBundleDisplayName` to the properly capitalised name\n- `android/app/src/main/AndroidManifest.xml` — set `android:label=\"YourAppName\"`\n\n### 4. iOS Icon — Remove Alpha Channel\nApp Store Connect rejects icons with an alpha channel. In `pubspec.yaml`:\n```yaml\nflutter_launcher_icons:\n  android: true\n  ios: true\n  remove_alpha_ios: true          # <-- required\n  image_path: \"assets/images/icon_1024.png\"\n  web:\n    generate: true\n    image_path: \"assets/images/icon_1024.png\"\n    favicon_image_path: \"assets/images/icon_1024.png\"\n```\nThen regenerate: `dart run flutter_launcher_icons`\n\n### 5. INTERNET Permission (Android)\nFlutter's HTTP package needs this explicitly declared in `android/app/src/main/AndroidManifest.xml`:\n```xml\n<manifest xmlns:android=\"http://schemas.android.com/apk/res/android\">\n    <uses-permission android:name=\"android.permission.INTERNET\"/>\n    ...\n```\n\n### 6. Privacy Manifest (iOS)\nRequired for any package that uses `NSUserDefaults` (e.g. `shared_preferences`).\nCreate `ios/Runner/PrivacyInfo.xcprivacy`:\n```xml\n<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<!DOCTYPE plist PUBLIC \"-//Apple//DTD PLIST 1.0//EN\" \"http://www.apple.com/DTDs/PropertyList-1.0.dtd\">\n<plist version=\"1.0\">\n<dict>\n    <key>NSPrivacyAccessedAPITypes</key>\n    <array>\n        <dict>\n            <key>NSPrivacyAccessedAPIType</key>\n            <string>NSPrivacyAccessedAPICategoryUserDefaults</string>\n            <key>NSPrivacyAccessedAPITypeReasons</key>\n            <array>\n                <string>CA92.1</string>\n            </array>\n        </dict>\n    </array>\n    <key>NSPrivacyCollectedDataTypes</key>\n    <array/>\n    <key>NSPrivacyTracking</key>\n    <false/>\n    <key>NSPrivacyTrackingDomains</key>\n    <array/>\n</dict>\n</plist>\n```\n\nAlso add the file to `ios/Runner.xcodeproj/project.pbxproj` in three places:\n1. A `PBXFileReference` entry\n2. The Runner `PBXGroup` children list\n3. The Runner `PBXResourcesBuildPhase` files list\n\n---\n\n## Known Issue: Homebrew LLVM Clang Breaks iOS Builds on Xcode 26\n\n### Symptom\n`flutter build ios` fails immediately with a cascade of parse errors:\n```\nParse Issue (Xcode): Module '_c_standard_library_obsolete' requires feature\n  'found_incompatible_headers__check_search_paths'\n  .../iPhoneOS26.2.sdk/usr/include/DarwinFoundation1.modulemap:287:7\n\nParse Issue (Xcode): Could not build module '_Builtin_float'\nParse Issue (Xcode): Could not build module 'CoreFoundation'\nParse Issue (Xcode): Could not build module 'Foundation'\n.../Pods-Runner-dummy.m:0:8\n```\n\nThe Xcode build completes in 1–5 seconds (too fast — nothing actually compiled).\n\n### Root Cause\nXcode 26 rewrote its C standard library module maps (`DarwinFoundation1.modulemap`).\nIf Homebrew LLVM (`/opt/homebrew/opt/llvm/bin/clang`) appears before Xcode's own clang\non the `PATH`, Xcode resolves `CC` to the Homebrew clang. The Homebrew clang does not\nunderstand Xcode 26's new SDK module maps, causing all Objective-C compilation to fail.\n\n**How to confirm:** Run `xcodebuild` with verbose output and check which clang binary is\nbeing invoked for C/ObjC compilation. If it shows `/opt/homebrew/opt/llvm/bin/clang`,\nthis is the issue.\n\n### Fix\nForce Xcode's own toolchain clang via build settings in two places:\n\n**1. `ios/Runner.xcodeproj/project.pbxproj`** — add to both project-level Debug and Release\n`XCBuildConfiguration` sections:\n```\nCC = \"$(DT_TOOLCHAIN_DIR)/usr/bin/clang\";\nCXX = \"$(DT_TOOLCHAIN_DIR)/usr/bin/clang++\";\n```\n\n**2. `ios/Podfile`** — add to the `post_install` hook:\n```ruby\npost_install do |installer|\n  installer.pods_project.targets.each do |target|\n    flutter_additional_ios_build_settings(target)\n    target.build_configurations.each do |config|\n      config.build_settings['IPHONEOS_DEPLOYMENT_TARGET'] = '16.0'\n      config.build_settings['CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER'] = 'NO'\n      # Force Xcode's own clang rather than any Homebrew-installed LLVM on the PATH\n      config.build_settings['CC'] = '$(DT_TOOLCHAIN_DIR)/usr/bin/clang'\n      config.build_settings['CXX'] = '$(DT_TOOLCHAIN_DIR)/usr/bin/clang++'\n    end\n  end\nend\n```\n\nAfter applying the fix, delete `ios/Pods/`, `ios/Podfile.lock`, and the Xcode DerivedData\nfor the project (`~/Library/Developer/Xcode/DerivedData/Runner-*/`), then rebuild.\n\n### Alternative (simpler but less portable)\n`brew unlink llvm` removes the Homebrew clang from PATH. Only do this if you don't need\nthe Homebrew LLVM for other projects.\n\n---\n\n## Installing CocoaPods\n\nDo NOT use `sudo gem install cocoapods` on macOS 26+ — the system Ruby is 2.6,\nwhich is too old and the gems directory is locked. Use Homebrew instead:\n```bash\nbrew install cocoapods\n```\n\n---\n\n## Xcode Command Line Tools Setup\n\nAfter installing Xcode from the App Store, you must point the command-line tools at it\n(Flutter doctor will show Xcode as broken until you do this):\n```bash\nsudo xcode-select --switch /Applications/Xcode.app/Contents/Developer\nsudo xcodebuild -runFirstLaunch\n```\n\n---\n\n## Bundle ID and Developer Account Notes\n\n- Bundle ID is **permanent** once registered in App Store Connect — choose carefully.\n- Convention: `com.<brandname>.<appname>` — all lowercase, no spaces.\n- The Apple Developer account **seller/display name** (shown on the App Store) is\n  independent of the bundle ID and can be changed at any time in App Store Connect\n  without affecting any existing app.\n- To change seller name: appstoreconnect.apple.com → Users and Access → your account → edit.\n\n---\n\n## LLM Commentary on Mobile — Proxy Architecture\n\nMobile apps cannot call `/.netlify/functions/…` (a relative URL with no host).\nThe solution is to proxy all mobile requests through the absolute Netlify URL,\nprotected by an app token and IP-based rate limiting.\n\n### How it works\n\n```\niOS/Android app  →  https://weirdchess.netlify.app/.netlify/functions/chess-commentary\n                        ↓  (validates X-App-Token header)\n                        ↓  (rate limits by IP: 30 req / 10 min)\n                        ↓  (uses ANTHROPIC_API_KEY env var)\n                   Anthropic / OpenAI / Google API\n```\n\n- The Netlify function holds your real API key server-side (never in the app binary).\n- The app sends a static `X-App-Token` header compiled in at build time via\n  `--dart-define`. This raises the bar against casual abuse of the endpoint.\n- In-memory IP rate limiting (30 requests / 10 min) limits burst usage per device.\n\n### Setup steps\n\n**1. Generate a secret token** (run this once, save the output):\n```bash\nopenssl rand -hex 32\n# e.g. a1b2c3d4e5f6789012345678901234567890abcdef0123456789012345678901\n```\n\n**2. Add the token to Netlify** (this is where the real validation lives):\n- Netlify Dashboard → your site → Site configuration → Environment variables\n- Add: `APP_SECRET_TOKEN = <your generated value>`\n- Redeploy the site (or it picks up on next deploy)\n\n**3. Build Flutter with the token baked in** (the token is compiled into the binary,\nnot stored in source code):\n```bash\n# iOS release build:\nflutter build ios --release --dart-define=APP_SECRET_TOKEN=<your-token>\n\n# Web release build:\nflutter build web --release --dart-define=APP_SECRET_TOKEN=<your-token>\n\n# Local dev:\nflutter run --dart-define=APP_SECRET_TOKEN=<your-token>\n```\n\n**4. Xcode Archive** — when building via Xcode for App Store upload, the\n`--dart-define` must be passed via the scheme's build arguments:\n- Xcode → Product menu → Scheme → Edit Scheme → Run → Arguments → Additional\n  Arguments: `--dart-define=APP_SECRET_TOKEN=<your-token>`\n- Or set it in `ios/Flutter/Debug.xcconfig` / `Release.xcconfig`:\n  ```\n  DART_DEFINES=APP_SECRET_TOKEN%3D<your-token>\n  ```\n\n### Key files changed\n\n| File | What changed |\n|------|-------------|\n| `lib/services/llm_service.dart` | Added `appToken` to `LlmConfig`; sends `X-App-Token` header in proxy calls |\n| `lib/main.dart` | On mobile, sets absolute Netlify URL + `directMode=false`; reads token via `String.fromEnvironment` |\n| `netlify/functions/chess-commentary.js` | Validates `X-App-Token` header; IP rate limiting 30 req/10 min |\n\n### Protecting against abuse\n\n| Mechanism | What it stops |\n|-----------|---------------|\n| `X-App-Token` header check | Casual URL discovery — requests without the token get 403 |\n| IP rate limiting (30/10 min) | Burst abuse from a single device |\n| Anthropic spending cap | Set at anthropic.com to cap worst-case cost |\n| App-level token in binary | Requires reverse-engineering the app to bypass |\n\n### Long-term upgrades (when adding subscriptions / monetisation)\n\nWhen the app grows to the point of needing per-user quotas or billing:\n\n1. **Apple DeviceCheck / Google Play Integrity** — cryptographically verifies\n   that requests come from a genuine, unmodified copy of your app. Requires a\n   backend call to Apple/Google to validate the device assertion token.\n2. **Cloudflare Workers** with built-in rate limiting (free tier: 100k req/day,\n   per-IP rules as first-class config, no code needed).\n3. **Google Cloud Run** proxy — full control, per-user quotas via Firestore,\n   scales to zero, integrates with Firebase Auth for subscription gating.\n4. **RevenueCat** + **Superwall** — standard Flutter subscription SDKs; pair\n   with Cloud Run backend that checks entitlement before forwarding LLM requests.\n\n---\n\n## Submitting to the App Store (after build succeeds)\n\n1. Open `ios/Runner.xcworkspace` in Xcode (use `.xcworkspace`, not `.xcodeproj`)\n2. Runner target → Signing & Capabilities → select your Apple Developer team\n3. Create the app record in App Store Connect with the correct bundle ID\n4. Xcode menu → Product → Archive\n5. When Organizer opens: Distribute App → App Store Connect → upload\n6. Complete metadata (screenshots, description, age rating) in App Store Connect\n",
-      "contentPreview": "# Mobile App Store Preparation  Notes for preparing Flutter apps for iOS App Store and Android Play Store submission. Validated against: Flutter 3.38.7 stable, Xcode 26.2, macOS 26.3, CocoaPods 1.16.2 (Homebrew).  ---  ## iOS App Store — Required Code Changes  Before submitting a Flutter app to the",
+      "content": "\n# Mobile App Store Preparation\n\nNotes for preparing Flutter and React Native (Expo) apps for iOS App Store and Android Play Store submission.\nValidated against: Flutter 3.38.7 stable, Xcode 26.2, macOS 26.3, CocoaPods 1.16.2 (Homebrew).\n\n---\n\n## Expo Policy\n\nExpo SDK libraries (expo-file-system, expo-sharing, expo-constants, etc.) are permitted\nin React Native projects. They are open-source, free, and do not require an account.\n\n**Do NOT use Expo's cloud build service (EAS Build).** All builds must be done locally\nvia Xcode after `expo prebuild`. Do not add `expo-dev-client` or use Expo Go for\ndevelopment — use the native Xcode build with Metro bundler instead.\n\n---\n\n## React Native (Expo) — Local Build Without Expo Account\n\nFor Expo-based React Native apps, use `expo prebuild` to generate native Xcode project\nfiles locally. This avoids needing an Expo account or EAS Build cloud service. The workflow\nmirrors the familiar Xcode signing/archiving process used for Flutter apps.\n\n### Generating the Xcode project\n\n```bash\ncd mobile\nnpm install\nnpx expo prebuild --platform ios\n```\n\nThis creates an `ios/` directory with a full Xcode workspace.\n\n### Building and submitting\n\n1. Open `ios/<AppName>.xcworkspace` in Xcode (use `.xcworkspace`, not `.xcodeproj`)\n2. Select the app target → Signing & Capabilities → set your Apple Developer team\n3. Product → Archive\n4. Organizer → Validate App → Distribute App → App Store Connect → Upload\n\n### Passing the APP_SECRET_TOKEN at build time\n\nIn the Expo `app.config.js`, the token is read from `process.env.APP_SECRET_TOKEN` into\n`extra.appSecretToken`. The `expo prebuild` step bakes whatever is in `app.config.js` into\nthe native project. To include the token:\n\n```bash\nAPP_SECRET_TOKEN=<your-token> npx expo prebuild --platform ios --clean\n```\n\nThe app code reads it at runtime via `expo-constants`:\n```typescript\nimport Constants from 'expo-constants';\nconst token = Constants.expoConfig?.extra?.appSecretToken || '';\n```\n\n### Key differences from Flutter workflow\n\n| | Flutter | Expo (React Native) |\n|---|---------|-------------------|\n| Native project generation | Built-in (`ios/Runner/`) | `npx expo prebuild` generates `ios/` |\n| Bundle ID config | `project.pbxproj` manual edits | `app.config.js` → `ios.bundleIdentifier` |\n| Privacy manifest | Manual `.xcprivacy` file + pbxproj edits | `app.config.js` → `ios.privacyManifests` |\n| Deployment target | Manual in `Podfile` + `project.pbxproj` | Handled by Expo SDK version |\n| App icon | `flutter_launcher_icons` package | Place 1024x1024 `icon.png` in `assets/` |\n| Build token passing | `--dart-define=KEY=value` | `APP_SECRET_TOKEN=x npx expo prebuild` |\n\n### No Expo account needed\n\nEAS Build (cloud) is optional. All builds can be done locally via Xcode after `expo prebuild`.\nThe `eas.json` file is only needed if using EAS cloud builds.\n\n---\n\n## iOS App Store — Required Code Changes (Flutter)\n\nBefore submitting a Flutter app to the iOS App Store, make these changes in the repo:\n\n### 1. Bundle ID\nReplace the default `com.example.<appname>` with your real bundle ID everywhere:\n\n- `android/app/build.gradle.kts` — `namespace` and `applicationId`\n- `ios/Runner.xcodeproj/project.pbxproj` — all occurrences of `PRODUCT_BUNDLE_IDENTIFIER`\n  (typically 5 times: 2× for Runner, 3× for RunnerTests)\n\nUse lowercase for bundle IDs: `com.anideasmith.weirdchess` not `com.AnIdeaSmith.WeirdChess`.\n\n### 2. iOS Deployment Target\nApple requires iOS 16.0+ for new App Store submissions (as of 2025/2026).\n\nIn `ios/Runner.xcodeproj/project.pbxproj`, set all occurrences of:\n```\nIPHONEOS_DEPLOYMENT_TARGET = 13.0;\n```\nto `16.0` (typically 3 occurrences at the project level).\n\nAlso uncomment/set in `ios/Podfile`:\n```ruby\nplatform :ios, '16.0'\n```\n\n### 3. Display Name\n- `ios/Runner/Info.plist` — set `CFBundleDisplayName` to the properly capitalised name\n- `android/app/src/main/AndroidManifest.xml` — set `android:label=\"YourAppName\"`\n\n### 4. iOS Icon — Remove Alpha Channel\nApp Store Connect rejects icons with an alpha channel. In `pubspec.yaml`:\n```yaml\nflutter_launcher_icons:\n  android: true\n  ios: true\n  remove_alpha_ios: true          # <-- required\n  image_path: \"assets/images/icon_1024.png\"\n  web:\n    generate: true\n    image_path: \"assets/images/icon_1024.png\"\n    favicon_image_path: \"assets/images/icon_1024.png\"\n```\nThen regenerate: `dart run flutter_launcher_icons`\n\n### 5. INTERNET Permission (Android)\nFlutter's HTTP package needs this explicitly declared in `android/app/src/main/AndroidManifest.xml`:\n```xml\n<manifest xmlns:android=\"http://schemas.android.com/apk/res/android\">\n    <uses-permission android:name=\"android.permission.INTERNET\"/>\n    ...\n```\n\n### 6. Privacy Manifest (iOS)\nRequired for any package that uses `NSUserDefaults` (e.g. `shared_preferences`).\nCreate `ios/Runner/PrivacyInfo.xcprivacy`:\n```xml\n<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<!DOCTYPE plist PUBLIC \"-//Apple//DTD PLIST 1.0//EN\" \"http://www.apple.com/DTDs/PropertyList-1.0.dtd\">\n<plist version=\"1.0\">\n<dict>\n    <key>NSPrivacyAccessedAPITypes</key>\n    <array>\n        <dict>\n            <key>NSPrivacyAccessedAPIType</key>\n            <string>NSPrivacyAccessedAPICategoryUserDefaults</string>\n            <key>NSPrivacyAccessedAPITypeReasons</key>\n            <array>\n                <string>CA92.1</string>\n            </array>\n        </dict>\n    </array>\n    <key>NSPrivacyCollectedDataTypes</key>\n    <array/>\n    <key>NSPrivacyTracking</key>\n    <false/>\n    <key>NSPrivacyTrackingDomains</key>\n    <array/>\n</dict>\n</plist>\n```\n\nAlso add the file to `ios/Runner.xcodeproj/project.pbxproj` in three places:\n1. A `PBXFileReference` entry\n2. The Runner `PBXGroup` children list\n3. The Runner `PBXResourcesBuildPhase` files list\n\n---\n\n## Known Issue: Homebrew LLVM Clang Breaks iOS Builds on Xcode 26\n\n### Symptom\n`flutter build ios` fails immediately with a cascade of parse errors:\n```\nParse Issue (Xcode): Module '_c_standard_library_obsolete' requires feature\n  'found_incompatible_headers__check_search_paths'\n  .../iPhoneOS26.2.sdk/usr/include/DarwinFoundation1.modulemap:287:7\n\nParse Issue (Xcode): Could not build module '_Builtin_float'\nParse Issue (Xcode): Could not build module 'CoreFoundation'\nParse Issue (Xcode): Could not build module 'Foundation'\n.../Pods-Runner-dummy.m:0:8\n```\n\nThe Xcode build completes in 1–5 seconds (too fast — nothing actually compiled).\n\n### Root Cause\nXcode 26 rewrote its C standard library module maps (`DarwinFoundation1.modulemap`).\nIf Homebrew LLVM (`/opt/homebrew/opt/llvm/bin/clang`) appears before Xcode's own clang\non the `PATH`, Xcode resolves `CC` to the Homebrew clang. The Homebrew clang does not\nunderstand Xcode 26's new SDK module maps, causing all Objective-C compilation to fail.\n\n**How to confirm:** Run `xcodebuild` with verbose output and check which clang binary is\nbeing invoked for C/ObjC compilation. If it shows `/opt/homebrew/opt/llvm/bin/clang`,\nthis is the issue.\n\n### Fix\nForce Xcode's own toolchain clang via build settings in two places:\n\n**1. `ios/Runner.xcodeproj/project.pbxproj`** — add to both project-level Debug and Release\n`XCBuildConfiguration` sections:\n```\nCC = \"$(DT_TOOLCHAIN_DIR)/usr/bin/clang\";\nCXX = \"$(DT_TOOLCHAIN_DIR)/usr/bin/clang++\";\n```\n\n**2. `ios/Podfile`** — add to the `post_install` hook:\n```ruby\npost_install do |installer|\n  installer.pods_project.targets.each do |target|\n    flutter_additional_ios_build_settings(target)\n    target.build_configurations.each do |config|\n      config.build_settings['IPHONEOS_DEPLOYMENT_TARGET'] = '16.0'\n      config.build_settings['CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER'] = 'NO'\n      # Force Xcode's own clang rather than any Homebrew-installed LLVM on the PATH\n      config.build_settings['CC'] = '$(DT_TOOLCHAIN_DIR)/usr/bin/clang'\n      config.build_settings['CXX'] = '$(DT_TOOLCHAIN_DIR)/usr/bin/clang++'\n    end\n  end\nend\n```\n\nAfter applying the fix, delete `ios/Pods/`, `ios/Podfile.lock`, and the Xcode DerivedData\nfor the project (`~/Library/Developer/Xcode/DerivedData/Runner-*/`), then rebuild.\n\n### Alternative (simpler but less portable)\n`brew unlink llvm` removes the Homebrew clang from PATH. Only do this if you don't need\nthe Homebrew LLVM for other projects.\n\n---\n\n## Installing CocoaPods\n\nDo NOT use `sudo gem install cocoapods` on macOS 26+ — the system Ruby is 2.6,\nwhich is too old and the gems directory is locked. Use Homebrew instead:\n```bash\nbrew install cocoapods\n```\n\n---\n\n## Xcode Command Line Tools Setup\n\nAfter installing Xcode from the App Store, you must point the command-line tools at it\n(Flutter doctor will show Xcode as broken until you do this):\n```bash\nsudo xcode-select --switch /Applications/Xcode.app/Contents/Developer\nsudo xcodebuild -runFirstLaunch\n```\n\n---\n\n## Bundle ID and Developer Account Notes\n\n- Bundle ID is **permanent** once registered in App Store Connect — choose carefully.\n- Convention: `com.<brandname>.<appname>` — all lowercase, no spaces.\n- The Apple Developer account **seller/display name** (shown on the App Store) is\n  independent of the bundle ID and can be changed at any time in App Store Connect\n  without affecting any existing app.\n- To change seller name: appstoreconnect.apple.com → Users and Access → your account → edit.\n\n---\n\n## LLM Commentary on Mobile — Proxy Architecture\n\nMobile apps cannot call `/.netlify/functions/…` (a relative URL with no host).\nThe solution is to proxy all mobile requests through the absolute Netlify URL,\nprotected by an app token and IP-based rate limiting.\n\n### How it works\n\n```\niOS/Android app  →  https://weirdchess.netlify.app/.netlify/functions/chess-commentary\n                        ↓  (validates X-App-Token header)\n                        ↓  (rate limits by IP: 30 req / 10 min)\n                        ↓  (uses ANTHROPIC_API_KEY env var)\n                   Anthropic / OpenAI / Google API\n```\n\n- The Netlify function holds your real API key server-side (never in the app binary).\n- The app sends a static `X-App-Token` header compiled in at build time via\n  `--dart-define`. This raises the bar against casual abuse of the endpoint.\n- In-memory IP rate limiting (30 requests / 10 min) limits burst usage per device.\n\n### Setup steps\n\n**1. Generate a secret token** (run this once, save the output):\n```bash\nopenssl rand -hex 32\n# e.g. a1b2c3d4e5f6789012345678901234567890abcdef0123456789012345678901\n```\n\n**2. Add the token to Netlify** (this is where the real validation lives):\n- Netlify Dashboard → your site → Site configuration → Environment variables\n- Add: `APP_SECRET_TOKEN = <your generated value>`\n- Redeploy the site (or it picks up on next deploy)\n\n**3. Build Flutter with the token baked in** (the token is compiled into the binary,\nnot stored in source code):\n```bash\n# iOS release build:\nflutter build ios --release --dart-define=APP_SECRET_TOKEN=<your-token>\n\n# Web release build:\nflutter build web --release --dart-define=APP_SECRET_TOKEN=<your-token>\n\n# Local dev:\nflutter run --dart-define=APP_SECRET_TOKEN=<your-token>\n```\n\n**4. Xcode Archive** — when building via Xcode for App Store upload, the\n`--dart-define` must be passed via the scheme's build arguments:\n- Xcode → Product menu → Scheme → Edit Scheme → Run → Arguments → Additional\n  Arguments: `--dart-define=APP_SECRET_TOKEN=<your-token>`\n- Or set it in `ios/Flutter/Debug.xcconfig` / `Release.xcconfig`:\n  ```\n  DART_DEFINES=APP_SECRET_TOKEN%3D<your-token>\n  ```\n\n### Key files changed\n\n| File | What changed |\n|------|-------------|\n| `lib/services/llm_service.dart` | Added `appToken` to `LlmConfig`; sends `X-App-Token` header in proxy calls |\n| `lib/main.dart` | On mobile, sets absolute Netlify URL + `directMode=false`; reads token via `String.fromEnvironment` |\n| `netlify/functions/chess-commentary.js` | Validates `X-App-Token` header; IP rate limiting 30 req/10 min |\n\n### Protecting against abuse\n\n| Mechanism | What it stops |\n|-----------|---------------|\n| `X-App-Token` header check | Casual URL discovery — requests without the token get 403 |\n| IP rate limiting (30/10 min) | Burst abuse from a single device |\n| Anthropic spending cap | Set at anthropic.com to cap worst-case cost |\n| App-level token in binary | Requires reverse-engineering the app to bypass |\n\n### Long-term upgrades (when adding subscriptions / monetisation)\n\nWhen the app grows to the point of needing per-user quotas or billing:\n\n1. **Apple DeviceCheck / Google Play Integrity** — cryptographically verifies\n   that requests come from a genuine, unmodified copy of your app. Requires a\n   backend call to Apple/Google to validate the device assertion token.\n2. **Cloudflare Workers** with built-in rate limiting (free tier: 100k req/day,\n   per-IP rules as first-class config, no code needed).\n3. **Google Cloud Run** proxy — full control, per-user quotas via Firestore,\n   scales to zero, integrates with Firebase Auth for subscription gating.\n4. **RevenueCat** + **Superwall** — standard Flutter subscription SDKs; pair\n   with Cloud Run backend that checks entitlement before forwarding LLM requests.\n\n---\n\n## Submitting to the App Store (after build succeeds)\n\n**Important:** Complete App Store Connect metadata BEFORE uploading the build.\nThe build upload will succeed without metadata, but you cannot submit for review until\nall required fields are filled in.\n\n### Correct submission order\n\n1. Go to appstoreconnect.apple.com → create the app record with the correct bundle ID\n2. Fill in all required metadata (see section below)\n3. Open `ios/Runner.xcworkspace` in Xcode (use `.xcworkspace`, not `.xcodeproj`)\n4. Runner target → Signing & Capabilities → select your Apple Developer team\n5. Build the release IPA via CLI (passes --dart-define correctly):\n   ```bash\n   flutter build ipa --release --dart-define=APP_SECRET_TOKEN=<token>\n   ```\n6. Open the archive in Xcode Organizer:\n   ```bash\n   open build/ios/archive/Runner.xcarchive\n   ```\n7. Organizer → **Validate App** first (catches signing/metadata issues, ~1–5 min)\n8. Organizer → **Distribute App → App Store Connect → Upload**\n9. Wait 5–30 minutes for Apple to process the build (you'll get an email)\n10. Back in App Store Connect: select the processed build, then **Add for Review**\n\n### Taking screenshots for App Store Connect\n\nApp Store Connect requires specific screenshot dimensions. The current Xcode 26 simulators\n(iPhone 17 Pro, etc.) produce screenshots at sizes Apple does not accept for the required slots.\n\n**Required dimensions and which simulator to use:**\n\n| Slot | Dimensions | Simulator |\n|------|-----------|-----------|\n| 6.5\" Display | 1242×2688 or 1284×2778 | iPhone 13 Pro Max (iOS 17.5) |\n| 6.7\" Display | 1290×2796 | iPhone 15 Pro Max (iOS 17.5) |\n\n**To install an older simulator runtime:**\nXcode → Settings → Platforms → download iOS 17.5 (~5GB). This adds iPhone 13 Pro Max\nand iPhone 15 Pro Max to the simulator list.\n\n**To target a specific simulator from CLI:**\n```bash\nflutter run -d \"iPhone 15 Pro Max\" --dart-define=APP_SECRET_TOKEN=<token>\n```\nWithout `-d`, Flutter may default to building for macOS, which fails with CoreFoundation errors.\n\n**To take screenshots:** `Cmd+S` in the Simulator window — saves to Desktop.\n\n**Quick resize alternative:** If you have screenshots from the wrong simulator, resize in\nmacOS Preview → Tools → Adjust Size → set to 1284×2778.\n\n---\n\n## App Store Connect — Required Metadata\n\n### Text fields\n\n| Field | Notes |\n|-------|-------|\n| **App Name** | Set here, not in Xcode. Must be unique on the App Store. |\n| **Promotional Text** | Up to 170 chars. Shown at top of listing. Can be updated without a new build. |\n| **Description** | Up to 4000 chars. Main marketing copy. |\n| **Keywords** | Up to 100 chars total, comma-separated, no spaces after commas. Don't repeat words already in the app name. |\n| **Support URL** | Required. Any live webpage — GitHub repo, Ko-Fi page, or simple Netlify page works. |\n| **Privacy Policy URL** | Required for all apps. Must be a live URL containing actual privacy policy text. |\n| **Category** | e.g. Games → Board |\n\n### Privacy policy\n\nRequired even for apps that collect no data. Quickest options:\n- Use a free generator (e.g. app-privacy-policy-generator.nisrulz.com) — select no data collected\n- Add a short privacy note to your Ko-Fi page and use that URL\n- Host a simple page on Netlify or GitHub Pages\n\nMinimum text for a no-data-collection app:\n> This app does not collect, store, or share any personal data. Network requests are made\n> solely to retrieve AI-generated content. No user data is transmitted or retained.\n\n### Fields to leave blank / ignore\n\n| Field | Action |\n|-------|--------|\n| App Clip | Leave blank (only for lightweight app experiences) |\n| iMessage App | Leave blank (only if building an iMessage extension) |\n| Routing App Coverage File | Leave blank (only for navigation/mapping apps) |\n| Game Center | Leave unchecked (only if using leaderboards or multiplayer matchmaking) |\n| Sign-In Required | Uncheck (only for apps that require login to use) |\n\n### Encryption question\n\nWhen asked \"What type of encryption algorithms does your app implement?\":\n- Select **\"None of the algorithms mentioned above\"** for apps that only use Apple's\n  built-in HTTPS networking (no custom crypto). No export documentation required.\n\n### Build processing\n\nAfter uploading via Xcode Organizer, the build takes **5–30 minutes** to process before\nit appears in App Store Connect. You'll receive an email when it's ready to select.\n\n---\n\n## App Store Review — Timelines and Notes\n\n- **First submission:** 3–7 days (app reviewed fresh)\n- **Subsequent updates:** Often under 24 hours\n- **Expedited review:** Available for critical bug fixes at appstoreconnect.apple.com\n\n### Ko-Fi / external payment links\nApple guideline 3.1.1 restricts in-app buttons that link directly to external payment or\ndonation flows. A direct \"Donate\" button linking to Ko-Fi may be rejected.\n**Safe approach:** Link to your own website/support page, which can mention Ko-Fi.\n\n### Sign in with Apple\nIf you add any third-party login (Google, email, etc.), Apple **requires** Sign in with\nApple to be offered alongside it. Plan for this before adding any auth system.\n\n### Developer display name\nThe \"Apps by ___\" name shown on the App Store is your account seller name, separate from\nthe bundle ID. Can be changed at any time:\nappstoreconnect.apple.com → Users and Access → your account → edit.\n",
+      "contentPreview": "# Mobile App Store Preparation  Notes for preparing Flutter and React Native (Expo) apps for iOS App Store and Android Play Store submission. Validated against: Flutter 3.38.7 stable, Xcode 26.2, macOS 26.3, CocoaPods 1.16.2 (Homebrew).  ---  ## Expo Policy  Expo SDK libraries (expo-file-system, ex",
       "category": "preferences",
-      "visibility": "public"
+      "visibility": "private"
     },
     {
-      "path": "/home/runner/work/code-wiki/code-wiki/wiki/preferences/standard-setups.md",
+      "path": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/code-wiki/wiki/preferences/standard-setups.md",
       "relativePath": "preferences/standard-setups.md",
       "title": "standard-setups",
       "tags": [],
@@ -99,10 +99,10 @@
       "content": "\n#Standard setups#\n\nNote: this current file itself is available to the local mcp via .claude and is also stored in code-wiki/wiki/preferences.\n\n##Some standard components\n\nWhen asked to build something that can involve several components, either directly or indirectly, check here first to see if something similar has already been used here. Also check to see if something is available that is open source which covers the same basic functionality. If you find anything in either case, present that to the user.\n\n-> Standard AI chat tools - recently using Vercel AI SDK -\n\n-> Signup / Login flow - recently using what is currently in Create. Most recent version should also have forgot password flow\n\n-> Database storage when needed - for always on / fast starts currently using Google cloud, which is still on free tier for me for the next 12 months\n\n-> User credentials and document storage from apps - Cloudflare, which also has worker setups. Previously Supabase was used.\n\n-> Standard UI for saving chats - for now, saving as md files for what's in practice in ValueApe and Metabot. Future note is to see if Vercel has some similar functionality.\n\n-> same code base for web app and mobile - mainly using React with Capacitor. Sometimes using Github Actions for python functionality.\n\n-> Health checks - if the application is going to be used on Netlify or a mobile app, ask first and then integrate the health check currently in \nHealth checks are currently monitored in the free tier of Uptime Robot. \n\n-> API / AI usage tracking - had made my own app for this, in my GitHub as apiTracker. \n\n-> Ko-fi link - my most recent favorite version of this is in the ValueApe app.\n\n-> Doc import / export functions have been set up in the Novelizer app, the EthicalAIditor app and the StoryCircle-dev app\n\n## Standard overall user preferences\n\n-> I as a user generally prefer a code base that can also be relatively conveniently ported to multiple different platforms. So I generally want it work as a web app that I will also host and test on Netlify, and also for it to be relatively easy to wrap the same core code in any needed functionality for porting to iOS and Android and placing in those stores. \n\n-> smaller items that are suitable for users basic information is stored locally on the users' individual device, often via IndexDB\n\n-> Python scripts and similar for more advanced functionality than can conveniently run on the user's browser or mobile app.\n\n-> larger databases or files including custom LLM models I'm typically hosting on Google Drive\n\n->I overall prefer using app resources at either free tier or my current typically low paid tier for services. I currently have free or paid access on:\n\n- Google including Gemini (Pro, at $2/mo for intro 3 months as of Jan 2026)\n- Perplexity (pro at $20)\n- Figma (pro at $20)\n- Open AI (pro at $20)\n- Github Copilot (pro at $39, looking at reducing if I can)\n- Anthropic at $100/mo \n\n- Friendli.ai (free)\n- Supabase (free)\n- Hugging Face (free)\n- Open Router (free)\n\n-> LLMs and other similar items I'm typically preferring to reach on the free tier of Hugging Face\n\n-> For UI and UX, I typically prefer the app to provide some feedback to the user when a user's input search returns no info, or when the user inputs information that does not work for some reason.\n\n-> When developing app code that will be for use with iOS and Android, and Flutter or some similar option is being used, testing might occur on Netlify. To make sure that Netlify hosted versions have the latest changes, rebuild what Netlify will need to display those changes. Make this part of the git repo update process as needed for this.\n\n-> If an app has a logo as part of the UI, such as in the top bar or similar, also make this logo the default thumbnail to appear if the web app is made a shortcut on iOS or Android. Also if the app code is made or remade for potential use in the iOS or Android app stores, have this same thumbnail be the default thumbnail offered. Of course if another thumbnail is created after this point that I want instead, use the thumbnail that I want.\n\n// ignore this for now, until the next double slashes. \n-> Pay attention to if the app being designed, redesigned or used is using real-world data or is creating new / mock / simulation data. Unless the app is for creating art such as fiction, or fill-in data for historical simulations, let the user know if and when this will be part of the design. //\n\n##Some standard features\n\n-> Unless otherwise asked, set up front end so that the web version can be viewed in a narrow browser, such as on a mobile device. \n\n-> Unless otherwise asked, if there are top menu nav items then have them move to a \"hamburger menu\" list when the web version of the app is viewed in a narrow browser, such as on a mobile device. \n\n-> Unless otherwise asked, a default saving and exporting setup is in /Users/jamesbeach/Documents/visual-studio-code/github-copilot/EthicalAIditor \n\n-> If there is any button or similar that causes an action, make the button has useful and appropriate label text\n\n##Standard things to check for\n\n-> When using Netlify, make sure the netlify.toml file will skip scanning for variables, example:\n\n[build.environment]\n  NODE_VERSION = \"20\"\n  SECRETS_SCAN_OMIT_KEYS = \"VITE_API_URL\"\n  \n-> If a requirements.txt file exists or is needed, make sure it matches the current needs for the app. It could be out of date.\n  \n-> Check for typescript errors that might also block Netlify builds \n\n-> For new projects or significant reworkings of existing projects, test via npm locally and fix issues before pushing changes to remote\n  \n-> Check and confirm ahead of time that there will not be CORS violations on Netlify\n\n-> CORS Configuration Gotcha: When using FastAPI (or similar) with CORSMiddleware, wildcard subdomain patterns like `https://*.netlify.app` do NOT work when `allow_credentials=True`. You must specify the exact domain:\n  - BAD: `allow_origins=[\"https://*.netlify.app\"]` with `allow_credentials=True`\n  - GOOD: `allow_origins=[\"https://my-app.netlify.app\"]` with `allow_credentials=True`\n  - ALTERNATIVE: Use `allow_origins=[\"*\"]` with `allow_credentials=False` (less secure, no cookies/auth headers)\n\n-> have a standard way set up for an agent to connect with my github repo if it's set to private\n\n-> For apps that are using data from other sources, once testing is complete and the app is going live such as to Netlify or similar, make sure that the app is using real data and not mock data",
       "contentPreview": "#Standard setups#  Note: this current file itself is available to the local mcp via .claude and is also stored in code-wiki/wiki/preferences.  ##Some standard components  When asked to build something that can involve several components, either directly or indirectly, check here first to see if som",
       "category": "preferences",
-      "visibility": "public"
+      "visibility": "private"
     },
     {
-      "path": "/home/runner/work/code-wiki/code-wiki/wiki/projects/_index.md",
+      "path": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/code-wiki/wiki/projects/_index.md",
       "relativePath": "projects/_index.md",
       "title": "Projects Index",
       "description": "Documentation for active repositories",
@@ -116,7 +116,7 @@
       "visibility": "public"
     },
     {
-      "path": "/home/runner/work/code-wiki/code-wiki/wiki/projects/docsy-to-do.md",
+      "path": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/code-wiki/wiki/projects/docsy-to-do.md",
       "relativePath": "projects/docsy-to-do.md",
       "title": "Docsy to do 1",
       "tags": [],
@@ -127,7 +127,7 @@
       "visibility": "public"
     },
     {
-      "path": "/home/runner/work/code-wiki/code-wiki/wiki/projects/docsy-todo-md.md",
+      "path": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/code-wiki/wiki/projects/docsy-todo-md.md",
       "relativePath": "projects/docsy-todo-md.md",
       "title": "Job Searcher",
       "tags": [],
@@ -138,7 +138,7 @@
       "visibility": "private"
     },
     {
-      "path": "/home/runner/work/code-wiki/code-wiki/wiki/projects/n8n-todo.md",
+      "path": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/code-wiki/wiki/projects/n8n-todo.md",
       "relativePath": "projects/n8n-todo.md",
       "title": "n8n To Do",
       "tags": [],
@@ -149,7 +149,7 @@
       "visibility": "public"
     },
     {
-      "path": "/home/runner/work/code-wiki/code-wiki/wiki/projects/overall-next-steps.md",
+      "path": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/code-wiki/wiki/projects/overall-next-steps.md",
       "relativePath": "projects/overall-next-steps.md",
       "title": "Overall next steps",
       "tags": [],
@@ -160,7 +160,7 @@
       "visibility": "public"
     },
     {
-      "path": "/home/runner/work/code-wiki/code-wiki/wiki/projects/overall-to-do.md",
+      "path": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/code-wiki/wiki/projects/overall-to-do.md",
       "relativePath": "projects/overall-to-do.md",
       "title": "Overall to do",
       "tags": [],
@@ -171,7 +171,7 @@
       "visibility": "public"
     },
     {
-      "path": "/home/runner/work/code-wiki/code-wiki/wiki/projects/repo-locations.md",
+      "path": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/code-wiki/wiki/projects/repo-locations.md",
       "relativePath": "projects/repo-locations.md",
       "title": "Repository Locations",
       "description": "Mapping of repositories to local file system paths and GitHub URLs",
@@ -187,7 +187,7 @@
       "visibility": "public"
     },
     {
-      "path": "/home/runner/work/code-wiki/code-wiki/wiki/projects/valueapetodo.md",
+      "path": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/code-wiki/wiki/projects/valueapetodo.md",
       "relativePath": "projects/valueapetodo.md",
       "title": "Value Ape to do",
       "tags": [],
@@ -198,7 +198,18 @@
       "visibility": "private"
     },
     {
-      "path": "/home/runner/work/code-wiki/code-wiki/wiki/snippets/_index.md",
+      "path": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/code-wiki/wiki/projects/weird-chess-to-do.md",
+      "relativePath": "projects/weird-chess-to-do.md",
+      "title": "Weird Chess To  Do",
+      "tags": [],
+      "updated": "2026-02-23",
+      "content": "\nApp completed and submitted to app store.\n\nUsed ko-fi link, https://ko-fi.com/mindfu/\n\nCreated privacy policy, https://jamesmbeach.com/archives/5604\n\nStore link so far: https://appstoreconnect.apple.com/apps/6759537454/distribution/reviewsubmissions/details/eb044204-305d-4f74-a7a1-3ff67c852527",
+      "contentPreview": "App completed and submitted to app store.  Used ko-fi link, https://ko-fi.com/mindfu/  Created privacy policy, https://jamesmbeach.com/archives/5604  Store link so far: https://appstoreconnect.apple.com/apps/6759537454/distribution/reviewsubmissions/details/eb044204-305d-4f74-a7a1-3ff67c852527",
+      "category": "projects",
+      "visibility": "private"
+    },
+    {
+      "path": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/code-wiki/wiki/snippets/_index.md",
       "relativePath": "snippets/_index.md",
       "title": "Snippets Index",
       "description": "Small, focused code pieces",
@@ -212,7 +223,7 @@
       "visibility": "public"
     },
     {
-      "path": "/home/runner/work/code-wiki/code-wiki/wiki/snippets/code-wiki-overview.md",
+      "path": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/code-wiki/wiki/snippets/code-wiki-overview.md",
       "relativePath": "snippets/code-wiki-overview.md",
       "title": "Code wiki overview",
       "tags": [],
@@ -223,7 +234,7 @@
       "visibility": "public"
     },
     {
-      "path": "/home/runner/work/code-wiki/code-wiki/wiki/templates/_index.md",
+      "path": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/code-wiki/wiki/templates/_index.md",
       "relativePath": "templates/_index.md",
       "title": "Templates Index",
       "description": "Project and file starters",
@@ -238,7 +249,7 @@
       "visibility": "public"
     },
     {
-      "path": "/home/runner/work/code-wiki/code-wiki/wiki/utilities/_index.md",
+      "path": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/code-wiki/wiki/utilities/_index.md",
       "relativePath": "utilities/_index.md",
       "title": "Utilities Index",
       "description": "Standalone helper functions and utilities",
@@ -250,39 +261,156 @@
       "contentPreview": "# Utilities  This category contains standalone helper functions and utilities.  ## What belongs here  - Date/time helpers - String manipulation utilities - Array/object utilities - Validation functions - Formatting utilities - Type guards and type utilities - Math/calculation helpers  ## Adding new",
       "category": "utilities",
       "visibility": "public"
-    },
-    {
-      "path": "wiki/projects/weird-chess-to-do.md",
-      "relativePath": "projects/weird-chess-to-do.md",
-      "title": "Weird Chess To  Do",
-      "tags": [],
-      "updated": "2026-02-23",
-      "content": "App completed and submitted to app store.\n\nUsed ko-fi link, https://ko-fi.com/mindfu/\n\nCreated privacy policy, https://jamesmbeach.com/archives/5604\n\nStore link so far: https://appstoreconnect.apple.com/apps/6759537454/distribution/reviewsubmissions/details/eb044204-305d-4f74-a7a1-3ff67c852527",
-      "contentPreview": "App completed and submitted to app store.  Used ko-fi link, https://ko-fi.com/mindfu/  Created privacy policy, https://jamesmbeach.com/archives/5604  Store link so far: https://appstoreconnect.apple.com/apps/6759537454/distribution/reviewsubmissions/details/eb044204-305d-4f74-a7a1-3ff67c852527",
-      "category": "projects",
-      "visibility": "private"
     }
   ],
   "repos": [
     {
-      "name": "weirdchess",
-      "description": "A game with 5 variants of 10x10 chess.",
-      "githubUrl": "https://github.com/mindfu23/weirdchess",
+      "name": "Metabot",
+      "description": "A bot that will take any query and send it to at least 4 different current AIs. This currently is Chat GPT, Anthropic's Claude, Google's Gemini and Perplexity AI. It will then provide a synthesis and summary of the received information, by default via Perplexity but also user-configurable for any other AI to be the summary agent.",
+      "githubUrl": "https://github.com/mindfu23/Metabot",
       "languages": [
-        "JavaScript"
+        "TypeScript"
       ],
-      "lastCommitDate": "2026-02-23T00:14:01Z",
+      "lastCommitDate": "2026-02-23T19:58:06Z",
       "status": "synced",
-      "visibility": "public",
-      "localPath": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/weirdchess",
+      "visibility": "private",
+      "localPath": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/Metabot",
       "markdownFiles": [
         {
-          "relativePath": "ios/Runner/Assets.xcassets/LaunchImage.imageset/README.md",
+          "relativePath": "API.md",
+          "name": "API.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "ARCHITECTURE.md",
+          "name": "ARCHITECTURE.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "CONTRIBUTING.md",
+          "name": "CONTRIBUTING.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "DEPLOYMENT.md",
+          "name": "DEPLOYMENT.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "DOCKER.md",
+          "name": "DOCKER.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "figma-export/README.md",
           "name": "README.md",
           "fileType": "md"
         },
         {
+          "relativePath": "figma-export/src/Attributions.md",
+          "name": "Attributions.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "figma-export/src/guidelines/Guidelines.md",
+          "name": "Guidelines.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "IMPLEMENTATION_SUMMARY.md",
+          "name": "IMPLEMENTATION_SUMMARY.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "MCP_INTEGRATION.md",
+          "name": "MCP_INTEGRATION.md",
+          "fileType": "md"
+        },
+        {
           "relativePath": "README.md",
+          "name": "README.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "VERIFICATION.md",
+          "name": "VERIFICATION.md",
+          "fileType": "md"
+        }
+      ]
+    },
+    {
+      "name": "ValueApe",
+      "githubUrl": "https://github.com/mindfu23/ValueApe",
+      "languages": [
+        "TypeScript"
+      ],
+      "lastCommitDate": "2026-02-23T06:34:53Z",
+      "status": "synced",
+      "visibility": "private",
+      "localPath": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/ValueApe",
+      "markdownFiles": [
+        {
+          "relativePath": "autotrade-proposed-code.md",
+          "name": "autotrade-proposed-code.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "docs/architecture.md",
+          "name": "architecture.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "docs/DATA_PROVIDERS.md",
+          "name": "DATA_PROVIDERS.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "docs/finrl-integration.md",
+          "name": "finrl-integration.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "docs/INTEGRATION_EXAMPLES.md",
+          "name": "INTEGRATION_EXAMPLES.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "docs/REAL_TIME_DATA.md",
+          "name": "REAL_TIME_DATA.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "docs/schwab-integration.md",
+          "name": "schwab-integration.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "docs/SUPABASE_SETUP.md",
+          "name": "SUPABASE_SETUP.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "netlify/functions/requirements.txt",
+          "name": "requirements.txt",
+          "fileType": "txt"
+        },
+        {
+          "relativePath": "PRD.md",
+          "name": "PRD.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "README.md",
+          "name": "README.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "SECURITY.md",
+          "name": "SECURITY.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "webscraper/README.md",
           "name": "README.md",
           "fileType": "md"
         }
@@ -294,7 +422,7 @@
       "languages": [
         "TypeScript"
       ],
-      "lastCommitDate": "2026-02-23T00:06:20Z",
+      "lastCommitDate": "2026-02-23T05:02:47Z",
       "status": "github-only",
       "visibility": "public",
       "markdownFiles": [
@@ -394,6 +522,11 @@
           "fileType": "md"
         },
         {
+          "relativePath": "wiki/projects/weird-chess-to-do.md",
+          "name": "weird-chess-to-do.md",
+          "fileType": "md"
+        },
+        {
           "relativePath": "wiki/snippets/_index.md",
           "name": "_index.md",
           "fileType": "md"
@@ -416,91 +549,13 @@
       ]
     },
     {
-      "name": "ValueApe",
-      "githubUrl": "https://github.com/mindfu23/ValueApe",
-      "languages": [
-        "TypeScript"
-      ],
-      "lastCommitDate": "2026-02-22T06:23:31Z",
-      "status": "synced",
-      "visibility": "private",
-      "localPath": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/ValueApe",
-      "markdownFiles": [
-        {
-          "relativePath": "autotrade-proposed-code.md",
-          "name": "autotrade-proposed-code.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "docs/architecture.md",
-          "name": "architecture.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "docs/DATA_PROVIDERS.md",
-          "name": "DATA_PROVIDERS.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "docs/finrl-integration.md",
-          "name": "finrl-integration.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "docs/INTEGRATION_EXAMPLES.md",
-          "name": "INTEGRATION_EXAMPLES.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "docs/REAL_TIME_DATA.md",
-          "name": "REAL_TIME_DATA.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "docs/schwab-integration.md",
-          "name": "schwab-integration.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "docs/SUPABASE_SETUP.md",
-          "name": "SUPABASE_SETUP.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "netlify/functions/requirements.txt",
-          "name": "requirements.txt",
-          "fileType": "txt"
-        },
-        {
-          "relativePath": "PRD.md",
-          "name": "PRD.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "README.md",
-          "name": "README.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "SECURITY.md",
-          "name": "SECURITY.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "webscraper/README.md",
-          "name": "README.md",
-          "fileType": "md"
-        }
-      ]
-    },
-    {
       "name": "apiTracker",
       "description": "A simple GUI tracker for health and number of remaining calls for my various APIs used in my other apps.",
       "githubUrl": "https://github.com/mindfu23/apiTracker",
       "languages": [
         "JavaScript"
       ],
-      "lastCommitDate": "2026-02-22T00:21:40Z",
+      "lastCommitDate": "2026-02-23T00:22:12Z",
       "status": "synced",
       "visibility": "public",
       "localPath": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/apiTracker",
@@ -528,6 +583,30 @@
         },
         {
           "relativePath": "platforms/README.md",
+          "name": "README.md",
+          "fileType": "md"
+        }
+      ]
+    },
+    {
+      "name": "weirdchess",
+      "description": "A game with 5 variants of 10x10 chess.",
+      "githubUrl": "https://github.com/mindfu23/weirdchess",
+      "languages": [
+        "JavaScript"
+      ],
+      "lastCommitDate": "2026-02-23T00:14:01Z",
+      "status": "synced",
+      "visibility": "public",
+      "localPath": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/weirdchess",
+      "markdownFiles": [
+        {
+          "relativePath": "ios/Runner/Assets.xcassets/LaunchImage.imageset/README.md",
+          "name": "README.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "README.md",
           "name": "README.md",
           "fileType": "md"
         }
@@ -1535,80 +1614,6 @@
       ]
     },
     {
-      "name": "Metabot",
-      "description": "A bot that will take any query and send it to at least 4 different current AIs. This currently is Chat GPT, Anthropic's Claude, Google's Gemini and Perplexity AI. It will then provide a synthesis and summary of the received information, by default via Perplexity but also user-configurable for any other AI to be the summary agent.",
-      "githubUrl": "https://github.com/mindfu23/Metabot",
-      "languages": [
-        "TypeScript"
-      ],
-      "lastCommitDate": "2026-01-21T21:08:18Z",
-      "status": "synced",
-      "visibility": "private",
-      "localPath": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/Metabot",
-      "markdownFiles": [
-        {
-          "relativePath": "API.md",
-          "name": "API.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "ARCHITECTURE.md",
-          "name": "ARCHITECTURE.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "CONTRIBUTING.md",
-          "name": "CONTRIBUTING.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "DEPLOYMENT.md",
-          "name": "DEPLOYMENT.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "DOCKER.md",
-          "name": "DOCKER.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "figma-export/README.md",
-          "name": "README.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "figma-export/src/Attributions.md",
-          "name": "Attributions.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "figma-export/src/guidelines/Guidelines.md",
-          "name": "Guidelines.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "IMPLEMENTATION_SUMMARY.md",
-          "name": "IMPLEMENTATION_SUMMARY.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "MCP_INTEGRATION.md",
-          "name": "MCP_INTEGRATION.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "README.md",
-          "name": "README.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "VERIFICATION.md",
-          "name": "VERIFICATION.md",
-          "fileType": "md"
-        }
-      ]
-    },
-    {
       "name": "Novelizer",
       "description": "My own personal multi-agentic app for creative novel writing and editing ",
       "githubUrl": "https://github.com/mindfu23/Novelizer",
@@ -2608,6 +2613,6 @@
     "templates",
     "utilities"
   ],
-  "buildTime": "2026-02-23T04:49:38.753Z",
+  "buildTime": "2026-02-23T21:40:42.298Z",
   "version": "1.0.0"
 }

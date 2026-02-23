@@ -1,6 +1,6 @@
 [
   {
-    "path": "/home/runner/work/code-wiki/code-wiki/wiki/projects/_index.md",
+    "path": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/code-wiki/wiki/projects/_index.md",
     "relativePath": "projects/_index.md",
     "title": "Projects Index",
     "description": "Documentation for active repositories",
@@ -14,7 +14,7 @@
     "visibility": "public"
   },
   {
-    "path": "/home/runner/work/code-wiki/code-wiki/wiki/projects/docsy-to-do.md",
+    "path": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/code-wiki/wiki/projects/docsy-to-do.md",
     "relativePath": "projects/docsy-to-do.md",
     "title": "Docsy to do 1",
     "tags": [],
@@ -25,7 +25,7 @@
     "visibility": "public"
   },
   {
-    "path": "/home/runner/work/code-wiki/code-wiki/wiki/projects/docsy-todo-md.md",
+    "path": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/code-wiki/wiki/projects/docsy-todo-md.md",
     "relativePath": "projects/docsy-todo-md.md",
     "title": "Job Searcher",
     "tags": [],
@@ -36,7 +36,7 @@
     "visibility": "private"
   },
   {
-    "path": "/home/runner/work/code-wiki/code-wiki/wiki/projects/n8n-todo.md",
+    "path": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/code-wiki/wiki/projects/n8n-todo.md",
     "relativePath": "projects/n8n-todo.md",
     "title": "n8n To Do",
     "tags": [],
@@ -47,7 +47,7 @@
     "visibility": "public"
   },
   {
-    "path": "/home/runner/work/code-wiki/code-wiki/wiki/projects/overall-next-steps.md",
+    "path": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/code-wiki/wiki/projects/overall-next-steps.md",
     "relativePath": "projects/overall-next-steps.md",
     "title": "Overall next steps",
     "tags": [],
@@ -58,7 +58,7 @@
     "visibility": "public"
   },
   {
-    "path": "/home/runner/work/code-wiki/code-wiki/wiki/projects/overall-to-do.md",
+    "path": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/code-wiki/wiki/projects/overall-to-do.md",
     "relativePath": "projects/overall-to-do.md",
     "title": "Overall to do",
     "tags": [],
@@ -69,7 +69,7 @@
     "visibility": "public"
   },
   {
-    "path": "/home/runner/work/code-wiki/code-wiki/wiki/projects/repo-locations.md",
+    "path": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/code-wiki/wiki/projects/repo-locations.md",
     "relativePath": "projects/repo-locations.md",
     "title": "Repository Locations",
     "description": "Mapping of repositories to local file system paths and GitHub URLs",
@@ -85,13 +85,24 @@
     "visibility": "public"
   },
   {
-    "path": "/home/runner/work/code-wiki/code-wiki/wiki/projects/valueapetodo.md",
+    "path": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/code-wiki/wiki/projects/valueapetodo.md",
     "relativePath": "projects/valueapetodo.md",
     "title": "Value Ape to do",
     "tags": [],
     "updated": "2026-02-22",
     "content": "\nGood chat here for some further possible next steps. \n\nAlso a ToDo in the repo of course.\n\nhttps://claude.ai/chat/2d60dea0-141f-4a9e-bc00-751720885646",
     "contentPreview": "Good chat here for some further possible next steps.   Also a ToDo in the repo of course.  https://claude.ai/chat/2d60dea0-141f-4a9e-bc00-751720885646",
+    "category": "projects",
+    "visibility": "private"
+  },
+  {
+    "path": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/code-wiki/wiki/projects/weird-chess-to-do.md",
+    "relativePath": "projects/weird-chess-to-do.md",
+    "title": "Weird Chess To  Do",
+    "tags": [],
+    "updated": "2026-02-23",
+    "content": "\nApp completed and submitted to app store.\n\nUsed ko-fi link, https://ko-fi.com/mindfu/\n\nCreated privacy policy, https://jamesmbeach.com/archives/5604\n\nStore link so far: https://appstoreconnect.apple.com/apps/6759537454/distribution/reviewsubmissions/details/eb044204-305d-4f74-a7a1-3ff67c852527",
+    "contentPreview": "App completed and submitted to app store.  Used ko-fi link, https://ko-fi.com/mindfu/  Created privacy policy, https://jamesmbeach.com/archives/5604  Store link so far: https://appstoreconnect.apple.com/apps/6759537454/distribution/reviewsubmissions/details/eb044204-305d-4f74-a7a1-3ff67c852527",
     "category": "projects",
     "visibility": "private"
   }

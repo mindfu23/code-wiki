@@ -576,22 +576,51 @@ async function buildIndex(): Promise<void> {
 
   console.log(`Found ${totalDocFiles} documentation files across all repos`);
 
+  // Preserve personal docs from previous build for categories whose source files
+  // are not in the current scan (e.g., wiki/preferences/ is gitignored and only
+  // exists on the developer's local machine, not in CI/GitHub Actions).
+  let preservedDocs: WikiDocument[] = [];
+  const preservedCategories = new Set<string>();
+  try {
+    const existingFullIndex = JSON.parse(
+      await fs.readFile(path.join(OUTPUT_DIR, 'index-full.json'), 'utf-8')
+    ) as WikiIndex;
+
+    const scannedCategories = new Set(documents.map(d => d.category));
+    for (const doc of existingFullIndex.documents) {
+      if (!scannedCategories.has(doc.category)) {
+        preservedDocs.push(doc);
+        preservedCategories.add(doc.category);
+      }
+    }
+
+    if (preservedDocs.length > 0) {
+      console.log(`Preserved ${preservedDocs.length} personal docs from previous build (categories: ${Array.from(preservedCategories).join(', ')})`);
+    }
+  } catch {
+    // No existing full index, nothing to preserve
+  }
+
+  // Merge preserved docs into the full document set
+  const allDocuments = [...documents, ...preservedDocs];
+  const allCategories = new Set([...categories, ...preservedCategories]);
+
   // Separate public and private repos
   const publicRepos = repos.filter(r => r.visibility !== 'private');
   const privateRepos = repos.filter(r => r.visibility === 'private');
 
-  // Separate public and private documents
+  // Separate public and private documents (from current scan only — preserved docs are private)
   const publicDocuments = documents.filter(d => d.visibility !== 'private');
-  const privateDocuments = documents.filter(d => d.visibility === 'private');
+  const privateDocuments = allDocuments.filter(d => d.visibility === 'private');
 
   console.log(`Repos: ${publicRepos.length} public, ${privateRepos.length} private`);
   console.log(`Docs: ${publicDocuments.length} public, ${privateDocuments.length} private`);
 
   // Build full index (includes all repos and docs - for authenticated owner)
   const fullIndex: WikiIndex = {
-    documents,
+    documents: allDocuments,
     repos,
-    categories: Array.from(categories).sort(),
+    categories: Array.from(allCategories).sort(),
     buildTime: new Date().toISOString(),
     version: '1.0.0',
   };
@@ -600,7 +629,7 @@ async function buildIndex(): Promise<void> {
   const publicIndex: WikiIndex = {
     documents: publicDocuments,
     repos: publicRepos,
-    categories: Array.from(categories).sort(),
+    categories: Array.from(allCategories).sort(),
     buildTime: new Date().toISOString(),
     version: '1.0.0',
   };
@@ -616,13 +645,13 @@ async function buildIndex(): Promise<void> {
   console.log(`Full index written to ${fullIndexPath}`);
 
   // Write individual category files for faster loading
-  for (const category of categories) {
-    const categoryDocs = documents.filter(d => d.category === category);
+  for (const category of allCategories) {
+    const categoryDocs = allDocuments.filter(d => d.category === category);
     const categoryPath = path.join(OUTPUT_DIR, `category-${category}.json`);
     await fs.writeFile(categoryPath, JSON.stringify(categoryDocs, null, 2));
   }
 
-  console.log(`Build complete: ${documents.length} documents (${publicDocuments.length} public, ${privateDocuments.length} private), ${repos.length} total repos (${publicRepos.length} public, ${privateRepos.length} private), ${categories.size} categories`);
+  console.log(`Build complete: ${allDocuments.length} documents (${publicDocuments.length} public, ${privateDocuments.length} private), ${repos.length} total repos (${publicRepos.length} public, ${privateRepos.length} private), ${allCategories.size} categories`);
 }
 
 buildIndex().catch(console.error);

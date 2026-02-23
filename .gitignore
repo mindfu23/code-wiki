@@ -1,0 +1,6 @@
+# Personal wiki docs (tracked in their own local git repo)
+# See README.md "Personal Wiki Documents" section for setup instructions
+wiki/preferences/
+
+# OS
+.DS_Store
