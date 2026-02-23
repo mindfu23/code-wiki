@@ -226,61 +226,56 @@ The MCP server provides local code search for AI agents like Claude Code.
 ```
 wiki/
 ├── AGENTS.md          # Instructions for AI agents
-├── preferences/       # Personal docs (separate local git repo, gitignored)
-├── patterns/          # Architectural patterns
-├── utilities/         # Helper functions
-├── integrations/      # API connectors
-├── templates/         # Project starters
-├── snippets/          # Small code pieces
-└── projects/          # Project documentation
+├── personal/          # Personal docs (separate local git repo, gitignored)
+│   ├── preferences/   #   Tech stack, deployment guides, etc.
+│   ├── projects/      #   Personal to-do lists, project notes
+│   └── snippets/      #   Personal code snippets
+├── patterns/          # Architectural patterns (public scaffolding)
+├── utilities/         # Helper functions (public scaffolding)
+├── integrations/      # API connectors (public scaffolding)
+├── templates/         # Project starters (public scaffolding)
+├── snippets/          # Code snippets (public scaffolding)
+└── projects/          # Project docs (public scaffolding + repo-locations.md)
 ```
 
 ## Personal Wiki Documents
 
-The `wiki/preferences/` directory is designed for personal documents (tech stack preferences, deployment guides, etc.) that you don't want included in the public open-source repo. It is:
+The `wiki/personal/` directory holds all your personal documents — things like tech stack preferences, project to-do lists, and code snippets that you don't want in the public open-source repo. It is:
 
 - **Gitignored** by the parent repo — your personal docs won't be pushed to your fork's public remote
-- **Its own local git repo** — your docs still have full version control (history, diffs, branching)
-- **Automatically indexed** — the index builder scans the filesystem, so these docs appear in your authenticated wiki view
+- **Its own local git repo** — your docs have full version control (history, diffs, branching)
+- **Automatically indexed** — the index builder scans `wiki/personal/` and assigns categories based on subdirectory names (e.g., `personal/projects/` → category "projects")
+- **Private by default** — all docs in `wiki/personal/` are automatically marked `visibility: private`, so they only appear behind authentication
 - **Preserved across CI rebuilds** — GitHub Actions carries forward personal docs from the previous build
 
 ### Setting Up Personal Docs (after forking)
 
 1. **Create the directory and initialize a local git repo:**
    ```bash
-   mkdir -p wiki/preferences
-   cd wiki/preferences
+   mkdir -p wiki/personal
+   cd wiki/personal
    git init
    ```
 
-2. **Add your personal docs** with `visibility: "private"` in the frontmatter:
+2. **Create subdirectories matching wiki categories:**
+   ```bash
+   mkdir -p preferences projects snippets
+   ```
+   Subdirectory names map to wiki categories. Use any existing category name (preferences, projects, snippets, patterns, utilities, etc.) or create new ones.
+
+3. **Add your personal docs** — frontmatter is optional since `wiki/personal/` docs default to private:
    ```markdown
    ---
    title: "My Tech Stack"
-   visibility: "private"
    ---
 
    # My Tech Stack Preferences
    Your content here...
    ```
 
-3. **Add a category index file** (`_index.md`):
-   ```markdown
-   ---
-   title: "Preferences Index"
-   tags: ["index", "preferences", "configuration"]
-   description: "User and project preference configurations"
-   visibility: "private"
-   ---
-
-   # Preferences
-
-   This category contains personal preference configurations.
-   ```
-
-4. **Commit in the local preferences repo:**
+4. **Commit in the personal repo:**
    ```bash
-   cd wiki/preferences
+   cd wiki/personal
    git add -A
    git commit -m "Add personal docs"
    ```
@@ -294,20 +289,21 @@ The `wiki/preferences/` directory is designed for personal documents (tech stack
 
 ### How It Works
 
-- The `wiki/preferences/` directory is listed in the root `.gitignore`, so the parent repo ignores it
-- The index builder scans `wiki/` recursively via the filesystem — it finds your docs regardless of git tracking
-- Documents with `visibility: "private"` are excluded from the public `index.json` and only appear in `index-full.json` (served behind authentication)
-- When GitHub Actions rebuilds the index (daily or on push), it preserves personal docs from the previous `index-full.json` since the source files aren't in the CI checkout
-- Your personal docs have their own git history inside `wiki/preferences/.git/`
+- `wiki/personal/` is listed in the root `.gitignore`, so the parent repo ignores it entirely
+- The index builder scans `wiki/personal/` as a separate wiki root — subdirectory names become categories
+- All docs found in `wiki/personal/` are automatically set to `visibility: private` (overridable via frontmatter)
+- Private docs are excluded from `index.json` (public) and only appear in `index-full.json` (served behind authentication)
+- When GitHub Actions rebuilds the index (where `wiki/personal/` doesn't exist), it preserves private docs from the previous `index-full.json`
+- The public `_index.md` scaffolding files in `wiki/projects/`, `wiki/snippets/`, etc. define category metadata for the web UI — personal docs merge into these categories seamlessly
 
 ### Claude Code / MCP Integration
 
-To make your personal docs available to Claude Code via the MCP server's `get_preferences` tool:
+To make your preference docs available to Claude Code via the MCP server's `get_preferences` tool:
 
 ```bash
 # Symlink preferences to Claude's standard location
 rm -rf ~/.claude/preferences
-ln -s /path/to/code-wiki/wiki/preferences ~/.claude/preferences
+ln -s /path/to/code-wiki/wiki/personal/preferences ~/.claude/preferences
 ```
 
 ### Optional: Private Remote Backup
@@ -315,7 +311,7 @@ ln -s /path/to/code-wiki/wiki/preferences ~/.claude/preferences
 If you want to back up your personal docs to a private GitHub repo:
 
 ```bash
-cd wiki/preferences
+cd wiki/personal
 git remote add origin git@github.com:your-username/my-wiki-preferences.git
 git push -u origin main
 ```

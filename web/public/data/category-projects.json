@@ -14,61 +14,6 @@
     "visibility": "public"
   },
   {
-    "path": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/code-wiki/wiki/projects/docsy-to-do.md",
-    "relativePath": "projects/docsy-to-do.md",
-    "title": "Docsy to do 1",
-    "tags": [],
-    "updated": "2026-02-20",
-    "content": "\n\nStill need to resolve the index for the main page rebuilding every time someone goes to \"Browse\" and then returns to the main page.",
-    "contentPreview": "Still need to resolve the index for the main page rebuilding every time someone goes to \"Browse\" and then returns to the main page.",
-    "category": "projects",
-    "visibility": "public"
-  },
-  {
-    "path": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/code-wiki/wiki/projects/docsy-todo-md.md",
-    "relativePath": "projects/docsy-todo-md.md",
-    "title": "Job Searcher",
-    "tags": [],
-    "updated": "2026-02-20",
-    "content": "\nHomegrown API currently replaced by n8n workflow. n8n workflow here: http://35.188.141.23:5678/home/workflows\n\nHave turned off this github action for the version in the code repo, here. https://github.com/mindfu23/JobSearcher/actions/workflows/daily-search.yml",
-    "contentPreview": "Homegrown API currently replaced by n8n workflow. n8n workflow here: http://35.188.141.23:5678/home/workflows  Have turned off this github action for the version in the code repo, here. https://github.com/mindfu23/JobSearcher/actions/workflows/daily-search.yml",
-    "category": "projects",
-    "visibility": "private"
-  },
-  {
-    "path": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/code-wiki/wiki/projects/n8n-todo.md",
-    "relativePath": "projects/n8n-todo.md",
-    "title": "n8n To Do",
-    "tags": [],
-    "updated": "2026-02-18",
-    "content": "\n\ncreate or assign a domain name to the current IP address, as currently stored in Google Compute:\n\nhttp://35.188.141.23:5678\n\nworkflows here, created for ValueApe, Metabot, ShamAIn, and novel orchestration via n8n, and 1 demo article generator from LinkedIn.\n\nhttp://35.188.141.23:5678/projects/0xV2ERXR2IwHi5lk/workflows",
-    "contentPreview": "create or assign a domain name to the current IP address, as currently stored in Google Compute:  http://35.188.141.23:5678  workflows here, created for ValueApe, Metabot, ShamAIn, and novel orchestration via n8n, and 1 demo article generator from LinkedIn.  http://35.188.141.23:5678/projects/0xV2",
-    "category": "projects",
-    "visibility": "public"
-  },
-  {
-    "path": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/code-wiki/wiki/projects/overall-next-steps.md",
-    "relativePath": "projects/overall-next-steps.md",
-    "title": "Overall next steps",
-    "tags": [],
-    "updated": "2026-01-28",
-    "content": "\nContinue setting up n8n so I can explore possible functionality for a) ShamAIn and b) Value Ape\n\nMake an app out of the easiest thing for the app store. \n\nReview all the other to-dos and keep moving them forward. ",
-    "contentPreview": "Continue setting up n8n so I can explore possible functionality for a) ShamAIn and b) Value Ape  Make an app out of the easiest thing for the app store.   Review all the other to-dos and keep moving them forward.",
-    "category": "projects",
-    "visibility": "public"
-  },
-  {
-    "path": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/code-wiki/wiki/projects/overall-to-do.md",
-    "relativePath": "projects/overall-to-do.md",
-    "title": "Overall to do",
-    "tags": [],
-    "updated": "2026-01-28",
-    "content": "\nNext is for me to research n8n and apply it to ShamAIn and Value Ape.\n\nAfter that, continue the novel development workflow.",
-    "contentPreview": "Next is for me to research n8n and apply it to ShamAIn and Value Ape.  After that, continue the novel development workflow.",
-    "category": "projects",
-    "visibility": "public"
-  },
-  {
     "path": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/code-wiki/wiki/projects/repo-locations.md",
     "relativePath": "projects/repo-locations.md",
     "title": "Repository Locations",
@@ -85,7 +30,62 @@
     "visibility": "public"
   },
   {
-    "path": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/code-wiki/wiki/projects/valueapetodo.md",
+    "path": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/code-wiki/wiki/personal/projects/docsy-to-do.md",
+    "relativePath": "projects/docsy-to-do.md",
+    "title": "Docsy to do 1",
+    "tags": [],
+    "updated": "2026-02-20",
+    "content": "\n\nStill need to resolve the index for the main page rebuilding every time someone goes to \"Browse\" and then returns to the main page.",
+    "contentPreview": "Still need to resolve the index for the main page rebuilding every time someone goes to \"Browse\" and then returns to the main page.",
+    "category": "projects",
+    "visibility": "private"
+  },
+  {
+    "path": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/code-wiki/wiki/personal/projects/docsy-todo-md.md",
+    "relativePath": "projects/docsy-todo-md.md",
+    "title": "Job Searcher",
+    "tags": [],
+    "updated": "2026-02-20",
+    "content": "\nHomegrown API currently replaced by n8n workflow. n8n workflow here: http://35.188.141.23:5678/home/workflows\n\nHave turned off this github action for the version in the code repo, here. https://github.com/mindfu23/JobSearcher/actions/workflows/daily-search.yml",
+    "contentPreview": "Homegrown API currently replaced by n8n workflow. n8n workflow here: http://35.188.141.23:5678/home/workflows  Have turned off this github action for the version in the code repo, here. https://github.com/mindfu23/JobSearcher/actions/workflows/daily-search.yml",
+    "category": "projects",
+    "visibility": "private"
+  },
+  {
+    "path": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/code-wiki/wiki/personal/projects/n8n-todo.md",
+    "relativePath": "projects/n8n-todo.md",
+    "title": "n8n To Do",
+    "tags": [],
+    "updated": "2026-02-18",
+    "content": "\n\ncreate or assign a domain name to the current IP address, as currently stored in Google Compute:\n\nhttp://35.188.141.23:5678\n\nworkflows here, created for ValueApe, Metabot, ShamAIn, and novel orchestration via n8n, and 1 demo article generator from LinkedIn.\n\nhttp://35.188.141.23:5678/projects/0xV2ERXR2IwHi5lk/workflows",
+    "contentPreview": "create or assign a domain name to the current IP address, as currently stored in Google Compute:  http://35.188.141.23:5678  workflows here, created for ValueApe, Metabot, ShamAIn, and novel orchestration via n8n, and 1 demo article generator from LinkedIn.  http://35.188.141.23:5678/projects/0xV2",
+    "category": "projects",
+    "visibility": "private"
+  },
+  {
+    "path": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/code-wiki/wiki/personal/projects/overall-next-steps.md",
+    "relativePath": "projects/overall-next-steps.md",
+    "title": "Overall next steps",
+    "tags": [],
+    "updated": "2026-01-28",
+    "content": "\nContinue setting up n8n so I can explore possible functionality for a) ShamAIn and b) Value Ape\n\nMake an app out of the easiest thing for the app store. \n\nReview all the other to-dos and keep moving them forward. ",
+    "contentPreview": "Continue setting up n8n so I can explore possible functionality for a) ShamAIn and b) Value Ape  Make an app out of the easiest thing for the app store.   Review all the other to-dos and keep moving them forward.",
+    "category": "projects",
+    "visibility": "private"
+  },
+  {
+    "path": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/code-wiki/wiki/personal/projects/overall-to-do.md",
+    "relativePath": "projects/overall-to-do.md",
+    "title": "Overall to do",
+    "tags": [],
+    "updated": "2026-01-28",
+    "content": "\nNext is for me to research n8n and apply it to ShamAIn and Value Ape.\n\nAfter that, continue the novel development workflow.",
+    "contentPreview": "Next is for me to research n8n and apply it to ShamAIn and Value Ape.  After that, continue the novel development workflow.",
+    "category": "projects",
+    "visibility": "private"
+  },
+  {
+    "path": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/code-wiki/wiki/personal/projects/valueapetodo.md",
     "relativePath": "projects/valueapetodo.md",
     "title": "Value Ape to do",
     "tags": [],
@@ -96,7 +96,7 @@
     "visibility": "private"
   },
   {
-    "path": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/code-wiki/wiki/projects/weird-chess-to-do.md",
+    "path": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/code-wiki/wiki/personal/projects/weird-chess-to-do.md",
     "relativePath": "projects/weird-chess-to-do.md",
     "title": "Weird Chess To  Do",
     "tags": [],
