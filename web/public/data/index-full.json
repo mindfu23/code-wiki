@@ -265,36 +265,12 @@
   ],
   "repos": [
     {
-      "name": "weirdchess",
-      "description": "A game with 5 variants of 10x10 chess.",
-      "githubUrl": "https://github.com/mindfu23/weirdchess",
-      "languages": [
-        "JavaScript"
-      ],
-      "lastCommitDate": "2026-02-24T22:43:42Z",
-      "status": "synced",
-      "visibility": "public",
-      "localPath": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/weirdchess",
-      "markdownFiles": [
-        {
-          "relativePath": "ios/Runner/Assets.xcassets/LaunchImage.imageset/README.md",
-          "name": "README.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "README.md",
-          "name": "README.md",
-          "fileType": "md"
-        }
-      ]
-    },
-    {
       "name": "ValueApe",
       "githubUrl": "https://github.com/mindfu23/ValueApe",
       "languages": [
         "TypeScript"
       ],
-      "lastCommitDate": "2026-02-24T06:30:24Z",
+      "lastCommitDate": "2026-02-25T06:33:00Z",
       "status": "synced",
       "visibility": "private",
       "localPath": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/ValueApe",
@@ -373,7 +349,7 @@
       "languages": [
         "JavaScript"
       ],
-      "lastCommitDate": "2026-02-24T00:22:14Z",
+      "lastCommitDate": "2026-02-25T00:23:41Z",
       "status": "synced",
       "visibility": "public",
       "localPath": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/apiTracker",
@@ -412,7 +388,7 @@
       "languages": [
         "TypeScript"
       ],
-      "lastCommitDate": "2026-02-24T00:19:55Z",
+      "lastCommitDate": "2026-02-25T00:21:22Z",
       "status": "github-only",
       "visibility": "public",
       "markdownFiles": [
@@ -474,6 +450,30 @@
         {
           "relativePath": "wiki/utilities/_index.md",
           "name": "_index.md",
+          "fileType": "md"
+        }
+      ]
+    },
+    {
+      "name": "weirdchess",
+      "description": "A game with 5 variants of 10x10 chess.",
+      "githubUrl": "https://github.com/mindfu23/weirdchess",
+      "languages": [
+        "JavaScript"
+      ],
+      "lastCommitDate": "2026-02-24T22:43:42Z",
+      "status": "synced",
+      "visibility": "public",
+      "localPath": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/weirdchess",
+      "markdownFiles": [
+        {
+          "relativePath": "ios/Runner/Assets.xcassets/LaunchImage.imageset/README.md",
+          "name": "README.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "README.md",
+          "name": "README.md",
           "fileType": "md"
         }
       ]
@@ -2553,6 +2553,6 @@
     "templates",
     "utilities"
   ],
-  "buildTime": "2026-02-25T00:21:21.864Z",
+  "buildTime": "2026-02-26T00:17:40.159Z",
   "version": "1.0.0"
 }
