@@ -265,40 +265,12 @@
   ],
   "repos": [
     {
-      "name": "NewsJuicer",
-      "description": "Script to run via Google to assemble and summarize the news from various emailed newsletters.",
-      "githubUrl": "https://github.com/mindfu23/NewsJuicer",
-      "languages": [
-        "JavaScript"
-      ],
-      "lastCommitDate": "2026-02-26T22:29:07Z",
-      "status": "github-only",
-      "visibility": "private",
-      "markdownFiles": [
-        {
-          "relativePath": "NewsJuicer_SETUP_GUIDE.md",
-          "name": "NewsJuicer_SETUP_GUIDE.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "README.md",
-          "name": "README.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "Unsubscribe_Guide.md",
-          "name": "Unsubscribe_Guide.md",
-          "fileType": "md"
-        }
-      ]
-    },
-    {
       "name": "ValueApe",
       "githubUrl": "https://github.com/mindfu23/ValueApe",
       "languages": [
         "TypeScript"
       ],
-      "lastCommitDate": "2026-02-26T06:30:13Z",
+      "lastCommitDate": "2026-02-27T06:26:05Z",
       "status": "synced",
       "visibility": "private",
       "localPath": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/ValueApe",
@@ -377,7 +349,7 @@
       "languages": [
         "JavaScript"
       ],
-      "lastCommitDate": "2026-02-26T00:20:10Z",
+      "lastCommitDate": "2026-02-27T00:22:33Z",
       "status": "synced",
       "visibility": "public",
       "localPath": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/apiTracker",
@@ -416,7 +388,7 @@
       "languages": [
         "TypeScript"
       ],
-      "lastCommitDate": "2026-02-26T00:17:40Z",
+      "lastCommitDate": "2026-02-27T00:20:38Z",
       "status": "github-only",
       "visibility": "public",
       "markdownFiles": [
@@ -478,6 +450,34 @@
         {
           "relativePath": "wiki/utilities/_index.md",
           "name": "_index.md",
+          "fileType": "md"
+        }
+      ]
+    },
+    {
+      "name": "NewsJuicer",
+      "description": "Script to run via Google to assemble and summarize the news from various emailed newsletters.",
+      "githubUrl": "https://github.com/mindfu23/NewsJuicer",
+      "languages": [
+        "JavaScript"
+      ],
+      "lastCommitDate": "2026-02-26T22:29:07Z",
+      "status": "github-only",
+      "visibility": "private",
+      "markdownFiles": [
+        {
+          "relativePath": "NewsJuicer_SETUP_GUIDE.md",
+          "name": "NewsJuicer_SETUP_GUIDE.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "README.md",
+          "name": "README.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "Unsubscribe_Guide.md",
+          "name": "Unsubscribe_Guide.md",
           "fileType": "md"
         }
       ]
@@ -2553,6 +2553,6 @@
     "templates",
     "utilities"
   ],
-  "buildTime": "2026-02-27T00:20:37.639Z",
+  "buildTime": "2026-02-28T00:16:43.150Z",
   "version": "1.0.0"
 }
