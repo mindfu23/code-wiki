@@ -130,40 +130,24 @@
   ],
   "repos": [
     {
-      "name": "apiTracker",
-      "description": "A simple GUI tracker for health and number of remaining calls for my various APIs used in my other apps.",
-      "githubUrl": "https://github.com/mindfu23/apiTracker",
+      "name": "weirdchess",
+      "description": "A game with 5 variants of 10x10 chess.",
+      "githubUrl": "https://github.com/mindfu23/weirdchess",
       "languages": [
-        "JavaScript"
+        "Dart"
       ],
-      "lastCommitDate": "2026-02-27T00:22:33Z",
+      "lastCommitDate": "2026-02-28T05:30:22Z",
       "status": "synced",
       "visibility": "public",
-      "localPath": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/apiTracker",
-      "notes": "also implemented as a browser extension, and further developed there.",
+      "localPath": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/weirdchess",
       "markdownFiles": [
         {
-          "relativePath": "browser-extension/README.md",
+          "relativePath": "ios/Runner/Assets.xcassets/LaunchImage.imageset/README.md",
           "name": "README.md",
           "fileType": "md"
         },
         {
-          "relativePath": "dist-platforms/firefox/README.md",
-          "name": "README.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "dist-platforms/safari/API Usage Scraper Extension/Resources/README.md",
-          "name": "README.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "dist-platforms/safari/README.md",
-          "name": "README.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "platforms/README.md",
+          "relativePath": "README.md",
           "name": "README.md",
           "fileType": "md"
         }
@@ -175,7 +159,7 @@
       "languages": [
         "TypeScript"
       ],
-      "lastCommitDate": "2026-02-27T00:20:38Z",
+      "lastCommitDate": "2026-02-28T01:34:26Z",
       "status": "github-only",
       "visibility": "public",
       "markdownFiles": [
@@ -215,6 +199,11 @@
           "fileType": "md"
         },
         {
+          "relativePath": "wiki/preferences/standard-setups.md",
+          "name": "standard-setups.md",
+          "fileType": "md"
+        },
+        {
           "relativePath": "wiki/projects/_index.md",
           "name": "_index.md",
           "fileType": "md"
@@ -242,24 +231,40 @@
       ]
     },
     {
-      "name": "weirdchess",
-      "description": "A game with 5 variants of 10x10 chess.",
-      "githubUrl": "https://github.com/mindfu23/weirdchess",
+      "name": "apiTracker",
+      "description": "A simple GUI tracker for health and number of remaining calls for my various APIs used in my other apps.",
+      "githubUrl": "https://github.com/mindfu23/apiTracker",
       "languages": [
         "JavaScript"
       ],
-      "lastCommitDate": "2026-02-24T22:43:42Z",
+      "lastCommitDate": "2026-02-28T00:18:36Z",
       "status": "synced",
       "visibility": "public",
-      "localPath": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/weirdchess",
+      "localPath": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/apiTracker",
+      "notes": "also implemented as a browser extension, and further developed there.",
       "markdownFiles": [
         {
-          "relativePath": "ios/Runner/Assets.xcassets/LaunchImage.imageset/README.md",
+          "relativePath": "browser-extension/README.md",
           "name": "README.md",
           "fileType": "md"
         },
         {
-          "relativePath": "README.md",
+          "relativePath": "dist-platforms/firefox/README.md",
+          "name": "README.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "dist-platforms/safari/API Usage Scraper Extension/Resources/README.md",
+          "name": "README.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "dist-platforms/safari/README.md",
+          "name": "README.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "platforms/README.md",
           "name": "README.md",
           "fileType": "md"
         }
@@ -272,7 +277,7 @@
       "languages": [
         "Shell"
       ],
-      "lastCommitDate": "2026-01-17T19:41:45Z",
+      "lastCommitDate": "2026-02-28T19:38:01Z",
       "status": "synced",
       "visibility": "public",
       "localPath": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/gastown-mission-district",
@@ -280,6 +285,21 @@
         {
           "relativePath": "agent_router/AGENTS.md",
           "name": "AGENTS.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "agent_router/crew/README.md",
+          "name": "README.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "agent_router/refinery/rig/PR-MULTI-MODEL-ROUTER.md",
+          "name": "PR-MULTI-MODEL-ROUTER.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "agent_router/refinery/rig/README.md",
+          "name": "README.md",
           "fileType": "md"
         },
         {
@@ -293,8 +313,263 @@
           "fileType": "md"
         },
         {
+          "relativePath": "CHANGELOG.md",
+          "name": "CHANGELOG.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "CODE_OF_CONDUCT.md",
+          "name": "CODE_OF_CONDUCT.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "CONTRIBUTING.md",
+          "name": "CONTRIBUTING.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "docs/agent-provider-integration.md",
+          "name": "agent-provider-integration.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "docs/beads-native-messaging.md",
+          "name": "beads-native-messaging.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "docs/CLEANUP.md",
+          "name": "CLEANUP.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "docs/concepts/convoy.md",
+          "name": "convoy.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "docs/concepts/identity.md",
+          "name": "identity.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "docs/concepts/integration-branches.md",
+          "name": "integration-branches.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "docs/concepts/molecules.md",
+          "name": "molecules.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "docs/concepts/polecat-lifecycle.md",
+          "name": "polecat-lifecycle.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "docs/concepts/propulsion-principle.md",
+          "name": "propulsion-principle.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "docs/design/agent-provider-interface.md",
+          "name": "agent-provider-interface.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "docs/design/architecture.md",
+          "name": "architecture.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "docs/design/at-spike-report.md",
+          "name": "at-spike-report.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "docs/design/convoy-lifecycle.md",
+          "name": "convoy-lifecycle.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "docs/design/convoy/convoy-lifecycle.md",
+          "name": "convoy-lifecycle.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "docs/design/convoy/daemon.md",
+          "name": "daemon.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "docs/design/convoy/roadmap.md",
+          "name": "roadmap.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "docs/design/convoy/spec.md",
+          "name": "spec.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "docs/design/convoy/stage-launch/bv-analysis.md",
+          "name": "bv-analysis.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "docs/design/convoy/stage-launch/prd.md",
+          "name": "prd.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "docs/design/convoy/stage-launch/review-20260220-072518.md",
+          "name": "review-20260220-072518.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "docs/design/convoy/stage-launch/testing.md",
+          "name": "testing.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "docs/design/convoy/testing.md",
+          "name": "testing.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "docs/design/dog-execution-model.md",
+          "name": "dog-execution-model.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "docs/design/dog-pool-architecture.md",
+          "name": "dog-pool-architecture.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "docs/design/dolt-storage.md",
+          "name": "dolt-storage.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "docs/design/escalation-system.md",
+          "name": "escalation-system.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "docs/design/escalation.md",
+          "name": "escalation.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "docs/design/federation.md",
+          "name": "federation.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "docs/design/hooks-registry-design.md",
+          "name": "hooks-registry-design.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "docs/design/ledger-export-triggers.md",
+          "name": "ledger-export-triggers.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "docs/design/mail-protocol.md",
+          "name": "mail-protocol.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "docs/design/operational-state.md",
+          "name": "operational-state.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "docs/design/persistent-polecat-pool.md",
+          "name": "persistent-polecat-pool.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "docs/design/plugin-system.md",
+          "name": "plugin-system.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "docs/design/polecat-lifecycle-patrol.md",
+          "name": "polecat-lifecycle-patrol.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "docs/design/polecat-self-managed-completion.md",
+          "name": "polecat-self-managed-completion.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "docs/design/property-layers.md",
+          "name": "property-layers.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "docs/design/watchdog-chain.md",
+          "name": "watchdog-chain.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "docs/design/witness-at-team-lead.md",
+          "name": "witness-at-team-lead.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "docs/design/work-queue.md",
+          "name": "work-queue.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "docs/examples/hanoi-demo.md",
+          "name": "hanoi-demo.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "docs/formula-resolution.md",
+          "name": "formula-resolution.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "docs/glossary.md",
+          "name": "glossary.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "docs/HOOKS.md",
+          "name": "HOOKS.md",
+          "fileType": "md"
+        },
+        {
           "relativePath": "docs/IMAGEN.md",
           "name": "IMAGEN.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "docs/INSTALLING.md",
+          "name": "INSTALLING.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "docs/issues/dashboard-workflow-improvements.md",
+          "name": "dashboard-workflow-improvements.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "docs/issues/fix-dolt-migrate-redirect.md",
+          "name": "fix-dolt-migrate-redirect.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "docs/mol-mall-design.md",
+          "name": "mol-mall-design.md",
           "fileType": "md"
         },
         {
@@ -303,8 +578,38 @@
           "fileType": "md"
         },
         {
+          "relativePath": "docs/overview.md",
+          "name": "overview.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "docs/reference.md",
+          "name": "reference.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "docs/skills/convoy/SKILL.md",
+          "name": "SKILL.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "docs/why-these-features.md",
+          "name": "why-these-features.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "FORK-STATUS.md",
+          "name": "FORK-STATUS.md",
+          "fileType": "md"
+        },
+        {
           "relativePath": "fractasy/AGENTS.md",
           "name": "AGENTS.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "fractasy/crew/README.md",
+          "name": "README.md",
           "fileType": "md"
         },
         {
@@ -318,17 +623,97 @@
           "fileType": "md"
         },
         {
-          "relativePath": "mayor/CLAUDE.md",
-          "name": "CLAUDE.md",
+          "relativePath": "gt-model-eval/MAINTENANCE.md",
+          "name": "MAINTENANCE.md",
           "fileType": "md"
         },
         {
-          "relativePath": "plugins/README.md",
+          "relativePath": "gt-model-eval/prompts/patrol-decision.txt",
+          "name": "patrol-decision.txt",
+          "fileType": "txt"
+        },
+        {
+          "relativePath": "gt-model-eval/README.md",
           "name": "README.md",
           "fileType": "md"
         },
         {
+          "relativePath": "internal/copilot/plugin/gastown-instructions.md",
+          "name": "gastown-instructions.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "internal/formula/README.md",
+          "name": "README.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "internal/templates/commands/bodies/handoff.md",
+          "name": "handoff.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "npm-package/README.md",
+          "name": "README.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "OVERNIGHT-CRON-SETUP.md",
+          "name": "OVERNIGHT-CRON-SETUP.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "plugins/compactor-dog/plugin.md",
+          "name": "plugin.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "plugins/dolt-archive/plugin.md",
+          "name": "plugin.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "plugins/github-sheriff/plugin.md",
+          "name": "plugin.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "plugins/session-hygiene/plugin.md",
+          "name": "plugin.md",
+          "fileType": "md"
+        },
+        {
           "relativePath": "README.md",
+          "name": "README.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "RELEASING.md",
+          "name": "RELEASING.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "SECURITY.md",
+          "name": "SECURITY.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "templates/polecat-CLAUDE.md",
+          "name": "polecat-CLAUDE.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "templates/witness-CLAUDE.md",
+          "name": "witness-CLAUDE.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "weirdchess/AGENTS.md",
+          "name": "AGENTS.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "weirdchess/crew/README.md",
           "name": "README.md",
           "fileType": "md"
         }
@@ -454,7 +839,7 @@
       "description": "Gas Town - multi-agent workspace manager",
       "githubUrl": "https://github.com/mindfu23/gastown",
       "languages": [],
-      "lastCommitDate": "2026-01-17T20:21:56Z",
+      "lastCommitDate": "2026-02-28T19:38:57Z",
       "status": "synced",
       "visibility": "public",
       "localPath": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/gastown",
@@ -842,7 +1227,7 @@
       "languages": [
         "Python"
       ],
-      "lastCommitDate": "2025-12-25T20:30:08Z",
+      "lastCommitDate": "2026-02-28T18:03:45Z",
       "status": "synced",
       "visibility": "public",
       "localPath": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/Postboi",
@@ -1140,7 +1525,7 @@
       "languages": [
         "JavaScript"
       ],
-      "lastCommitDate": "2025-12-08T21:17:21Z",
+      "lastCommitDate": "2026-02-28T20:22:47Z",
       "status": "synced",
       "visibility": "public",
       "localPath": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/StoryPlot",
@@ -1212,6 +1597,6 @@
     "templates",
     "utilities"
   ],
-  "buildTime": "2026-02-28T00:16:43.151Z",
+  "buildTime": "2026-03-01T00:20:49.963Z",
   "version": "1.0.0"
 }
