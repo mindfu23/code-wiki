@@ -130,24 +130,40 @@
   ],
   "repos": [
     {
-      "name": "weirdchess",
-      "description": "A game with 5 variants of 10x10 chess.",
-      "githubUrl": "https://github.com/mindfu23/weirdchess",
+      "name": "apiTracker",
+      "description": "A simple GUI tracker for health and number of remaining calls for my various APIs used in my other apps.",
+      "githubUrl": "https://github.com/mindfu23/apiTracker",
       "languages": [
-        "Dart"
+        "JavaScript"
       ],
-      "lastCommitDate": "2026-02-28T05:30:22Z",
+      "lastCommitDate": "2026-03-01T00:23:26Z",
       "status": "synced",
       "visibility": "public",
-      "localPath": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/weirdchess",
+      "localPath": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/apiTracker",
+      "notes": "also implemented as a browser extension, and further developed there.",
       "markdownFiles": [
         {
-          "relativePath": "ios/Runner/Assets.xcassets/LaunchImage.imageset/README.md",
+          "relativePath": "browser-extension/README.md",
           "name": "README.md",
           "fileType": "md"
         },
         {
-          "relativePath": "README.md",
+          "relativePath": "dist-platforms/firefox/README.md",
+          "name": "README.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "dist-platforms/safari/API Usage Scraper Extension/Resources/README.md",
+          "name": "README.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "dist-platforms/safari/README.md",
+          "name": "README.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "platforms/README.md",
           "name": "README.md",
           "fileType": "md"
         }
@@ -159,7 +175,7 @@
       "languages": [
         "TypeScript"
       ],
-      "lastCommitDate": "2026-02-28T01:34:26Z",
+      "lastCommitDate": "2026-03-01T00:20:50Z",
       "status": "github-only",
       "visibility": "public",
       "markdownFiles": [
@@ -231,40 +247,24 @@
       ]
     },
     {
-      "name": "apiTracker",
-      "description": "A simple GUI tracker for health and number of remaining calls for my various APIs used in my other apps.",
-      "githubUrl": "https://github.com/mindfu23/apiTracker",
+      "name": "weirdchess",
+      "description": "A game with 5 variants of 10x10 chess.",
+      "githubUrl": "https://github.com/mindfu23/weirdchess",
       "languages": [
-        "JavaScript"
+        "Dart"
       ],
-      "lastCommitDate": "2026-02-28T00:18:36Z",
+      "lastCommitDate": "2026-02-28T05:30:22Z",
       "status": "synced",
       "visibility": "public",
-      "localPath": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/apiTracker",
-      "notes": "also implemented as a browser extension, and further developed there.",
+      "localPath": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/weirdchess",
       "markdownFiles": [
         {
-          "relativePath": "browser-extension/README.md",
+          "relativePath": "ios/Runner/Assets.xcassets/LaunchImage.imageset/README.md",
           "name": "README.md",
           "fileType": "md"
         },
         {
-          "relativePath": "dist-platforms/firefox/README.md",
-          "name": "README.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "dist-platforms/safari/API Usage Scraper Extension/Resources/README.md",
-          "name": "README.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "dist-platforms/safari/README.md",
-          "name": "README.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "platforms/README.md",
+          "relativePath": "README.md",
           "name": "README.md",
           "fileType": "md"
         }
@@ -1597,6 +1597,6 @@
     "templates",
     "utilities"
   ],
-  "buildTime": "2026-03-01T00:20:49.963Z",
+  "buildTime": "2026-03-02T00:18:30.726Z",
   "version": "1.0.0"
 }
