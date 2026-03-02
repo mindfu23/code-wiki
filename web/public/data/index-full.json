@@ -270,7 +270,7 @@
       "languages": [
         "TypeScript"
       ],
-      "lastCommitDate": "2026-02-28T20:56:50Z",
+      "lastCommitDate": "2026-03-02T00:17:01Z",
       "status": "synced",
       "visibility": "private",
       "localPath": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/ValueApe",
@@ -348,6 +348,123 @@
         {
           "relativePath": "webscraper/README.md",
           "name": "README.md",
+          "fileType": "md"
+        }
+      ]
+    },
+    {
+      "name": "apiTracker",
+      "description": "A simple GUI tracker for health and number of remaining calls for my various APIs used in my other apps.",
+      "githubUrl": "https://github.com/mindfu23/apiTracker",
+      "languages": [
+        "JavaScript"
+      ],
+      "lastCommitDate": "2026-03-01T00:23:26Z",
+      "status": "synced",
+      "visibility": "public",
+      "localPath": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/apiTracker",
+      "notes": "also implemented as a browser extension, and further developed there.",
+      "markdownFiles": [
+        {
+          "relativePath": "browser-extension/README.md",
+          "name": "README.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "dist-platforms/firefox/README.md",
+          "name": "README.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "dist-platforms/safari/API Usage Scraper Extension/Resources/README.md",
+          "name": "README.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "dist-platforms/safari/README.md",
+          "name": "README.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "platforms/README.md",
+          "name": "README.md",
+          "fileType": "md"
+        }
+      ]
+    },
+    {
+      "name": "code-wiki",
+      "githubUrl": "https://github.com/mindfu23/code-wiki",
+      "languages": [
+        "TypeScript"
+      ],
+      "lastCommitDate": "2026-03-01T00:20:50Z",
+      "status": "github-only",
+      "visibility": "public",
+      "markdownFiles": [
+        {
+          "relativePath": "code-wiki-mcp-plan.md",
+          "name": "code-wiki-mcp-plan.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "README.md",
+          "name": "README.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "TODO.md",
+          "name": "TODO.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "wiki/_index.md",
+          "name": "_index.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "wiki/AGENTS.md",
+          "name": "AGENTS.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "wiki/integrations/_index.md",
+          "name": "_index.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "wiki/patterns/_index.md",
+          "name": "_index.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "wiki/preferences/standard-setups.md",
+          "name": "standard-setups.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "wiki/projects/_index.md",
+          "name": "_index.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "wiki/projects/repo-locations.md",
+          "name": "repo-locations.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "wiki/snippets/_index.md",
+          "name": "_index.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "wiki/templates/_index.md",
+          "name": "_index.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "wiki/utilities/_index.md",
+          "name": "_index.md",
           "fileType": "md"
         }
       ]
@@ -1131,123 +1248,6 @@
         },
         {
           "relativePath": "README.md",
-          "name": "README.md",
-          "fileType": "md"
-        }
-      ]
-    },
-    {
-      "name": "code-wiki",
-      "githubUrl": "https://github.com/mindfu23/code-wiki",
-      "languages": [
-        "TypeScript"
-      ],
-      "lastCommitDate": "2026-02-28T01:34:26Z",
-      "status": "github-only",
-      "visibility": "public",
-      "markdownFiles": [
-        {
-          "relativePath": "code-wiki-mcp-plan.md",
-          "name": "code-wiki-mcp-plan.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "README.md",
-          "name": "README.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "TODO.md",
-          "name": "TODO.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "wiki/_index.md",
-          "name": "_index.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "wiki/AGENTS.md",
-          "name": "AGENTS.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "wiki/integrations/_index.md",
-          "name": "_index.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "wiki/patterns/_index.md",
-          "name": "_index.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "wiki/preferences/standard-setups.md",
-          "name": "standard-setups.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "wiki/projects/_index.md",
-          "name": "_index.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "wiki/projects/repo-locations.md",
-          "name": "repo-locations.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "wiki/snippets/_index.md",
-          "name": "_index.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "wiki/templates/_index.md",
-          "name": "_index.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "wiki/utilities/_index.md",
-          "name": "_index.md",
-          "fileType": "md"
-        }
-      ]
-    },
-    {
-      "name": "apiTracker",
-      "description": "A simple GUI tracker for health and number of remaining calls for my various APIs used in my other apps.",
-      "githubUrl": "https://github.com/mindfu23/apiTracker",
-      "languages": [
-        "JavaScript"
-      ],
-      "lastCommitDate": "2026-02-28T00:18:36Z",
-      "status": "synced",
-      "visibility": "public",
-      "localPath": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/apiTracker",
-      "notes": "also implemented as a browser extension, and further developed there.",
-      "markdownFiles": [
-        {
-          "relativePath": "browser-extension/README.md",
-          "name": "README.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "dist-platforms/firefox/README.md",
-          "name": "README.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "dist-platforms/safari/API Usage Scraper Extension/Resources/README.md",
-          "name": "README.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "dist-platforms/safari/README.md",
-          "name": "README.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "platforms/README.md",
           "name": "README.md",
           "fileType": "md"
         }
@@ -2973,6 +2973,6 @@
     "templates",
     "utilities"
   ],
-  "buildTime": "2026-03-01T00:20:49.963Z",
+  "buildTime": "2026-03-02T00:18:30.726Z",
   "version": "1.0.0"
 }
