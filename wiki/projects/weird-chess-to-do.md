@@ -4,14 +4,18 @@ updated: "2026-03-06"
 visibility: "private"
 ---
 
-
 X App completed and submitted to iOS app store.
 
-Use ko-fi link, https://ko-fi.com/mindfu/
+X Use ko-fi link, https://ko-fi.com/mindfu/ - skipping for now, that's apparently difficult or iOS to accept
 
-Created privacy policy, https://jamesmbeach.com/archives/5604
+X Created privacy policy, https://jamesmbeach.com/archives/5604
 
-Store link so far: https://appstoreconnect.apple.com/apps/6759537454/distribution/reviewsubmissions/details/eb044204-305d-4f74-a7a1-3ff67c852527 
+X Store link so far: https://appstoreconnect.apple.com/apps/6759537454/distribution/reviewsubmissions/details/eb044204-305d-4f74-a7a1-3ff67c852527 
+
+approved in iOS!
+
+- update screenshots so they look better
+- create or have a general workflow for generating screenshots that are high-res from the start, for future apps
 
 ...next:
 
