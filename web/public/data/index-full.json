@@ -241,13 +241,13 @@
       "visibility": "private"
     },
     {
-      "path": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/code-wiki/wiki/personal/projects/weird-chess-to-do.md",
+      "path": "wiki/projects/weird-chess-to-do.md",
       "relativePath": "projects/weird-chess-to-do.md",
       "title": "Weird Chess To  Do",
       "tags": [],
-      "updated": "2026-02-23",
-      "content": "\nApp completed and submitted to app store.\n\nUsed ko-fi link, https://ko-fi.com/mindfu/\n\nCreated privacy policy, https://jamesmbeach.com/archives/5604\n\nStore link so far: https://appstoreconnect.apple.com/apps/6759537454/distribution/reviewsubmissions/details/eb044204-305d-4f74-a7a1-3ff67c852527",
-      "contentPreview": "App completed and submitted to app store.  Used ko-fi link, https://ko-fi.com/mindfu/  Created privacy policy, https://jamesmbeach.com/archives/5604  Store link so far: https://appstoreconnect.apple.com/apps/6759537454/distribution/reviewsubmissions/details/eb044204-305d-4f74-a7a1-3ff67c852527",
+      "updated": "2026-03-06",
+      "content": "X App completed and submitted to iOS app store.\n\nUse ko-fi link, https://ko-fi.com/mindfu/\n\nCreated privacy policy, https://jamesmbeach.com/archives/5604\n\nStore link so far: https://appstoreconnect.apple.com/apps/6759537454/distribution/reviewsubmissions/details/eb044204-305d-4f74-a7a1-3ff67c852527 \n\n...next:\n\nupdate game pieces. mainly for the 10x01 boards. \nalso I have a possible workflow for mass graphics generation via Gastown. Good to dig that up and maybe tweak it for user approval with samples before it mass generates - review that later.\n\nthat said, also cool to for the 8x8:\n\n- have a barbarian look for the 8x8 horde board\n- have atomic theme for atomic chess\n\n10x1os:\n\nJetan - warriors, princesses and creatures from Edgar Rice Burroughs Barsoom novels. opposing tribes \n\nHyderabad Decimal Chess - ancient hindu kings, courts, warriors including chariots where relevant, consider the Mahabharata as a source\n\nDecimal chess: robots vs. robots\n\nOmega chess: human astronauts vs. green aliens.\n\nGrand chess: steampunk characters, courtly aristocrats",
+      "contentPreview": "X App completed and submitted to iOS app store.  Use ko-fi link, https://ko-fi.com/mindfu/  Created privacy policy, https://jamesmbeach.com/archives/5604  Store link so far: https://appstoreconnect.apple.com/apps/6759537454/distribution/reviewsubmissions/details/eb044204-305d-4f74-a7a1-3ff67c852527",
       "category": "projects",
       "visibility": "private"
     },
@@ -2985,6 +2985,6 @@
     "templates",
     "utilities"
   ],
-  "buildTime": "2026-03-06T00:23:58.140Z",
+  "buildTime": "2026-03-06T19:04:38.275Z",
   "version": "1.0.0"
 }
