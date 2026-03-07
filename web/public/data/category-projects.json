@@ -30,6 +30,17 @@
     "visibility": "public"
   },
   {
+    "path": "/home/runner/work/code-wiki/code-wiki/wiki/projects/weird-chess-to-do.md",
+    "relativePath": "projects/weird-chess-to-do.md",
+    "title": "Weird Chess To  Do",
+    "tags": [],
+    "updated": "2026-03-06",
+    "content": "\nX App completed and submitted to iOS app store.\n\nX Use ko-fi link, https://ko-fi.com/mindfu/ - skipping for now, that's apparently difficult or iOS to accept\n\nX Created privacy policy, https://jamesmbeach.com/archives/5604\n\nX Store link so far: https://appstoreconnect.apple.com/apps/6759537454/distribution/reviewsubmissions/details/eb044204-305d-4f74-a7a1-3ff67c852527 \n\napproved in iOS!\n\n- update screenshots so they look better\n- create or have a general workflow for generating screenshots that are high-res from the start, for future apps\n\n...next:\n\nupdate game pieces. mainly for the 10x01 boards. \nalso I have a possible workflow for mass graphics generation via Gastown. Good to dig that up and maybe tweak it for user approval with samples before it mass generates - review that later.\n\nthat said, also cool to for the 8x8:\n\n- have a barbarian look for the 8x8 horde board\n- have atomic theme for atomic chess\n\n10x1os:\n\nJetan - warriors, princesses and creatures from Edgar Rice Burroughs Barsoom novels. opposing tribes \n\nHyderabad Decimal Chess - ancient hindu kings, courts, warriors including chariots where relevant, consider the Mahabharata as a source\n\nDecimal chess: robots vs. robots\n\nOmega chess: human astronauts vs. green aliens.\n\nGrand chess: steampunk characters, courtly aristocrats",
+    "contentPreview": "X App completed and submitted to iOS app store.  X Use ko-fi link, https://ko-fi.com/mindfu/ - skipping for now, that's apparently difficult or iOS to accept  X Created privacy policy, https://jamesmbeach.com/archives/5604  X Store link so far: https://appstoreconnect.apple.com/apps/6759537454/dist",
+    "category": "projects",
+    "visibility": "private"
+  },
+  {
     "path": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/code-wiki/wiki/personal/projects/docsy-to-do.md",
     "relativePath": "projects/docsy-to-do.md",
     "title": "Docsy to do 1",
@@ -92,17 +103,6 @@
     "updated": "2026-02-22",
     "content": "\nGood chat here for some further possible next steps. \n\nAlso a ToDo in the repo of course.\n\nhttps://claude.ai/chat/2d60dea0-141f-4a9e-bc00-751720885646",
     "contentPreview": "Good chat here for some further possible next steps.   Also a ToDo in the repo of course.  https://claude.ai/chat/2d60dea0-141f-4a9e-bc00-751720885646",
-    "category": "projects",
-    "visibility": "private"
-  },
-  {
-    "path": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/code-wiki/wiki/personal/projects/weird-chess-to-do.md",
-    "relativePath": "projects/weird-chess-to-do.md",
-    "title": "Weird Chess To  Do",
-    "tags": [],
-    "updated": "2026-02-23",
-    "content": "\nApp completed and submitted to app store.\n\nUsed ko-fi link, https://ko-fi.com/mindfu/\n\nCreated privacy policy, https://jamesmbeach.com/archives/5604\n\nStore link so far: https://appstoreconnect.apple.com/apps/6759537454/distribution/reviewsubmissions/details/eb044204-305d-4f74-a7a1-3ff67c852527",
-    "contentPreview": "App completed and submitted to app store.  Used ko-fi link, https://ko-fi.com/mindfu/  Created privacy policy, https://jamesmbeach.com/archives/5604  Store link so far: https://appstoreconnect.apple.com/apps/6759537454/distribution/reviewsubmissions/details/eb044204-305d-4f74-a7a1-3ff67c852527",
     "category": "projects",
     "visibility": "private"
   }
