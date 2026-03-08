@@ -4,3 +4,10 @@ wiki/personal/
 
 # OS
 .DS_Store
+
+# Documents with sensitive content
+wiki/projects/specstory-markdown-for-review.md
+
+# Claude Code
+.claude/
+CLAUDE.md
