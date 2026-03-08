@@ -273,6 +273,18 @@
       "contentPreview": "## MCP Server Setup All custom MCP servers are Node.js (ES modules) using @modelcontextprotocol/sdk. Configuration lives in two files:  ~/.claude/mcp.json — Global MCPs (loaded in every session) ~/.claude/settings.json — Settings-level MCPs  ### Global MCPs (~/.claude/mcp.json) **1. code-wiki**  Loc",
       "category": "patterns",
       "visibility": "private"
+    },
+    {
+      "path": "wiki/projects/overall-current-status.md",
+      "relativePath": "projects/overall-current-status.md",
+      "title": "Overall current status",
+      "description": "status across many or all repos",
+      "tags": [],
+      "updated": "2026-03-08",
+      "content": "On 2026 03 08 I set up access to \"Renovate\" to scan 5 current code bases of low-key released apps.\n\nhttps://developer.mend.io/github/mindfu23\n\nCurrent apps:\n\nMetabot aka Quantum Retriever\n\nValueApe\nweirdchess\ncode-wiki \nManuscriptReview aka Manuscript Koala",
+      "contentPreview": "On 2026 03 08 I set up access to \"Renovate\" to scan 5 current code bases of low-key released apps.  https://developer.mend.io/github/mindfu23  Current apps:  Metabot aka Quantum Retriever  ValueApe weirdchess code-wiki  ManuscriptReview aka Manuscript Koala",
+      "category": "projects",
+      "visibility": "private"
     }
   ],
   "repos": [
@@ -3213,6 +3225,6 @@
     "templates",
     "utilities"
   ],
-  "buildTime": "2026-03-08T16:51:26.334Z",
+  "buildTime": "2026-03-08T18:23:12.496Z",
   "version": "1.0.0"
 }
