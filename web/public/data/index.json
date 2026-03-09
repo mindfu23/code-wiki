@@ -130,52 +130,12 @@
   ],
   "repos": [
     {
-      "name": "apiTracker",
-      "description": "A simple GUI tracker for health and number of remaining calls for my various APIs used in my other apps.",
-      "githubUrl": "https://github.com/mindfu23/apiTracker",
-      "languages": [
-        "JavaScript"
-      ],
-      "lastCommitDate": "2026-03-07T00:20:40Z",
-      "status": "synced",
-      "visibility": "public",
-      "localPath": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/apiTracker",
-      "notes": "also implemented as a browser extension, and further developed there.",
-      "markdownFiles": [
-        {
-          "relativePath": "browser-extension/README.md",
-          "name": "README.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "dist-platforms/firefox/README.md",
-          "name": "README.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "dist-platforms/safari/API Usage Scraper Extension/Resources/README.md",
-          "name": "README.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "dist-platforms/safari/README.md",
-          "name": "README.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "platforms/README.md",
-          "name": "README.md",
-          "fileType": "md"
-        }
-      ]
-    },
-    {
       "name": "code-wiki",
       "githubUrl": "https://github.com/mindfu23/code-wiki",
       "languages": [
         "TypeScript"
       ],
-      "lastCommitDate": "2026-03-07T00:18:39Z",
+      "lastCommitDate": "2026-03-08T22:40:08Z",
       "status": "github-only",
       "visibility": "public",
       "markdownFiles": [
@@ -215,6 +175,11 @@
           "fileType": "md"
         },
         {
+          "relativePath": "wiki/patterns/overall-mcp-info.md",
+          "name": "overall-mcp-info.md",
+          "fileType": "md"
+        },
+        {
           "relativePath": "wiki/preferences/standard-setups.md",
           "name": "standard-setups.md",
           "fileType": "md"
@@ -222,6 +187,16 @@
         {
           "relativePath": "wiki/projects/_index.md",
           "name": "_index.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "wiki/projects/overall-current-status.md",
+          "name": "overall-current-status.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "wiki/projects/overall-novel-processes.md",
+          "name": "overall-novel-processes.md",
           "fileType": "md"
         },
         {
@@ -247,6 +222,96 @@
         {
           "relativePath": "wiki/utilities/_index.md",
           "name": "_index.md",
+          "fileType": "md"
+        }
+      ]
+    },
+    {
+      "name": "n8n_workflows",
+      "description": "Private repo for n8n workflows",
+      "githubUrl": "https://github.com/mindfu23/n8n_workflows",
+      "languages": [
+        "Shell"
+      ],
+      "lastCommitDate": "2026-03-08T22:30:09Z",
+      "status": "synced",
+      "visibility": "public",
+      "localPath": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/n8n_workflows",
+      "notes": "Not deployed directly, will put URL in once it's set up.",
+      "markdownFiles": [
+        {
+          "relativePath": "docs/N8N_GCP_SETUP_GUIDE.md",
+          "name": "N8N_GCP_SETUP_GUIDE.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "README.md",
+          "name": "README.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "workflows/JOBSEARCHER_INTEGRATION_GUIDE.md",
+          "name": "JOBSEARCHER_INTEGRATION_GUIDE.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "workflows/METABOT_INTEGRATION_GUIDE.md",
+          "name": "METABOT_INTEGRATION_GUIDE.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "workflows/NOVEL_ORCHESTRATION_README.md",
+          "name": "NOVEL_ORCHESTRATION_README.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "workflows/SHAMAIN_INTEGRATION_GUIDE.md",
+          "name": "SHAMAIN_INTEGRATION_GUIDE.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "workflows/VALUEAPE_INTEGRATION_GUIDE.md",
+          "name": "VALUEAPE_INTEGRATION_GUIDE.md",
+          "fileType": "md"
+        }
+      ]
+    },
+    {
+      "name": "apiTracker",
+      "description": "A simple GUI tracker for health and number of remaining calls for my various APIs used in my other apps.",
+      "githubUrl": "https://github.com/mindfu23/apiTracker",
+      "languages": [
+        "JavaScript"
+      ],
+      "lastCommitDate": "2026-03-08T00:21:20Z",
+      "status": "synced",
+      "visibility": "public",
+      "localPath": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/apiTracker",
+      "notes": "also implemented as a browser extension, and further developed there.",
+      "markdownFiles": [
+        {
+          "relativePath": "browser-extension/README.md",
+          "name": "README.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "dist-platforms/firefox/README.md",
+          "name": "README.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "dist-platforms/safari/API Usage Scraper Extension/Resources/README.md",
+          "name": "README.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "dist-platforms/safari/README.md",
+          "name": "README.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "platforms/README.md",
+          "name": "README.md",
           "fileType": "md"
         }
       ]
@@ -744,56 +809,6 @@
         {
           "relativePath": "weirdchess/crew/README.md",
           "name": "README.md",
-          "fileType": "md"
-        }
-      ]
-    },
-    {
-      "name": "n8n_workflows",
-      "description": "Private repo for n8n workflows",
-      "githubUrl": "https://github.com/mindfu23/n8n_workflows",
-      "languages": [
-        "Shell"
-      ],
-      "lastCommitDate": "2026-03-06T16:43:24Z",
-      "status": "synced",
-      "visibility": "public",
-      "localPath": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/n8n_workflows",
-      "notes": "Not deployed directly, will put URL in once it's set up.",
-      "markdownFiles": [
-        {
-          "relativePath": "docs/N8N_GCP_SETUP_GUIDE.md",
-          "name": "N8N_GCP_SETUP_GUIDE.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "README.md",
-          "name": "README.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "workflows/JOBSEARCHER_INTEGRATION_GUIDE.md",
-          "name": "JOBSEARCHER_INTEGRATION_GUIDE.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "workflows/METABOT_INTEGRATION_GUIDE.md",
-          "name": "METABOT_INTEGRATION_GUIDE.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "workflows/NOVEL_ORCHESTRATION_README.md",
-          "name": "NOVEL_ORCHESTRATION_README.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "workflows/SHAMAIN_INTEGRATION_GUIDE.md",
-          "name": "SHAMAIN_INTEGRATION_GUIDE.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "workflows/VALUEAPE_INTEGRATION_GUIDE.md",
-          "name": "VALUEAPE_INTEGRATION_GUIDE.md",
           "fileType": "md"
         }
       ]
@@ -1605,6 +1620,6 @@
     "templates",
     "utilities"
   ],
-  "buildTime": "2026-03-08T00:19:09.321Z",
+  "buildTime": "2026-03-09T00:19:10.831Z",
   "version": "1.0.0"
 }

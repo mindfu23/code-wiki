@@ -55,6 +55,18 @@
       "visibility": "public"
     },
     {
+      "path": "/home/runner/work/code-wiki/code-wiki/wiki/patterns/overall-mcp-info.md",
+      "relativePath": "patterns/overall-mcp-info.md",
+      "title": "Overall MCP info",
+      "description": "Info on my personal MCP setups",
+      "tags": [],
+      "updated": "2026-03-08",
+      "content": "\n## MCP Server Setup\nAll custom MCP servers are Node.js (ES modules) using @modelcontextprotocol/sdk. Configuration lives in two files:\n\n~/.claude/mcp.json — Global MCPs (loaded in every session)\n~/.claude/settings.json — Settings-level MCPs\n\n### Global MCPs (~/.claude/mcp.json)\n**1. code-wiki**\n\nLocation: ~/.claude/mcp-servers/code-wiki/index.js\n\nPurpose: Stores and retrieves development preferences and coding standards as markdown files in ~/.claude/preferences/\n\nTools: get_preferences, set_preference\n\nUse case: When Claude needs to check your tech stack preferences, deployment standards, or UI guidelines before making recommendations\n\n**2. novel-tools**\n\nLocation: ~/.claude/mcp-servers/novel-tools/index.js\n\nPurpose: Wraps Python novel-editing-tools scripts (at ~/Documents/visual-studio-code/antigravity-and-others/novel-editing-tools/) as MCP tools\n\nTools: research, fact_check, world_build, generate_names, check_grammar, check_style, compare_versions, ingest_manuscript, plan_revisions, fix_typos\n\nUse case: AI-assisted novel editing — research, grammar/style checking, manuscript ingestion, revision planning, and .docx typo fixing\n\n**3. lorebook**\n\nLocation: ~/.claude/mcp-servers/lorebook/index.js\n\nPurpose: Selective context injection for long-form fiction. Maintains a per-project lorebook (characters, settings, plot threads, themes) and returns only entries relevant to the text being worked on, based on keyword matching. Reduces token usage by injecting only what's needed.\n\nTools: init_lorebook, add_entry, update_entry, remove_entry, get_entry, list_entries, get_context_for_text, search_entries, get_lorebook_summary\n\nStorage: <project>/.lorebook/lorebook.json\n\nUse case: When writing or editing a chapter, call get_context_for_text with the chapter text to get only the relevant world-building data instead of the entire manuscript's context\n\n## Settings-level MCPs (~/.claude/settings.json)\n\n**google-sheets**\n\n\nCommand: mcp-google-sheets\n\nAuth: Google service account credentials (GCP project spatial-racer-263823)\n\nUse case: Reading/writing Google Sheets data from within Claude Code sessions",
+      "contentPreview": "## MCP Server Setup All custom MCP servers are Node.js (ES modules) using @modelcontextprotocol/sdk. Configuration lives in two files:  ~/.claude/mcp.json — Global MCPs (loaded in every session) ~/.claude/settings.json — Settings-level MCPs  ### Global MCPs (~/.claude/mcp.json) **1. code-wiki**  Lo",
+      "category": "patterns",
+      "visibility": "private"
+    },
+    {
       "path": "/home/runner/work/code-wiki/code-wiki/wiki/preferences/standard-setups.md",
       "relativePath": "preferences/standard-setups.md",
       "title": "standard-setups",
@@ -78,6 +90,29 @@
       "contentPreview": "# Projects  This category contains documentation for active repositories.  ## What belongs here  - Project overviews - Architecture decisions - Key file locations - Common tasks and commands - Deployment notes - Known issues and workarounds  ## Adding new project docs  Create a new `.md` file in th",
       "category": "projects",
       "visibility": "public"
+    },
+    {
+      "path": "/home/runner/work/code-wiki/code-wiki/wiki/projects/overall-current-status.md",
+      "relativePath": "projects/overall-current-status.md",
+      "title": "Overall current status",
+      "description": "status across many or all repos",
+      "tags": [],
+      "updated": "2026-03-08",
+      "content": "\nOn 2026 03 08 I set up access to \"Renovate\" to scan 5 current code bases of low-key released apps.\n\nhttps://developer.mend.io/github/mindfu23\n\nCurrent apps:\n\nMetabot aka Quantum Retriever\n\nValueApe\nweirdchess\ncode-wiki \nManuscriptReview aka Manuscript Koala",
+      "contentPreview": "On 2026 03 08 I set up access to \"Renovate\" to scan 5 current code bases of low-key released apps.  https://developer.mend.io/github/mindfu23  Current apps:  Metabot aka Quantum Retriever  ValueApe weirdchess code-wiki  ManuscriptReview aka Manuscript Koala",
+      "category": "projects",
+      "visibility": "private"
+    },
+    {
+      "path": "/home/runner/work/code-wiki/code-wiki/wiki/projects/overall-novel-processes.md",
+      "relativePath": "projects/overall-novel-processes.md",
+      "title": "Overall novel processes and workflows",
+      "tags": [],
+      "updated": "2026-03-08",
+      "content": "\nAs of this writing 2026 03 08 I'm developing and testing a few different ways to create novels from scratch with AI orchestration. \n\nThe two main methods are the Novelizer app, and the n8n workflow currently at http://35.188.141.23:5678/workflow/fO5KbBCNxtXK5KPh \n\nBoth have been updated today to use the recently put together lorebook MCP. This was based on vibe-coding with some tokenizing, similar to the method used by jcodemunch. \n\nI've also created a google sheet that should sync with local MCP lorebook use, here. Each new book should become a separate new tab. https://docs.google.com/spreadsheets/d/1vSGcfSPmDKBUAvk7vJK7Y76PX5rJNr3L82ipCP5xsjI/edit?gid=0#gid=0 \n\nOne other method to compare could be Gastown as rigged for novels. Can see how that goes after this. With the Lorebook MCP, this should be significantly cheaper than other methods in API cost.",
+      "contentPreview": "As of this writing 2026 03 08 I'm developing and testing a few different ways to create novels from scratch with AI orchestration.   The two main methods are the Novelizer app, and the n8n workflow currently at http://35.188.141.23:5678/workflow/fO5KbBCNxtXK5KPh   Both have been updated today to us",
+      "category": "projects",
+      "visibility": "private"
     },
     {
       "path": "/home/runner/work/code-wiki/code-wiki/wiki/projects/repo-locations.md",
@@ -261,51 +296,217 @@
       "contentPreview": "Creating this basic code wiki as a way to search through and understand all of the apps I've been developing in this repo, and also to create a general meta way to view setups like this for possible later creation for writers I'm giving tech services to or similar clients.",
       "category": "snippets",
       "visibility": "private"
-    },
-    {
-      "path": "wiki/patterns/overall-mcp-info.md",
-      "relativePath": "patterns/overall-mcp-info.md",
-      "title": "Overall MCP info",
-      "description": "Info on my personal MCP setups",
-      "tags": [],
-      "updated": "2026-03-08",
-      "content": "## MCP Server Setup\nAll custom MCP servers are Node.js (ES modules) using @modelcontextprotocol/sdk. Configuration lives in two files:\n\n~/.claude/mcp.json — Global MCPs (loaded in every session)\n~/.claude/settings.json — Settings-level MCPs\n\n### Global MCPs (~/.claude/mcp.json)\n**1. code-wiki**\n\nLocation: ~/.claude/mcp-servers/code-wiki/index.js\n\nPurpose: Stores and retrieves development preferences and coding standards as markdown files in ~/.claude/preferences/\n\nTools: get_preferences, set_preference\n\nUse case: When Claude needs to check your tech stack preferences, deployment standards, or UI guidelines before making recommendations\n\n**2. novel-tools**\n\nLocation: ~/.claude/mcp-servers/novel-tools/index.js\n\nPurpose: Wraps Python novel-editing-tools scripts (at ~/Documents/visual-studio-code/antigravity-and-others/novel-editing-tools/) as MCP tools\n\nTools: research, fact_check, world_build, generate_names, check_grammar, check_style, compare_versions, ingest_manuscript, plan_revisions, fix_typos\n\nUse case: AI-assisted novel editing — research, grammar/style checking, manuscript ingestion, revision planning, and .docx typo fixing\n\n**3. lorebook**\n\nLocation: ~/.claude/mcp-servers/lorebook/index.js\n\nPurpose: Selective context injection for long-form fiction. Maintains a per-project lorebook (characters, settings, plot threads, themes) and returns only entries relevant to the text being worked on, based on keyword matching. Reduces token usage by injecting only what's needed.\n\nTools: init_lorebook, add_entry, update_entry, remove_entry, get_entry, list_entries, get_context_for_text, search_entries, get_lorebook_summary\n\nStorage: <project>/.lorebook/lorebook.json\n\nUse case: When writing or editing a chapter, call get_context_for_text with the chapter text to get only the relevant world-building data instead of the entire manuscript's context\n\n## Settings-level MCPs (~/.claude/settings.json)\n\n**google-sheets**\n\n\nCommand: mcp-google-sheets\n\nAuth: Google service account credentials (GCP project spatial-racer-263823)\n\nUse case: Reading/writing Google Sheets data from within Claude Code sessions",
-      "contentPreview": "## MCP Server Setup All custom MCP servers are Node.js (ES modules) using @modelcontextprotocol/sdk. Configuration lives in two files:  ~/.claude/mcp.json — Global MCPs (loaded in every session) ~/.claude/settings.json — Settings-level MCPs  ### Global MCPs (~/.claude/mcp.json) **1. code-wiki**  Loc",
-      "category": "patterns",
-      "visibility": "private"
-    },
-    {
-      "path": "wiki/projects/overall-current-status.md",
-      "relativePath": "projects/overall-current-status.md",
-      "title": "Overall current status",
-      "description": "status across many or all repos",
-      "tags": [],
-      "updated": "2026-03-08",
-      "content": "On 2026 03 08 I set up access to \"Renovate\" to scan 5 current code bases of low-key released apps.\n\nhttps://developer.mend.io/github/mindfu23\n\nCurrent apps:\n\nMetabot aka Quantum Retriever\n\nValueApe\nweirdchess\ncode-wiki \nManuscriptReview aka Manuscript Koala",
-      "contentPreview": "On 2026 03 08 I set up access to \"Renovate\" to scan 5 current code bases of low-key released apps.  https://developer.mend.io/github/mindfu23  Current apps:  Metabot aka Quantum Retriever  ValueApe weirdchess code-wiki  ManuscriptReview aka Manuscript Koala",
-      "category": "projects",
-      "visibility": "private"
-    },
-    {
-      "path": "wiki/projects/overall-novel-processes.md",
-      "relativePath": "projects/overall-novel-processes.md",
-      "title": "Overall novel processes and workflows",
-      "tags": [],
-      "updated": "2026-03-08",
-      "content": "As of this writing 2026 03 08 I'm developing and testing a few different ways to create novels from scratch with AI orchestration. \n\nThe two main methods are the Novelizer app, and the n8n workflow currently at http://35.188.141.23:5678/workflow/fO5KbBCNxtXK5KPh \n\nBoth have been updated today to use the recently put together lorebook MCP. This was based on vibe-coding with some tokenizing, similar to the method used by jcodemunch. \n\nI've also created a google sheet that should sync with local MCP lorebook use, here. Each new book should become a separate new tab. https://docs.google.com/spreadsheets/d/1vSGcfSPmDKBUAvk7vJK7Y76PX5rJNr3L82ipCP5xsjI/edit?gid=0#gid=0 \n\nOne other method to compare could be Gastown as rigged for novels. Can see how that goes after this. With the Lorebook MCP, this should be significantly cheaper than other methods in API cost.",
-      "contentPreview": "As of this writing 2026 03 08 I'm developing and testing a few different ways to create novels from scratch with AI orchestration.   The two main methods are the Novelizer app, and the n8n workflow currently at http://35.188.141.23:5678/workflow/fO5KbBCNxtXK5KPh   Both have been updated today to use",
-      "category": "projects",
-      "visibility": "private"
     }
   ],
   "repos": [
+    {
+      "name": "code-wiki",
+      "githubUrl": "https://github.com/mindfu23/code-wiki",
+      "languages": [
+        "TypeScript"
+      ],
+      "lastCommitDate": "2026-03-08T22:40:08Z",
+      "status": "github-only",
+      "visibility": "public",
+      "markdownFiles": [
+        {
+          "relativePath": "code-wiki-mcp-plan.md",
+          "name": "code-wiki-mcp-plan.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "README.md",
+          "name": "README.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "TODO.md",
+          "name": "TODO.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "wiki/_index.md",
+          "name": "_index.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "wiki/AGENTS.md",
+          "name": "AGENTS.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "wiki/integrations/_index.md",
+          "name": "_index.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "wiki/patterns/_index.md",
+          "name": "_index.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "wiki/patterns/overall-mcp-info.md",
+          "name": "overall-mcp-info.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "wiki/preferences/standard-setups.md",
+          "name": "standard-setups.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "wiki/projects/_index.md",
+          "name": "_index.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "wiki/projects/overall-current-status.md",
+          "name": "overall-current-status.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "wiki/projects/overall-novel-processes.md",
+          "name": "overall-novel-processes.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "wiki/projects/repo-locations.md",
+          "name": "repo-locations.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "wiki/projects/weird-chess-to-do.md",
+          "name": "weird-chess-to-do.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "wiki/snippets/_index.md",
+          "name": "_index.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "wiki/templates/_index.md",
+          "name": "_index.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "wiki/utilities/_index.md",
+          "name": "_index.md",
+          "fileType": "md"
+        }
+      ]
+    },
+    {
+      "name": "n8n_workflows",
+      "description": "Private repo for n8n workflows",
+      "githubUrl": "https://github.com/mindfu23/n8n_workflows",
+      "languages": [
+        "Shell"
+      ],
+      "lastCommitDate": "2026-03-08T22:30:09Z",
+      "status": "synced",
+      "visibility": "public",
+      "localPath": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/n8n_workflows",
+      "notes": "Not deployed directly, will put URL in once it's set up.",
+      "markdownFiles": [
+        {
+          "relativePath": "docs/N8N_GCP_SETUP_GUIDE.md",
+          "name": "N8N_GCP_SETUP_GUIDE.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "README.md",
+          "name": "README.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "workflows/JOBSEARCHER_INTEGRATION_GUIDE.md",
+          "name": "JOBSEARCHER_INTEGRATION_GUIDE.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "workflows/METABOT_INTEGRATION_GUIDE.md",
+          "name": "METABOT_INTEGRATION_GUIDE.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "workflows/NOVEL_ORCHESTRATION_README.md",
+          "name": "NOVEL_ORCHESTRATION_README.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "workflows/SHAMAIN_INTEGRATION_GUIDE.md",
+          "name": "SHAMAIN_INTEGRATION_GUIDE.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "workflows/VALUEAPE_INTEGRATION_GUIDE.md",
+          "name": "VALUEAPE_INTEGRATION_GUIDE.md",
+          "fileType": "md"
+        }
+      ]
+    },
+    {
+      "name": "Novelizer",
+      "description": "My own personal multi-agentic app for creative novel writing and editing ",
+      "githubUrl": "https://github.com/mindfu23/Novelizer",
+      "languages": [
+        "TypeScript"
+      ],
+      "lastCommitDate": "2026-03-08T22:25:13Z",
+      "status": "synced",
+      "visibility": "private",
+      "localPath": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/Novelizer",
+      "markdownFiles": [
+        {
+          "relativePath": "DEVELOPMENT_PLAN.md",
+          "name": "DEVELOPMENT_PLAN.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "NOTES.md",
+          "name": "NOTES.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "NOVELIZER-ENHANCEMENTS.md",
+          "name": "NOVELIZER-ENHANCEMENTS.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "POSSIBLE-EXPANSION.md",
+          "name": "POSSIBLE-EXPANSION.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "README.md",
+          "name": "README.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "TODO_alt.md",
+          "name": "TODO_alt.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "TODO.md",
+          "name": "TODO.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "web/README.md",
+          "name": "README.md",
+          "fileType": "md"
+        }
+      ]
+    },
     {
       "name": "ValueApe",
       "githubUrl": "https://github.com/mindfu23/ValueApe",
       "languages": [
         "TypeScript"
       ],
-      "lastCommitDate": "2026-03-07T06:18:03Z",
+      "lastCommitDate": "2026-03-08T20:41:17Z",
       "status": "synced",
       "visibility": "private",
       "localPath": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/ValueApe",
@@ -394,7 +595,7 @@
       "languages": [
         "JavaScript"
       ],
-      "lastCommitDate": "2026-03-07T00:20:40Z",
+      "lastCommitDate": "2026-03-08T00:21:20Z",
       "status": "synced",
       "visibility": "public",
       "localPath": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/apiTracker",
@@ -423,88 +624,6 @@
         {
           "relativePath": "platforms/README.md",
           "name": "README.md",
-          "fileType": "md"
-        }
-      ]
-    },
-    {
-      "name": "code-wiki",
-      "githubUrl": "https://github.com/mindfu23/code-wiki",
-      "languages": [
-        "TypeScript"
-      ],
-      "lastCommitDate": "2026-03-07T00:18:39Z",
-      "status": "github-only",
-      "visibility": "public",
-      "markdownFiles": [
-        {
-          "relativePath": "code-wiki-mcp-plan.md",
-          "name": "code-wiki-mcp-plan.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "README.md",
-          "name": "README.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "TODO.md",
-          "name": "TODO.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "wiki/_index.md",
-          "name": "_index.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "wiki/AGENTS.md",
-          "name": "AGENTS.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "wiki/integrations/_index.md",
-          "name": "_index.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "wiki/patterns/_index.md",
-          "name": "_index.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "wiki/preferences/standard-setups.md",
-          "name": "standard-setups.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "wiki/projects/_index.md",
-          "name": "_index.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "wiki/projects/repo-locations.md",
-          "name": "repo-locations.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "wiki/projects/weird-chess-to-do.md",
-          "name": "weird-chess-to-do.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "wiki/snippets/_index.md",
-          "name": "_index.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "wiki/templates/_index.md",
-          "name": "_index.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "wiki/utilities/_index.md",
-          "name": "_index.md",
           "fileType": "md"
         }
       ]
@@ -1175,56 +1294,6 @@
         {
           "relativePath": "weirdchess/crew/README.md",
           "name": "README.md",
-          "fileType": "md"
-        }
-      ]
-    },
-    {
-      "name": "n8n_workflows",
-      "description": "Private repo for n8n workflows",
-      "githubUrl": "https://github.com/mindfu23/n8n_workflows",
-      "languages": [
-        "Shell"
-      ],
-      "lastCommitDate": "2026-03-06T16:43:24Z",
-      "status": "synced",
-      "visibility": "public",
-      "localPath": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/n8n_workflows",
-      "notes": "Not deployed directly, will put URL in once it's set up.",
-      "markdownFiles": [
-        {
-          "relativePath": "docs/N8N_GCP_SETUP_GUIDE.md",
-          "name": "N8N_GCP_SETUP_GUIDE.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "README.md",
-          "name": "README.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "workflows/JOBSEARCHER_INTEGRATION_GUIDE.md",
-          "name": "JOBSEARCHER_INTEGRATION_GUIDE.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "workflows/METABOT_INTEGRATION_GUIDE.md",
-          "name": "METABOT_INTEGRATION_GUIDE.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "workflows/NOVEL_ORCHESTRATION_README.md",
-          "name": "NOVEL_ORCHESTRATION_README.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "workflows/SHAMAIN_INTEGRATION_GUIDE.md",
-          "name": "SHAMAIN_INTEGRATION_GUIDE.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "workflows/VALUEAPE_INTEGRATION_GUIDE.md",
-          "name": "VALUEAPE_INTEGRATION_GUIDE.md",
           "fileType": "md"
         }
       ]
@@ -2270,55 +2339,6 @@
       ]
     },
     {
-      "name": "Novelizer",
-      "description": "My own personal multi-agentic app for creative novel writing and editing ",
-      "githubUrl": "https://github.com/mindfu23/Novelizer",
-      "languages": [
-        "TypeScript"
-      ],
-      "lastCommitDate": "2026-01-19T19:10:45Z",
-      "status": "synced",
-      "visibility": "private",
-      "localPath": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/Novelizer",
-      "markdownFiles": [
-        {
-          "relativePath": "DEVELOPMENT_PLAN.md",
-          "name": "DEVELOPMENT_PLAN.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "NOTES.md",
-          "name": "NOTES.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "NOVELIZER-ENHANCEMENTS.md",
-          "name": "NOVELIZER-ENHANCEMENTS.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "POSSIBLE-EXPANSION.md",
-          "name": "POSSIBLE-EXPANSION.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "README.md",
-          "name": "README.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "TODO.md",
-          "name": "TODO.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "web/README.md",
-          "name": "README.md",
-          "fileType": "md"
-        }
-      ]
-    },
-    {
       "name": "gastown",
       "description": "Gas Town - multi-agent workspace manager",
       "githubUrl": "https://github.com/mindfu23/gastown",
@@ -3236,6 +3256,6 @@
     "templates",
     "utilities"
   ],
-  "buildTime": "2026-03-08T22:29:07.758Z",
+  "buildTime": "2026-03-09T00:19:10.831Z",
   "version": "1.0.0"
 }
