@@ -14,6 +14,29 @@
     "visibility": "public"
   },
   {
+    "path": "/home/runner/work/code-wiki/code-wiki/wiki/projects/overall-current-status.md",
+    "relativePath": "projects/overall-current-status.md",
+    "title": "Overall current status",
+    "description": "status across many or all repos",
+    "tags": [],
+    "updated": "2026-03-08",
+    "content": "\nOn 2026 03 08 I set up access to \"Renovate\" to scan 5 current code bases of low-key released apps.\n\nhttps://developer.mend.io/github/mindfu23\n\nCurrent apps:\n\nMetabot aka Quantum Retriever\n\nValueApe\nweirdchess\ncode-wiki \nManuscriptReview aka Manuscript Koala",
+    "contentPreview": "On 2026 03 08 I set up access to \"Renovate\" to scan 5 current code bases of low-key released apps.  https://developer.mend.io/github/mindfu23  Current apps:  Metabot aka Quantum Retriever  ValueApe weirdchess code-wiki  ManuscriptReview aka Manuscript Koala",
+    "category": "projects",
+    "visibility": "private"
+  },
+  {
+    "path": "/home/runner/work/code-wiki/code-wiki/wiki/projects/overall-novel-processes.md",
+    "relativePath": "projects/overall-novel-processes.md",
+    "title": "Overall novel processes and workflows",
+    "tags": [],
+    "updated": "2026-03-08",
+    "content": "\nAs of this writing 2026 03 08 I'm developing and testing a few different ways to create novels from scratch with AI orchestration. \n\nThe two main methods are the Novelizer app, and the n8n workflow currently at http://35.188.141.23:5678/workflow/fO5KbBCNxtXK5KPh \n\nBoth have been updated today to use the recently put together lorebook MCP. This was based on vibe-coding with some tokenizing, similar to the method used by jcodemunch. \n\nI've also created a google sheet that should sync with local MCP lorebook use, here. Each new book should become a separate new tab. https://docs.google.com/spreadsheets/d/1vSGcfSPmDKBUAvk7vJK7Y76PX5rJNr3L82ipCP5xsjI/edit?gid=0#gid=0 \n\nOne other method to compare could be Gastown as rigged for novels. Can see how that goes after this. With the Lorebook MCP, this should be significantly cheaper than other methods in API cost.",
+    "contentPreview": "As of this writing 2026 03 08 I'm developing and testing a few different ways to create novels from scratch with AI orchestration.   The two main methods are the Novelizer app, and the n8n workflow currently at http://35.188.141.23:5678/workflow/fO5KbBCNxtXK5KPh   Both have been updated today to us",
+    "category": "projects",
+    "visibility": "private"
+  },
+  {
     "path": "/home/runner/work/code-wiki/code-wiki/wiki/projects/repo-locations.md",
     "relativePath": "projects/repo-locations.md",
     "title": "Repository Locations",
