@@ -130,12 +130,62 @@
   ],
   "repos": [
     {
+      "name": "n8n_workflows",
+      "description": "Private repo for n8n workflows",
+      "githubUrl": "https://github.com/mindfu23/n8n_workflows",
+      "languages": [
+        "JavaScript"
+      ],
+      "lastCommitDate": "2026-03-09T16:47:34Z",
+      "status": "synced",
+      "visibility": "public",
+      "localPath": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/n8n_workflows",
+      "notes": "Not deployed directly, will put URL in once it's set up.",
+      "markdownFiles": [
+        {
+          "relativePath": "docs/N8N_GCP_SETUP_GUIDE.md",
+          "name": "N8N_GCP_SETUP_GUIDE.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "README.md",
+          "name": "README.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "workflows/JOBSEARCHER_INTEGRATION_GUIDE.md",
+          "name": "JOBSEARCHER_INTEGRATION_GUIDE.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "workflows/METABOT_INTEGRATION_GUIDE.md",
+          "name": "METABOT_INTEGRATION_GUIDE.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "workflows/NOVEL_ORCHESTRATION_README.md",
+          "name": "NOVEL_ORCHESTRATION_README.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "workflows/SHAMAIN_INTEGRATION_GUIDE.md",
+          "name": "SHAMAIN_INTEGRATION_GUIDE.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "workflows/VALUEAPE_INTEGRATION_GUIDE.md",
+          "name": "VALUEAPE_INTEGRATION_GUIDE.md",
+          "fileType": "md"
+        }
+      ]
+    },
+    {
       "name": "code-wiki",
       "githubUrl": "https://github.com/mindfu23/code-wiki",
       "languages": [
         "TypeScript"
       ],
-      "lastCommitDate": "2026-03-08T22:40:08Z",
+      "lastCommitDate": "2026-03-09T02:00:33Z",
       "status": "github-only",
       "visibility": "public",
       "markdownFiles": [
@@ -227,63 +277,13 @@
       ]
     },
     {
-      "name": "n8n_workflows",
-      "description": "Private repo for n8n workflows",
-      "githubUrl": "https://github.com/mindfu23/n8n_workflows",
-      "languages": [
-        "Shell"
-      ],
-      "lastCommitDate": "2026-03-08T22:30:09Z",
-      "status": "synced",
-      "visibility": "public",
-      "localPath": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/n8n_workflows",
-      "notes": "Not deployed directly, will put URL in once it's set up.",
-      "markdownFiles": [
-        {
-          "relativePath": "docs/N8N_GCP_SETUP_GUIDE.md",
-          "name": "N8N_GCP_SETUP_GUIDE.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "README.md",
-          "name": "README.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "workflows/JOBSEARCHER_INTEGRATION_GUIDE.md",
-          "name": "JOBSEARCHER_INTEGRATION_GUIDE.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "workflows/METABOT_INTEGRATION_GUIDE.md",
-          "name": "METABOT_INTEGRATION_GUIDE.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "workflows/NOVEL_ORCHESTRATION_README.md",
-          "name": "NOVEL_ORCHESTRATION_README.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "workflows/SHAMAIN_INTEGRATION_GUIDE.md",
-          "name": "SHAMAIN_INTEGRATION_GUIDE.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "workflows/VALUEAPE_INTEGRATION_GUIDE.md",
-          "name": "VALUEAPE_INTEGRATION_GUIDE.md",
-          "fileType": "md"
-        }
-      ]
-    },
-    {
       "name": "apiTracker",
       "description": "A simple GUI tracker for health and number of remaining calls for my various APIs used in my other apps.",
       "githubUrl": "https://github.com/mindfu23/apiTracker",
       "languages": [
         "JavaScript"
       ],
-      "lastCommitDate": "2026-03-08T00:21:20Z",
+      "lastCommitDate": "2026-03-09T00:21:21Z",
       "status": "synced",
       "visibility": "public",
       "localPath": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/apiTracker",
@@ -1620,6 +1620,6 @@
     "templates",
     "utilities"
   ],
-  "buildTime": "2026-03-09T00:19:10.831Z",
+  "buildTime": "2026-03-10T00:17:04.699Z",
   "version": "1.0.0"
 }
