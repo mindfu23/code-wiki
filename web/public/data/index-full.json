@@ -300,21 +300,65 @@
   ],
   "repos": [
     {
-      "name": "n8n_workflows",
-      "description": "Private repo for n8n workflows",
-      "githubUrl": "https://github.com/mindfu23/n8n_workflows",
+      "name": "Metabot",
+      "description": "A bot that will take any query and send it to at least 4 different current AIs. This currently is Chat GPT, Anthropic's Claude, Google's Gemini and Perplexity AI. It will then provide a synthesis and summary of the received information, by default via Perplexity but also user-configurable for any other AI to be the summary agent.",
+      "githubUrl": "https://github.com/mindfu23/Metabot",
       "languages": [
-        "JavaScript"
+        "TypeScript"
       ],
-      "lastCommitDate": "2026-03-09T16:47:34Z",
+      "lastCommitDate": "2026-03-10T17:23:22Z",
       "status": "synced",
-      "visibility": "public",
-      "localPath": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/n8n_workflows",
-      "notes": "Not deployed directly, will put URL in once it's set up.",
+      "visibility": "private",
+      "localPath": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/Metabot",
       "markdownFiles": [
         {
-          "relativePath": "docs/N8N_GCP_SETUP_GUIDE.md",
-          "name": "N8N_GCP_SETUP_GUIDE.md",
+          "relativePath": "API.md",
+          "name": "API.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "ARCHITECTURE.md",
+          "name": "ARCHITECTURE.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "CONTRIBUTING.md",
+          "name": "CONTRIBUTING.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "DEPLOYMENT.md",
+          "name": "DEPLOYMENT.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "DOCKER.md",
+          "name": "DOCKER.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "figma-export/README.md",
+          "name": "README.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "figma-export/src/Attributions.md",
+          "name": "Attributions.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "figma-export/src/guidelines/Guidelines.md",
+          "name": "Guidelines.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "IMPLEMENTATION_SUMMARY.md",
+          "name": "IMPLEMENTATION_SUMMARY.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "MCP_INTEGRATION.md",
+          "name": "MCP_INTEGRATION.md",
           "fileType": "md"
         },
         {
@@ -323,28 +367,32 @@
           "fileType": "md"
         },
         {
-          "relativePath": "workflows/JOBSEARCHER_INTEGRATION_GUIDE.md",
-          "name": "JOBSEARCHER_INTEGRATION_GUIDE.md",
+          "relativePath": "VERIFICATION.md",
+          "name": "VERIFICATION.md",
+          "fileType": "md"
+        }
+      ]
+    },
+    {
+      "name": "weirdchess",
+      "description": "A game with 5 variants of 10x10 chess.",
+      "githubUrl": "https://github.com/mindfu23/weirdchess",
+      "languages": [
+        "Dart"
+      ],
+      "lastCommitDate": "2026-03-10T17:22:55Z",
+      "status": "synced",
+      "visibility": "public",
+      "localPath": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/weirdchess",
+      "markdownFiles": [
+        {
+          "relativePath": "ios/Runner/Assets.xcassets/LaunchImage.imageset/README.md",
+          "name": "README.md",
           "fileType": "md"
         },
         {
-          "relativePath": "workflows/METABOT_INTEGRATION_GUIDE.md",
-          "name": "METABOT_INTEGRATION_GUIDE.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "workflows/NOVEL_ORCHESTRATION_README.md",
-          "name": "NOVEL_ORCHESTRATION_README.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "workflows/SHAMAIN_INTEGRATION_GUIDE.md",
-          "name": "SHAMAIN_INTEGRATION_GUIDE.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "workflows/VALUEAPE_INTEGRATION_GUIDE.md",
-          "name": "VALUEAPE_INTEGRATION_GUIDE.md",
+          "relativePath": "README.md",
+          "name": "README.md",
           "fileType": "md"
         }
       ]
@@ -355,7 +403,7 @@
       "languages": [
         "TypeScript"
       ],
-      "lastCommitDate": "2026-03-09T06:32:13Z",
+      "lastCommitDate": "2026-03-10T06:24:27Z",
       "status": "synced",
       "visibility": "private",
       "localPath": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/ValueApe",
@@ -438,12 +486,102 @@
       ]
     },
     {
+      "name": "n8n_workflows",
+      "description": "Private repo for n8n workflows",
+      "githubUrl": "https://github.com/mindfu23/n8n_workflows",
+      "languages": [
+        "JavaScript"
+      ],
+      "lastCommitDate": "2026-03-10T01:09:32Z",
+      "status": "synced",
+      "visibility": "public",
+      "localPath": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/n8n_workflows",
+      "notes": "Not deployed directly, will put URL in once it's set up.",
+      "markdownFiles": [
+        {
+          "relativePath": "docs/N8N_GCP_SETUP_GUIDE.md",
+          "name": "N8N_GCP_SETUP_GUIDE.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "README.md",
+          "name": "README.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "workflows/JOBSEARCHER_INTEGRATION_GUIDE.md",
+          "name": "JOBSEARCHER_INTEGRATION_GUIDE.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "workflows/METABOT_INTEGRATION_GUIDE.md",
+          "name": "METABOT_INTEGRATION_GUIDE.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "workflows/NOVEL_ORCHESTRATION_README.md",
+          "name": "NOVEL_ORCHESTRATION_README.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "workflows/SHAMAIN_INTEGRATION_GUIDE.md",
+          "name": "SHAMAIN_INTEGRATION_GUIDE.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "workflows/VALUEAPE_INTEGRATION_GUIDE.md",
+          "name": "VALUEAPE_INTEGRATION_GUIDE.md",
+          "fileType": "md"
+        }
+      ]
+    },
+    {
+      "name": "apiTracker",
+      "description": "A simple GUI tracker for health and number of remaining calls for my various APIs used in my other apps.",
+      "githubUrl": "https://github.com/mindfu23/apiTracker",
+      "languages": [
+        "JavaScript"
+      ],
+      "lastCommitDate": "2026-03-10T00:19:14Z",
+      "status": "synced",
+      "visibility": "public",
+      "localPath": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/apiTracker",
+      "notes": "also implemented as a browser extension, and further developed there.",
+      "markdownFiles": [
+        {
+          "relativePath": "browser-extension/README.md",
+          "name": "README.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "dist-platforms/firefox/README.md",
+          "name": "README.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "dist-platforms/safari/API Usage Scraper Extension/Resources/README.md",
+          "name": "README.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "dist-platforms/safari/README.md",
+          "name": "README.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "platforms/README.md",
+          "name": "README.md",
+          "fileType": "md"
+        }
+      ]
+    },
+    {
       "name": "code-wiki",
       "githubUrl": "https://github.com/mindfu23/code-wiki",
       "languages": [
         "TypeScript"
       ],
-      "lastCommitDate": "2026-03-09T02:00:33Z",
+      "lastCommitDate": "2026-03-10T00:17:05Z",
       "status": "github-only",
       "visibility": "public",
       "markdownFiles": [
@@ -530,46 +668,6 @@
         {
           "relativePath": "wiki/utilities/_index.md",
           "name": "_index.md",
-          "fileType": "md"
-        }
-      ]
-    },
-    {
-      "name": "apiTracker",
-      "description": "A simple GUI tracker for health and number of remaining calls for my various APIs used in my other apps.",
-      "githubUrl": "https://github.com/mindfu23/apiTracker",
-      "languages": [
-        "JavaScript"
-      ],
-      "lastCommitDate": "2026-03-09T00:21:21Z",
-      "status": "synced",
-      "visibility": "public",
-      "localPath": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/apiTracker",
-      "notes": "also implemented as a browser extension, and further developed there.",
-      "markdownFiles": [
-        {
-          "relativePath": "browser-extension/README.md",
-          "name": "README.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "dist-platforms/firefox/README.md",
-          "name": "README.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "dist-platforms/safari/API Usage Scraper Extension/Resources/README.md",
-          "name": "README.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "dist-platforms/safari/README.md",
-          "name": "README.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "platforms/README.md",
-          "name": "README.md",
           "fileType": "md"
         }
       ]
@@ -1294,80 +1392,6 @@
         {
           "relativePath": "weirdchess/crew/README.md",
           "name": "README.md",
-          "fileType": "md"
-        }
-      ]
-    },
-    {
-      "name": "Metabot",
-      "description": "A bot that will take any query and send it to at least 4 different current AIs. This currently is Chat GPT, Anthropic's Claude, Google's Gemini and Perplexity AI. It will then provide a synthesis and summary of the received information, by default via Perplexity but also user-configurable for any other AI to be the summary agent.",
-      "githubUrl": "https://github.com/mindfu23/Metabot",
-      "languages": [
-        "TypeScript"
-      ],
-      "lastCommitDate": "2026-03-05T04:27:58Z",
-      "status": "synced",
-      "visibility": "private",
-      "localPath": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/Metabot",
-      "markdownFiles": [
-        {
-          "relativePath": "API.md",
-          "name": "API.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "ARCHITECTURE.md",
-          "name": "ARCHITECTURE.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "CONTRIBUTING.md",
-          "name": "CONTRIBUTING.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "DEPLOYMENT.md",
-          "name": "DEPLOYMENT.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "DOCKER.md",
-          "name": "DOCKER.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "figma-export/README.md",
-          "name": "README.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "figma-export/src/Attributions.md",
-          "name": "Attributions.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "figma-export/src/guidelines/Guidelines.md",
-          "name": "Guidelines.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "IMPLEMENTATION_SUMMARY.md",
-          "name": "IMPLEMENTATION_SUMMARY.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "MCP_INTEGRATION.md",
-          "name": "MCP_INTEGRATION.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "README.md",
-          "name": "README.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "VERIFICATION.md",
-          "name": "VERIFICATION.md",
           "fileType": "md"
         }
       ]
@@ -2140,30 +2164,6 @@
         {
           "relativePath": "TrollJar_claude.md",
           "name": "TrollJar_claude.md",
-          "fileType": "md"
-        }
-      ]
-    },
-    {
-      "name": "weirdchess",
-      "description": "A game with 5 variants of 10x10 chess.",
-      "githubUrl": "https://github.com/mindfu23/weirdchess",
-      "languages": [
-        "Dart"
-      ],
-      "lastCommitDate": "2026-02-28T05:30:22Z",
-      "status": "synced",
-      "visibility": "public",
-      "localPath": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/weirdchess",
-      "markdownFiles": [
-        {
-          "relativePath": "ios/Runner/Assets.xcassets/LaunchImage.imageset/README.md",
-          "name": "README.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "README.md",
-          "name": "README.md",
           "fileType": "md"
         }
       ]
@@ -3256,6 +3256,6 @@
     "templates",
     "utilities"
   ],
-  "buildTime": "2026-03-10T00:17:04.698Z",
+  "buildTime": "2026-03-11T00:16:30.197Z",
   "version": "1.0.0"
 }
