@@ -81,6 +81,13 @@ Health checks are currently monitored in the free tier of Uptime Robot.
 
 -> If Flutter is used to create builds for iOS versions, including but not necessarily limited to baking in an API key value, update the Netlify .toml build so that the Flutter build is made and output for the web deploy also.
 
+## Standard .gitignore entries
+
+Every project's `.gitignore` should include at minimum:
+- `node_modules/`, `dist/`, `.env`, `.DS_Store`, `*.log`
+- `.specstory/` — SpecStory session transcripts (may contain API keys or sensitive chat content)
+- `.claude/`, `CLAUDE.md`
+
 ##Standard things to check for
 
 -> When using Netlify, make sure the netlify.toml file will skip scanning for variables, example:
