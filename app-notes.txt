@@ -1,0 +1,34 @@
+Overall notes
+
+setup preferences as referenced by Claude and the local MCP are here:
+
+/Users/jamesbeach/.claude/preferences/ 
+
+-> Most recent addition, have it add a generic health check section if the application is going to be used on Netlify or a mobile app. Main current use case is for integration with Uptime Robot.
+
+
+App to do list
+
+-> NOvelizer - add plot function? or do Plottr first then integrate
+
+-> Metabot - difference function?
+
+-> ShamAIn - get into app store, maybe with review of functionality improvement via Perplexity first
+
+-> Weird chess - graphics generation
+
+-> Tarot - graphics generation
+
+-> Good news?? Your Good Morning app, that people can set to the good news they want - make this nice and pretty too. Good way to show some UX. 
+also might be the simplest to make as an app in the app store. 
+
+-> Value Ape - crypto study section?? Also backtesting section
+
+-> Conspiracy thing. 
+
+
+cd weirdchess
+flutter build ios --release --dart-define=APP_SECRET_TOKEN=66f3c548a02536c0ce3db87ed6adb037bfb44650a1263ea4afb2ad39bc32051a
+
+
+I am resubmitting it, with a more precise privacy policy with a different URL, here: https://jamesmbeach.com/archives/5652
