@@ -1,9 +1,10 @@
 ---
 title: "New Project Setup Cheatsheet"
-tags: ["setup", "supabase", "netlify", "gcp", "n8n", "pwa", "capacitor"]
 description: "Step-by-step commands and URLs for wiring up a new React+Vite+Supabase+Netlify project from scaffold to live prototype"
-updated: "2026-03-11"
+tags: ["setup", "supabase", "netlify", "gcp", "n8n", "pwa", "capacitor"]
+updated: "2026-03-12"
 ---
+
 
 # New Project Setup Cheatsheet
 
@@ -16,26 +17,31 @@ End-to-end steps to take a scaffolded project (React + Vite + Supabase + Netlify
 **URL:** https://supabase.com/dashboard
 
 1. Click **New project**
+
 2. Choose organization → enter project name → set a strong database password (save it)
+
 3. Select region: **US West** (or closest to you)
+
 4. Wait ~2 minutes for provisioning
 
 ### Get your keys
 Settings → API:
 - **Project URL** → `VITE_SUPABASE_URL`
 - **anon / public key** → `VITE_SUPABASE_ANON_KEY`
+
+^ add to local .env and Netlify, as public
+
 - **service_role key** → `SUPABASE_SERVICE_ROLE_KEY` (server-side only, never in client)
 
+^ only add to Netlify, as secret
+
 ### Run migrations
-SQL Editor → New query → paste contents of `supabase/migrations/001_initial_schema.sql` → Run
+Supabase: SQL Editor → New query → paste contents of `supabase/migrations/001_initial_schema.sql` → Run
 
-### Enable Google OAuth
-Authentication → Providers → Google → Enable
-- Add your Google OAuth Client ID + Secret (get from Google Cloud Console below)
-- Redirect URL shown in Supabase → copy it for Google Cloud Console
+### Start authentication steps
+Supabase: Authentication → Providers → Google → Enable
 
-### Enable email confirmations (optional for prototype)
-Authentication → Email → toggle "Confirm email" on/off as needed for testing
+Copy Callback URL (for OAuth) 
 
 ---
 
@@ -49,9 +55,21 @@ Only needed if using Google OAuth login (recommended).
 2. APIs & Services → Credentials → **Create Credentials** → OAuth client ID
 3. Application type: **Web application**
 4. Authorized redirect URIs → paste the URL from Supabase (ends in `/auth/v1/callback`)
-5. Copy **Client ID** and **Client Secret** → paste into Supabase Google provider settings
+5. Click create
+6. Copy and locally save **Client ID** and **Client Secret**, then → go back to Supabase to paste into Supabase Google provider settings
 
 ---
+
+Back to Supabase
+
+### Enable Google OAuth
+Supabase: Authentication → Providers → Google → Enable
+- Add your Google OAuth Client ID + Secret (get from Google Cloud Console below)
+- Redirect URL shown in Supabase → copy it for Google Cloud Console
+
+### Enable email confirmations (optional for prototype)
+Authentication → Email → toggle "Confirm email" on/off as needed for testing
+
 
 ## 3. Local .env Setup
 
