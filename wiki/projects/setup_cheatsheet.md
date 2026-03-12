@@ -5,7 +5,6 @@ tags: ["setup", "supabase", "netlify", "gcp", "n8n", "pwa", "capacitor"]
 updated: "2026-03-12"
 ---
 
-
 # New Project Setup Cheatsheet
 
 End-to-end steps to take a scaffolded project (React + Vite + Supabase + Netlify) from local code to live testable prototype. Written for StoryLoft but applies to any project on this stack.
@@ -17,11 +16,8 @@ End-to-end steps to take a scaffolded project (React + Vite + Supabase + Netlify
 **URL:** https://supabase.com/dashboard
 
 1. Click **New project**
-
 2. Choose organization → enter project name → set a strong database password (save it)
-
 3. Select region: **US West** (or closest to you)
-
 4. Wait ~2 minutes for provisioning
 
 ### Get your keys
@@ -87,23 +83,35 @@ VITE_APP_ENV=development
 ```
 
 Server-side keys (go in Netlify dashboard, NOT in .env for production):
+Also add same minimum keys for Netlify, as public:
+
+VITE_SUPABASE_URL=https://xxxxxxxxxxxx.supabase.co
+VITE_SUPABASE_ANON_KEY=eyJhbGc...
+
+Then add: 
 ```
 SUPABASE_SERVICE_ROLE_KEY=eyJhbGc...
 BREVO_API_KEY=xkeysib-...
 ```
 
----
 
-## 4. Local Dev
+## 4. Brevo and Resend setup for Email Delivery
 
-```bash
-cd /Users/jamesbeach/Documents/visual-studio-code/github-copilot/StoryLoft
+**URL:** https://app.brevo.com
 
-npm install          # first time only
-npm run dev          # starts Vite dev server at http://localhost:5173
-npm run build        # production build — always run before deploying
-npm run preview      # preview the production build locally
-```
+1. Create free account
+2. Settings → SMTP & API → API Keys → **Generate a new API key**
+3. Copy key → add as `BREVO_API_KEY` in Netlify env vars
+4. **Verify your sender domain** (important for deliverability):
+   - Settings → Senders & IP → Domains → Add a domain
+   - Add the DNS records they give you to your domain registrar
+5. Free tier: **300 emails/day** — sufficient for prototype
+
+### Resend (fallback)
+**URL:** https://resend.com
+1. Create account → API Keys → Create API Key
+2. Add as `RESEND_API_KEY` in Netlify
+3. Verify a domain here too for production sends
 
 ---
 
@@ -137,25 +145,21 @@ Site settings → Domain management → Add custom domain
 
 ---
 
-## 6. Brevo — Email Delivery
+## 6. Local Dev
 
-**URL:** https://app.brevo.com
+```bash
+cd /Users/jamesbeach/Documents/visual-studio-code/github-copilot/StoryLoft
 
-1. Create free account
-2. Settings → SMTP & API → API Keys → **Generate a new API key**
-3. Copy key → add as `BREVO_API_KEY` in Netlify env vars
-4. **Verify your sender domain** (important for deliverability):
-   - Settings → Senders & IP → Domains → Add a domain
-   - Add the DNS records they give you to your domain registrar
-5. Free tier: **300 emails/day** — sufficient for prototype
-
-### Resend (fallback)
-**URL:** https://resend.com
-1. Create account → API Keys → Create API Key
-2. Add as `RESEND_API_KEY` in Netlify
-3. Verify a domain here too for production sends
+npm install          # first time only
+npm run dev          # starts Vite dev server at http://localhost:5173
+npm run build        # production build — always run before deploying
+npm run preview      # preview the production build locally
+```
 
 ---
+
+
+
 
 ## 7. Sentry — Error Monitoring
 
