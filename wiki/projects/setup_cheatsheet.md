@@ -83,16 +83,11 @@ VITE_APP_ENV=development
 ```
 
 Server-side keys (go in Netlify dashboard, NOT in .env for production):
-Also add same minimum keys for Netlify, as public:
+
+Also will later add same minimum keys for Netlify, as public:
 
 VITE_SUPABASE_URL=https://xxxxxxxxxxxx.supabase.co
 VITE_SUPABASE_ANON_KEY=eyJhbGc...
-
-Then add: 
-```
-SUPABASE_SERVICE_ROLE_KEY=eyJhbGc...
-BREVO_API_KEY=xkeysib-...
-```
 
 
 ## 4. Brevo and Resend setup for Email Delivery
@@ -107,11 +102,12 @@ BREVO_API_KEY=xkeysib-...
    - Add the DNS records they give you to your domain registrar
 5. Free tier: **300 emails/day** — sufficient for prototype
 
+Also note that my initial email address is probably fine for prototyping, but for serious use will have to swap in an email domain and use that. 
+
 ### Resend (fallback)
 **URL:** https://resend.com
 1. Create account → API Keys → Create API Key
-2. Add as `RESEND_API_KEY` in Netlify
-3. Verify a domain here too for production sends
+2. Verify a domain here too for production sends
 
 ---
 
@@ -133,7 +129,7 @@ Site settings → Environment variables → Add:
 |---|---|---|
 | `VITE_SUPABASE_URL` | from Supabase | public, safe |
 | `VITE_SUPABASE_ANON_KEY` | from Supabase | public, safe |
-| `VITE_APP_ENV` | `production` | public, safe |
+| `VITE_APP_ENV` | `production` | public, safe | (optiona?)
 | `SUPABASE_SERVICE_ROLE_KEY` | from Supabase | secret — server only |
 | `BREVO_API_KEY` | from Brevo | secret — server only |
 | `RESEND_API_KEY` | from Resend | secret — server only |
