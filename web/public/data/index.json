@@ -160,220 +160,13 @@
   ],
   "repos": [
     {
-      "name": "code-wiki",
-      "githubUrl": "https://github.com/mindfu23/code-wiki",
-      "languages": [
-        "TypeScript"
-      ],
-      "lastCommitDate": "2026-03-12T23:20:33Z",
-      "status": "github-only",
-      "visibility": "public",
-      "markdownFiles": [
-        {
-          "relativePath": "app-notes.txt",
-          "name": "app-notes.txt",
-          "fileType": "txt"
-        },
-        {
-          "relativePath": "code-wiki-mcp-plan.md",
-          "name": "code-wiki-mcp-plan.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "portfolio-summary.md",
-          "name": "portfolio-summary.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "README.md",
-          "name": "README.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "TODO.md",
-          "name": "TODO.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "wiki/_index.md",
-          "name": "_index.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "wiki/AGENTS.md",
-          "name": "AGENTS.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "wiki/integrations/_index.md",
-          "name": "_index.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "wiki/patterns/_index.md",
-          "name": "_index.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "wiki/patterns/overall-mcp-info.md",
-          "name": "overall-mcp-info.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "wiki/preferences/standard-setups.md",
-          "name": "standard-setups.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "wiki/projects/_index.md",
-          "name": "_index.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "wiki/projects/app-prices-notes.md",
-          "name": "app-prices-notes.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "wiki/projects/overall-current-status.md",
-          "name": "overall-current-status.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "wiki/projects/overall-novel-processes.md",
-          "name": "overall-novel-processes.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "wiki/projects/repo-locations.md",
-          "name": "repo-locations.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "wiki/projects/setup_cheatsheet.md",
-          "name": "setup_cheatsheet.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "wiki/projects/weird-chess-to-do.md",
-          "name": "weird-chess-to-do.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "wiki/snippets/_index.md",
-          "name": "_index.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "wiki/templates/_index.md",
-          "name": "_index.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "wiki/utilities/_index.md",
-          "name": "_index.md",
-          "fileType": "md"
-        }
-      ]
-    },
-    {
-      "name": "apiTracker",
-      "description": "A simple GUI tracker for health and number of remaining calls for my various APIs used in my other apps.",
-      "githubUrl": "https://github.com/mindfu23/apiTracker",
-      "languages": [
-        "JavaScript"
-      ],
-      "lastCommitDate": "2026-03-12T00:18:26Z",
-      "status": "synced",
-      "visibility": "public",
-      "localPath": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/apiTracker",
-      "notes": "also implemented as a browser extension, and further developed there.",
-      "markdownFiles": [
-        {
-          "relativePath": "browser-extension/README.md",
-          "name": "README.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "dist-platforms/firefox/README.md",
-          "name": "README.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "dist-platforms/safari/API Usage Scraper Extension/Resources/README.md",
-          "name": "README.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "dist-platforms/safari/README.md",
-          "name": "README.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "platforms/README.md",
-          "name": "README.md",
-          "fileType": "md"
-        }
-      ]
-    },
-    {
-      "name": "n8n_workflows",
-      "description": "Private repo for n8n workflows",
-      "githubUrl": "https://github.com/mindfu23/n8n_workflows",
-      "languages": [
-        "JavaScript"
-      ],
-      "lastCommitDate": "2026-03-11T20:10:59Z",
-      "status": "synced",
-      "visibility": "public",
-      "localPath": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/n8n_workflows",
-      "notes": "Not deployed directly, will put URL in once it's set up.",
-      "markdownFiles": [
-        {
-          "relativePath": "docs/N8N_GCP_SETUP_GUIDE.md",
-          "name": "N8N_GCP_SETUP_GUIDE.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "README.md",
-          "name": "README.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "workflows/JOBSEARCHER_INTEGRATION_GUIDE.md",
-          "name": "JOBSEARCHER_INTEGRATION_GUIDE.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "workflows/METABOT_INTEGRATION_GUIDE.md",
-          "name": "METABOT_INTEGRATION_GUIDE.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "workflows/NOVEL_ORCHESTRATION_README.md",
-          "name": "NOVEL_ORCHESTRATION_README.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "workflows/SHAMAIN_INTEGRATION_GUIDE.md",
-          "name": "SHAMAIN_INTEGRATION_GUIDE.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "workflows/VALUEAPE_INTEGRATION_GUIDE.md",
-          "name": "VALUEAPE_INTEGRATION_GUIDE.md",
-          "fileType": "md"
-        }
-      ]
-    },
-    {
       "name": "weirdchess",
       "description": "A game with 5 variants of 10x10 chess.",
       "githubUrl": "https://github.com/mindfu23/weirdchess",
       "languages": [
         "Dart"
       ],
-      "lastCommitDate": "2026-03-10T17:22:55Z",
+      "lastCommitDate": "2026-03-13T21:54:44Z",
       "status": "synced",
       "visibility": "public",
       "localPath": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/weirdchess",
@@ -387,48 +180,15 @@
           "relativePath": "README.md",
           "name": "README.md",
           "fileType": "md"
-        }
-      ]
-    },
-    {
-      "name": "CoverJudge",
-      "description": "A website, iOS and Android app that will:",
-      "githubUrl": "https://github.com/mindfu23/CoverJudge",
-      "languages": [
-        "JavaScript"
-      ],
-      "lastCommitDate": "2026-03-06T20:06:04Z",
-      "status": "github-only",
-      "visibility": "public",
-      "markdownFiles": [
+        },
         {
-          "relativePath": "docs/adding-ai-provider.md",
-          "name": "adding-ai-provider.md",
+          "relativePath": "TODO.md",
+          "name": "TODO.md",
           "fileType": "md"
         },
         {
-          "relativePath": "docs/adding-retailer.md",
-          "name": "adding-retailer.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "docs/deployment-guide.md",
-          "name": "deployment-guide.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "mobile/README.md",
-          "name": "README.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "README.md",
-          "name": "README.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "web/README.md",
-          "name": "README.md",
+          "relativePath": "weirdchess-store-text.md",
+          "name": "weirdchess-store-text.md",
           "fileType": "md"
         }
       ]
@@ -440,7 +200,7 @@
       "languages": [
         "Go"
       ],
-      "lastCommitDate": "2026-03-06T17:08:15Z",
+      "lastCommitDate": "2026-03-13T18:55:34Z",
       "status": "synced",
       "visibility": "public",
       "localPath": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/gastown-mission-district",
@@ -882,6 +642,256 @@
         },
         {
           "relativePath": "weirdchess/crew/README.md",
+          "name": "README.md",
+          "fileType": "md"
+        }
+      ]
+    },
+    {
+      "name": "apiTracker",
+      "description": "A simple GUI tracker for health and number of remaining calls for my various APIs used in my other apps.",
+      "githubUrl": "https://github.com/mindfu23/apiTracker",
+      "languages": [
+        "JavaScript"
+      ],
+      "lastCommitDate": "2026-03-13T00:21:27Z",
+      "status": "synced",
+      "visibility": "public",
+      "localPath": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/apiTracker",
+      "notes": "also implemented as a browser extension, and further developed there.",
+      "markdownFiles": [
+        {
+          "relativePath": "browser-extension/README.md",
+          "name": "README.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "dist-platforms/firefox/README.md",
+          "name": "README.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "dist-platforms/safari/API Usage Scraper Extension/Resources/README.md",
+          "name": "README.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "dist-platforms/safari/README.md",
+          "name": "README.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "platforms/README.md",
+          "name": "README.md",
+          "fileType": "md"
+        }
+      ]
+    },
+    {
+      "name": "code-wiki",
+      "githubUrl": "https://github.com/mindfu23/code-wiki",
+      "languages": [
+        "TypeScript"
+      ],
+      "lastCommitDate": "2026-03-13T00:19:42Z",
+      "status": "github-only",
+      "visibility": "public",
+      "markdownFiles": [
+        {
+          "relativePath": "app-notes.txt",
+          "name": "app-notes.txt",
+          "fileType": "txt"
+        },
+        {
+          "relativePath": "code-wiki-mcp-plan.md",
+          "name": "code-wiki-mcp-plan.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "portfolio-summary.md",
+          "name": "portfolio-summary.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "README.md",
+          "name": "README.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "TODO.md",
+          "name": "TODO.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "wiki/_index.md",
+          "name": "_index.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "wiki/AGENTS.md",
+          "name": "AGENTS.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "wiki/integrations/_index.md",
+          "name": "_index.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "wiki/patterns/_index.md",
+          "name": "_index.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "wiki/patterns/overall-mcp-info.md",
+          "name": "overall-mcp-info.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "wiki/preferences/standard-setups.md",
+          "name": "standard-setups.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "wiki/projects/_index.md",
+          "name": "_index.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "wiki/projects/app-prices-notes.md",
+          "name": "app-prices-notes.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "wiki/projects/overall-current-status.md",
+          "name": "overall-current-status.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "wiki/projects/overall-novel-processes.md",
+          "name": "overall-novel-processes.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "wiki/projects/repo-locations.md",
+          "name": "repo-locations.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "wiki/projects/setup_cheatsheet.md",
+          "name": "setup_cheatsheet.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "wiki/projects/weird-chess-to-do.md",
+          "name": "weird-chess-to-do.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "wiki/snippets/_index.md",
+          "name": "_index.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "wiki/templates/_index.md",
+          "name": "_index.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "wiki/utilities/_index.md",
+          "name": "_index.md",
+          "fileType": "md"
+        }
+      ]
+    },
+    {
+      "name": "n8n_workflows",
+      "description": "Private repo for n8n workflows",
+      "githubUrl": "https://github.com/mindfu23/n8n_workflows",
+      "languages": [
+        "JavaScript"
+      ],
+      "lastCommitDate": "2026-03-11T20:10:59Z",
+      "status": "synced",
+      "visibility": "public",
+      "localPath": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/n8n_workflows",
+      "notes": "Not deployed directly, will put URL in once it's set up.",
+      "markdownFiles": [
+        {
+          "relativePath": "docs/N8N_GCP_SETUP_GUIDE.md",
+          "name": "N8N_GCP_SETUP_GUIDE.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "README.md",
+          "name": "README.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "workflows/JOBSEARCHER_INTEGRATION_GUIDE.md",
+          "name": "JOBSEARCHER_INTEGRATION_GUIDE.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "workflows/METABOT_INTEGRATION_GUIDE.md",
+          "name": "METABOT_INTEGRATION_GUIDE.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "workflows/NOVEL_ORCHESTRATION_README.md",
+          "name": "NOVEL_ORCHESTRATION_README.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "workflows/SHAMAIN_INTEGRATION_GUIDE.md",
+          "name": "SHAMAIN_INTEGRATION_GUIDE.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "workflows/VALUEAPE_INTEGRATION_GUIDE.md",
+          "name": "VALUEAPE_INTEGRATION_GUIDE.md",
+          "fileType": "md"
+        }
+      ]
+    },
+    {
+      "name": "CoverJudge",
+      "description": "A website, iOS and Android app that will:",
+      "githubUrl": "https://github.com/mindfu23/CoverJudge",
+      "languages": [
+        "JavaScript"
+      ],
+      "lastCommitDate": "2026-03-06T20:06:04Z",
+      "status": "github-only",
+      "visibility": "public",
+      "markdownFiles": [
+        {
+          "relativePath": "docs/adding-ai-provider.md",
+          "name": "adding-ai-provider.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "docs/adding-retailer.md",
+          "name": "adding-retailer.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "docs/deployment-guide.md",
+          "name": "deployment-guide.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "mobile/README.md",
+          "name": "README.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "README.md",
+          "name": "README.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "web/README.md",
           "name": "README.md",
           "fileType": "md"
         }
@@ -1670,6 +1680,6 @@
     "templates",
     "utilities"
   ],
-  "buildTime": "2026-03-13T00:19:41.750Z",
+  "buildTime": "2026-03-14T00:18:22.927Z",
   "version": "1.0.0"
 }
