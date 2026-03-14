@@ -330,405 +330,13 @@
   ],
   "repos": [
     {
-      "name": "StoryLoft",
-      "description": "Repo for prototypes of author community website and app.",
-      "githubUrl": "https://github.com/mindfu23/StoryLoft",
-      "languages": [
-        "TypeScript"
-      ],
-      "lastCommitDate": "2026-03-12T23:57:16Z",
-      "status": "github-only",
-      "visibility": "private",
-      "markdownFiles": [
-        {
-          "relativePath": "PLANNING.md",
-          "name": "PLANNING.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "README.md",
-          "name": "README.md",
-          "fileType": "md"
-        }
-      ]
-    },
-    {
-      "name": "code-wiki",
-      "githubUrl": "https://github.com/mindfu23/code-wiki",
-      "languages": [
-        "TypeScript"
-      ],
-      "lastCommitDate": "2026-03-12T23:20:33Z",
-      "status": "github-only",
-      "visibility": "public",
-      "markdownFiles": [
-        {
-          "relativePath": "app-notes.txt",
-          "name": "app-notes.txt",
-          "fileType": "txt"
-        },
-        {
-          "relativePath": "code-wiki-mcp-plan.md",
-          "name": "code-wiki-mcp-plan.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "portfolio-summary.md",
-          "name": "portfolio-summary.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "README.md",
-          "name": "README.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "TODO.md",
-          "name": "TODO.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "wiki/_index.md",
-          "name": "_index.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "wiki/AGENTS.md",
-          "name": "AGENTS.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "wiki/integrations/_index.md",
-          "name": "_index.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "wiki/patterns/_index.md",
-          "name": "_index.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "wiki/patterns/overall-mcp-info.md",
-          "name": "overall-mcp-info.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "wiki/preferences/standard-setups.md",
-          "name": "standard-setups.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "wiki/projects/_index.md",
-          "name": "_index.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "wiki/projects/app-prices-notes.md",
-          "name": "app-prices-notes.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "wiki/projects/overall-current-status.md",
-          "name": "overall-current-status.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "wiki/projects/overall-novel-processes.md",
-          "name": "overall-novel-processes.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "wiki/projects/repo-locations.md",
-          "name": "repo-locations.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "wiki/projects/setup_cheatsheet.md",
-          "name": "setup_cheatsheet.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "wiki/projects/weird-chess-to-do.md",
-          "name": "weird-chess-to-do.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "wiki/snippets/_index.md",
-          "name": "_index.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "wiki/templates/_index.md",
-          "name": "_index.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "wiki/utilities/_index.md",
-          "name": "_index.md",
-          "fileType": "md"
-        }
-      ]
-    },
-    {
-      "name": "ValueApe",
-      "githubUrl": "https://github.com/mindfu23/ValueApe",
-      "languages": [
-        "TypeScript"
-      ],
-      "lastCommitDate": "2026-03-12T06:26:58Z",
-      "status": "synced",
-      "visibility": "private",
-      "localPath": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/ValueApe",
-      "markdownFiles": [
-        {
-          "relativePath": "autotrade-proposed-code.md",
-          "name": "autotrade-proposed-code.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "docs/architecture.md",
-          "name": "architecture.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "docs/DATA_PROVIDERS.md",
-          "name": "DATA_PROVIDERS.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "docs/finrl-integration.md",
-          "name": "finrl-integration.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "docs/INTEGRATION_EXAMPLES.md",
-          "name": "INTEGRATION_EXAMPLES.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "docs/REAL_TIME_DATA.md",
-          "name": "REAL_TIME_DATA.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "docs/schwab-integration.md",
-          "name": "schwab-integration.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "docs/stock-search-macro-plan.md",
-          "name": "stock-search-macro-plan.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "docs/SUPABASE_SETUP.md",
-          "name": "SUPABASE_SETUP.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "netlify/functions/requirements.txt",
-          "name": "requirements.txt",
-          "fileType": "txt"
-        },
-        {
-          "relativePath": "PRD.md",
-          "name": "PRD.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "README.md",
-          "name": "README.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "SECURITY.md",
-          "name": "SECURITY.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "TODO.md",
-          "name": "TODO.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "webscraper/README.md",
-          "name": "README.md",
-          "fileType": "md"
-        }
-      ]
-    },
-    {
-      "name": "apiTracker",
-      "description": "A simple GUI tracker for health and number of remaining calls for my various APIs used in my other apps.",
-      "githubUrl": "https://github.com/mindfu23/apiTracker",
-      "languages": [
-        "JavaScript"
-      ],
-      "lastCommitDate": "2026-03-12T00:18:26Z",
-      "status": "synced",
-      "visibility": "public",
-      "localPath": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/apiTracker",
-      "notes": "also implemented as a browser extension, and further developed there.",
-      "markdownFiles": [
-        {
-          "relativePath": "browser-extension/README.md",
-          "name": "README.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "dist-platforms/firefox/README.md",
-          "name": "README.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "dist-platforms/safari/API Usage Scraper Extension/Resources/README.md",
-          "name": "README.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "dist-platforms/safari/README.md",
-          "name": "README.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "platforms/README.md",
-          "name": "README.md",
-          "fileType": "md"
-        }
-      ]
-    },
-    {
-      "name": "n8n_workflows",
-      "description": "Private repo for n8n workflows",
-      "githubUrl": "https://github.com/mindfu23/n8n_workflows",
-      "languages": [
-        "JavaScript"
-      ],
-      "lastCommitDate": "2026-03-11T20:10:59Z",
-      "status": "synced",
-      "visibility": "public",
-      "localPath": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/n8n_workflows",
-      "notes": "Not deployed directly, will put URL in once it's set up.",
-      "markdownFiles": [
-        {
-          "relativePath": "docs/N8N_GCP_SETUP_GUIDE.md",
-          "name": "N8N_GCP_SETUP_GUIDE.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "README.md",
-          "name": "README.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "workflows/JOBSEARCHER_INTEGRATION_GUIDE.md",
-          "name": "JOBSEARCHER_INTEGRATION_GUIDE.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "workflows/METABOT_INTEGRATION_GUIDE.md",
-          "name": "METABOT_INTEGRATION_GUIDE.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "workflows/NOVEL_ORCHESTRATION_README.md",
-          "name": "NOVEL_ORCHESTRATION_README.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "workflows/SHAMAIN_INTEGRATION_GUIDE.md",
-          "name": "SHAMAIN_INTEGRATION_GUIDE.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "workflows/VALUEAPE_INTEGRATION_GUIDE.md",
-          "name": "VALUEAPE_INTEGRATION_GUIDE.md",
-          "fileType": "md"
-        }
-      ]
-    },
-    {
-      "name": "Metabot",
-      "description": "A bot that will take any query and send it to at least 4 different current AIs. This currently is Chat GPT, Anthropic's Claude, Google's Gemini and Perplexity AI. It will then provide a synthesis and summary of the received information, by default via Perplexity but also user-configurable for any other AI to be the summary agent.",
-      "githubUrl": "https://github.com/mindfu23/Metabot",
-      "languages": [
-        "TypeScript"
-      ],
-      "lastCommitDate": "2026-03-10T17:23:22Z",
-      "status": "synced",
-      "visibility": "private",
-      "localPath": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/Metabot",
-      "markdownFiles": [
-        {
-          "relativePath": "API.md",
-          "name": "API.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "ARCHITECTURE.md",
-          "name": "ARCHITECTURE.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "CONTRIBUTING.md",
-          "name": "CONTRIBUTING.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "DEPLOYMENT.md",
-          "name": "DEPLOYMENT.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "DOCKER.md",
-          "name": "DOCKER.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "figma-export/README.md",
-          "name": "README.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "figma-export/src/Attributions.md",
-          "name": "Attributions.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "figma-export/src/guidelines/Guidelines.md",
-          "name": "Guidelines.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "IMPLEMENTATION_SUMMARY.md",
-          "name": "IMPLEMENTATION_SUMMARY.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "MCP_INTEGRATION.md",
-          "name": "MCP_INTEGRATION.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "README.md",
-          "name": "README.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "VERIFICATION.md",
-          "name": "VERIFICATION.md",
-          "fileType": "md"
-        }
-      ]
-    },
-    {
       "name": "weirdchess",
       "description": "A game with 5 variants of 10x10 chess.",
       "githubUrl": "https://github.com/mindfu23/weirdchess",
       "languages": [
         "Dart"
       ],
-      "lastCommitDate": "2026-03-10T17:22:55Z",
+      "lastCommitDate": "2026-03-13T21:54:44Z",
       "status": "synced",
       "visibility": "public",
       "localPath": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/weirdchess",
@@ -742,50 +350,6 @@
           "relativePath": "README.md",
           "name": "README.md",
           "fileType": "md"
-        }
-      ]
-    },
-    {
-      "name": "Novelizer",
-      "description": "My own personal multi-agentic app for creative novel writing and editing ",
-      "githubUrl": "https://github.com/mindfu23/Novelizer",
-      "languages": [
-        "TypeScript"
-      ],
-      "lastCommitDate": "2026-03-08T22:25:13Z",
-      "status": "synced",
-      "visibility": "private",
-      "localPath": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/Novelizer",
-      "markdownFiles": [
-        {
-          "relativePath": "DEVELOPMENT_PLAN.md",
-          "name": "DEVELOPMENT_PLAN.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "NOTES.md",
-          "name": "NOTES.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "NOVELIZER-ENHANCEMENTS.md",
-          "name": "NOVELIZER-ENHANCEMENTS.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "POSSIBLE-EXPANSION.md",
-          "name": "POSSIBLE-EXPANSION.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "README.md",
-          "name": "README.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "TODO_alt.md",
-          "name": "TODO_alt.md",
-          "fileType": "md"
         },
         {
           "relativePath": "TODO.md",
@@ -793,224 +357,8 @@
           "fileType": "md"
         },
         {
-          "relativePath": "web/README.md",
-          "name": "README.md",
-          "fileType": "md"
-        }
-      ]
-    },
-    {
-      "name": "WebToFigma",
-      "description": "App for generating a basic wireframe of a pre-existing site and then putting it into a format that can be opened by Figma for review and changes. ",
-      "githubUrl": "https://github.com/mindfu23/WebToFigma",
-      "languages": [
-        "JavaScript"
-      ],
-      "lastCommitDate": "2026-03-06T20:12:21Z",
-      "status": "github-only",
-      "visibility": "private",
-      "markdownFiles": [
-        {
-          "relativePath": "README.md",
-          "name": "README.md",
-          "fileType": "md"
-        }
-      ]
-    },
-    {
-      "name": "CoverJudge",
-      "description": "A website, iOS and Android app that will:",
-      "githubUrl": "https://github.com/mindfu23/CoverJudge",
-      "languages": [
-        "JavaScript"
-      ],
-      "lastCommitDate": "2026-03-06T20:06:04Z",
-      "status": "github-only",
-      "visibility": "public",
-      "markdownFiles": [
-        {
-          "relativePath": "docs/adding-ai-provider.md",
-          "name": "adding-ai-provider.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "docs/adding-retailer.md",
-          "name": "adding-retailer.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "docs/deployment-guide.md",
-          "name": "deployment-guide.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "mobile/README.md",
-          "name": "README.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "README.md",
-          "name": "README.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "web/README.md",
-          "name": "README.md",
-          "fileType": "md"
-        }
-      ]
-    },
-    {
-      "name": "StoryPlot",
-      "description": "A fiction story plot generator. Work in progress.",
-      "githubUrl": "https://github.com/mindfu23/StoryPlot",
-      "languages": [
-        "JavaScript"
-      ],
-      "lastCommitDate": "2026-03-06T18:43:03Z",
-      "status": "synced",
-      "visibility": "private",
-      "localPath": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/StoryPlot",
-      "markdownFiles": [
-        {
-          "relativePath": "docs/story-circle/DEVELOPMENT_PLAN.md",
-          "name": "DEVELOPMENT_PLAN.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "docs/story-circle/reference/fat-outline.txt",
-          "name": "fat-outline.txt",
-          "fileType": "txt"
-        },
-        {
-          "relativePath": "docs/story-circle/reference/lester-dent-plot-basics.txt",
-          "name": "lester-dent-plot-basics.txt",
-          "fileType": "txt"
-        },
-        {
-          "relativePath": "docs/story-circle/reference/Mckee-story-and-scenes.txt",
-          "name": "Mckee-story-and-scenes.txt",
-          "fileType": "txt"
-        },
-        {
-          "relativePath": "docs/story-circle/reference/michael-moorcock-novel-in-3-days.txt",
-          "name": "michael-moorcock-novel-in-3-days.txt",
-          "fileType": "txt"
-        },
-        {
-          "relativePath": "docs/story-circle/TODO.md",
-          "name": "TODO.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "README.md",
-          "name": "README.md",
-          "fileType": "md"
-        }
-      ]
-    },
-    {
-      "name": "Fractasy",
-      "description": "Repo for my graphics generating app",
-      "githubUrl": "https://github.com/mindfu23/Fractasy",
-      "languages": [
-        "Dart"
-      ],
-      "lastCommitDate": "2026-03-06T17:30:39Z",
-      "status": "github-only",
-      "visibility": "private",
-      "markdownFiles": [
-        {
-          "relativePath": "ios/Runner/Assets.xcassets/LaunchImage.imageset/README.md",
-          "name": "README.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "linux/CMakeLists.txt",
-          "name": "CMakeLists.txt",
-          "fileType": "txt"
-        },
-        {
-          "relativePath": "linux/flutter/CMakeLists.txt",
-          "name": "CMakeLists.txt",
-          "fileType": "txt"
-        },
-        {
-          "relativePath": "linux/runner/CMakeLists.txt",
-          "name": "CMakeLists.txt",
-          "fileType": "txt"
-        },
-        {
-          "relativePath": "README.md",
-          "name": "README.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "windows/CMakeLists.txt",
-          "name": "CMakeLists.txt",
-          "fileType": "txt"
-        },
-        {
-          "relativePath": "windows/flutter/CMakeLists.txt",
-          "name": "CMakeLists.txt",
-          "fileType": "txt"
-        },
-        {
-          "relativePath": "windows/runner/CMakeLists.txt",
-          "name": "CMakeLists.txt",
-          "fileType": "txt"
-        }
-      ]
-    },
-    {
-      "name": "JBWordPressTheme",
-      "description": "repo for my wordpress theme",
-      "githubUrl": "https://github.com/mindfu23/JBWordPressTheme",
-      "languages": [
-        "HTML"
-      ],
-      "lastCommitDate": "2026-03-06T17:21:05Z",
-      "status": "github-only",
-      "visibility": "private",
-      "markdownFiles": [
-        {
-          "relativePath": "INSTALLATION_GUIDE.md",
-          "name": "INSTALLATION_GUIDE.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "README.md",
-          "name": "README.md",
-          "fileType": "md"
-        }
-      ]
-    },
-    {
-      "name": "ambient-gallery",
-      "githubUrl": "https://github.com/mindfu23/ambient-gallery",
-      "languages": [],
-      "lastCommitDate": "2026-03-06T17:13:58Z",
-      "status": "github-only",
-      "visibility": "private",
-      "markdownFiles": [
-        {
-          "relativePath": "docs/project-brief.md",
-          "name": "project-brief.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "docs/project-structure.md",
-          "name": "project-structure.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "docs/vizio-research.md",
-          "name": "vizio-research.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "README.md",
-          "name": "README.md",
+          "relativePath": "weirdchess-store-text.md",
+          "name": "weirdchess-store-text.md",
           "fileType": "md"
         }
       ]
@@ -1022,7 +370,7 @@
       "languages": [
         "Go"
       ],
-      "lastCommitDate": "2026-03-06T17:08:15Z",
+      "lastCommitDate": "2026-03-13T18:55:34Z",
       "status": "synced",
       "visibility": "public",
       "localPath": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/gastown-mission-district",
@@ -1464,6 +812,668 @@
         },
         {
           "relativePath": "weirdchess/crew/README.md",
+          "name": "README.md",
+          "fileType": "md"
+        }
+      ]
+    },
+    {
+      "name": "ValueApe",
+      "githubUrl": "https://github.com/mindfu23/ValueApe",
+      "languages": [
+        "TypeScript"
+      ],
+      "lastCommitDate": "2026-03-13T06:26:23Z",
+      "status": "synced",
+      "visibility": "private",
+      "localPath": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/ValueApe",
+      "markdownFiles": [
+        {
+          "relativePath": "autotrade-proposed-code.md",
+          "name": "autotrade-proposed-code.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "docs/architecture.md",
+          "name": "architecture.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "docs/DATA_PROVIDERS.md",
+          "name": "DATA_PROVIDERS.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "docs/finrl-integration.md",
+          "name": "finrl-integration.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "docs/INTEGRATION_EXAMPLES.md",
+          "name": "INTEGRATION_EXAMPLES.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "docs/REAL_TIME_DATA.md",
+          "name": "REAL_TIME_DATA.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "docs/schwab-integration.md",
+          "name": "schwab-integration.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "docs/stock-search-macro-plan.md",
+          "name": "stock-search-macro-plan.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "docs/SUPABASE_SETUP.md",
+          "name": "SUPABASE_SETUP.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "netlify/functions/requirements.txt",
+          "name": "requirements.txt",
+          "fileType": "txt"
+        },
+        {
+          "relativePath": "PRD.md",
+          "name": "PRD.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "README.md",
+          "name": "README.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "SECURITY.md",
+          "name": "SECURITY.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "TODO.md",
+          "name": "TODO.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "webscraper/README.md",
+          "name": "README.md",
+          "fileType": "md"
+        }
+      ]
+    },
+    {
+      "name": "StoryLoft",
+      "description": "Repo for prototypes of author community website and app.",
+      "githubUrl": "https://github.com/mindfu23/StoryLoft",
+      "languages": [
+        "TypeScript"
+      ],
+      "lastCommitDate": "2026-03-13T05:29:33Z",
+      "status": "github-only",
+      "visibility": "private",
+      "markdownFiles": [
+        {
+          "relativePath": "PLANNING.md",
+          "name": "PLANNING.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "README.md",
+          "name": "README.md",
+          "fileType": "md"
+        }
+      ]
+    },
+    {
+      "name": "apiTracker",
+      "description": "A simple GUI tracker for health and number of remaining calls for my various APIs used in my other apps.",
+      "githubUrl": "https://github.com/mindfu23/apiTracker",
+      "languages": [
+        "JavaScript"
+      ],
+      "lastCommitDate": "2026-03-13T00:21:27Z",
+      "status": "synced",
+      "visibility": "public",
+      "localPath": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/apiTracker",
+      "notes": "also implemented as a browser extension, and further developed there.",
+      "markdownFiles": [
+        {
+          "relativePath": "browser-extension/README.md",
+          "name": "README.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "dist-platforms/firefox/README.md",
+          "name": "README.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "dist-platforms/safari/API Usage Scraper Extension/Resources/README.md",
+          "name": "README.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "dist-platforms/safari/README.md",
+          "name": "README.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "platforms/README.md",
+          "name": "README.md",
+          "fileType": "md"
+        }
+      ]
+    },
+    {
+      "name": "code-wiki",
+      "githubUrl": "https://github.com/mindfu23/code-wiki",
+      "languages": [
+        "TypeScript"
+      ],
+      "lastCommitDate": "2026-03-13T00:19:42Z",
+      "status": "github-only",
+      "visibility": "public",
+      "markdownFiles": [
+        {
+          "relativePath": "app-notes.txt",
+          "name": "app-notes.txt",
+          "fileType": "txt"
+        },
+        {
+          "relativePath": "code-wiki-mcp-plan.md",
+          "name": "code-wiki-mcp-plan.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "portfolio-summary.md",
+          "name": "portfolio-summary.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "README.md",
+          "name": "README.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "TODO.md",
+          "name": "TODO.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "wiki/_index.md",
+          "name": "_index.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "wiki/AGENTS.md",
+          "name": "AGENTS.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "wiki/integrations/_index.md",
+          "name": "_index.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "wiki/patterns/_index.md",
+          "name": "_index.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "wiki/patterns/overall-mcp-info.md",
+          "name": "overall-mcp-info.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "wiki/preferences/standard-setups.md",
+          "name": "standard-setups.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "wiki/projects/_index.md",
+          "name": "_index.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "wiki/projects/app-prices-notes.md",
+          "name": "app-prices-notes.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "wiki/projects/overall-current-status.md",
+          "name": "overall-current-status.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "wiki/projects/overall-novel-processes.md",
+          "name": "overall-novel-processes.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "wiki/projects/repo-locations.md",
+          "name": "repo-locations.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "wiki/projects/setup_cheatsheet.md",
+          "name": "setup_cheatsheet.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "wiki/projects/weird-chess-to-do.md",
+          "name": "weird-chess-to-do.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "wiki/snippets/_index.md",
+          "name": "_index.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "wiki/templates/_index.md",
+          "name": "_index.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "wiki/utilities/_index.md",
+          "name": "_index.md",
+          "fileType": "md"
+        }
+      ]
+    },
+    {
+      "name": "n8n_workflows",
+      "description": "Private repo for n8n workflows",
+      "githubUrl": "https://github.com/mindfu23/n8n_workflows",
+      "languages": [
+        "JavaScript"
+      ],
+      "lastCommitDate": "2026-03-11T20:10:59Z",
+      "status": "synced",
+      "visibility": "public",
+      "localPath": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/n8n_workflows",
+      "notes": "Not deployed directly, will put URL in once it's set up.",
+      "markdownFiles": [
+        {
+          "relativePath": "docs/N8N_GCP_SETUP_GUIDE.md",
+          "name": "N8N_GCP_SETUP_GUIDE.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "README.md",
+          "name": "README.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "workflows/JOBSEARCHER_INTEGRATION_GUIDE.md",
+          "name": "JOBSEARCHER_INTEGRATION_GUIDE.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "workflows/METABOT_INTEGRATION_GUIDE.md",
+          "name": "METABOT_INTEGRATION_GUIDE.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "workflows/NOVEL_ORCHESTRATION_README.md",
+          "name": "NOVEL_ORCHESTRATION_README.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "workflows/SHAMAIN_INTEGRATION_GUIDE.md",
+          "name": "SHAMAIN_INTEGRATION_GUIDE.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "workflows/VALUEAPE_INTEGRATION_GUIDE.md",
+          "name": "VALUEAPE_INTEGRATION_GUIDE.md",
+          "fileType": "md"
+        }
+      ]
+    },
+    {
+      "name": "Metabot",
+      "description": "A bot that will take any query and send it to at least 4 different current AIs. This currently is Chat GPT, Anthropic's Claude, Google's Gemini and Perplexity AI. It will then provide a synthesis and summary of the received information, by default via Perplexity but also user-configurable for any other AI to be the summary agent.",
+      "githubUrl": "https://github.com/mindfu23/Metabot",
+      "languages": [
+        "TypeScript"
+      ],
+      "lastCommitDate": "2026-03-10T17:23:22Z",
+      "status": "synced",
+      "visibility": "private",
+      "localPath": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/Metabot",
+      "markdownFiles": [
+        {
+          "relativePath": "API.md",
+          "name": "API.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "ARCHITECTURE.md",
+          "name": "ARCHITECTURE.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "CONTRIBUTING.md",
+          "name": "CONTRIBUTING.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "DEPLOYMENT.md",
+          "name": "DEPLOYMENT.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "DOCKER.md",
+          "name": "DOCKER.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "figma-export/README.md",
+          "name": "README.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "figma-export/src/Attributions.md",
+          "name": "Attributions.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "figma-export/src/guidelines/Guidelines.md",
+          "name": "Guidelines.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "IMPLEMENTATION_SUMMARY.md",
+          "name": "IMPLEMENTATION_SUMMARY.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "MCP_INTEGRATION.md",
+          "name": "MCP_INTEGRATION.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "README.md",
+          "name": "README.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "VERIFICATION.md",
+          "name": "VERIFICATION.md",
+          "fileType": "md"
+        }
+      ]
+    },
+    {
+      "name": "Novelizer",
+      "description": "My own personal multi-agentic app for creative novel writing and editing ",
+      "githubUrl": "https://github.com/mindfu23/Novelizer",
+      "languages": [
+        "TypeScript"
+      ],
+      "lastCommitDate": "2026-03-08T22:25:13Z",
+      "status": "synced",
+      "visibility": "private",
+      "localPath": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/Novelizer",
+      "markdownFiles": [
+        {
+          "relativePath": "DEVELOPMENT_PLAN.md",
+          "name": "DEVELOPMENT_PLAN.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "NOTES.md",
+          "name": "NOTES.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "NOVELIZER-ENHANCEMENTS.md",
+          "name": "NOVELIZER-ENHANCEMENTS.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "POSSIBLE-EXPANSION.md",
+          "name": "POSSIBLE-EXPANSION.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "README.md",
+          "name": "README.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "TODO_alt.md",
+          "name": "TODO_alt.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "TODO.md",
+          "name": "TODO.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "web/README.md",
+          "name": "README.md",
+          "fileType": "md"
+        }
+      ]
+    },
+    {
+      "name": "WebToFigma",
+      "description": "App for generating a basic wireframe of a pre-existing site and then putting it into a format that can be opened by Figma for review and changes. ",
+      "githubUrl": "https://github.com/mindfu23/WebToFigma",
+      "languages": [
+        "JavaScript"
+      ],
+      "lastCommitDate": "2026-03-06T20:12:21Z",
+      "status": "github-only",
+      "visibility": "private",
+      "markdownFiles": [
+        {
+          "relativePath": "README.md",
+          "name": "README.md",
+          "fileType": "md"
+        }
+      ]
+    },
+    {
+      "name": "CoverJudge",
+      "description": "A website, iOS and Android app that will:",
+      "githubUrl": "https://github.com/mindfu23/CoverJudge",
+      "languages": [
+        "JavaScript"
+      ],
+      "lastCommitDate": "2026-03-06T20:06:04Z",
+      "status": "github-only",
+      "visibility": "public",
+      "markdownFiles": [
+        {
+          "relativePath": "docs/adding-ai-provider.md",
+          "name": "adding-ai-provider.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "docs/adding-retailer.md",
+          "name": "adding-retailer.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "docs/deployment-guide.md",
+          "name": "deployment-guide.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "mobile/README.md",
+          "name": "README.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "README.md",
+          "name": "README.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "web/README.md",
+          "name": "README.md",
+          "fileType": "md"
+        }
+      ]
+    },
+    {
+      "name": "StoryPlot",
+      "description": "A fiction story plot generator. Work in progress.",
+      "githubUrl": "https://github.com/mindfu23/StoryPlot",
+      "languages": [
+        "JavaScript"
+      ],
+      "lastCommitDate": "2026-03-06T18:43:03Z",
+      "status": "synced",
+      "visibility": "private",
+      "localPath": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/StoryPlot",
+      "markdownFiles": [
+        {
+          "relativePath": "docs/story-circle/DEVELOPMENT_PLAN.md",
+          "name": "DEVELOPMENT_PLAN.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "docs/story-circle/reference/fat-outline.txt",
+          "name": "fat-outline.txt",
+          "fileType": "txt"
+        },
+        {
+          "relativePath": "docs/story-circle/reference/lester-dent-plot-basics.txt",
+          "name": "lester-dent-plot-basics.txt",
+          "fileType": "txt"
+        },
+        {
+          "relativePath": "docs/story-circle/reference/Mckee-story-and-scenes.txt",
+          "name": "Mckee-story-and-scenes.txt",
+          "fileType": "txt"
+        },
+        {
+          "relativePath": "docs/story-circle/reference/michael-moorcock-novel-in-3-days.txt",
+          "name": "michael-moorcock-novel-in-3-days.txt",
+          "fileType": "txt"
+        },
+        {
+          "relativePath": "docs/story-circle/TODO.md",
+          "name": "TODO.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "README.md",
+          "name": "README.md",
+          "fileType": "md"
+        }
+      ]
+    },
+    {
+      "name": "Fractasy",
+      "description": "Repo for my graphics generating app",
+      "githubUrl": "https://github.com/mindfu23/Fractasy",
+      "languages": [
+        "Dart"
+      ],
+      "lastCommitDate": "2026-03-06T17:30:39Z",
+      "status": "github-only",
+      "visibility": "private",
+      "markdownFiles": [
+        {
+          "relativePath": "ios/Runner/Assets.xcassets/LaunchImage.imageset/README.md",
+          "name": "README.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "linux/CMakeLists.txt",
+          "name": "CMakeLists.txt",
+          "fileType": "txt"
+        },
+        {
+          "relativePath": "linux/flutter/CMakeLists.txt",
+          "name": "CMakeLists.txt",
+          "fileType": "txt"
+        },
+        {
+          "relativePath": "linux/runner/CMakeLists.txt",
+          "name": "CMakeLists.txt",
+          "fileType": "txt"
+        },
+        {
+          "relativePath": "README.md",
+          "name": "README.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "windows/CMakeLists.txt",
+          "name": "CMakeLists.txt",
+          "fileType": "txt"
+        },
+        {
+          "relativePath": "windows/flutter/CMakeLists.txt",
+          "name": "CMakeLists.txt",
+          "fileType": "txt"
+        },
+        {
+          "relativePath": "windows/runner/CMakeLists.txt",
+          "name": "CMakeLists.txt",
+          "fileType": "txt"
+        }
+      ]
+    },
+    {
+      "name": "JBWordPressTheme",
+      "description": "repo for my wordpress theme",
+      "githubUrl": "https://github.com/mindfu23/JBWordPressTheme",
+      "languages": [
+        "HTML"
+      ],
+      "lastCommitDate": "2026-03-06T17:21:05Z",
+      "status": "github-only",
+      "visibility": "private",
+      "markdownFiles": [
+        {
+          "relativePath": "INSTALLATION_GUIDE.md",
+          "name": "INSTALLATION_GUIDE.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "README.md",
+          "name": "README.md",
+          "fileType": "md"
+        }
+      ]
+    },
+    {
+      "name": "ambient-gallery",
+      "githubUrl": "https://github.com/mindfu23/ambient-gallery",
+      "languages": [],
+      "lastCommitDate": "2026-03-06T17:13:58Z",
+      "status": "github-only",
+      "visibility": "private",
+      "markdownFiles": [
+        {
+          "relativePath": "docs/project-brief.md",
+          "name": "project-brief.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "docs/project-structure.md",
+          "name": "project-structure.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "docs/vizio-research.md",
+          "name": "vizio-research.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "README.md",
           "name": "README.md",
           "fileType": "md"
         }
@@ -3329,6 +3339,6 @@
     "templates",
     "utilities"
   ],
-  "buildTime": "2026-03-13T00:19:41.750Z",
+  "buildTime": "2026-03-14T00:18:22.926Z",
   "version": "1.0.0"
 }
