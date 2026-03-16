@@ -330,58 +330,80 @@
   ],
   "repos": [
     {
-      "name": "weirdchess",
-      "description": "A game with 5 variants of 10x10 chess.",
-      "githubUrl": "https://github.com/mindfu23/weirdchess",
-      "languages": [
-        "Dart"
-      ],
-      "lastCommitDate": "2026-03-14T21:08:07Z",
-      "status": "synced",
-      "visibility": "public",
-      "localPath": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/weirdchess",
-      "markdownFiles": [
-        {
-          "relativePath": "ios/Runner/Assets.xcassets/LaunchImage.imageset/README.md",
-          "name": "README.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "README.md",
-          "name": "README.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "TODO.md",
-          "name": "TODO.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "weirdchess-store-text.md",
-          "name": "weirdchess-store-text.md",
-          "fileType": "md"
-        }
-      ]
-    },
-    {
-      "name": "StoryLoft",
-      "description": "Repo for prototypes of author community website and app.",
-      "githubUrl": "https://github.com/mindfu23/StoryLoft",
+      "name": "Metabot",
+      "description": "A bot that will take any query and send it to at least 4 different current AIs. This currently is Chat GPT, Anthropic's Claude, Google's Gemini and Perplexity AI. It will then provide a synthesis and summary of the received information, by default via Perplexity but also user-configurable for any other AI to be the summary agent.",
+      "githubUrl": "https://github.com/mindfu23/Metabot",
       "languages": [
         "TypeScript"
       ],
-      "lastCommitDate": "2026-03-14T19:23:49Z",
-      "status": "github-only",
+      "lastCommitDate": "2026-03-16T00:15:59Z",
+      "status": "synced",
       "visibility": "private",
+      "localPath": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/Metabot",
       "markdownFiles": [
         {
-          "relativePath": "PLANNING.md",
-          "name": "PLANNING.md",
+          "relativePath": "API.md",
+          "name": "API.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "ARCHITECTURE.md",
+          "name": "ARCHITECTURE.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "CONTRIBUTING.md",
+          "name": "CONTRIBUTING.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "DEPLOYMENT.md",
+          "name": "DEPLOYMENT.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "DOCKER.md",
+          "name": "DOCKER.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "figma-export/README.md",
+          "name": "README.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "figma-export/src/Attributions.md",
+          "name": "Attributions.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "figma-export/src/guidelines/Guidelines.md",
+          "name": "Guidelines.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "IMPLEMENTATION_SUMMARY.md",
+          "name": "IMPLEMENTATION_SUMMARY.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "MCP_INTEGRATION.md",
+          "name": "MCP_INTEGRATION.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "quantum-retreiver-store-text.md",
+          "name": "quantum-retreiver-store-text.md",
           "fileType": "md"
         },
         {
           "relativePath": "README.md",
           "name": "README.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "VERIFICATION.md",
+          "name": "VERIFICATION.md",
           "fileType": "md"
         }
       ]
@@ -392,7 +414,7 @@
       "languages": [
         "TypeScript"
       ],
-      "lastCommitDate": "2026-03-14T06:23:56Z",
+      "lastCommitDate": "2026-03-15T06:29:51Z",
       "status": "synced",
       "visibility": "private",
       "localPath": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/ValueApe",
@@ -468,6 +490,11 @@
           "fileType": "md"
         },
         {
+          "relativePath": "value-ape-stock-picks_2026_1.txt",
+          "name": "value-ape-stock-picks_2026_1.txt",
+          "fileType": "txt"
+        },
+        {
           "relativePath": "webscraper/README.md",
           "name": "README.md",
           "fileType": "md"
@@ -481,7 +508,7 @@
       "languages": [
         "JavaScript"
       ],
-      "lastCommitDate": "2026-03-14T00:20:14Z",
+      "lastCommitDate": "2026-03-15T00:24:47Z",
       "status": "synced",
       "visibility": "public",
       "localPath": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/apiTracker",
@@ -520,7 +547,7 @@
       "languages": [
         "TypeScript"
       ],
-      "lastCommitDate": "2026-03-14T00:18:23Z",
+      "lastCommitDate": "2026-03-15T00:22:10Z",
       "status": "github-only",
       "visibility": "public",
       "markdownFiles": [
@@ -627,6 +654,63 @@
         {
           "relativePath": "wiki/utilities/_index.md",
           "name": "_index.md",
+          "fileType": "md"
+        }
+      ]
+    },
+    {
+      "name": "weirdchess",
+      "description": "A game with 5 variants of 10x10 chess.",
+      "githubUrl": "https://github.com/mindfu23/weirdchess",
+      "languages": [
+        "Dart"
+      ],
+      "lastCommitDate": "2026-03-14T21:08:07Z",
+      "status": "synced",
+      "visibility": "public",
+      "localPath": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/weirdchess",
+      "markdownFiles": [
+        {
+          "relativePath": "ios/Runner/Assets.xcassets/LaunchImage.imageset/README.md",
+          "name": "README.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "README.md",
+          "name": "README.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "TODO.md",
+          "name": "TODO.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "weirdchess-store-text.md",
+          "name": "weirdchess-store-text.md",
+          "fileType": "md"
+        }
+      ]
+    },
+    {
+      "name": "StoryLoft",
+      "description": "Repo for prototypes of author community website and app.",
+      "githubUrl": "https://github.com/mindfu23/StoryLoft",
+      "languages": [
+        "TypeScript"
+      ],
+      "lastCommitDate": "2026-03-14T19:23:49Z",
+      "status": "github-only",
+      "visibility": "private",
+      "markdownFiles": [
+        {
+          "relativePath": "PLANNING.md",
+          "name": "PLANNING.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "README.md",
+          "name": "README.md",
           "fileType": "md"
         }
       ]
@@ -1131,80 +1215,6 @@
         {
           "relativePath": "workflows/VALUEAPE_INTEGRATION_GUIDE.md",
           "name": "VALUEAPE_INTEGRATION_GUIDE.md",
-          "fileType": "md"
-        }
-      ]
-    },
-    {
-      "name": "Metabot",
-      "description": "A bot that will take any query and send it to at least 4 different current AIs. This currently is Chat GPT, Anthropic's Claude, Google's Gemini and Perplexity AI. It will then provide a synthesis and summary of the received information, by default via Perplexity but also user-configurable for any other AI to be the summary agent.",
-      "githubUrl": "https://github.com/mindfu23/Metabot",
-      "languages": [
-        "TypeScript"
-      ],
-      "lastCommitDate": "2026-03-10T17:23:22Z",
-      "status": "synced",
-      "visibility": "private",
-      "localPath": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/Metabot",
-      "markdownFiles": [
-        {
-          "relativePath": "API.md",
-          "name": "API.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "ARCHITECTURE.md",
-          "name": "ARCHITECTURE.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "CONTRIBUTING.md",
-          "name": "CONTRIBUTING.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "DEPLOYMENT.md",
-          "name": "DEPLOYMENT.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "DOCKER.md",
-          "name": "DOCKER.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "figma-export/README.md",
-          "name": "README.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "figma-export/src/Attributions.md",
-          "name": "Attributions.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "figma-export/src/guidelines/Guidelines.md",
-          "name": "Guidelines.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "IMPLEMENTATION_SUMMARY.md",
-          "name": "IMPLEMENTATION_SUMMARY.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "MCP_INTEGRATION.md",
-          "name": "MCP_INTEGRATION.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "README.md",
-          "name": "README.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "VERIFICATION.md",
-          "name": "VERIFICATION.md",
           "fileType": "md"
         }
       ]
@@ -3339,6 +3349,6 @@
     "templates",
     "utilities"
   ],
-  "buildTime": "2026-03-15T00:22:10.377Z",
+  "buildTime": "2026-03-16T00:22:14.432Z",
   "version": "1.0.0"
 }
