@@ -330,71 +330,46 @@
   ],
   "repos": [
     {
-      "name": "Metabot",
-      "description": "A bot that will take any query and send it to at least 4 different current AIs. This currently is Chat GPT, Anthropic's Claude, Google's Gemini and Perplexity AI. It will then provide a synthesis and summary of the received information, by default via Perplexity but also user-configurable for any other AI to be the summary agent.",
-      "githubUrl": "https://github.com/mindfu23/Metabot",
+      "name": "EthicalAIditor",
+      "description": "An interface and AI wrapper for writers and editors, that's linked to LLMs trained only on legally and publicly available writing materials. ",
+      "githubUrl": "https://github.com/mindfu23/EthicalAIditor",
       "languages": [
-        "TypeScript"
+        "JavaScript"
       ],
-      "lastCommitDate": "2026-03-16T15:17:41Z",
+      "lastCommitDate": "2026-03-17T21:22:43Z",
       "status": "synced",
-      "visibility": "private",
-      "localPath": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/Metabot",
+      "visibility": "public",
+      "localPath": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/EthicalAIditor",
       "markdownFiles": [
-        {
-          "relativePath": "API.md",
-          "name": "API.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "ARCHITECTURE.md",
-          "name": "ARCHITECTURE.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "CONTRIBUTING.md",
-          "name": "CONTRIBUTING.md",
-          "fileType": "md"
-        },
         {
           "relativePath": "DEPLOYMENT.md",
           "name": "DEPLOYMENT.md",
           "fileType": "md"
         },
         {
-          "relativePath": "DOCKER.md",
-          "name": "DOCKER.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "figma-export/README.md",
+          "relativePath": "Ethical_Aiditor_Front_End/README.md",
           "name": "README.md",
           "fileType": "md"
         },
         {
-          "relativePath": "figma-export/src/Attributions.md",
+          "relativePath": "Ethical_Aiditor_Front_End/src/Attributions.md",
           "name": "Attributions.md",
           "fileType": "md"
         },
         {
-          "relativePath": "figma-export/src/guidelines/Guidelines.md",
-          "name": "Guidelines.md",
+          "relativePath": "HANDOFF.md",
+          "name": "HANDOFF.md",
           "fileType": "md"
         },
         {
-          "relativePath": "IMPLEMENTATION_SUMMARY.md",
-          "name": "IMPLEMENTATION_SUMMARY.md",
-          "fileType": "md"
+          "relativePath": "llm-api/requirements.txt",
+          "name": "requirements.txt",
+          "fileType": "txt"
         },
         {
-          "relativePath": "MCP_INTEGRATION.md",
-          "name": "MCP_INTEGRATION.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "quantum-retreiver-store-text.md",
-          "name": "quantum-retreiver-store-text.md",
-          "fileType": "md"
+          "relativePath": "plugins/capacitor-llama-cpp/android/src/main/cpp/CMakeLists.txt",
+          "name": "CMakeLists.txt",
+          "fileType": "txt"
         },
         {
           "relativePath": "README.md",
@@ -402,8 +377,8 @@
           "fileType": "md"
         },
         {
-          "relativePath": "VERIFICATION.md",
-          "name": "VERIFICATION.md",
+          "relativePath": "TODO.md",
+          "name": "TODO.md",
           "fileType": "md"
         }
       ]
@@ -414,7 +389,7 @@
       "languages": [
         "TypeScript"
       ],
-      "lastCommitDate": "2026-03-16T06:42:56Z",
+      "lastCommitDate": "2026-03-17T06:32:59Z",
       "status": "synced",
       "visibility": "private",
       "localPath": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/ValueApe",
@@ -508,7 +483,7 @@
       "languages": [
         "JavaScript"
       ],
-      "lastCommitDate": "2026-03-16T00:24:45Z",
+      "lastCommitDate": "2026-03-17T00:22:16Z",
       "status": "synced",
       "visibility": "public",
       "localPath": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/apiTracker",
@@ -547,7 +522,7 @@
       "languages": [
         "TypeScript"
       ],
-      "lastCommitDate": "2026-03-16T00:22:14Z",
+      "lastCommitDate": "2026-03-17T00:20:33Z",
       "status": "github-only",
       "visibility": "public",
       "markdownFiles": [
@@ -654,6 +629,85 @@
         {
           "relativePath": "wiki/utilities/_index.md",
           "name": "_index.md",
+          "fileType": "md"
+        }
+      ]
+    },
+    {
+      "name": "Metabot",
+      "description": "A bot that will take any query and send it to at least 4 different current AIs. This currently is Chat GPT, Anthropic's Claude, Google's Gemini and Perplexity AI. It will then provide a synthesis and summary of the received information, by default via Perplexity but also user-configurable for any other AI to be the summary agent.",
+      "githubUrl": "https://github.com/mindfu23/Metabot",
+      "languages": [
+        "TypeScript"
+      ],
+      "lastCommitDate": "2026-03-16T15:17:41Z",
+      "status": "synced",
+      "visibility": "private",
+      "localPath": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/Metabot",
+      "markdownFiles": [
+        {
+          "relativePath": "API.md",
+          "name": "API.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "ARCHITECTURE.md",
+          "name": "ARCHITECTURE.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "CONTRIBUTING.md",
+          "name": "CONTRIBUTING.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "DEPLOYMENT.md",
+          "name": "DEPLOYMENT.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "DOCKER.md",
+          "name": "DOCKER.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "figma-export/README.md",
+          "name": "README.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "figma-export/src/Attributions.md",
+          "name": "Attributions.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "figma-export/src/guidelines/Guidelines.md",
+          "name": "Guidelines.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "IMPLEMENTATION_SUMMARY.md",
+          "name": "IMPLEMENTATION_SUMMARY.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "MCP_INTEGRATION.md",
+          "name": "MCP_INTEGRATION.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "quantum-retreiver-store-text.md",
+          "name": "quantum-retreiver-store-text.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "README.md",
+          "name": "README.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "VERIFICATION.md",
+          "name": "VERIFICATION.md",
           "fileType": "md"
         }
       ]
@@ -2629,60 +2683,6 @@
       ]
     },
     {
-      "name": "EthicalAIditor",
-      "description": "An interface and AI wrapper for writers and editors, that's linked to LLMs trained only on legally and publicly available writing materials. ",
-      "githubUrl": "https://github.com/mindfu23/EthicalAIditor",
-      "languages": [
-        "JavaScript"
-      ],
-      "lastCommitDate": "2026-01-16T21:50:18Z",
-      "status": "synced",
-      "visibility": "public",
-      "localPath": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/EthicalAIditor",
-      "markdownFiles": [
-        {
-          "relativePath": "DEPLOYMENT.md",
-          "name": "DEPLOYMENT.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "Ethical_Aiditor_Front_End/README.md",
-          "name": "README.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "Ethical_Aiditor_Front_End/src/Attributions.md",
-          "name": "Attributions.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "HANDOFF.md",
-          "name": "HANDOFF.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "llm-api/requirements.txt",
-          "name": "requirements.txt",
-          "fileType": "txt"
-        },
-        {
-          "relativePath": "plugins/capacitor-llama-cpp/android/src/main/cpp/CMakeLists.txt",
-          "name": "CMakeLists.txt",
-          "fileType": "txt"
-        },
-        {
-          "relativePath": "README.md",
-          "name": "README.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "TODO.md",
-          "name": "TODO.md",
-          "fileType": "md"
-        }
-      ]
-    },
-    {
       "name": "Create",
       "description": "An app to introduce kids to some methods of creating and encourage them in doing it. ",
       "githubUrl": "https://github.com/mindfu23/Create",
@@ -3349,6 +3349,6 @@
     "templates",
     "utilities"
   ],
-  "buildTime": "2026-03-17T00:20:33.351Z",
+  "buildTime": "2026-03-18T00:21:22.030Z",
   "version": "1.0.0"
 }

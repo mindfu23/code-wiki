@@ -160,13 +160,67 @@
   ],
   "repos": [
     {
+      "name": "EthicalAIditor",
+      "description": "An interface and AI wrapper for writers and editors, that's linked to LLMs trained only on legally and publicly available writing materials. ",
+      "githubUrl": "https://github.com/mindfu23/EthicalAIditor",
+      "languages": [
+        "JavaScript"
+      ],
+      "lastCommitDate": "2026-03-17T21:22:43Z",
+      "status": "synced",
+      "visibility": "public",
+      "localPath": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/EthicalAIditor",
+      "markdownFiles": [
+        {
+          "relativePath": "DEPLOYMENT.md",
+          "name": "DEPLOYMENT.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "Ethical_Aiditor_Front_End/README.md",
+          "name": "README.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "Ethical_Aiditor_Front_End/src/Attributions.md",
+          "name": "Attributions.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "HANDOFF.md",
+          "name": "HANDOFF.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "llm-api/requirements.txt",
+          "name": "requirements.txt",
+          "fileType": "txt"
+        },
+        {
+          "relativePath": "plugins/capacitor-llama-cpp/android/src/main/cpp/CMakeLists.txt",
+          "name": "CMakeLists.txt",
+          "fileType": "txt"
+        },
+        {
+          "relativePath": "README.md",
+          "name": "README.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "TODO.md",
+          "name": "TODO.md",
+          "fileType": "md"
+        }
+      ]
+    },
+    {
       "name": "apiTracker",
       "description": "A simple GUI tracker for health and number of remaining calls for my various APIs used in my other apps.",
       "githubUrl": "https://github.com/mindfu23/apiTracker",
       "languages": [
         "JavaScript"
       ],
-      "lastCommitDate": "2026-03-16T00:24:45Z",
+      "lastCommitDate": "2026-03-17T00:22:16Z",
       "status": "synced",
       "visibility": "public",
       "localPath": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/apiTracker",
@@ -205,7 +259,7 @@
       "languages": [
         "TypeScript"
       ],
-      "lastCommitDate": "2026-03-16T00:22:14Z",
+      "lastCommitDate": "2026-03-17T00:20:33Z",
       "status": "github-only",
       "visibility": "public",
       "markdownFiles": [
@@ -1172,60 +1226,6 @@
       ]
     },
     {
-      "name": "EthicalAIditor",
-      "description": "An interface and AI wrapper for writers and editors, that's linked to LLMs trained only on legally and publicly available writing materials. ",
-      "githubUrl": "https://github.com/mindfu23/EthicalAIditor",
-      "languages": [
-        "JavaScript"
-      ],
-      "lastCommitDate": "2026-01-16T21:50:18Z",
-      "status": "synced",
-      "visibility": "public",
-      "localPath": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/EthicalAIditor",
-      "markdownFiles": [
-        {
-          "relativePath": "DEPLOYMENT.md",
-          "name": "DEPLOYMENT.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "Ethical_Aiditor_Front_End/README.md",
-          "name": "README.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "Ethical_Aiditor_Front_End/src/Attributions.md",
-          "name": "Attributions.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "HANDOFF.md",
-          "name": "HANDOFF.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "llm-api/requirements.txt",
-          "name": "requirements.txt",
-          "fileType": "txt"
-        },
-        {
-          "relativePath": "plugins/capacitor-llama-cpp/android/src/main/cpp/CMakeLists.txt",
-          "name": "CMakeLists.txt",
-          "fileType": "txt"
-        },
-        {
-          "relativePath": "README.md",
-          "name": "README.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "TODO.md",
-          "name": "TODO.md",
-          "fileType": "md"
-        }
-      ]
-    },
-    {
       "name": "Create",
       "description": "An app to introduce kids to some methods of creating and encourage them in doing it. ",
       "githubUrl": "https://github.com/mindfu23/Create",
@@ -1680,6 +1680,6 @@
     "templates",
     "utilities"
   ],
-  "buildTime": "2026-03-17T00:20:33.352Z",
+  "buildTime": "2026-03-18T00:21:22.030Z",
   "version": "1.0.0"
 }
