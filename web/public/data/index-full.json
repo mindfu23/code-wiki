@@ -330,66 +330,12 @@
   ],
   "repos": [
     {
-      "name": "EthicalAIditor",
-      "description": "An interface and AI wrapper for writers and editors, that's linked to LLMs trained only on legally and publicly available writing materials. ",
-      "githubUrl": "https://github.com/mindfu23/EthicalAIditor",
-      "languages": [
-        "JavaScript"
-      ],
-      "lastCommitDate": "2026-03-19T16:07:03Z",
-      "status": "synced",
-      "visibility": "public",
-      "localPath": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/EthicalAIditor",
-      "markdownFiles": [
-        {
-          "relativePath": "DEPLOYMENT.md",
-          "name": "DEPLOYMENT.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "Ethical_Aiditor_Front_End/README.md",
-          "name": "README.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "Ethical_Aiditor_Front_End/src/Attributions.md",
-          "name": "Attributions.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "HANDOFF.md",
-          "name": "HANDOFF.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "llm-api/requirements.txt",
-          "name": "requirements.txt",
-          "fileType": "txt"
-        },
-        {
-          "relativePath": "plugins/capacitor-llama-cpp/android/src/main/cpp/CMakeLists.txt",
-          "name": "CMakeLists.txt",
-          "fileType": "txt"
-        },
-        {
-          "relativePath": "README.md",
-          "name": "README.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "TODO.md",
-          "name": "TODO.md",
-          "fileType": "md"
-        }
-      ]
-    },
-    {
       "name": "ValueApe",
       "githubUrl": "https://github.com/mindfu23/ValueApe",
       "languages": [
         "TypeScript"
       ],
-      "lastCommitDate": "2026-03-19T06:30:30Z",
+      "lastCommitDate": "2026-03-20T06:28:23Z",
       "status": "synced",
       "visibility": "private",
       "localPath": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/ValueApe",
@@ -483,7 +429,7 @@
       "languages": [
         "JavaScript"
       ],
-      "lastCommitDate": "2026-03-19T00:23:18Z",
+      "lastCommitDate": "2026-03-20T00:22:22Z",
       "status": "synced",
       "visibility": "public",
       "localPath": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/apiTracker",
@@ -522,7 +468,7 @@
       "languages": [
         "TypeScript"
       ],
-      "lastCommitDate": "2026-03-19T00:21:08Z",
+      "lastCommitDate": "2026-03-20T00:20:32Z",
       "status": "github-only",
       "visibility": "public",
       "markdownFiles": [
@@ -629,6 +575,60 @@
         {
           "relativePath": "wiki/utilities/_index.md",
           "name": "_index.md",
+          "fileType": "md"
+        }
+      ]
+    },
+    {
+      "name": "EthicalAIditor",
+      "description": "An interface and AI wrapper for writers and editors, that's linked to LLMs trained only on legally and publicly available writing materials. ",
+      "githubUrl": "https://github.com/mindfu23/EthicalAIditor",
+      "languages": [
+        "JavaScript"
+      ],
+      "lastCommitDate": "2026-03-19T16:07:03Z",
+      "status": "synced",
+      "visibility": "public",
+      "localPath": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/EthicalAIditor",
+      "markdownFiles": [
+        {
+          "relativePath": "DEPLOYMENT.md",
+          "name": "DEPLOYMENT.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "Ethical_Aiditor_Front_End/README.md",
+          "name": "README.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "Ethical_Aiditor_Front_End/src/Attributions.md",
+          "name": "Attributions.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "HANDOFF.md",
+          "name": "HANDOFF.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "llm-api/requirements.txt",
+          "name": "requirements.txt",
+          "fileType": "txt"
+        },
+        {
+          "relativePath": "plugins/capacitor-llama-cpp/android/src/main/cpp/CMakeLists.txt",
+          "name": "CMakeLists.txt",
+          "fileType": "txt"
+        },
+        {
+          "relativePath": "README.md",
+          "name": "README.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "TODO.md",
+          "name": "TODO.md",
           "fileType": "md"
         }
       ]
@@ -3349,6 +3349,6 @@
     "templates",
     "utilities"
   ],
-  "buildTime": "2026-03-20T00:20:32.187Z",
+  "buildTime": "2026-03-21T00:18:27.587Z",
   "version": "1.0.0"
 }
