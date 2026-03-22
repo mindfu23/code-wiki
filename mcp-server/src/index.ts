@@ -11,13 +11,14 @@ import dotenv from 'dotenv';
 import * as path from 'path';
 import { fileURLToPath } from 'url';
 
-import { loadConfig } from './types/index.js';
+import { loadConfig, loadMetricsConfig } from './types/index.js';
 import { CacheService } from './services/cacheService.js';
 import { IndexService } from './services/indexService.js';
 import { WikiService } from './services/wikiService.js';
 import { RipgrepService } from './services/ripgrepService.js';
 import { SearchService } from './services/searchService.js';
 import { SyncService } from './services/syncService.js';
+import { MetricsService } from './services/metricsService.js';
 import { CodeWikiServer } from './server.js';
 import { logger } from './utils/logger.js';
 
@@ -95,13 +96,32 @@ async function main(): Promise<void> {
     logger.info('Main', 'GitHub sync disabled (no token configured)');
   }
 
+  // Initialize Observatory metrics service
+  const metricsConfig = loadMetricsConfig();
+  const metricsDir = path.join(
+    path.isAbsolute(config.cacheDirectory)
+      ? config.cacheDirectory
+      : path.join(__dirname, '..', config.cacheDirectory),
+    'metrics'
+  );
+  const metricsService = new MetricsService(config, metricsConfig, indexService, metricsDir);
+
+  // Start background metrics collection if any API tokens are configured
+  if (config.githubToken || metricsConfig.netlifyAccessToken) {
+    metricsService.startBackgroundCollection();
+    logger.info('Main', 'Observatory metrics collection enabled');
+  } else {
+    logger.info('Main', 'Observatory metrics disabled (no API tokens configured)');
+  }
+
   // Create and start MCP server
   const codeWikiServer = new CodeWikiServer(
     config,
     indexService,
     searchService,
     wikiService,
-    syncService
+    syncService,
+    metricsService
   );
 
   const transport = new StdioServerTransport();
@@ -113,12 +133,14 @@ async function main(): Promise<void> {
   process.on('SIGINT', () => {
     logger.info('Main', 'Shutting down...');
     syncService.stopBackgroundSync();
+    metricsService.stopBackgroundCollection();
     process.exit(0);
   });
 
   process.on('SIGTERM', () => {
     logger.info('Main', 'Shutting down...');
     syncService.stopBackgroundSync();
+    metricsService.stopBackgroundCollection();
     process.exit(0);
   });
 }

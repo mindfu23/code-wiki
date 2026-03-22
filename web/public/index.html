@@ -22,6 +22,7 @@
       </a>
       <nav>
         <a href="/browse" class="nav-link" data-page="browse">Browse</a>
+        <a href="/dashboard" class="nav-link" data-page="dashboard">Dashboard</a>
         <a href="/login" class="nav-link" data-page="login" id="login-nav-link">Login</a>
         <div id="user-nav" class="user-nav" style="display: none;">
           <button id="new-doc-btn" class="btn btn-primary btn-sm">+ New</button>
@@ -267,6 +268,70 @@
       </div>
     </section>
 
+    <!-- Dashboard Page (Observatory) -->
+    <section id="page-dashboard" class="page">
+      <div class="dashboard-container" style="max-width: 1200px; margin: 0 auto; padding: 1rem;">
+        <div class="section-header-accent">
+          <div class="cyan-accent-bar"></div>
+          <h3>Observatory — Project Health Matrix</h3>
+        </div>
+        <div style="display: flex; align-items: center; gap: 1rem; margin-bottom: 1rem;">
+          <div id="dashboard-summary" style="color: #94a3b8; font-size: 0.9rem;"></div>
+          <div style="margin-left: auto; display: flex; gap: 0.5rem;">
+            <select id="dashboard-filter" style="padding: 0.25rem 0.5rem; background: #1e293b; color: #e2e8f0; border: 1px solid #334155; border-radius: 4px;">
+              <option value="all">All Projects</option>
+              <option value="deployed">Deployed Only</option>
+              <option value="issues">Issues Only</option>
+            </select>
+            <button id="refresh-dashboard-btn" class="btn btn-sm btn-secondary">Refresh</button>
+          </div>
+        </div>
+        <div class="quickview-table-container">
+          <table class="quickview-table" id="dashboard-table">
+            <thead>
+              <tr>
+                <th>Project</th>
+                <th>Last Commit</th>
+                <th>Deploy</th>
+                <th>CI/CD</th>
+                <th>Issues</th>
+                <th>Success Rate</th>
+              </tr>
+            </thead>
+            <tbody id="dashboard-tbody">
+              <tr><td colspan="7" class="loading">Loading observatory data...</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div style="margin-top: 2rem;">
+          <a href="/trends" class="nav-link" onclick="event.preventDefault(); navigateTo('trends');" style="color: #22d3ee;">View Trends &rarr;</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- Trends Page (Observatory) -->
+    <section id="page-trends" class="page">
+      <div id="trends-container" style="max-width: 1200px; margin: 0 auto; padding: 1rem;">
+        <div class="section-header-accent">
+          <div class="cyan-accent-bar"></div>
+          <h3>Observatory — Trends</h3>
+        </div>
+        <div style="margin-bottom: 1rem;">
+          <a href="/dashboard" class="nav-link" onclick="event.preventDefault(); navigateTo('dashboard');" style="color: #22d3ee;">&larr; Back to Dashboard</a>
+        </div>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem;">
+          <div style="background: #1e293b; border-radius: 8px; padding: 1.5rem;">
+            <h4 style="color: #e2e8f0; margin: 0 0 1rem;">Language Distribution</h4>
+            <canvas id="language-chart"></canvas>
+          </div>
+          <div style="background: #1e293b; border-radius: 8px; padding: 1.5rem;">
+            <h4 style="color: #e2e8f0; margin: 0 0 1rem;">Deploy Status</h4>
+            <canvas id="deploy-chart"></canvas>
+          </div>
+        </div>
+      </div>
+    </section>
+
     <!-- Login Page -->
     <section id="page-login" class="page">
       <div class="auth-container">
@@ -347,6 +412,7 @@
     <p>Docsy McDocsface <a href="https://github.com/mindfu23/code-wiki" target="_blank">GitHub</a></p>
   </footer>
 
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4/dist/chart.umd.min.js"></script>
   <script src="/app.js"></script>
 </body>
 </html>
