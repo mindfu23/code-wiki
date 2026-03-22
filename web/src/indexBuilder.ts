@@ -55,6 +55,44 @@ loadEnvFallback();
 // Supported documentation file extensions
 const DOC_EXTENSIONS = ['.md', '.txt', '.rst', '.adoc', '.asciidoc', '.org'] as const;
 
+// Files to skip during indexing (conversation logs, large generated files that may contain secrets)
+const SKIP_FILE_PATTERNS = [
+  /^specstory/i,
+  /^\.specstory/i,
+  /conversation-log/i,
+  /chat-history/i,
+];
+
+function shouldSkipFile(filename: string): boolean {
+  const base = path.basename(filename, path.extname(filename));
+  return SKIP_FILE_PATTERNS.some(pattern => pattern.test(base));
+}
+
+// Patterns that match known API key formats — replaced with "[REDACTED]" before indexing
+const SECRET_PATTERNS: Array<{ pattern: RegExp; label: string }> = [
+  { pattern: /\bhf_[A-Za-z0-9]{20,}\b/g, label: 'HuggingFace token' },
+  { pattern: /\bsk-[A-Za-z0-9]{20,}\b/g, label: 'OpenAI key' },
+  { pattern: /\bpplx-[A-Za-z0-9]{20,}\b/g, label: 'Perplexity key' },
+  { pattern: /\bgithub_pat_[A-Za-z0-9_]{30,}\b/g, label: 'GitHub PAT' },
+  { pattern: /\bghp_[A-Za-z0-9]{30,}\b/g, label: 'GitHub token' },
+  { pattern: /\bnfp_[A-Za-z0-9]{30,}\b/g, label: 'Netlify token' },
+  { pattern: /\bAIza[A-Za-z0-9_-]{30,}\b/g, label: 'Google API key' },
+  { pattern: /\bxai-[A-Za-z0-9]{20,}\b/g, label: 'xAI/Grok key' },
+  { pattern: /\bsk-ant-[A-Za-z0-9-]{20,}\b/g, label: 'Anthropic key' },
+  // Generic: VARIABLE=<long-alphanumeric-value> in export/env-var contexts
+  { pattern: /(?<=(?:API_KEY|SECRET|TOKEN|PASSWORD)\s*=\s*["']?)[A-Za-z0-9_-]{25,}(?=["']?\s)/gi, label: 'env-var secret' },
+];
+
+function sanitizeSecrets(content: string): string {
+  let sanitized = content;
+  for (const { pattern } of SECRET_PATTERNS) {
+    // Reset lastIndex for global regexes
+    pattern.lastIndex = 0;
+    sanitized = sanitized.replace(pattern, '[REDACTED]');
+  }
+  return sanitized;
+}
+
 function getFileType(filename: string): RepoDocFile['fileType'] | null {
   const ext = filename.toLowerCase();
   if (ext.endsWith('.md')) return 'md';
@@ -111,7 +149,7 @@ async function findMarkdownFiles(dir: string, baseDir: string = dir, skipDirs: s
       if (entry.isDirectory() && !entry.name.startsWith('.') && !skipDirs.includes(entry.name)) {
         const subFiles = await findMarkdownFiles(fullPath, baseDir, []);
         files.push(...subFiles);
-      } else if (entry.isFile() && entry.name.endsWith('.md')) {
+      } else if (entry.isFile() && entry.name.endsWith('.md') && !shouldSkipFile(entry.name)) {
         files.push(fullPath);
       }
     }
@@ -135,6 +173,9 @@ async function parseWikiDocument(filePath: string, wikiDir: string): Promise<Wik
     // Skip index files from search results but include them for category listing
     const fileName = path.basename(filePath, '.md');
 
+    // Sanitize content to strip any API keys or tokens before indexing
+    const sanitizedBody = sanitizeSecrets(body);
+
     return {
       path: filePath,
       relativePath,
@@ -144,8 +185,8 @@ async function parseWikiDocument(filePath: string, wikiDir: string): Promise<Wik
       language: frontmatter.language,
       updated: frontmatter.updated,
       sourceRepo: frontmatter.source_repo,
-      content: body,
-      contentPreview: body.slice(0, 300).replace(/\n/g, ' ').trim(),
+      content: sanitizedBody,
+      contentPreview: sanitizedBody.slice(0, 300).replace(/\n/g, ' ').trim(),
       category,
       visibility: frontmatter.visibility === 'private' ? 'private' : 'public',
     };
