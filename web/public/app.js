@@ -2369,8 +2369,9 @@ function renderLanguageChart(projects) {
     },
     options: {
       responsive: true,
+      maintainAspectRatio: false,
       plugins: {
-        legend: { position: 'right', labels: { color: '#94a3b8' } },
+        legend: { position: 'right', labels: { color: '#94a3b8', font: { size: 11 } } },
         title: { display: false },
       },
     },
@@ -2401,14 +2402,15 @@ function renderDeployChart(projects) {
     },
     options: {
       responsive: true,
+      maintainAspectRatio: false,
       scales: {
         y: {
           beginAtZero: true,
-          ticks: { stepSize: 1, color: '#94a3b8' },
+          ticks: { stepSize: 1, color: '#94a3b8', font: { size: 11 } },
           grid: { color: '#334155' },
-          title: { display: true, text: 'Number of Projects', color: '#94a3b8' },
+          title: { display: true, text: 'Number of Projects', color: '#94a3b8', font: { size: 11 } },
         },
-        x: { ticks: { color: '#94a3b8' }, grid: { color: '#334155' } },
+        x: { ticks: { color: '#94a3b8', font: { size: 11 } }, grid: { color: '#334155' } },
       },
       plugins: {
         legend: { display: false },
