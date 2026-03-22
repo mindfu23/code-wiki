@@ -47,6 +47,7 @@ interface ProjectHealthRow {
   trafficLevel: 'high' | 'medium' | 'low' | 'none';
   openIssues: number;
   siteUrl?: string;
+  githubUrl?: string;
 }
 
 // --- Auth helpers (same pattern as full-index.ts) ---
@@ -110,6 +111,7 @@ async function fetchGitHubRepos(username: string, token: string) {
   return response.json() as Promise<Array<{
     name: string;
     full_name: string;
+    html_url: string;
     language: string | null;
     open_issues_count: number;
     pushed_at: string;
@@ -326,6 +328,7 @@ const handler: Handler = async (event: HandlerEvent) => {
             trafficLevel: 'none' as const,
             openIssues,
             siteUrl,
+            githubUrl: ghRepo?.html_url,
           };
         })
       );

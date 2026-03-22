@@ -546,6 +546,15 @@ main {
   color: var(--text-muted);
 }
 
+.quickview-table th.sortable {
+  cursor: pointer;
+  user-select: none;
+}
+
+.quickview-table th.sortable:hover {
+  background: var(--border);
+}
+
 .quickview-table th .header-hint {
   font-weight: 400;
   color: var(--text-muted);

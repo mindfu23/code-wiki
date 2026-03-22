@@ -22,7 +22,7 @@
       </a>
       <nav>
         <a href="/browse" class="nav-link" data-page="browse">Browse</a>
-        <a href="/dashboard" class="nav-link" data-page="dashboard">Dashboard</a>
+        <a href="/dashboard" class="nav-link" data-page="dashboard">Observatory</a>
         <a href="/login" class="nav-link" data-page="login" id="login-nav-link">Login</a>
         <div id="user-nav" class="user-nav" style="display: none;">
           <button id="new-doc-btn" class="btn btn-primary btn-sm">+ New</button>
@@ -300,12 +300,12 @@
           <table class="quickview-table" id="dashboard-table">
             <thead>
               <tr>
-                <th>Project</th>
-                <th>Last Commit</th>
-                <th>Deploy</th>
-                <th>CI/CD</th>
-                <th>Issues</th>
-                <th>Success Rate</th>
+                <th class="sortable" data-sort="name">Project</th>
+                <th class="sortable" data-sort="lastCommitDate">Last Commit</th>
+                <th class="sortable" data-sort="deployStatus">Deploy</th>
+                <th class="sortable" data-sort="actionsStatus">Actions</th>
+                <th class="sortable" data-sort="openIssues">Issues</th>
+                <th class="sortable" data-sort="deploySuccessRate">Deploy Success</th>
               </tr>
             </thead>
             <tbody id="dashboard-tbody">
