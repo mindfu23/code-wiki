@@ -1,8 +1,8 @@
 ---
 title: "New Project Setup Cheatsheet"
-tags: ["setup", "supabase", "netlify", "gcp", "n8n", "pwa", "capacitor"]
 description: "Step-by-step commands and URLs for wiring up a new React+Vite+Supabase+Netlify project from scaffold to live prototype"
-updated: "2026-03-11"
+tags: ["setup", "supabase", "netlify", "gcp", "n8n", "pwa", "capacitor"]
+updated: "2026-03-12"
 ---
 
 # New Project Setup Cheatsheet
@@ -24,18 +24,20 @@ End-to-end steps to take a scaffolded project (React + Vite + Supabase + Netlify
 Settings → API:
 - **Project URL** → `VITE_SUPABASE_URL`
 - **anon / public key** → `VITE_SUPABASE_ANON_KEY`
+
+^ add to local .env and Netlify, as public
+
 - **service_role key** → `SUPABASE_SERVICE_ROLE_KEY` (server-side only, never in client)
 
+^ only add to Netlify, as secret
+
 ### Run migrations
-SQL Editor → New query → paste contents of `supabase/migrations/001_initial_schema.sql` → Run
+Supabase: SQL Editor → New query → paste contents of `supabase/migrations/001_initial_schema.sql` → Run
 
-### Enable Google OAuth
-Authentication → Providers → Google → Enable
-- Add your Google OAuth Client ID + Secret (get from Google Cloud Console below)
-- Redirect URL shown in Supabase → copy it for Google Cloud Console
+### Start authentication steps
+Supabase: Authentication → Providers → Google → Enable
 
-### Enable email confirmations (optional for prototype)
-Authentication → Email → toggle "Confirm email" on/off as needed for testing
+Copy Callback URL (for OAuth) 
 
 ---
 
@@ -49,9 +51,21 @@ Only needed if using Google OAuth login (recommended).
 2. APIs & Services → Credentials → **Create Credentials** → OAuth client ID
 3. Application type: **Web application**
 4. Authorized redirect URIs → paste the URL from Supabase (ends in `/auth/v1/callback`)
-5. Copy **Client ID** and **Client Secret** → paste into Supabase Google provider settings
+5. Click create
+6. Copy and locally save **Client ID** and **Client Secret**, then → go back to Supabase to paste into Supabase Google provider settings
 
 ---
+
+Back to Supabase
+
+### Enable Google OAuth
+Supabase: Authentication → Providers → Google → Enable
+- Add your Google OAuth Client ID + Secret (get from Google Cloud Console below)
+- Redirect URL shown in Supabase → copy it for Google Cloud Console
+
+### Enable email confirmations (optional for prototype)
+Authentication → Email → toggle "Confirm email" on/off as needed for testing
+
 
 ## 3. Local .env Setup
 
@@ -69,23 +83,31 @@ VITE_APP_ENV=development
 ```
 
 Server-side keys (go in Netlify dashboard, NOT in .env for production):
-```
-SUPABASE_SERVICE_ROLE_KEY=eyJhbGc...
-BREVO_API_KEY=xkeysib-...
-```
 
----
+Also will later add same minimum keys for Netlify, as public:
 
-## 4. Local Dev
+VITE_SUPABASE_URL=https://xxxxxxxxxxxx.supabase.co
+VITE_SUPABASE_ANON_KEY=eyJhbGc...
 
-```bash
-cd /Users/jamesbeach/Documents/visual-studio-code/github-copilot/StoryLoft
 
-npm install          # first time only
-npm run dev          # starts Vite dev server at http://localhost:5173
-npm run build        # production build — always run before deploying
-npm run preview      # preview the production build locally
-```
+## 4. Brevo and Resend setup for Email Delivery
+
+**URL:** https://app.brevo.com
+
+1. Create free account
+2. Settings → SMTP & API → API Keys → **Generate a new API key**
+3. Copy key → add as `BREVO_API_KEY` in Netlify env vars
+4. **Verify your sender domain** (important for deliverability):
+   - Settings → Senders & IP → Domains → Add a domain
+   - Add the DNS records they give you to your domain registrar
+5. Free tier: **300 emails/day** — sufficient for prototype
+
+Also note that my initial email address is probably fine for prototyping, but for serious use will have to swap in an email domain and use that. 
+
+### Resend (fallback)
+**URL:** https://resend.com
+1. Create account → API Keys → Create API Key
+2. Verify a domain here too for production sends
 
 ---
 
@@ -107,7 +129,7 @@ Site settings → Environment variables → Add:
 |---|---|---|
 | `VITE_SUPABASE_URL` | from Supabase | public, safe |
 | `VITE_SUPABASE_ANON_KEY` | from Supabase | public, safe |
-| `VITE_APP_ENV` | `production` | public, safe |
+| `VITE_APP_ENV` | `production` | public, safe | (optiona?)
 | `SUPABASE_SERVICE_ROLE_KEY` | from Supabase | secret — server only |
 | `BREVO_API_KEY` | from Brevo | secret — server only |
 | `RESEND_API_KEY` | from Resend | secret — server only |
@@ -119,25 +141,21 @@ Site settings → Domain management → Add custom domain
 
 ---
 
-## 6. Brevo — Email Delivery
+## 6. Local Dev
 
-**URL:** https://app.brevo.com
+```bash
+cd /Users/jamesbeach/Documents/visual-studio-code/github-copilot/StoryLoft
 
-1. Create free account
-2. Settings → SMTP & API → API Keys → **Generate a new API key**
-3. Copy key → add as `BREVO_API_KEY` in Netlify env vars
-4. **Verify your sender domain** (important for deliverability):
-   - Settings → Senders & IP → Domains → Add a domain
-   - Add the DNS records they give you to your domain registrar
-5. Free tier: **300 emails/day** — sufficient for prototype
-
-### Resend (fallback)
-**URL:** https://resend.com
-1. Create account → API Keys → Create API Key
-2. Add as `RESEND_API_KEY` in Netlify
-3. Verify a domain here too for production sends
+npm install          # first time only
+npm run dev          # starts Vite dev server at http://localhost:5173
+npm run build        # production build — always run before deploying
+npm run preview      # preview the production build locally
+```
 
 ---
+
+
+
 
 ## 7. Sentry — Error Monitoring
 
