@@ -70,3 +70,44 @@ Currently, non-markdown files (.txt, .rst, .adoc, .org) link directly to GitHub 
 - [ ] VS Code extension to open files directly in editor
 - [ ] CLI tool to search across repos from terminal
 - [ ] MCP server integration for AI-assisted documentation search
+
+## Observatory — Project Health Dashboard
+
+### Phase 1: Core + GitHub + Netlify (complete)
+
+- [x] Metrics type definitions (`mcp-server/src/types/metrics.ts`)
+- [x] Base collector pattern with error handling and timing
+- [x] GitHub collector (commits, Actions runs, traffic, open issues)
+- [x] Netlify collector (sites, deploys, success rates)
+- [x] MetricsService orchestrating collectors with `Promise.allSettled()`
+- [x] MCP tools: `project_health`, `deploy_status`, `infra_overview`
+- [x] Web dashboard with sortable project health matrix table
+- [x] Language distribution doughnut chart (Chart.js)
+- [x] Deploy status bar chart with healthy/warning/error/not-deployed breakdown
+- [x] Status message below deploy chart ("All deploys are currently healthy")
+- [x] Descriptive error summary ("2 with GitHub Actions errors" instead of generic)
+- [x] Issues column linked to GitHub issues page
+- [x] Access control: public visitors see public repos only; owner sees all (matches full-index auth pattern)
+- [x] Dashboard data function merges GitHub API + wiki index for complete project coverage
+- [x] Secret sanitization in index builder (strips API key patterns, skips SpecStory/conversation log files)
+- [x] `export-bronze` Netlify function for Databricks ingestion (JSON/NDJSON, filterable by source)
+- [x] `collectMetrics.ts` standalone script for GitHub Actions
+- [x] `.github/workflows/collect-metrics.yml` — automated collection every 6 hours
+- [x] Databricks integration guide (`wiki/integrations/databricks-observatory.md`)
+
+### Phase 2: Remaining Collectors + MCP Tools
+
+- [ ] Cloudflare Workers collector (analytics via CF GraphQL API)
+- [ ] GCP collector (Cloud Run + Compute Engine metrics, manual JWT auth)
+- [ ] Supabase collector (DB size, auth users, API counts)
+- [ ] n8n collector (workflow executions, success rates, durations)
+- [ ] Obtain and configure credentials: CF_API_TOKEN, CF_ACCOUNT_ID, SUPABASE_ACCESS_TOKEN, SUPABASE_PROJECT_REFS, N8N_API_URL, N8N_API_KEY
+- [ ] Add GitHub Secrets for collect-metrics.yml workflow (NETLIFY_ACCESS_TOKEN, CF_API_TOKEN, etc.)
+
+### Phase 3: Trends + Databricks
+
+- [ ] Historical trend charts (commit activity over time, deploy success trends)
+- [ ] Databricks Community Edition signup and cluster setup
+- [ ] Create Databricks notebook: fetch from export-bronze endpoint
+- [ ] Build bronze → silver → gold Delta tables
+- [ ] Create SQL dashboard visualizations in Databricks

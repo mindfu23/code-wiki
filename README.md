@@ -209,6 +209,38 @@ The MCP server provides local code search for AI agents like Claude Code.
    brew install ripgrep
    ```
 
+## Observatory — Project Health Dashboard
+
+The Observatory provides infrastructure observability across all your projects, accessible from the "Observatory" nav link. It aggregates data from GitHub and Netlify APIs into a unified health dashboard.
+
+### Features
+
+- **Project Health Matrix** — sortable table showing deploy status, GitHub Actions status, open issues (linked to GitHub), and deploy success rate for every project
+- **Language Distribution chart** — doughnut chart of languages across all projects
+- **Deploy Status chart** — bar chart of healthy/warning/error/not-deployed counts, with status message when all deploys are healthy
+- **Access-controlled** — unauthenticated visitors see only public repos; the wiki owner (authenticated via GitHub OAuth) sees all repos including private
+- **Secret sanitization** — the index builder automatically strips known API key patterns (OpenAI, HuggingFace, GitHub PATs, Netlify tokens, etc.) and skips conversation log files (SpecStory, chat history) to prevent accidental credential exposure
+- **MCP tools** — `project_health`, `deploy_status`, and `infra_overview` tools for querying project metrics from Claude Code
+- **Bronze data export** — `export-bronze` endpoint serves raw metrics as JSON/NDJSON for Databricks ingestion
+- **Automated collection** — GitHub Actions workflow collects metrics every 6 hours and commits snapshots for historical analysis
+- **Databricks integration guide** — wiki doc with full medallion architecture (bronze → silver → gold) setup for Databricks Community Edition
+
+### Observatory Environment Variables
+
+Set these in your Netlify dashboard and/or `.env` file:
+
+| Variable | Description | Required |
+|----------|-------------|----------|
+| `NETLIFY_ACCESS_TOKEN` | Netlify Personal Access Token for deploy status | For deploy monitoring |
+| `CF_API_TOKEN` | Cloudflare API token | Phase 2 |
+| `CF_ACCOUNT_ID` | Cloudflare account ID | Phase 2 |
+| `GCP_SERVICE_ACCOUNT_KEY_PATH` | Path to GCP service account JSON | Phase 2 |
+| `SUPABASE_ACCESS_TOKEN` | Supabase management API token | Phase 2 |
+| `N8N_API_URL` | n8n instance URL | Phase 2 |
+| `N8N_API_KEY` | n8n API key | Phase 2 |
+
+> Further observability improvements (Cloudflare Workers analytics, GCP Cloud Run metrics, Supabase monitoring, n8n workflow tracking, historical trend charts) are TBD — see `TODO.md` for the roadmap.
+
 ## MCP Tools
 
 | Tool | Description |
@@ -220,6 +252,9 @@ The MCP server provides local code search for AI agents like Claude Code.
 | `list_repos` | List all indexed repositories |
 | `list_category` | List wiki category contents |
 | `sync_repos` | Trigger GitHub sync |
+| `project_health` | Per-project health: commits, deploys, CI/CD, conventions |
+| `deploy_status` | Deploy status filtered by project or platform |
+| `infra_overview` | Aggregated infrastructure health summary |
 
 ## Wiki Structure
 
