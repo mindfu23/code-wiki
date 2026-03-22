@@ -2271,16 +2271,26 @@ async function loadDashboard(forceRefresh = false) {
     renderDashboardTable(result.data, tbody);
     renderDashboardCharts(result.data.projects);
 
-    // Update summary counts
+    // Update summary counts with specific error descriptions
     const summary = document.getElementById('dashboard-summary');
     if (summary) {
-      summary.innerHTML = `
+      const projects = result.data.projects;
+      const deployErrors = projects.filter(p => p.deployStatus === 'error').length;
+      const actionsErrors = projects.filter(p => p.actionsStatus === 'error').length;
+
+      let errorParts = [];
+      if (deployErrors > 0) errorParts.push(`${deployErrors} with deploy errors`);
+      if (actionsErrors > 0) errorParts.push(`${actionsErrors} with GitHub Actions errors`);
+
+      let html = `
         <span>${result.data.totalProjects} projects</span>
         <span class="sep">·</span>
         <span>${result.data.deployedProjects} deployed</span>
-        <span class="sep">·</span>
-        <span class="${result.data.projectsWithErrors > 0 ? 'error-text' : ''}">${result.data.projectsWithErrors} with errors</span>
       `;
+      if (errorParts.length > 0) {
+        html += `<span class="sep">·</span><span class="error-text">${errorParts.join(', ')}</span>`;
+      }
+      summary.innerHTML = html;
     }
 
     // Set up sortable headers
@@ -2467,6 +2477,20 @@ function renderDeployChart(projects) {
   const warning = deployed.filter(p => p.deployStatus === 'warning').length;
   const error = deployed.filter(p => p.deployStatus === 'error').length;
   const notDeployed = projects.filter(p => !p.deployPlatform).length;
+
+  // Show status message below chart
+  const statusEl = document.getElementById('deploy-chart-status');
+  if (statusEl) {
+    if (deployed.length > 0 && warning === 0 && error === 0) {
+      statusEl.innerHTML = '<span style="color: #22c55e;">All deploys are currently healthy.</span>';
+    } else if (error > 0) {
+      statusEl.innerHTML = `<span style="color: #ef4444;">${error} deploy${error > 1 ? 's' : ''} with errors.</span>`;
+    } else if (warning > 0) {
+      statusEl.innerHTML = `<span style="color: #eab308;">${warning} deploy${warning > 1 ? 's' : ''} with warnings.</span>`;
+    } else {
+      statusEl.textContent = '';
+    }
+  }
 
   deployChartInstance = new Chart(canvas.getContext('2d'), {
     type: 'bar',
