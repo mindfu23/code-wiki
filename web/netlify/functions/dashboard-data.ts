@@ -1,16 +1,38 @@
 /**
  * Dashboard Data API — aggregates GitHub + Netlify metrics for the Observatory dashboard.
- * Calls GitHub and Netlify APIs directly from the serverless function.
+ * Merges data from: wiki index (all known repos) + GitHub API + Netlify API.
+ *
+ * Access control:
+ * - Unauthenticated users: see only public repos (from index.json + public GitHub API)
+ * - Authenticated owner: sees all repos including private (from index-full.json)
+ * - Authenticated non-owner: sees only public repos
  */
 
 import { Handler, HandlerEvent } from '@netlify/functions';
+import * as crypto from 'crypto';
+import * as fs from 'fs';
+import * as path from 'path';
+
+const SESSION_SECRET = process.env.SESSION_SECRET;
+const GITHUB_REPO_OWNER = process.env.GITHUB_REPO_OWNER || '';
 
 const headers = {
   'Access-Control-Allow-Origin': '*',
   'Access-Control-Allow-Methods': 'GET, OPTIONS',
   'Access-Control-Allow-Headers': 'Content-Type',
+  'Access-Control-Allow-Credentials': 'true',
   'Content-Type': 'application/json',
 };
+
+interface SessionData {
+  access_token: string;
+  user_id: number;
+  login: string;
+  name: string | null;
+  email: string | null;
+  avatar_url: string;
+  exp: number;
+}
 
 interface ProjectHealthRow {
   name: string;
@@ -25,6 +47,50 @@ interface ProjectHealthRow {
   trafficLevel: 'high' | 'medium' | 'low' | 'none';
   openIssues: number;
   siteUrl?: string;
+}
+
+// --- Auth helpers (same pattern as full-index.ts) ---
+
+function parseCookies(cookieHeader: string): Record<string, string> {
+  const cookies: Record<string, string> = {};
+  if (!cookieHeader) return cookies;
+  cookieHeader.split(';').forEach((cookie) => {
+    const [name, ...rest] = cookie.split('=');
+    if (name && rest.length > 0) {
+      cookies[name.trim()] = rest.join('=').trim();
+    }
+  });
+  return cookies;
+}
+
+function decryptSession(token: string): SessionData | null {
+  if (!SESSION_SECRET || SESSION_SECRET.length < 32) return null;
+  try {
+    const [ivB64, encryptedB64, authTagB64] = token.split('.');
+    if (!ivB64 || !encryptedB64 || !authTagB64) return null;
+    const key = Buffer.from(SESSION_SECRET.slice(0, 32), 'utf-8');
+    const iv = Buffer.from(ivB64, 'base64');
+    const encrypted = Buffer.from(encryptedB64, 'base64');
+    const authTag = Buffer.from(authTagB64, 'base64');
+    const decipher = crypto.createDecipheriv('aes-256-gcm', key, iv);
+    decipher.setAuthTag(authTag);
+    let decrypted = decipher.update(encrypted, undefined, 'utf8');
+    decrypted += decipher.final('utf8');
+    const data = JSON.parse(decrypted) as SessionData;
+    if (data.exp < Date.now()) return null;
+    return data;
+  } catch {
+    return null;
+  }
+}
+
+function isOwnerSession(event: HandlerEvent): boolean {
+  const cookies = parseCookies(event.headers.cookie || '');
+  const sessionToken = cookies.wiki_session;
+  if (!sessionToken) return false;
+  const session = decryptSession(sessionToken);
+  if (!session) return false;
+  return session.login.toLowerCase() === GITHUB_REPO_OWNER.toLowerCase();
 }
 
 // --- GitHub API helpers ---
@@ -111,6 +177,38 @@ async function fetchNetlifyDeploys(siteId: string, token: string): Promise<Netli
   }
 }
 
+// --- Wiki index helpers (for local-only repos) ---
+
+interface IndexRepoInfo {
+  name: string;
+  description?: string;
+  languages: string[];
+  lastCommitDate?: string;
+  status: 'synced' | 'local-only' | 'github-only';
+}
+
+function loadWikiIndex(includePrivate: boolean): IndexRepoInfo[] {
+  // Owner gets index-full.json (all repos); public visitors get index.json (public only)
+  const indexFile = includePrivate ? 'index-full.json' : 'index.json';
+  const possiblePaths = [
+    path.join(process.cwd(), `public/data/${indexFile}`),
+    path.join(process.cwd(), `data/${indexFile}`),
+    path.resolve(`./public/data/${indexFile}`),
+    path.resolve(`./data/${indexFile}`),
+  ];
+  for (const indexPath of possiblePaths) {
+    try {
+      if (fs.existsSync(indexPath)) {
+        const data = JSON.parse(fs.readFileSync(indexPath, 'utf-8'));
+        return data.repos || [];
+      }
+    } catch {
+      // Try next path
+    }
+  }
+  return [];
+}
+
 // --- Main handler ---
 
 const handler: Handler = async (event: HandlerEvent) => {
@@ -132,10 +230,14 @@ const handler: Handler = async (event: HandlerEvent) => {
   }
 
   try {
-    // Fetch GitHub repos and Netlify sites in parallel
-    const [repos, netlifySites] = await Promise.all([
+    // Check if the requesting user is the wiki owner (authenticated via session cookie)
+    const includePrivate = isOwnerSession(event);
+
+    // Fetch GitHub repos, Netlify sites, and wiki index in parallel
+    const [githubRepos, netlifySites, wikiRepos] = await Promise.all([
       fetchGitHubRepos(githubUsername, githubToken),
       netlifyToken ? fetchNetlifySites(netlifyToken) : Promise.resolve([]),
+      Promise.resolve(loadWikiIndex(includePrivate)),
     ]);
 
     // Build repo-to-Netlify-site mapping
@@ -148,25 +250,47 @@ const handler: Handler = async (event: HandlerEvent) => {
       }
     }
 
-    // Fetch Actions + deploys for repos that have them (in parallel batches)
+    // Build a map of GitHub repos by name for quick lookup
+    const githubByName = new Map<string, typeof githubRepos[0]>();
+    for (const repo of githubRepos) {
+      githubByName.set(repo.name.toLowerCase(), repo);
+    }
+
+    // Build a unified set of all known project names from all sources
+    const allProjectNames = new Set<string>();
+    for (const repo of githubRepos) allProjectNames.add(repo.name.toLowerCase());
+    for (const repo of wikiRepos) allProjectNames.add(repo.name.toLowerCase());
+
+    // Process all projects in batches
+    const allNames = Array.from(allProjectNames);
     const projects: ProjectHealthRow[] = [];
 
-    for (let i = 0; i < repos.length; i += 10) {
-      const batch = repos.slice(i, i + 10);
+    for (let i = 0; i < allNames.length; i += 10) {
+      const batch = allNames.slice(i, i + 10);
       const batchResults = await Promise.allSettled(
-        batch.map(async (repo) => {
-          const site = repoToSite.get(repo.name.toLowerCase());
+        batch.map(async (projectName) => {
+          const ghRepo = githubByName.get(projectName);
+          const wikiRepo = wikiRepos.find(r => r.name.toLowerCase() === projectName);
+          const site = repoToSite.get(projectName);
 
-          // Fetch Actions runs
-          const runs = await fetchWorkflowRuns(repo.full_name, githubToken);
+          // Use GitHub data if available, otherwise fall back to wiki index
+          const name = ghRepo?.name || wikiRepo?.name || projectName;
+          const lastCommitDate = ghRepo?.pushed_at || wikiRepo?.lastCommitDate || '';
+          const language = ghRepo?.language || (wikiRepo?.languages?.[0] ?? null);
+          const openIssues = ghRepo?.open_issues_count || 0;
+
+          // Fetch Actions runs only for GitHub repos
           let actionsStatus: ProjectHealthRow['actionsStatus'] = 'unknown';
-          if (runs.length > 0) {
-            const hasFailure = runs.some((r: { conclusion: string | null }) => r.conclusion === 'failure');
-            const allSuccess = runs.every(
-              (r: { conclusion: string | null; status: string }) =>
-                r.conclusion === 'success' || r.conclusion === 'skipped'
-            );
-            actionsStatus = hasFailure ? 'error' : allSuccess ? 'healthy' : 'warning';
+          if (ghRepo) {
+            const runs = await fetchWorkflowRuns(ghRepo.full_name, githubToken);
+            if (runs.length > 0) {
+              const hasFailure = runs.some((r: { conclusion: string | null }) => r.conclusion === 'failure');
+              const allSuccess = runs.every(
+                (r: { conclusion: string | null; status: string }) =>
+                  r.conclusion === 'success' || r.conclusion === 'skipped'
+              );
+              actionsStatus = hasFailure ? 'error' : allSuccess ? 'healthy' : 'warning';
+            }
           }
 
           // Fetch deploy status
@@ -190,17 +314,17 @@ const handler: Handler = async (event: HandlerEvent) => {
           }
 
           return {
-            name: repo.name,
-            lastCommitDate: repo.pushed_at,
-            commitCount30d: 0, // Would need per-repo commit count API call
-            language: repo.language,
+            name,
+            lastCommitDate,
+            commitCount30d: 0,
+            language,
             deployStatus,
             deployPlatform,
             lastDeployDate,
             deploySuccessRate,
             actionsStatus,
             trafficLevel: 'none' as const,
-            openIssues: repo.open_issues_count,
+            openIssues,
             siteUrl,
           };
         })
