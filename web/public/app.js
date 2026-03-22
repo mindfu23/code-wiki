@@ -2248,6 +2248,8 @@ window.saveNote = saveNote;
 // ============================================
 
 let dashboardCache = null;
+let dashboardSortKey = null;
+let dashboardSortAsc = true;
 
 async function loadDashboard(forceRefresh = false) {
   const tbody = document.getElementById('dashboard-tbody');
@@ -2258,7 +2260,7 @@ async function loadDashboard(forceRefresh = false) {
     return;
   }
 
-  tbody.innerHTML = '<tr><td colspan="7" class="loading">Loading observatory data...</td></tr>';
+  tbody.innerHTML = '<tr><td colspan="6" class="loading">Loading observatory data...</td></tr>';
 
   try {
     const response = await fetch('/.netlify/functions/dashboard-data');
@@ -2280,9 +2282,74 @@ async function loadDashboard(forceRefresh = false) {
         <span class="${result.data.projectsWithErrors > 0 ? 'error-text' : ''}">${result.data.projectsWithErrors} with errors</span>
       `;
     }
+
+    // Set up sortable headers
+    setupDashboardSort();
   } catch (error) {
-    tbody.innerHTML = `<tr><td colspan="7" class="error-text">${escapeHtml(error.message)}</td></tr>`;
+    tbody.innerHTML = `<tr><td colspan="6" class="error-text">${escapeHtml(error.message)}</td></tr>`;
   }
+}
+
+function setupDashboardSort() {
+  const table = document.getElementById('dashboard-table');
+  if (!table) return;
+
+  table.querySelectorAll('th.sortable').forEach(th => {
+    th.style.cursor = 'pointer';
+    th.style.userSelect = 'none';
+    th.addEventListener('click', () => {
+      const key = th.dataset.sort;
+      if (dashboardSortKey === key) {
+        dashboardSortAsc = !dashboardSortAsc;
+      } else {
+        dashboardSortKey = key;
+        dashboardSortAsc = true;
+      }
+      // Update sort arrows
+      table.querySelectorAll('th.sortable').forEach(h => {
+        const base = h.textContent.replace(/ [▲▼]$/, '');
+        h.textContent = h.dataset.sort === key
+          ? base + (dashboardSortAsc ? ' ▲' : ' ▼')
+          : base;
+      });
+      const tbody = document.getElementById('dashboard-tbody');
+      if (dashboardCache && tbody) renderDashboardTable(dashboardCache, tbody);
+    });
+  });
+}
+
+function sortDashboardProjects(projects) {
+  if (!dashboardSortKey) return projects;
+
+  const key = dashboardSortKey;
+  const dir = dashboardSortAsc ? 1 : -1;
+
+  return [...projects].sort((a, b) => {
+    let av = a[key], bv = b[key];
+
+    // Status columns: sort by severity (error > warning > healthy > unknown)
+    if (key === 'deployStatus' || key === 'actionsStatus') {
+      const order = { error: 0, warning: 1, healthy: 2, unknown: 3 };
+      return (dir) * ((order[av] ?? 4) - (order[bv] ?? 4));
+    }
+
+    // Date columns
+    if (key === 'lastCommitDate') {
+      const da = av ? new Date(av).getTime() : 0;
+      const db = bv ? new Date(bv).getTime() : 0;
+      return dir * (da - db);
+    }
+
+    // Numeric columns
+    if (key === 'openIssues' || key === 'deploySuccessRate') {
+      return dir * ((av || 0) - (bv || 0));
+    }
+
+    // String columns (name)
+    av = (av || '').toString().toLowerCase();
+    bv = (bv || '').toString().toLowerCase();
+    return dir * av.localeCompare(bv);
+  });
 }
 
 function renderDashboardTable(data, tbody) {
@@ -2292,8 +2359,11 @@ function renderDashboardTable(data, tbody) {
   if (filter === 'deployed') projects = projects.filter(p => p.deployPlatform);
   if (filter === 'issues') projects = projects.filter(p => p.deployStatus === 'error' || p.actionsStatus === 'error');
 
+  // Apply current sort
+  projects = sortDashboardProjects(projects);
+
   if (projects.length === 0) {
-    tbody.innerHTML = '<tr><td colspan="7">No projects match this filter.</td></tr>';
+    tbody.innerHTML = '<tr><td colspan="6">No projects match this filter.</td></tr>';
     return;
   }
 
@@ -2305,12 +2375,20 @@ function renderDashboardTable(data, tbody) {
       ? `<a href="${escapeHtml(p.siteUrl)}" target="_blank" title="${escapeHtml(p.siteUrl)}">${p.deployPlatform}</a>`
       : (p.deployPlatform || '-');
 
+    // Link issues count to GitHub issues page if available
+    let issuesCell = '-';
+    if (p.openIssues > 0 && p.githubUrl) {
+      issuesCell = `<a href="${escapeHtml(p.githubUrl)}/issues" target="_blank" title="View open issues">${p.openIssues}</a>`;
+    } else if (p.openIssues > 0) {
+      issuesCell = String(p.openIssues);
+    }
+
     return `<tr>
       <td><strong>${escapeHtml(p.name)}</strong>${p.language ? ` <span class="lang-badge">${escapeHtml(p.language)}</span>` : ''}</td>
       <td title="${escapeHtml(p.lastCommitDate)}">${commitAge}</td>
       <td>${deployDot} ${siteLink}</td>
       <td>${actionsDot}</td>
-      <td>${p.openIssues > 0 ? p.openIssues : '-'}</td>
+      <td>${issuesCell}</td>
       <td>${p.deploySuccessRate < 1 ? Math.round(p.deploySuccessRate * 100) + '%' : p.deployPlatform ? '100%' : '-'}</td>
     </tr>`;
   }).join('');
