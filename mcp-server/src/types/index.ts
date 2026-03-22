@@ -6,3 +6,4 @@ export * from './config.js';
 export * from './index.types.js';
 export * from './search.js';
 export * from './repo.js';
+export * from './metrics.js';
