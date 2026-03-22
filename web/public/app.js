@@ -201,6 +201,8 @@ function handleNavigation() {
   else if (path === '/login') page = 'login';
   else if (path === '/editor' || path.startsWith('/editor')) page = 'editor';
   else if (path === '/document' || params.get('doc')) page = 'document';
+  else if (path === '/dashboard') page = 'dashboard';
+  else if (path === '/trends') page = 'trends';
 
   const pageParams = {};
   if (params.get('doc')) pageParams.doc = params.get('doc');
@@ -255,6 +257,12 @@ function showPage(page, params = {}) {
       if (params.doc) {
         openEditor(params.doc);
       }
+      break;
+    case 'dashboard':
+      loadDashboard();
+      break;
+    case 'trends':
+      loadTrends();
       break;
   }
 }
@@ -2238,6 +2246,208 @@ setupNotesEventDelegation();
 window.startEditNote = startEditNote;
 window.cancelEditNote = cancelEditNote;
 window.saveNote = saveNote;
+
+// ============================================
+// OBSERVATORY — Dashboard & Trends
+// ============================================
+
+let dashboardCache = null;
+let trendsChartsRendered = false;
+
+async function loadDashboard(forceRefresh = false) {
+  const tbody = document.getElementById('dashboard-tbody');
+  if (!tbody) return;
+
+  if (dashboardCache && !forceRefresh) {
+    renderDashboardTable(dashboardCache, tbody);
+    return;
+  }
+
+  tbody.innerHTML = '<tr><td colspan="7" class="loading">Loading observatory data...</td></tr>';
+
+  try {
+    const response = await fetch('/.netlify/functions/dashboard-data');
+    const result = await response.json();
+    if (!result.success) throw new Error(result.error || 'Failed to load dashboard');
+
+    dashboardCache = result.data;
+    renderDashboardTable(result.data, tbody);
+
+    // Update summary counts
+    const summary = document.getElementById('dashboard-summary');
+    if (summary) {
+      summary.innerHTML = `
+        <span>${result.data.totalProjects} projects</span>
+        <span class="sep">·</span>
+        <span>${result.data.deployedProjects} deployed</span>
+        <span class="sep">·</span>
+        <span class="${result.data.projectsWithErrors > 0 ? 'error-text' : ''}">${result.data.projectsWithErrors} with errors</span>
+      `;
+    }
+  } catch (error) {
+    tbody.innerHTML = `<tr><td colspan="7" class="error-text">${escapeHtml(error.message)}</td></tr>`;
+  }
+}
+
+function renderDashboardTable(data, tbody) {
+  const filter = document.getElementById('dashboard-filter')?.value || 'all';
+
+  let projects = data.projects;
+  if (filter === 'deployed') projects = projects.filter(p => p.deployPlatform);
+  if (filter === 'issues') projects = projects.filter(p => p.deployStatus === 'error' || p.actionsStatus === 'error');
+
+  if (projects.length === 0) {
+    tbody.innerHTML = '<tr><td colspan="7">No projects match this filter.</td></tr>';
+    return;
+  }
+
+  tbody.innerHTML = projects.map(p => {
+    const deployDot = statusDot(p.deployStatus);
+    const actionsDot = statusDot(p.actionsStatus);
+    const commitAge = timeAgo(p.lastCommitDate);
+    const siteLink = p.siteUrl
+      ? `<a href="${escapeHtml(p.siteUrl)}" target="_blank" title="${escapeHtml(p.siteUrl)}">${p.deployPlatform}</a>`
+      : (p.deployPlatform || '-');
+
+    return `<tr>
+      <td><strong>${escapeHtml(p.name)}</strong>${p.language ? ` <span class="lang-badge">${escapeHtml(p.language)}</span>` : ''}</td>
+      <td title="${escapeHtml(p.lastCommitDate)}">${commitAge}</td>
+      <td>${deployDot} ${siteLink}</td>
+      <td>${actionsDot}</td>
+      <td>${p.openIssues > 0 ? p.openIssues : '-'}</td>
+      <td>${p.deploySuccessRate < 1 ? Math.round(p.deploySuccessRate * 100) + '%' : p.deployPlatform ? '100%' : '-'}</td>
+    </tr>`;
+  }).join('');
+}
+
+function statusDot(status) {
+  const colors = { healthy: '#22c55e', warning: '#eab308', error: '#ef4444', unknown: '#6b7280' };
+  const color = colors[status] || colors.unknown;
+  return `<span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:${color};margin-right:4px;" title="${status}"></span>`;
+}
+
+function timeAgo(dateStr) {
+  if (!dateStr) return '-';
+  const diff = Date.now() - new Date(dateStr).getTime();
+  const hours = Math.floor(diff / (1000 * 60 * 60));
+  if (hours < 1) return 'just now';
+  if (hours < 24) return hours + 'h ago';
+  const days = Math.floor(hours / 24);
+  if (days < 30) return days + 'd ago';
+  const months = Math.floor(days / 30);
+  return months + 'mo ago';
+}
+
+async function loadTrends() {
+  if (trendsChartsRendered) return;
+
+  const container = document.getElementById('trends-container');
+  if (!container) return;
+
+  // Reuse dashboard data
+  if (!dashboardCache) {
+    try {
+      const response = await fetch('/.netlify/functions/dashboard-data');
+      const result = await response.json();
+      if (result.success) dashboardCache = result.data;
+    } catch { /* use empty data */ }
+  }
+
+  if (!dashboardCache) {
+    container.innerHTML = '<p>No data available yet.</p>';
+    return;
+  }
+
+  const projects = dashboardCache.projects;
+
+  // Render language distribution chart
+  renderLanguageChart(projects);
+
+  // Render deploy status chart
+  renderDeployChart(projects);
+
+  trendsChartsRendered = true;
+}
+
+function renderLanguageChart(projects) {
+  const canvas = document.getElementById('language-chart');
+  if (!canvas || typeof Chart === 'undefined') return;
+
+  const langCounts = {};
+  for (const p of projects) {
+    const lang = p.language || 'Unknown';
+    langCounts[lang] = (langCounts[lang] || 0) + 1;
+  }
+
+  const sorted = Object.entries(langCounts).sort((a, b) => b[1] - a[1]);
+  const colors = ['#3b82f6', '#22c55e', '#eab308', '#ef4444', '#8b5cf6', '#ec4899', '#06b6d4', '#f97316', '#6b7280', '#14b8a6'];
+
+  new Chart(canvas.getContext('2d'), {
+    type: 'doughnut',
+    data: {
+      labels: sorted.map(([l]) => l),
+      datasets: [{
+        data: sorted.map(([, c]) => c),
+        backgroundColor: colors.slice(0, sorted.length),
+      }],
+    },
+    options: {
+      responsive: true,
+      plugins: {
+        legend: { position: 'right', labels: { color: '#94a3b8' } },
+        title: { display: false },
+      },
+    },
+  });
+}
+
+function renderDeployChart(projects) {
+  const canvas = document.getElementById('deploy-chart');
+  if (!canvas || typeof Chart === 'undefined') return;
+
+  const deployed = projects.filter(p => p.deployPlatform);
+  const healthy = deployed.filter(p => p.deployStatus === 'healthy').length;
+  const warning = deployed.filter(p => p.deployStatus === 'warning').length;
+  const error = deployed.filter(p => p.deployStatus === 'error').length;
+  const unknown = deployed.filter(p => p.deployStatus === 'unknown').length;
+
+  new Chart(canvas.getContext('2d'), {
+    type: 'bar',
+    data: {
+      labels: ['Healthy', 'Warning', 'Error', 'Unknown'],
+      datasets: [{
+        label: 'Deploy Status',
+        data: [healthy, warning, error, unknown],
+        backgroundColor: ['#22c55e', '#eab308', '#ef4444', '#6b7280'],
+      }],
+    },
+    options: {
+      responsive: true,
+      scales: {
+        y: { beginAtZero: true, ticks: { stepSize: 1, color: '#94a3b8' }, grid: { color: '#334155' } },
+        x: { ticks: { color: '#94a3b8' }, grid: { color: '#334155' } },
+      },
+      plugins: {
+        legend: { display: false },
+      },
+    },
+  });
+}
+
+// Dashboard event listeners
+document.addEventListener('click', (e) => {
+  if (e.target.id === 'refresh-dashboard-btn') {
+    dashboardCache = null;
+    loadDashboard(true);
+  }
+});
+
+document.addEventListener('change', (e) => {
+  if (e.target.id === 'dashboard-filter') {
+    const tbody = document.getElementById('dashboard-tbody');
+    if (dashboardCache && tbody) renderDashboardTable(dashboardCache, tbody);
+  }
+});
 
 // Initialize on load
 document.addEventListener('DOMContentLoaded', init);

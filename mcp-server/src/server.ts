@@ -14,6 +14,7 @@ import { IndexService } from './services/indexService.js';
 import { SearchService } from './services/searchService.js';
 import { WikiService } from './services/wikiService.js';
 import { SyncService } from './services/syncService.js';
+import { MetricsService } from './services/metricsService.js';
 
 // Tools
 import { searchWikiTool, handleSearchWiki } from './tools/searchWiki.js';
@@ -24,6 +25,9 @@ import { listReposTool, handleListRepos } from './tools/listRepos.js';
 import { listCategoryTool, handleListCategory } from './tools/listCategory.js';
 import { syncReposTool, handleSyncRepos } from './tools/syncRepos.js';
 import { getPreferencesTool, handleGetPreferences } from './tools/getPreferences.js';
+import { projectHealthTool, handleProjectHealth } from './tools/projectHealth.js';
+import { deployStatusTool, handleDeployStatus } from './tools/deployStatus.js';
+import { infraOverviewTool, handleInfraOverview } from './tools/infraOverview.js';
 
 import { logger } from './utils/logger.js';
 
@@ -34,19 +38,22 @@ export class CodeWikiServer {
   private searchService: SearchService;
   private wikiService: WikiService;
   private syncService: SyncService;
+  private metricsService: MetricsService;
 
   constructor(
     config: Config,
     indexService: IndexService,
     searchService: SearchService,
     wikiService: WikiService,
-    syncService: SyncService
+    syncService: SyncService,
+    metricsService: MetricsService
   ) {
     this.config = config;
     this.indexService = indexService;
     this.searchService = searchService;
     this.wikiService = wikiService;
     this.syncService = syncService;
+    this.metricsService = metricsService;
 
     this.server = new Server(
       {
@@ -76,6 +83,9 @@ export class CodeWikiServer {
         listCategoryTool,
         syncReposTool,
         getPreferencesTool,
+        projectHealthTool,
+        deployStatusTool,
+        infraOverviewTool,
       ],
     }));
 
@@ -141,6 +151,27 @@ export class CodeWikiServer {
             result = await handleGetPreferences(
               args as { file?: string },
               this.config
+            );
+            break;
+
+          case 'project_health':
+            result = await handleProjectHealth(
+              args as { project?: string },
+              this.metricsService
+            );
+            break;
+
+          case 'deploy_status':
+            result = await handleDeployStatus(
+              args as { project?: string; platform?: string },
+              this.metricsService
+            );
+            break;
+
+          case 'infra_overview':
+            result = await handleInfraOverview(
+              args as Record<string, never>,
+              this.metricsService
             );
             break;
 

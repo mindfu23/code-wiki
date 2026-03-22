@@ -33,6 +33,34 @@ export interface RateLimitConfig {
   maxDelayMs: number;
 }
 
+export interface MetricsConfig {
+  netlifyAccessToken?: string;
+  cloudflareApiToken?: string;
+  cloudflareAccountId?: string;
+  gcpServiceAccountKeyPath?: string;
+  supabaseAccessToken?: string;
+  supabaseProjectRefs: string[];
+  n8nApiUrl?: string;
+  n8nApiKey?: string;
+  metricsCollectionIntervalMinutes: number;
+  metricsTtlMinutes: number;
+}
+
+export function loadMetricsConfig(): MetricsConfig {
+  return {
+    netlifyAccessToken: process.env.NETLIFY_ACCESS_TOKEN,
+    cloudflareApiToken: process.env.CF_API_TOKEN,
+    cloudflareAccountId: process.env.CF_ACCOUNT_ID,
+    gcpServiceAccountKeyPath: process.env.GCP_SERVICE_ACCOUNT_KEY_PATH,
+    supabaseAccessToken: process.env.SUPABASE_ACCESS_TOKEN,
+    supabaseProjectRefs: (process.env.SUPABASE_PROJECT_REFS || '').split(',').map(s => s.trim()).filter(Boolean),
+    n8nApiUrl: process.env.N8N_API_URL,
+    n8nApiKey: process.env.N8N_API_KEY,
+    metricsCollectionIntervalMinutes: parseInt(process.env.METRICS_INTERVAL_MINUTES || '360', 10),
+    metricsTtlMinutes: parseInt(process.env.METRICS_TTL_MINUTES || '60', 10),
+  };
+}
+
 export function loadConfig(): Config {
   return {
     sourceDirectories: (process.env.SOURCE_DIRS || '').split(',').map(s => s.trim()).filter(Boolean),
