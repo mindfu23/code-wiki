@@ -202,7 +202,6 @@ function handleNavigation() {
   else if (path === '/editor' || path.startsWith('/editor')) page = 'editor';
   else if (path === '/document' || params.get('doc')) page = 'document';
   else if (path === '/dashboard') page = 'dashboard';
-  else if (path === '/trends') page = 'trends';
 
   const pageParams = {};
   if (params.get('doc')) pageParams.doc = params.get('doc');
@@ -260,9 +259,6 @@ function showPage(page, params = {}) {
       break;
     case 'dashboard':
       loadDashboard();
-      break;
-    case 'trends':
-      loadTrends();
       break;
   }
 }
@@ -2252,7 +2248,6 @@ window.saveNote = saveNote;
 // ============================================
 
 let dashboardCache = null;
-let trendsChartsRendered = false;
 
 async function loadDashboard(forceRefresh = false) {
   const tbody = document.getElementById('dashboard-tbody');
@@ -2272,6 +2267,7 @@ async function loadDashboard(forceRefresh = false) {
 
     dashboardCache = result.data;
     renderDashboardTable(result.data, tbody);
+    renderDashboardCharts(result.data.projects);
 
     // Update summary counts
     const summary = document.getElementById('dashboard-summary');
@@ -2338,40 +2334,20 @@ function timeAgo(dateStr) {
   return months + 'mo ago';
 }
 
-async function loadTrends() {
-  if (trendsChartsRendered) return;
+let languageChartInstance = null;
+let deployChartInstance = null;
 
-  const container = document.getElementById('trends-container');
-  if (!container) return;
-
-  // Reuse dashboard data
-  if (!dashboardCache) {
-    try {
-      const response = await fetch('/.netlify/functions/dashboard-data');
-      const result = await response.json();
-      if (result.success) dashboardCache = result.data;
-    } catch { /* use empty data */ }
-  }
-
-  if (!dashboardCache) {
-    container.innerHTML = '<p>No data available yet.</p>';
-    return;
-  }
-
-  const projects = dashboardCache.projects;
-
-  // Render language distribution chart
+function renderDashboardCharts(projects) {
+  if (typeof Chart === 'undefined') return;
   renderLanguageChart(projects);
-
-  // Render deploy status chart
   renderDeployChart(projects);
-
-  trendsChartsRendered = true;
 }
 
 function renderLanguageChart(projects) {
   const canvas = document.getElementById('language-chart');
   if (!canvas || typeof Chart === 'undefined') return;
+
+  if (languageChartInstance) { languageChartInstance.destroy(); }
 
   const langCounts = {};
   for (const p of projects) {
@@ -2382,7 +2358,7 @@ function renderLanguageChart(projects) {
   const sorted = Object.entries(langCounts).sort((a, b) => b[1] - a[1]);
   const colors = ['#3b82f6', '#22c55e', '#eab308', '#ef4444', '#8b5cf6', '#ec4899', '#06b6d4', '#f97316', '#6b7280', '#14b8a6'];
 
-  new Chart(canvas.getContext('2d'), {
+  languageChartInstance = new Chart(canvas.getContext('2d'), {
     type: 'doughnut',
     data: {
       labels: sorted.map(([l]) => l),
@@ -2405,26 +2381,33 @@ function renderDeployChart(projects) {
   const canvas = document.getElementById('deploy-chart');
   if (!canvas || typeof Chart === 'undefined') return;
 
+  if (deployChartInstance) { deployChartInstance.destroy(); }
+
   const deployed = projects.filter(p => p.deployPlatform);
   const healthy = deployed.filter(p => p.deployStatus === 'healthy').length;
   const warning = deployed.filter(p => p.deployStatus === 'warning').length;
   const error = deployed.filter(p => p.deployStatus === 'error').length;
-  const unknown = deployed.filter(p => p.deployStatus === 'unknown').length;
+  const notDeployed = projects.filter(p => !p.deployPlatform).length;
 
-  new Chart(canvas.getContext('2d'), {
+  deployChartInstance = new Chart(canvas.getContext('2d'), {
     type: 'bar',
     data: {
-      labels: ['Healthy', 'Warning', 'Error', 'Unknown'],
+      labels: ['Healthy', 'Warning', 'Error', 'Not Deployed'],
       datasets: [{
-        label: 'Deploy Status',
-        data: [healthy, warning, error, unknown],
-        backgroundColor: ['#22c55e', '#eab308', '#ef4444', '#6b7280'],
+        label: 'Projects',
+        data: [healthy, warning, error, notDeployed],
+        backgroundColor: ['#22c55e', '#eab308', '#ef4444', '#334155'],
       }],
     },
     options: {
       responsive: true,
       scales: {
-        y: { beginAtZero: true, ticks: { stepSize: 1, color: '#94a3b8' }, grid: { color: '#334155' } },
+        y: {
+          beginAtZero: true,
+          ticks: { stepSize: 1, color: '#94a3b8' },
+          grid: { color: '#334155' },
+          title: { display: true, text: 'Number of Projects', color: '#94a3b8' },
+        },
         x: { ticks: { color: '#94a3b8' }, grid: { color: '#334155' } },
       },
       plugins: {

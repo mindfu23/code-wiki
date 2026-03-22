@@ -303,29 +303,13 @@
             </tbody>
           </table>
         </div>
-        <div style="margin-top: 2rem;">
-          <a href="/trends" class="nav-link" onclick="event.preventDefault(); navigateTo('trends');" style="color: #22d3ee;">View Trends &rarr;</a>
-        </div>
-      </div>
-    </section>
-
-    <!-- Trends Page (Observatory) -->
-    <section id="page-trends" class="page">
-      <div id="trends-container" style="max-width: 1200px; margin: 0 auto; padding: 1rem;">
-        <div class="section-header-accent">
-          <div class="cyan-accent-bar"></div>
-          <h3>Observatory — Trends</h3>
-        </div>
-        <div style="margin-bottom: 1rem;">
-          <a href="/dashboard" class="nav-link" onclick="event.preventDefault(); navigateTo('dashboard');" style="color: #22d3ee;">&larr; Back to Dashboard</a>
-        </div>
-        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem;">
+        <div id="dashboard-charts" style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; margin-top: 2rem;">
           <div style="background: #1e293b; border-radius: 8px; padding: 1.5rem;">
             <h4 style="color: #e2e8f0; margin: 0 0 1rem;">Language Distribution</h4>
             <canvas id="language-chart"></canvas>
           </div>
           <div style="background: #1e293b; border-radius: 8px; padding: 1.5rem;">
-            <h4 style="color: #e2e8f0; margin: 0 0 1rem;">Deploy Status</h4>
+            <h4 style="color: #e2e8f0; margin: 0 0 1rem;">Deploy Status (# of projects)</h4>
             <canvas id="deploy-chart"></canvas>
           </div>
         </div>
