@@ -330,12 +330,35 @@
   ],
   "repos": [
     {
+      "name": "JBWordPressTheme",
+      "description": "repo for my wordpress theme",
+      "githubUrl": "https://github.com/mindfu23/JBWordPressTheme",
+      "languages": [
+        "HTML"
+      ],
+      "lastCommitDate": "2026-03-21T21:51:44Z",
+      "status": "github-only",
+      "visibility": "private",
+      "markdownFiles": [
+        {
+          "relativePath": "INSTALLATION_GUIDE.md",
+          "name": "INSTALLATION_GUIDE.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "README.md",
+          "name": "README.md",
+          "fileType": "md"
+        }
+      ]
+    },
+    {
       "name": "ValueApe",
       "githubUrl": "https://github.com/mindfu23/ValueApe",
       "languages": [
         "TypeScript"
       ],
-      "lastCommitDate": "2026-03-20T06:28:23Z",
+      "lastCommitDate": "2026-03-21T06:21:16Z",
       "status": "synced",
       "visibility": "private",
       "localPath": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/ValueApe",
@@ -429,7 +452,7 @@
       "languages": [
         "JavaScript"
       ],
-      "lastCommitDate": "2026-03-20T00:22:22Z",
+      "lastCommitDate": "2026-03-21T00:20:44Z",
       "status": "synced",
       "visibility": "public",
       "localPath": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/apiTracker",
@@ -468,7 +491,7 @@
       "languages": [
         "TypeScript"
       ],
-      "lastCommitDate": "2026-03-20T00:20:32Z",
+      "lastCommitDate": "2026-03-21T00:18:28Z",
       "status": "github-only",
       "visibility": "public",
       "markdownFiles": [
@@ -1487,29 +1510,6 @@
           "relativePath": "windows/runner/CMakeLists.txt",
           "name": "CMakeLists.txt",
           "fileType": "txt"
-        }
-      ]
-    },
-    {
-      "name": "JBWordPressTheme",
-      "description": "repo for my wordpress theme",
-      "githubUrl": "https://github.com/mindfu23/JBWordPressTheme",
-      "languages": [
-        "HTML"
-      ],
-      "lastCommitDate": "2026-03-06T17:21:05Z",
-      "status": "github-only",
-      "visibility": "private",
-      "markdownFiles": [
-        {
-          "relativePath": "INSTALLATION_GUIDE.md",
-          "name": "INSTALLATION_GUIDE.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "README.md",
-          "name": "README.md",
-          "fileType": "md"
         }
       ]
     },
@@ -3349,6 +3349,6 @@
     "templates",
     "utilities"
   ],
-  "buildTime": "2026-03-21T00:18:27.587Z",
+  "buildTime": "2026-03-22T00:20:14.352Z",
   "version": "1.0.0"
 }
