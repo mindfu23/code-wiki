@@ -1,7 +1,7 @@
 {
   "documents": [
     {
-      "path": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/code-wiki/wiki/AGENTS.md",
+      "path": "/home/runner/work/code-wiki/code-wiki/wiki/AGENTS.md",
       "relativePath": "AGENTS.md",
       "title": "AGENTS",
       "tags": [],
@@ -11,7 +11,7 @@
       "visibility": "public"
     },
     {
-      "path": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/code-wiki/wiki/_index.md",
+      "path": "/home/runner/work/code-wiki/code-wiki/wiki/_index.md",
       "relativePath": "_index.md",
       "title": "Contents",
       "description": "Wiki table of contents",
@@ -25,7 +25,7 @@
       "visibility": "public"
     },
     {
-      "path": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/code-wiki/wiki/integrations/_index.md",
+      "path": "/home/runner/work/code-wiki/code-wiki/wiki/integrations/_index.md",
       "relativePath": "integrations/_index.md",
       "title": "Integrations Index",
       "description": "Third-party API connectors and service integrations",
@@ -41,7 +41,7 @@
       "visibility": "public"
     },
     {
-      "path": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/code-wiki/wiki/integrations/databricks-observatory.md",
+      "path": "/home/runner/work/code-wiki/code-wiki/wiki/integrations/databricks-observatory.md",
       "relativePath": "integrations/databricks-observatory.md",
       "title": "Databricks Observatory Setup",
       "description": "Guide for ingesting observatory metrics into Databricks Community Edition using the medallion architecture",
@@ -59,7 +59,7 @@
       "visibility": "public"
     },
     {
-      "path": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/code-wiki/wiki/patterns/_index.md",
+      "path": "/home/runner/work/code-wiki/code-wiki/wiki/patterns/_index.md",
       "relativePath": "patterns/_index.md",
       "title": "Patterns Index",
       "description": "Architectural patterns and design approaches",
@@ -73,7 +73,7 @@
       "visibility": "public"
     },
     {
-      "path": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/code-wiki/wiki/projects/_index.md",
+      "path": "/home/runner/work/code-wiki/code-wiki/wiki/projects/_index.md",
       "relativePath": "projects/_index.md",
       "title": "Projects Index",
       "description": "Documentation for active repositories",
@@ -87,7 +87,7 @@
       "visibility": "public"
     },
     {
-      "path": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/code-wiki/wiki/projects/app-prices-notes.md",
+      "path": "/home/runner/work/code-wiki/code-wiki/wiki/projects/app-prices-notes.md",
       "relativePath": "projects/app-prices-notes.md",
       "title": "app-prices-notes",
       "tags": [],
@@ -97,7 +97,7 @@
       "visibility": "public"
     },
     {
-      "path": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/code-wiki/wiki/projects/repo-locations.md",
+      "path": "/home/runner/work/code-wiki/code-wiki/wiki/projects/repo-locations.md",
       "relativePath": "projects/repo-locations.md",
       "title": "Repository Locations",
       "description": "Mapping of repositories to local file system paths and GitHub URLs",
@@ -113,7 +113,7 @@
       "visibility": "public"
     },
     {
-      "path": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/code-wiki/wiki/projects/setup_cheatsheet.md",
+      "path": "/home/runner/work/code-wiki/code-wiki/wiki/projects/setup_cheatsheet.md",
       "relativePath": "projects/setup_cheatsheet.md",
       "title": "New Project Setup Cheatsheet",
       "description": "Step-by-step commands and URLs for wiring up a new React+Vite+Supabase+Netlify project from scaffold to live prototype",
@@ -133,7 +133,7 @@
       "visibility": "public"
     },
     {
-      "path": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/code-wiki/wiki/snippets/_index.md",
+      "path": "/home/runner/work/code-wiki/code-wiki/wiki/snippets/_index.md",
       "relativePath": "snippets/_index.md",
       "title": "Snippets Index",
       "description": "Small, focused code pieces",
@@ -147,7 +147,7 @@
       "visibility": "public"
     },
     {
-      "path": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/code-wiki/wiki/templates/_index.md",
+      "path": "/home/runner/work/code-wiki/code-wiki/wiki/templates/_index.md",
       "relativePath": "templates/_index.md",
       "title": "Templates Index",
       "description": "Project and file starters",
@@ -162,7 +162,7 @@
       "visibility": "public"
     },
     {
-      "path": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/code-wiki/wiki/utilities/_index.md",
+      "path": "/home/runner/work/code-wiki/code-wiki/wiki/utilities/_index.md",
       "relativePath": "utilities/_index.md",
       "title": "Utilities Index",
       "description": "Standalone helper functions and utilities",
@@ -183,7 +183,7 @@
       "languages": [
         "TypeScript"
       ],
-      "lastCommitDate": "2026-03-22T21:47:20Z",
+      "lastCommitDate": "2026-03-22T22:19:06Z",
       "status": "github-only",
       "visibility": "public",
       "markdownFiles": [
@@ -1731,6 +1731,6 @@
     "templates",
     "utilities"
   ],
-  "buildTime": "2026-03-22T21:50:27.290Z",
+  "buildTime": "2026-03-23T00:22:06.979Z",
   "version": "1.0.0"
 }
