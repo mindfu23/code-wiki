@@ -182,7 +182,8 @@ function setupEventListeners() {
 
 // Navigate to a page
 function navigateTo(page, params = {}) {
-  let url = '/' + (page === 'search' ? '' : page);
+  const slugMap = { search: '', browse: 'contents', dashboard: 'observatory' };
+  let url = '/' + (slugMap[page] !== undefined ? slugMap[page] : page);
   if (params.doc) url += '?doc=' + encodeURIComponent(params.doc);
   if (params.category) url += '?category=' + encodeURIComponent(params.category);
 
@@ -196,11 +197,13 @@ function handleNavigation() {
   const params = new URLSearchParams(window.location.search);
 
   let page = 'search';
-  if (path === '/browse' || path.startsWith('/browse')) page = 'browse';
+  if (path === '/contents' || path.startsWith('/contents')) page = 'browse';
+  else if (path === '/browse' || path.startsWith('/browse')) page = 'browse';
   else if (path === '/repos' || path.startsWith('/repos')) page = 'repos';
   else if (path === '/login') page = 'login';
   else if (path === '/editor' || path.startsWith('/editor')) page = 'editor';
   else if (path === '/document' || params.get('doc')) page = 'document';
+  else if (path === '/observatory') page = 'dashboard';
   else if (path === '/dashboard') page = 'dashboard';
 
   const pageParams = {};
@@ -1929,7 +1932,7 @@ function renderRecentDocs() {
   });
 
   html += '</tbody></table>';
-  html += '<div class="recent-docs-footer"><a href="/browse?tab=docs" class="recent-docs-link" id="view-all-docs-link">View all docs &rarr;</a></div>';
+  html += '<div class="recent-docs-footer"><a href="/contents?tab=docs" class="recent-docs-link" id="view-all-docs-link">View all docs &rarr;</a></div>';
 
   container.innerHTML = html;
 
@@ -1949,7 +1952,7 @@ function renderRecentDocs() {
   if (viewAllLink) {
     viewAllLink.addEventListener('click', (e) => {
       e.preventDefault();
-      history.pushState({ page: 'browse', tab: 'docs' }, '', '/browse?tab=docs');
+      history.pushState({ page: 'browse', tab: 'docs' }, '', '/contents?tab=docs');
       showPage('browse', { tab: 'docs' });
     });
   }
