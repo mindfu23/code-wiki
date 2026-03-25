@@ -21,8 +21,9 @@
         </div>
       </a>
       <nav>
-        <a href="/browse" class="nav-link" data-page="browse">Browse</a>
-        <a href="/dashboard" class="nav-link" data-page="dashboard">Observatory</a>
+        <a href="/" class="nav-link" data-page="search">Main</a>
+        <a href="/contents" class="nav-link" data-page="browse">Contents</a>
+        <a href="/observatory" class="nav-link" data-page="dashboard">Observatory</a>
         <a href="/login" class="nav-link" data-page="login" id="login-nav-link">Login</a>
         <div id="user-nav" class="user-nav" style="display: none;">
           <button id="new-doc-btn" class="btn btn-primary btn-sm">+ New</button>
@@ -109,7 +110,7 @@
           <nav class="breadcrumb-nav">
             <a href="/" class="breadcrumb-link" data-page="search">Main</a>
             <span class="breadcrumb-sep">›</span>
-            <span class="breadcrumb-current">Browse</span>
+            <span class="breadcrumb-current">Contents</span>
           </nav>
         </div>
         <div class="repo-tabs" id="repo-tabs">
@@ -297,7 +298,7 @@
             <button id="refresh-dashboard-btn" class="btn btn-sm btn-secondary">Refresh</button>
           </div>
         </div>
-        <div style="display: flex; gap: 2rem; margin-bottom: 1rem; font-size: 0.8rem; color: #94a3b8;">
+        <div style="display: flex; gap: 2rem; margin-bottom: 1rem; font-size: 0.8rem; color: #94a3b8; justify-content: flex-end;">
           <span style="display: flex; align-items: center; gap: 0.35rem;"><span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:#22c55e;"></span> Healthy build or action</span>
           <span style="display: flex; align-items: center; gap: 0.35rem;"><span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:#eab308;"></span> Warning / some issues</span>
           <span style="display: flex; align-items: center; gap: 0.35rem;"><span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:#ef4444;"></span> Error</span>
