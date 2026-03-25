@@ -107,7 +107,7 @@ Currently, non-markdown files (.txt, .rst, .adoc, .org) link directly to GitHub 
 ### Phase 3: Trends + Databricks
 
 - [ ] Historical trend charts (commit activity over time, deploy success trends)
-- [ ] Databricks Community Edition signup and cluster setup
-- [ ] Create Databricks notebook: fetch from export-bronze endpoint
-- [ ] Build bronze → silver → gold Delta tables
+- [x] Databricks Community Edition signup and cluster setup
+- [x] Create Databricks notebook: fetch from export-bronze endpoint
+- [x] Build bronze → silver → gold Delta tables
 - [ ] Create SQL dashboard visualizations in Databricks
