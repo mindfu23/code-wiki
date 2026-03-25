@@ -1,6 +1,6 @@
 [
   {
-    "path": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/code-wiki/wiki/projects/_index.md",
+    "path": "/home/runner/work/code-wiki/code-wiki/wiki/projects/_index.md",
     "relativePath": "projects/_index.md",
     "title": "Projects Index",
     "description": "Documentation for active repositories",
@@ -14,7 +14,7 @@
     "visibility": "public"
   },
   {
-    "path": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/code-wiki/wiki/projects/app-prices-notes.md",
+    "path": "/home/runner/work/code-wiki/code-wiki/wiki/projects/app-prices-notes.md",
     "relativePath": "projects/app-prices-notes.md",
     "title": "app-prices-notes",
     "tags": [],
@@ -24,7 +24,7 @@
     "visibility": "public"
   },
   {
-    "path": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/code-wiki/wiki/projects/overall-current-status.md",
+    "path": "/home/runner/work/code-wiki/code-wiki/wiki/projects/overall-current-status.md",
     "relativePath": "projects/overall-current-status.md",
     "title": "Overall current status",
     "description": "status across many or all repos",
@@ -36,7 +36,7 @@
     "visibility": "private"
   },
   {
-    "path": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/code-wiki/wiki/projects/overall-novel-processes.md",
+    "path": "/home/runner/work/code-wiki/code-wiki/wiki/projects/overall-novel-processes.md",
     "relativePath": "projects/overall-novel-processes.md",
     "title": "Overall novel processes and workflows",
     "tags": [],
@@ -47,7 +47,7 @@
     "visibility": "private"
   },
   {
-    "path": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/code-wiki/wiki/projects/repo-locations.md",
+    "path": "/home/runner/work/code-wiki/code-wiki/wiki/projects/repo-locations.md",
     "relativePath": "projects/repo-locations.md",
     "title": "Repository Locations",
     "description": "Mapping of repositories to local file system paths and GitHub URLs",
@@ -63,7 +63,7 @@
     "visibility": "public"
   },
   {
-    "path": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/code-wiki/wiki/projects/setup_cheatsheet.md",
+    "path": "/home/runner/work/code-wiki/code-wiki/wiki/projects/setup_cheatsheet.md",
     "relativePath": "projects/setup_cheatsheet.md",
     "title": "New Project Setup Cheatsheet",
     "description": "Step-by-step commands and URLs for wiring up a new React+Vite+Supabase+Netlify project from scaffold to live prototype",
@@ -83,7 +83,7 @@
     "visibility": "public"
   },
   {
-    "path": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/code-wiki/wiki/projects/weird-chess-to-do.md",
+    "path": "/home/runner/work/code-wiki/code-wiki/wiki/projects/weird-chess-to-do.md",
     "relativePath": "projects/weird-chess-to-do.md",
     "title": "Weird Chess To  Do",
     "tags": [],
@@ -156,17 +156,6 @@
     "updated": "2026-02-22",
     "content": "\nGood chat here for some further possible next steps. \n\nAlso a ToDo in the repo of course.\n\nhttps://claude.ai/chat/2d60dea0-141f-4a9e-bc00-751720885646",
     "contentPreview": "Good chat here for some further possible next steps.   Also a ToDo in the repo of course.  https://claude.ai/chat/2d60dea0-141f-4a9e-bc00-751720885646",
-    "category": "projects",
-    "visibility": "private"
-  },
-  {
-    "path": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/code-wiki/wiki/personal/projects/weird-chess-to-do.md",
-    "relativePath": "projects/weird-chess-to-do.md",
-    "title": "Weird Chess To  Do",
-    "tags": [],
-    "updated": "2026-02-23",
-    "content": "\nApp completed and submitted to app store.\n\nUsed ko-fi link, https://ko-fi.com/mindfu/\n\nCreated privacy policy, https://jamesmbeach.com/archives/5604\n\nStore link so far: https://appstoreconnect.apple.com/apps/6759537454/distribution/reviewsubmissions/details/eb044204-305d-4f74-a7a1-3ff67c852527",
-    "contentPreview": "App completed and submitted to app store.  Used ko-fi link, https://ko-fi.com/mindfu/  Created privacy policy, https://jamesmbeach.com/archives/5604  Store link so far: https://appstoreconnect.apple.com/apps/6759537454/distribution/reviewsubmissions/details/eb044204-305d-4f74-a7a1-3ff67c852527",
     "category": "projects",
     "visibility": "private"
   }
