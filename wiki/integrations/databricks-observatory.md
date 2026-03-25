@@ -29,7 +29,7 @@ Community Edition gives you:
 The Observatory exposes a bronze data export at:
 
 ```
-https://your-code-wiki.netlify.app/.netlify/functions/export-bronze
+https://mindfu23code-wiki.netlify.app/.netlify/functions/export-bronze
 ```
 
 Query params:
@@ -45,7 +45,7 @@ import requests
 import json
 
 # Fetch raw metrics from Observatory
-url = "https://your-code-wiki.netlify.app/.netlify/functions/export-bronze"
+url = "https://mindfu23code-wiki.netlify.app/.netlify/functions/export-bronze"
 response = requests.get(url)
 data = response.json()
 
@@ -71,10 +71,30 @@ for source_name, source_data in data.get("sources", {}).items():
 github_data = data["sources"].get("github", {})
 repos = github_data.get("repos", [])
 
-github_df = spark.createDataFrame(repos)
+# Flatten to simple types (raw API responses have nested objects Spark can't auto-infer)
+flat_repos = [{
+    "name": r.get("name", ""),
+    "full_name": r.get("full_name", ""),
+    "language": r.get("language") or "Unknown",
+    "private": bool(r.get("private", False)),
+    "fork": bool(r.get("fork", False)),
+    "stargazers_count": int(r.get("stargazers_count", 0)),
+    "open_issues_count": int(r.get("open_issues_count", 0)),
+    "pushed_at": r.get("pushed_at", ""),
+    "created_at": r.get("created_at", ""),
+    "updated_at": r.get("updated_at", ""),
+    "html_url": r.get("html_url", ""),
+    "description": r.get("description") or "",
+    "default_branch": r.get("default_branch", "main"),
+    "size": int(r.get("size", 0)),
+} for r in repos]
+
+github_df = spark.createDataFrame(flat_repos)
 github_df.write.format("delta") \
   .mode("overwrite") \
   .saveAsTable("bronze_github_repos")
+
+display(github_df)
 ```
 
 ### Netlify-specific bronze table
@@ -83,10 +103,28 @@ github_df.write.format("delta") \
 netlify_data = data["sources"].get("netlify", {})
 sites = netlify_data.get("sites", [])
 
-netlify_df = spark.createDataFrame(sites)
+# Flatten to simple types
+flat_sites = [{
+    "site_id": s.get("id", ""),
+    "name": s.get("name", ""),
+    "url": s.get("url", ""),
+    "ssl_url": s.get("ssl_url", ""),
+    "admin_url": s.get("admin_url", ""),
+    "created_at": s.get("created_at", ""),
+    "updated_at": s.get("updated_at", ""),
+    "repo_url": (s.get("build_settings") or {}).get("repo_url", ""),
+    "repo_branch": (s.get("build_settings") or {}).get("repo_branch", ""),
+    "build_command": (s.get("build_settings") or {}).get("cmd", ""),
+    "publish_dir": (s.get("build_settings") or {}).get("dir", ""),
+    "deploy_state": (s.get("published_deploy") or {}).get("state", ""),
+} for s in sites]
+
+netlify_df = spark.createDataFrame(flat_sites)
 netlify_df.write.format("delta") \
   .mode("overwrite") \
   .saveAsTable("bronze_netlify_sites")
+
+display(netlify_df)
 ```
 
 ## 4. Silver Layer — Cleaned & Normalized
@@ -97,22 +135,21 @@ CREATE OR REPLACE TABLE silver_project_metrics AS
 SELECT
   g.name AS project_name,
   g.language,
-  g.commits30d,
-  g.lastCommitDate AS last_commit_date,
-  g.openIssues AS open_issues,
-  n.siteName AS netlify_site,
-  n.url AS site_url,
-  n.deploysLast30d AS deploys_30d,
-  n.deploySuccessRate AS deploy_success_rate,
+  g.open_issues_count AS open_issues,
+  g.pushed_at AS last_commit_date,
+  g.stargazers_count AS stars,
+  g.size AS repo_size_kb,
+  n.name AS netlify_site,
+  n.ssl_url AS site_url,
   CASE
-    WHEN n.lastDeploy.state = 'ready' THEN 'healthy'
-    WHEN n.lastDeploy.state = 'error' THEN 'error'
+    WHEN n.deploy_state = 'ready' THEN 'healthy'
+    WHEN n.deploy_state = 'error' THEN 'error'
     ELSE 'unknown'
   END AS deploy_status,
   current_timestamp() AS processed_at
 FROM bronze_github_repos g
 LEFT JOIN bronze_netlify_sites n
-  ON lower(n.repoUrl) LIKE concat('%/', lower(g.name), '%')
+  ON lower(n.repo_url) LIKE concat('%/', lower(g.name), '%')
 ```
 
 ## 5. Gold Layer — Business-Ready Aggregations
@@ -124,50 +161,36 @@ SELECT
   project_name,
   language,
   last_commit_date,
-  datediff(current_date(), last_commit_date) AS days_since_commit,
-  commits30d,
+  datediff(current_date(), to_date(last_commit_date)) AS days_since_commit,
+  stars,
   deploy_status,
-  deploy_success_rate,
-  deploys_30d,
   open_issues,
   CASE
     WHEN deploy_status = 'error' THEN 'needs-attention'
-    WHEN datediff(current_date(), last_commit_date) > 90 THEN 'stale'
-    WHEN deploy_success_rate < 0.8 THEN 'unstable'
+    WHEN datediff(current_date(), to_date(last_commit_date)) > 90 THEN 'stale'
     ELSE 'healthy'
   END AS health_category
 FROM silver_project_metrics
+```
 
+```sql
 -- Gold: infrastructure overview
 CREATE OR REPLACE TABLE gold_infra_overview AS
 SELECT
   count(*) AS total_projects,
   count(netlify_site) AS deployed_projects,
-  sum(deploys_30d) AS total_deploys_30d,
-  avg(deploy_success_rate) AS avg_deploy_success_rate,
   sum(CASE WHEN deploy_status = 'error' THEN 1 ELSE 0 END) AS projects_with_errors,
-  sum(CASE WHEN datediff(current_date(), last_commit_date) > 90 THEN 1 ELSE 0 END) AS stale_projects
+  sum(CASE WHEN datediff(current_date(), to_date(last_commit_date)) > 90 THEN 1 ELSE 0 END) AS stale_projects,
+  sum(open_issues) AS total_open_issues
 FROM silver_project_metrics
 ```
 
 ## 6. SQL Dashboard Queries
 
-### Effort vs Impact
-
-```sql
-SELECT
-  project_name,
-  commits30d AS effort,
-  deploys_30d AS deployment_activity,
-  health_category
-FROM gold_project_health
-ORDER BY commits30d DESC
-```
-
 ### Stalest Projects
 
 ```sql
-SELECT project_name, days_since_commit, language, deploy_status
+SELECT project_name, days_since_commit, language, deploy_status, health_category
 FROM gold_project_health
 WHERE days_since_commit > 30
 ORDER BY days_since_commit DESC
