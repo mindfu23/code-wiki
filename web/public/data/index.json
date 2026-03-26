@@ -53,7 +53,7 @@
       ],
       "language": "python",
       "updated": "2026-03-22",
-      "content": "\n# Databricks Observatory — Setup Guide\n\nThis guide walks through ingesting metrics from the code-wiki Observatory into Databricks Community Edition, building a medallion lakehouse (bronze → silver → gold), and creating SQL dashboards.\n\n## 1. Sign Up for Databricks Community Edition\n\n1. Go to [community.cloud.databricks.com](https://community.cloud.databricks.com/)\n2. Click \"Get Started — Free\"\n3. Select \"Community Edition\" (not the full trial)\n4. Create your account — no credit card required\n5. Once in, create a cluster: Compute → Create Cluster → use defaults → Start\n\nCommunity Edition gives you:\n- One small cluster (terminates after 2 hours of inactivity)\n- Delta Lake support\n- Notebooks (Python, SQL, Scala)\n- No Delta Live Tables or Workflows (paid features), but you can demonstrate the medallion pattern manually\n\n## 2. Export Endpoint\n\nThe Observatory exposes a bronze data export at:\n\n```\nhttps://your-code-wiki.netlify.app/.netlify/functions/export-bronze\n```\n\nQuery params:\n- `?source=github,netlify` — filter to specific sources\n- `?format=ndjson` — newline-delimited JSON (useful for streaming)\n\n## 3. Bronze Layer — Raw Ingestion\n\nCreate a Python notebook and run:\n\n```python\nimport requests\nimport json\n\n# Fetch raw metrics from Observatory\nurl = \"https://your-code-wiki.netlify.app/.netlify/functions/export-bronze\"\nresponse = requests.get(url)\ndata = response.json()\n\n# Create bronze tables per source\nfor source_name, source_data in data.get(\"sources\", {}).items():\n    df = spark.createDataFrame([{\n        \"source\": source_name,\n        \"snapshot_time\": data[\"snapshotTime\"],\n        \"raw_json\": json.dumps(source_data),\n        \"ingested_at\": data[\"exportedAt\"],\n    }])\n\n    df.write.format(\"delta\") \\\n      .mode(\"append\") \\\n      .saveAsTable(f\"bronze_{source_name}\")\n\n    print(f\"Saved bronze_{source_name}\")\n```\n\n### GitHub-specific bronze table\n\n```python\ngithub_data = data[\"sources\"].get(\"github\", {})\nrepos = github_data.get(\"repos\", [])\n\ngithub_df = spark.createDataFrame(repos)\ngithub_df.write.format(\"delta\") \\\n  .mode(\"overwrite\") \\\n  .saveAsTable(\"bronze_github_repos\")\n```\n\n### Netlify-specific bronze table\n\n```python\nnetlify_data = data[\"sources\"].get(\"netlify\", {})\nsites = netlify_data.get(\"sites\", [])\n\nnetlify_df = spark.createDataFrame(sites)\nnetlify_df.write.format(\"delta\") \\\n  .mode(\"overwrite\") \\\n  .saveAsTable(\"bronze_netlify_sites\")\n```\n\n## 4. Silver Layer — Cleaned & Normalized\n\n```sql\n-- Silver: normalized project-level view joining GitHub and Netlify data\nCREATE OR REPLACE TABLE silver_project_metrics AS\nSELECT\n  g.name AS project_name,\n  g.language,\n  g.commits30d,\n  g.lastCommitDate AS last_commit_date,\n  g.openIssues AS open_issues,\n  n.siteName AS netlify_site,\n  n.url AS site_url,\n  n.deploysLast30d AS deploys_30d,\n  n.deploySuccessRate AS deploy_success_rate,\n  CASE\n    WHEN n.lastDeploy.state = 'ready' THEN 'healthy'\n    WHEN n.lastDeploy.state = 'error' THEN 'error'\n    ELSE 'unknown'\n  END AS deploy_status,\n  current_timestamp() AS processed_at\nFROM bronze_github_repos g\nLEFT JOIN bronze_netlify_sites n\n  ON lower(n.repoUrl) LIKE concat('%/', lower(g.name), '%')\n```\n\n## 5. Gold Layer — Business-Ready Aggregations\n\n```sql\n-- Gold: project health summary\nCREATE OR REPLACE TABLE gold_project_health AS\nSELECT\n  project_name,\n  language,\n  last_commit_date,\n  datediff(current_date(), last_commit_date) AS days_since_commit,\n  commits30d,\n  deploy_status,\n  deploy_success_rate,\n  deploys_30d,\n  open_issues,\n  CASE\n    WHEN deploy_status = 'error' THEN 'needs-attention'\n    WHEN datediff(current_date(), last_commit_date) > 90 THEN 'stale'\n    WHEN deploy_success_rate < 0.8 THEN 'unstable'\n    ELSE 'healthy'\n  END AS health_category\nFROM silver_project_metrics\n\n-- Gold: infrastructure overview\nCREATE OR REPLACE TABLE gold_infra_overview AS\nSELECT\n  count(*) AS total_projects,\n  count(netlify_site) AS deployed_projects,\n  sum(deploys_30d) AS total_deploys_30d,\n  avg(deploy_success_rate) AS avg_deploy_success_rate,\n  sum(CASE WHEN deploy_status = 'error' THEN 1 ELSE 0 END) AS projects_with_errors,\n  sum(CASE WHEN datediff(current_date(), last_commit_date) > 90 THEN 1 ELSE 0 END) AS stale_projects\nFROM silver_project_metrics\n```\n\n## 6. SQL Dashboard Queries\n\n### Effort vs Impact\n\n```sql\nSELECT\n  project_name,\n  commits30d AS effort,\n  deploys_30d AS deployment_activity,\n  health_category\nFROM gold_project_health\nORDER BY commits30d DESC\n```\n\n### Stalest Projects\n\n```sql\nSELECT project_name, days_since_commit, language, deploy_status\nFROM gold_project_health\nWHERE days_since_commit > 30\nORDER BY days_since_commit DESC\n```\n\n### Language Distribution\n\n```sql\nSELECT language, count(*) AS project_count\nFROM gold_project_health\nGROUP BY language\nORDER BY project_count DESC\n```\n\n## 7. Scheduling (Manual in Community Edition)\n\nCommunity Edition doesn't have Workflows/Jobs. To accumulate historical data:\n\n1. Run the bronze ingestion notebook manually each day (or whenever you collect new metrics)\n2. Use `mode(\"append\")` for bronze tables to build history\n3. Silver/gold tables use `CREATE OR REPLACE` to always reflect the latest snapshot\n\nIn production Databricks, you'd use:\n- **Delta Live Tables** for declarative bronze → silver → gold pipeline\n- **Workflows** for scheduled notebook execution\n- **Auto Loader** for incremental file ingestion\n\n## 8. Portfolio Presentation Notes\n\nWhen presenting this as a proof of concept:\n\n- **Emphasize the architecture**: \"The same medallion pipeline handles an org with 5,000 repos without structural changes\"\n- **Show real data**: Navigate the dashboard, then show the same data flowing through Databricks\n- **Highlight cross-source joins**: The silver layer joining GitHub commits with Netlify deploys is a genuine data engineering challenge\n- **Address scale honestly**: \"This is portfolio-scale data. The design decisions — partitioning, Delta format, incremental loading — are the patterns that matter at enterprise scale\"\n- **Point out what's real**: \"I can explain why this traffic spike happened, or why this n8n workflow failed — because it's my actual infrastructure\"\n",
+      "content": "\n# Databricks Observatory — Setup Guide\n\nThis guide walks through ingesting metrics from the code-wiki Observatory into Databricks Community Edition, building a medallion lakehouse (bronze → silver → gold), and creating SQL dashboards.\n\n## 1. Sign Up for Databricks Community Edition\n\n1. Go to [community.cloud.databricks.com](https://community.cloud.databricks.com/)\n2. Click \"Get Started — Free\"\n3. Select \"Community Edition\" (not the full trial)\n4. Create your account — no credit card required\n5. Once in, create a cluster: Compute → Create Cluster → use defaults → Start\n\nCommunity Edition gives you:\n- One small cluster (terminates after 2 hours of inactivity)\n- Delta Lake support\n- Notebooks (Python, SQL, Scala)\n- No Delta Live Tables or Workflows (paid features), but you can demonstrate the medallion pattern manually\n\n## 2. Export Endpoint\n\nThe Observatory exposes a bronze data export at:\n\n```\nhttps://mindfu23code-wiki.netlify.app/.netlify/functions/export-bronze\n```\n\nQuery params:\n- `?source=github,netlify` — filter to specific sources\n- `?format=ndjson` — newline-delimited JSON (useful for streaming)\n\n## 3. Bronze Layer — Raw Ingestion\n\nCreate a Python notebook and run:\n\n```python\nimport requests\nimport json\n\n# Fetch raw metrics from Observatory\nurl = \"https://mindfu23code-wiki.netlify.app/.netlify/functions/export-bronze\"\nresponse = requests.get(url)\ndata = response.json()\n\n# Create bronze tables per source\nfor source_name, source_data in data.get(\"sources\", {}).items():\n    df = spark.createDataFrame([{\n        \"source\": source_name,\n        \"snapshot_time\": data[\"snapshotTime\"],\n        \"raw_json\": json.dumps(source_data),\n        \"ingested_at\": data[\"exportedAt\"],\n    }])\n\n    df.write.format(\"delta\") \\\n      .mode(\"append\") \\\n      .saveAsTable(f\"bronze_{source_name}\")\n\n    print(f\"Saved bronze_{source_name}\")\n```\n\n### GitHub-specific bronze table\n\n```python\ngithub_data = data[\"sources\"].get(\"github\", {})\nrepos = github_data.get(\"repos\", [])\n\n# Flatten to simple types (raw API responses have nested objects Spark can't auto-infer)\nflat_repos = [{\n    \"name\": r.get(\"name\", \"\"),\n    \"full_name\": r.get(\"full_name\", \"\"),\n    \"language\": r.get(\"language\") or \"Unknown\",\n    \"private\": bool(r.get(\"private\", False)),\n    \"fork\": bool(r.get(\"fork\", False)),\n    \"stargazers_count\": int(r.get(\"stargazers_count\", 0)),\n    \"open_issues_count\": int(r.get(\"open_issues_count\", 0)),\n    \"pushed_at\": r.get(\"pushed_at\", \"\"),\n    \"created_at\": r.get(\"created_at\", \"\"),\n    \"updated_at\": r.get(\"updated_at\", \"\"),\n    \"html_url\": r.get(\"html_url\", \"\"),\n    \"description\": r.get(\"description\") or \"\",\n    \"default_branch\": r.get(\"default_branch\", \"main\"),\n    \"size\": int(r.get(\"size\", 0)),\n} for r in repos]\n\ngithub_df = spark.createDataFrame(flat_repos)\ngithub_df.write.format(\"delta\") \\\n  .mode(\"overwrite\") \\\n  .saveAsTable(\"bronze_github_repos\")\n\ndisplay(github_df)\n```\n\n### Netlify-specific bronze table\n\n```python\nnetlify_data = data[\"sources\"].get(\"netlify\", {})\nsites = netlify_data.get(\"sites\", [])\n\n# Flatten to simple types\nflat_sites = [{\n    \"site_id\": s.get(\"id\", \"\"),\n    \"name\": s.get(\"name\", \"\"),\n    \"url\": s.get(\"url\", \"\"),\n    \"ssl_url\": s.get(\"ssl_url\", \"\"),\n    \"admin_url\": s.get(\"admin_url\", \"\"),\n    \"created_at\": s.get(\"created_at\", \"\"),\n    \"updated_at\": s.get(\"updated_at\", \"\"),\n    \"repo_url\": (s.get(\"build_settings\") or {}).get(\"repo_url\", \"\"),\n    \"repo_branch\": (s.get(\"build_settings\") or {}).get(\"repo_branch\", \"\"),\n    \"build_command\": (s.get(\"build_settings\") or {}).get(\"cmd\", \"\"),\n    \"publish_dir\": (s.get(\"build_settings\") or {}).get(\"dir\", \"\"),\n    \"deploy_state\": (s.get(\"published_deploy\") or {}).get(\"state\", \"\"),\n} for s in sites]\n\nnetlify_df = spark.createDataFrame(flat_sites)\nnetlify_df.write.format(\"delta\") \\\n  .mode(\"overwrite\") \\\n  .saveAsTable(\"bronze_netlify_sites\")\n\ndisplay(netlify_df)\n```\n\n## 4. Silver Layer — Cleaned & Normalized\n\n```sql\n-- Silver: normalized project-level view joining GitHub and Netlify data\nCREATE OR REPLACE TABLE silver_project_metrics AS\nSELECT\n  g.name AS project_name,\n  g.language,\n  g.open_issues_count AS open_issues,\n  g.pushed_at AS last_commit_date,\n  g.stargazers_count AS stars,\n  g.size AS repo_size_kb,\n  n.name AS netlify_site,\n  n.ssl_url AS site_url,\n  CASE\n    WHEN n.deploy_state = 'ready' THEN 'healthy'\n    WHEN n.deploy_state = 'error' THEN 'error'\n    ELSE 'unknown'\n  END AS deploy_status,\n  current_timestamp() AS processed_at\nFROM bronze_github_repos g\nLEFT JOIN bronze_netlify_sites n\n  ON lower(n.repo_url) LIKE concat('%/', lower(g.name), '%')\n```\n\n## 5. Gold Layer — Business-Ready Aggregations\n\n```sql\n-- Gold: project health summary\nCREATE OR REPLACE TABLE gold_project_health AS\nSELECT\n  project_name,\n  language,\n  last_commit_date,\n  datediff(current_date(), to_date(last_commit_date)) AS days_since_commit,\n  stars,\n  deploy_status,\n  open_issues,\n  CASE\n    WHEN deploy_status = 'error' THEN 'needs-attention'\n    WHEN datediff(current_date(), to_date(last_commit_date)) > 90 THEN 'stale'\n    ELSE 'healthy'\n  END AS health_category\nFROM silver_project_metrics\n```\n\n```sql\n-- Gold: infrastructure overview\nCREATE OR REPLACE TABLE gold_infra_overview AS\nSELECT\n  count(*) AS total_projects,\n  count(netlify_site) AS deployed_projects,\n  sum(CASE WHEN deploy_status = 'error' THEN 1 ELSE 0 END) AS projects_with_errors,\n  sum(CASE WHEN datediff(current_date(), to_date(last_commit_date)) > 90 THEN 1 ELSE 0 END) AS stale_projects,\n  sum(open_issues) AS total_open_issues\nFROM silver_project_metrics\n```\n\n## 6. SQL Dashboard Queries\n\n### Stalest Projects\n\n```sql\nSELECT project_name, days_since_commit, language, deploy_status, health_category\nFROM gold_project_health\nWHERE days_since_commit > 30\nORDER BY days_since_commit DESC\n```\n\n### Language Distribution\n\n```sql\nSELECT language, count(*) AS project_count\nFROM gold_project_health\nGROUP BY language\nORDER BY project_count DESC\n```\n\n## 7. Scheduling (Manual in Community Edition)\n\nCommunity Edition doesn't have Workflows/Jobs. To accumulate historical data:\n\n1. Run the bronze ingestion notebook manually each day (or whenever you collect new metrics)\n2. Use `mode(\"append\")` for bronze tables to build history\n3. Silver/gold tables use `CREATE OR REPLACE` to always reflect the latest snapshot\n\nIn production Databricks, you'd use:\n- **Delta Live Tables** for declarative bronze → silver → gold pipeline\n- **Workflows** for scheduled notebook execution\n- **Auto Loader** for incremental file ingestion\n\n## 8. Portfolio Presentation Notes\n\nWhen presenting this as a proof of concept:\n\n- **Emphasize the architecture**: \"The same medallion pipeline handles an org with 5,000 repos without structural changes\"\n- **Show real data**: Navigate the dashboard, then show the same data flowing through Databricks\n- **Highlight cross-source joins**: The silver layer joining GitHub commits with Netlify deploys is a genuine data engineering challenge\n- **Address scale honestly**: \"This is portfolio-scale data. The design decisions — partitioning, Delta format, incremental loading — are the patterns that matter at enterprise scale\"\n- **Point out what's real**: \"I can explain why this traffic spike happened, or why this n8n workflow failed — because it's my actual infrastructure\"\n",
       "contentPreview": "# Databricks Observatory — Setup Guide  This guide walks through ingesting metrics from the code-wiki Observatory into Databricks Community Edition, building a medallion lakehouse (bronze → silver → gold), and creating SQL dashboards.  ## 1. Sign Up for Databricks Community Edition  1. Go to [commu",
       "category": "integrations",
       "visibility": "public"
@@ -178,52 +178,12 @@
   ],
   "repos": [
     {
-      "name": "apiTracker",
-      "description": "A simple GUI tracker for health and number of remaining calls for my various APIs used in my other apps.",
-      "githubUrl": "https://github.com/mindfu23/apiTracker",
-      "languages": [
-        "JavaScript"
-      ],
-      "lastCommitDate": "2026-03-24T00:20:01Z",
-      "status": "synced",
-      "visibility": "public",
-      "localPath": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/apiTracker",
-      "notes": "also implemented as a browser extension, and further developed there.",
-      "markdownFiles": [
-        {
-          "relativePath": "browser-extension/README.md",
-          "name": "README.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "dist-platforms/firefox/README.md",
-          "name": "README.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "dist-platforms/safari/API Usage Scraper Extension/Resources/README.md",
-          "name": "README.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "dist-platforms/safari/README.md",
-          "name": "README.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "platforms/README.md",
-          "name": "README.md",
-          "fileType": "md"
-        }
-      ]
-    },
-    {
       "name": "code-wiki",
       "githubUrl": "https://github.com/mindfu23/code-wiki",
       "languages": [
         "TypeScript"
       ],
-      "lastCommitDate": "2026-03-24T00:18:30Z",
+      "lastCommitDate": "2026-03-25T06:17:09Z",
       "status": "github-only",
       "visibility": "public",
       "markdownFiles": [
@@ -335,6 +295,46 @@
         {
           "relativePath": "wiki/utilities/_index.md",
           "name": "_index.md",
+          "fileType": "md"
+        }
+      ]
+    },
+    {
+      "name": "apiTracker",
+      "description": "A simple GUI tracker for health and number of remaining calls for my various APIs used in my other apps.",
+      "githubUrl": "https://github.com/mindfu23/apiTracker",
+      "languages": [
+        "JavaScript"
+      ],
+      "lastCommitDate": "2026-03-25T00:22:40Z",
+      "status": "synced",
+      "visibility": "public",
+      "localPath": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/apiTracker",
+      "notes": "also implemented as a browser extension, and further developed there.",
+      "markdownFiles": [
+        {
+          "relativePath": "browser-extension/README.md",
+          "name": "README.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "dist-platforms/firefox/README.md",
+          "name": "README.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "dist-platforms/safari/API Usage Scraper Extension/Resources/README.md",
+          "name": "README.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "dist-platforms/safari/README.md",
+          "name": "README.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "platforms/README.md",
+          "name": "README.md",
           "fileType": "md"
         }
       ]
@@ -1731,6 +1731,6 @@
     "templates",
     "utilities"
   ],
-  "buildTime": "2026-03-25T00:20:34.263Z",
+  "buildTime": "2026-03-26T00:22:49.404Z",
   "version": "1.0.0"
 }
