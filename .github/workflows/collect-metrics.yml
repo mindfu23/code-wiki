@@ -5,13 +5,16 @@ on:
     - cron: '0 */6 * * *'  # Every 6 hours
   workflow_dispatch:        # Manual trigger
 
+permissions:
+  contents: write
+
 jobs:
   collect-metrics:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
         with:
-          token: ${{ secrets.REPO_ACCESS_TOKEN }}
+          token: ${{ secrets.GITHUB_TOKEN }}
 
       - uses: actions/setup-node@v4
         with:
@@ -30,7 +33,7 @@ jobs:
       - name: Collect metrics
         working-directory: mcp-server
         env:
-          GITHUB_TOKEN: ${{ secrets.REPO_ACCESS_TOKEN }}
+          GH_API_TOKEN: ${{ secrets.REPO_ACCESS_TOKEN }}
           GITHUB_USERNAME: ${{ github.repository_owner }}
           SOURCE_DIRS: /tmp/dummy
           WIKI_DIR: /tmp/dummy

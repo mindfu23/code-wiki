@@ -185,9 +185,41 @@ SELECT
 FROM silver_project_metrics
 ```
 
-## 6. SQL Dashboard Queries
+## 6. SQL Dashboard Visualizations
 
-### Stalest Projects
+After running each SQL cell, click the **"+"** button (or chart icon) below the results table to add a visualization. The recommended chart type is noted for each query.
+
+### 6a. Health Category Breakdown
+**Visualization: Pie chart** — Keys: `health_category`, Values: `project_count`
+
+```sql
+SELECT health_category, count(*) AS project_count
+FROM gold_project_health
+GROUP BY health_category
+ORDER BY project_count DESC
+```
+
+### 6b. Language Distribution
+**Visualization: Bar chart** — X: `language`, Y: `project_count`
+
+```sql
+SELECT language, count(*) AS project_count
+FROM gold_project_health
+GROUP BY language
+ORDER BY project_count DESC
+```
+
+### 6c. Deploy Status Overview
+**Visualization: Pie chart** — Keys: `deploy_status`, Values: `project_count`
+
+```sql
+SELECT deploy_status, count(*) AS project_count
+FROM gold_project_health
+GROUP BY deploy_status
+```
+
+### 6d. Stalest Projects (days since last commit)
+**Visualization: Bar chart** — X: `project_name`, Y: `days_since_commit`, Color: `health_category`
 
 ```sql
 SELECT project_name, days_since_commit, language, deploy_status, health_category
@@ -196,13 +228,49 @@ WHERE days_since_commit > 30
 ORDER BY days_since_commit DESC
 ```
 
-### Language Distribution
+### 6e. Project Activity Heatmap
+**Visualization: Bar chart** — X: `project_name`, Y: `days_since_commit`, Color: `language`
 
 ```sql
-SELECT language, count(*) AS project_count
+SELECT project_name, days_since_commit, stars, open_issues, language
 FROM gold_project_health
-GROUP BY language
-ORDER BY project_count DESC
+ORDER BY days_since_commit ASC
+LIMIT 20
+```
+
+### 6f. Infrastructure Summary (single row KPIs)
+**Visualization: Counter** — select each column as a separate counter, or leave as table
+
+```sql
+SELECT
+  total_projects,
+  deployed_projects,
+  (total_projects - deployed_projects) AS not_deployed,
+  projects_with_errors,
+  stale_projects,
+  total_open_issues
+FROM gold_infra_overview
+```
+
+### 6g. Projects with Open Issues
+**Visualization: Bar chart** — X: `project_name`, Y: `open_issues`
+
+```sql
+SELECT project_name, open_issues, language, deploy_status
+FROM gold_project_health
+WHERE open_issues > 0
+ORDER BY open_issues DESC
+```
+
+### 6h. Repo Size Distribution
+**Visualization: Bar chart** — X: `project_name`, Y: `repo_size_kb`
+
+```sql
+SELECT project_name, repo_size_kb, language
+FROM silver_project_metrics
+WHERE repo_size_kb > 0
+ORDER BY repo_size_kb DESC
+LIMIT 20
 ```
 
 ## 7. Scheduling (Manual in Community Edition)
