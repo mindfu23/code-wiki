@@ -45,6 +45,13 @@ jobs:
           WIKI_DIR: ${{ github.workspace }}/wiki
         run: npm run build:index
 
+      - name: Check diagram staleness
+        working-directory: web
+        env:
+          GITHUB_TOKEN: ${{ secrets.REPO_ACCESS_TOKEN || secrets.GITHUB_TOKEN }}
+          GITHUB_USERNAME: ${{ github.repository_owner }}
+        run: npm run build:signals
+
       - name: Check for changes
         id: changes
         run: |

@@ -36,6 +36,80 @@
     "visibility": "public"
   },
   {
+    "path": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/code-wiki/wiki/diagrams/ethicalaiditor-flow.md",
+    "relativePath": "diagrams/ethicalaiditor-flow.md",
+    "title": "EthicalAIditor — Data Flow",
+    "description": "Architecture flow for EthicalAIditor: AI-powered document editing and ethical analysis.",
+    "tags": [
+      "architecture",
+      "ai",
+      "document-editing"
+    ],
+    "language": "typescript",
+    "updated": "2026-03-30",
+    "sourceRepo": "EthicalAIditor",
+    "content": "\n# EthicalAIditor Data Flow\n\nAI-powered document editing and ethical analysis tool with .docx import/export.\n\n```mermaid\nflowchart LR\n    User([User]) --> React[\"React SPA<br/>Vite + Tailwind\"]\n    User -->|upload .docx| React\n    React -->|fetch| NF[\"Netlify Functions<br/>API Proxy\"]\n    NF -->|API key| Claude[\"Claude API\"]\n    NF -->|API key| Pleias[\"Pleias API\"]\n    Claude --> NF\n    Pleias --> NF\n    NF --> React\n    React -->|export .docx| User\n```\n\n## Key Services\n- **Netlify Functions**: API proxy for Claude and Pleias\n- **Claude API**: AI-powered editing suggestions and analysis\n- **Pleias API**: Ethical analysis and bias detection\n- **Document processing**: .docx import/export via client-side parsing\n",
+    "contentPreview": "# EthicalAIditor Data Flow  AI-powered document editing and ethical analysis tool with .docx import/export.  ```mermaid flowchart LR     User([User]) --> React[\"React SPA<br/>Vite + Tailwind\"]     User -->|upload .docx| React     React -->|fetch| NF[\"Netlify Functions<br/>API Proxy\"]     NF -->|API",
+    "category": "diagrams",
+    "visibility": "public"
+  },
+  {
+    "path": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/code-wiki/wiki/diagrams/gastown-flow.md",
+    "relativePath": "diagrams/gastown-flow.md",
+    "title": "Gastown — Data Flow",
+    "description": "Architecture flow for Gastown: multi-agent orchestration CLI written in Go.",
+    "tags": [
+      "architecture",
+      "ai",
+      "agents",
+      "go"
+    ],
+    "language": "go",
+    "updated": "2026-03-30",
+    "sourceRepo": "gastown",
+    "content": "\n# Gastown Data Flow\n\nMulti-agent orchestration CLI written in Go.\n\n```mermaid\nflowchart LR\n    User([User]) --> CLI[\"Go CLI\"]\n    CLI -->|spawn| Agents[\"Agent Processes\"]\n    Agents -->|API key| Claude[\"Claude API\"]\n    Agents -->|API key| GPT[\"OpenAI API\"]\n    Claude --> Agents\n    GPT --> Agents\n    Agents -->|results| CLI\n    CLI -->|file ops| FS[\"Local Filesystem\"]\n    CLI --> User\n```\n\n## Key Services\n- **Go CLI**: Orchestrates multiple AI agent processes\n- **Claude + OpenAI APIs**: Multi-provider LLM backends for agents\n- **Local filesystem**: Agent work products and file operations\n",
+    "contentPreview": "# Gastown Data Flow  Multi-agent orchestration CLI written in Go.  ```mermaid flowchart LR     User([User]) --> CLI[\"Go CLI\"]     CLI -->|spawn| Agents[\"Agent Processes\"]     Agents -->|API key| Claude[\"Claude API\"]     Agents -->|API key| GPT[\"OpenAI API\"]     Claude --> Agents     GPT --> Agents",
+    "category": "diagrams",
+    "visibility": "public"
+  },
+  {
+    "path": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/code-wiki/wiki/diagrams/jbwordpresstheme-flow.md",
+    "relativePath": "diagrams/jbwordpresstheme-flow.md",
+    "title": "Technicalistic WP Theme — Data Flow",
+    "description": "Architecture flow for Technicalistic: WordPress Full Site Editing block theme.",
+    "tags": [
+      "architecture",
+      "wordpress",
+      "theme"
+    ],
+    "language": "php",
+    "updated": "2026-03-30",
+    "sourceRepo": "JBWordPressTheme",
+    "content": "\n# Technicalistic WP Theme Data Flow\n\nWordPress Full Site Editing block theme submitted to wordpress.org directory.\n\n```mermaid\nflowchart LR\n    Visitor([Visitor]) --> WP[\"WordPress<br/>PHP + Block Editor\"]\n    WP -->|FSE| Theme[\"Technicalistic Theme<br/>theme.json + templates\"]\n    Theme -->|block patterns| Blocks[\"Custom Block<br/>Patterns\"]\n    Theme -->|styles| CSS[\"Style Variations\"]\n    WP -->|query| DB[\"MySQL Database\"]\n    DB --> WP\n    WP --> Visitor\n```\n\n## Key Services\n- **WordPress FSE**: Full Site Editing with theme.json configuration\n- **Block patterns**: Custom reusable block patterns\n- **Style variations**: Multiple visual styles selectable by the user\n- **MySQL**: Standard WordPress database for content\n",
+    "contentPreview": "# Technicalistic WP Theme Data Flow  WordPress Full Site Editing block theme submitted to wordpress.org directory.  ```mermaid flowchart LR     Visitor([Visitor]) --> WP[\"WordPress<br/>PHP + Block Editor\"]     WP -->|FSE| Theme[\"Technicalistic Theme<br/>theme.json + templates\"]     Theme -->|block",
+    "category": "diagrams",
+    "visibility": "public"
+  },
+  {
+    "path": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/code-wiki/wiki/diagrams/lensquery-flow.md",
+    "relativePath": "diagrams/lensquery-flow.md",
+    "title": "LensQuery — Data Flow",
+    "description": "Architecture flow for LensQuery: cross-platform photo library query tool with Tauri desktop and web interfaces.",
+    "tags": [
+      "architecture",
+      "ai",
+      "photography",
+      "tauri"
+    ],
+    "language": "typescript",
+    "updated": "2026-03-30",
+    "sourceRepo": "LensQuery",
+    "content": "\n# LensQuery Data Flow\n\nCross-platform photo library query tool — Tauri desktop app + web SPA.\n\n```mermaid\nflowchart LR\n    User([User]) --> Tauri[\"Tauri Shell<br/>Rust + React\"]\n    User --> Web[\"Web SPA<br/>Vite + React\"]\n    Tauri -->|read catalog| LR[\"Lightroom DB<br/>SQLite\"]\n    Tauri -->|read catalog| C1[\"Capture One<br/>Sessions\"]\n    Tauri -->|thumbnails| FS[\"Local Filesystem\"]\n    Tauri -->|analyze| API[\"API Server\"]\n    Web -->|analyze| API\n    API -->|API key| Claude[\"Claude API\"]\n    API -->|API key| Gemini[\"Gemini API\"]\n    Claude --> API\n    Gemini --> API\n    API --> Tauri\n    API --> Web\n```\n\n## Key Services\n- **Tauri shell (Rust)**: Native desktop app with filesystem access for catalogs and thumbnails\n- **Web SPA**: Browser-based interface for remote access\n- **API Server**: Backend for AI-powered image analysis\n- **Claude + Gemini**: Multi-provider image analysis\n- **Lightroom + Capture One**: Read catalog databases (SQLite for LR, session files for C1)\n",
+    "contentPreview": "# LensQuery Data Flow  Cross-platform photo library query tool — Tauri desktop app + web SPA.  ```mermaid flowchart LR     User([User]) --> Tauri[\"Tauri Shell<br/>Rust + React\"]     User --> Web[\"Web SPA<br/>Vite + React\"]     Tauri -->|read catalog| LR[\"Lightroom DB<br/>SQLite\"]     Tauri -->|read",
+    "category": "diagrams",
+    "visibility": "public"
+  },
+  {
     "path": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/code-wiki/wiki/diagrams/metabot-flow.md",
     "relativePath": "diagrams/metabot-flow.md",
     "title": "Metabot — Data Flow",
@@ -50,6 +124,135 @@
     "sourceRepo": "Metabot",
     "content": "\n# Metabot Data Flow\n\nMulti-AI aggregation app that queries multiple LLM providers and merges responses.\n\n```mermaid\nflowchart LR\n    User([User]) --> React[\"React SPA<br/>Vite + Tailwind\"]\n    React -->|fetch| Express[\"Express Backend\"]\n    Express -->|API key| Claude[\"Claude API\"]\n    Express -->|API key| GPT[\"OpenAI API\"]\n    Express -->|API key| Gemini[\"Gemini API\"]\n    Claude --> Express\n    GPT --> Express\n    Gemini --> Express\n    Express -->|merged response| React\n    React -->|save as .md| Files[\"Local Files\"]\n    React --> User\n```\n\n## Key Services\n- **Express backend**: Aggregates responses from multiple LLM providers\n- **React SPA + Expo mobile**: Dual frontend (web and mobile)\n- **Local file storage**: Conversations saved as .md files\n",
     "contentPreview": "# Metabot Data Flow  Multi-AI aggregation app that queries multiple LLM providers and merges responses.  ```mermaid flowchart LR     User([User]) --> React[\"React SPA<br/>Vite + Tailwind\"]     React -->|fetch| Express[\"Express Backend\"]     Express -->|API key| Claude[\"Claude API\"]     Express -->|",
+    "category": "diagrams",
+    "visibility": "public"
+  },
+  {
+    "path": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/code-wiki/wiki/diagrams/n8n-workflows-flow.md",
+    "relativePath": "diagrams/n8n-workflows-flow.md",
+    "title": "n8n Workflows — Data Flow",
+    "description": "Architecture flow for n8n Workflows: novel orchestration pipeline on self-hosted GCP.",
+    "tags": [
+      "architecture",
+      "automation",
+      "novel-pipeline"
+    ],
+    "language": "typescript",
+    "updated": "2026-03-30",
+    "sourceRepo": "n8n_workflows",
+    "content": "\n# n8n Workflows Data Flow\n\nNovel orchestration pipeline — self-hosted n8n on GCP e2-micro instance.\n\n```mermaid\nflowchart LR\n    Trigger[\"Manual / Schedule\"] --> n8n[\"n8n<br/>GCP e2-micro\"]\n    n8n -->|read chapters| Sheets[\"Google Sheets\"]\n    n8n -->|API key| Claude[\"Claude API\"]\n    Claude -->|chapter text| n8n\n    n8n -->|write chapter| Docs[\"Google Docs\"]\n    n8n -->|log| Sheets\n    Caddy[\"Caddy Proxy\"] --> n8n\n```\n\n## Key Services\n- **n8n**: Self-hosted on GCP e2-micro (1GB RAM), Docker Compose\n- **Caddy**: Reverse proxy with automatic HTTPS\n- **Claude API**: Chapter generation and editing\n- **Google Sheets**: Chapter metadata, project logs, orchestration state\n- **Google Docs**: Final chapter output\n",
+    "contentPreview": "# n8n Workflows Data Flow  Novel orchestration pipeline — self-hosted n8n on GCP e2-micro instance.  ```mermaid flowchart LR     Trigger[\"Manual / Schedule\"] --> n8n[\"n8n<br/>GCP e2-micro\"]     n8n -->|read chapters| Sheets[\"Google Sheets\"]     n8n -->|API key| Claude[\"Claude API\"]     Claude -->|c",
+    "category": "diagrams",
+    "visibility": "public"
+  },
+  {
+    "path": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/code-wiki/wiki/diagrams/novelizer-flow.md",
+    "relativePath": "diagrams/novelizer-flow.md",
+    "title": "Novelizer — Data Flow",
+    "description": "Architecture flow for Novelizer: novel writing assistant with document import/export.",
+    "tags": [
+      "architecture",
+      "ai",
+      "writing"
+    ],
+    "language": "typescript",
+    "updated": "2026-03-30",
+    "sourceRepo": "Novelizer",
+    "content": "\n# Novelizer Data Flow\n\nNovel writing assistant with AI-powered editing and manuscript import/export.\n\n```mermaid\nflowchart LR\n    User([User]) --> React[\"React SPA<br/>Vite + Tailwind\"]\n    User -->|upload manuscript| React\n    React -->|fetch| NF[\"Netlify Functions\"]\n    NF -->|API key| Claude[\"Claude API\"]\n    Claude --> NF\n    NF --> React\n    React -->|export| User\n```\n\n## Key Services\n- **Netlify Functions**: API proxy for Claude\n- **Claude API**: Writing assistance, editing suggestions, manuscript analysis\n- **Document handling**: Manuscript import/export\n",
+    "contentPreview": "# Novelizer Data Flow  Novel writing assistant with AI-powered editing and manuscript import/export.  ```mermaid flowchart LR     User([User]) --> React[\"React SPA<br/>Vite + Tailwind\"]     User -->|upload manuscript| React     React -->|fetch| NF[\"Netlify Functions\"]     NF -->|API key| Claude[\"Cl",
+    "category": "diagrams",
+    "visibility": "public"
+  },
+  {
+    "path": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/code-wiki/wiki/diagrams/photophreaker-flow.md",
+    "relativePath": "diagrams/photophreaker-flow.md",
+    "title": "PhotoPhreaker — Data Flow",
+    "description": "Architecture flow for PhotoPhreaker: AI image decomposition with Topaz and Photoshop integration.",
+    "tags": [
+      "architecture",
+      "ai",
+      "photography",
+      "desktop"
+    ],
+    "language": "python",
+    "updated": "2026-03-30",
+    "sourceRepo": "PhotoPhreaker",
+    "content": "\n# PhotoPhreaker Data Flow\n\nAI image decomposition with Topaz AI and Adobe Photoshop integration.\n\n```mermaid\nflowchart LR\n    User([User]) --> UI[\"Desktop UI<br/>Python\"]\n    User -->|input images| UI\n    UI -->|process| Topaz[\"Topaz AI\"]\n    UI -->|process| PS[\"Photoshop<br/>Scripting\"]\n    UI -->|analyze| Claude[\"Claude API\"]\n    Topaz --> UI\n    PS --> UI\n    Claude --> UI\n    UI -->|output images| FS[\"Local Filesystem\"]\n    UI --> User\n```\n\n## Key Services\n- **Python desktop UI**: Local application for image processing pipeline\n- **Topaz AI**: AI-powered image enhancement and upscaling\n- **Photoshop scripting**: Automated layer manipulation and compositing\n- **Claude API**: Image analysis and decomposition guidance\n- **Local filesystem**: Input/output image storage\n",
+    "contentPreview": "# PhotoPhreaker Data Flow  AI image decomposition with Topaz AI and Adobe Photoshop integration.  ```mermaid flowchart LR     User([User]) --> UI[\"Desktop UI<br/>Python\"]     User -->|input images| UI     UI -->|process| Topaz[\"Topaz AI\"]     UI -->|process| PS[\"Photoshop<br/>Scripting\"]     UI -->",
+    "category": "diagrams",
+    "visibility": "public"
+  },
+  {
+    "path": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/code-wiki/wiki/diagrams/searchbard-flow.md",
+    "relativePath": "diagrams/searchbard-flow.md",
+    "title": "SearchBard — Data Flow",
+    "description": "Architecture flow for SearchBard: AI-powered search with multi-provider fallback.",
+    "tags": [
+      "architecture",
+      "ai",
+      "search"
+    ],
+    "language": "typescript",
+    "updated": "2026-03-30",
+    "sourceRepo": "SearchBard",
+    "content": "\n# SearchBard Data Flow\n\nAI-powered search with multi-provider fallback.\n\n```mermaid\nflowchart LR\n    User([User]) --> React[\"React SPA<br/>Vite + Tailwind\"]\n    React -->|fetch| NF[\"Netlify Functions\"]\n    NF -->|API key| Perplexity[\"Perplexity API\"]\n    NF -->|fallback| Claude[\"Claude API\"]\n    Perplexity --> NF\n    Claude --> NF\n    NF --> React\n    React --> User\n```\n\n## Key Services\n- **Netlify Functions**: API proxy with provider fallback logic\n- **Perplexity API**: Primary search provider (web-grounded)\n- **Claude API**: Fallback when Perplexity is unavailable\n",
+    "contentPreview": "# SearchBard Data Flow  AI-powered search with multi-provider fallback.  ```mermaid flowchart LR     User([User]) --> React[\"React SPA<br/>Vite + Tailwind\"]     React -->|fetch| NF[\"Netlify Functions\"]     NF -->|API key| Perplexity[\"Perplexity API\"]     NF -->|fallback| Claude[\"Claude API\"]     Pe",
+    "category": "diagrams",
+    "visibility": "public"
+  },
+  {
+    "path": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/code-wiki/wiki/diagrams/storyplot-flow.md",
+    "relativePath": "diagrams/storyplot-flow.md",
+    "title": "StoryPlot — Data Flow",
+    "description": "Architecture flow for StoryPlot: interactive story plot generator based on the Plotto system.",
+    "tags": [
+      "architecture",
+      "ai",
+      "writing",
+      "plotto"
+    ],
+    "language": "typescript",
+    "updated": "2026-03-30",
+    "sourceRepo": "StoryPlot",
+    "content": "\n# StoryPlot Data Flow\n\nInteractive story plot generator based on the Plotto system.\n\n```mermaid\nflowchart LR\n    User([User]) --> React[\"React SPA<br/>Vite + Tailwind\"]\n    React -->|fetch| NF[\"Netlify Functions\"]\n    NF -->|API key| Claude[\"Claude API\"]\n    Claude --> NF\n    NF --> React\n    React -->|parse| XML[\"Plotto XML<br/>Data\"]\n    React --> User\n```\n\n## Key Services\n- **Netlify Functions**: API proxy for Claude\n- **Claude API**: Story generation and plot expansion\n- **Plotto XML**: Classic plot formula database parsed client-side\n",
+    "contentPreview": "# StoryPlot Data Flow  Interactive story plot generator based on the Plotto system.  ```mermaid flowchart LR     User([User]) --> React[\"React SPA<br/>Vite + Tailwind\"]     React -->|fetch| NF[\"Netlify Functions\"]     NF -->|API key| Claude[\"Claude API\"]     Claude --> NF     NF --> React     React",
+    "category": "diagrams",
+    "visibility": "public"
+  },
+  {
+    "path": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/code-wiki/wiki/diagrams/theorazine-flow.md",
+    "relativePath": "diagrams/theorazine-flow.md",
+    "title": "Theorazine — Data Flow",
+    "description": "Architecture flow for Theorazine: calculator and theory exploration tool with Perplexity integration.",
+    "tags": [
+      "architecture",
+      "ai",
+      "calculator"
+    ],
+    "language": "typescript",
+    "updated": "2026-03-30",
+    "sourceRepo": "Theorazine",
+    "content": "\n# Theorazine Data Flow\n\nCalculator and theory exploration tool with Perplexity AI integration.\n\n```mermaid\nflowchart LR\n    User([User]) --> React[\"React SPA<br/>Vite + Tailwind\"]\n    React -->|fetch| NF[\"Netlify Functions\"]\n    NF -->|API key| Perplexity[\"Perplexity API\"]\n    Perplexity --> NF\n    NF --> React\n    React -->|persist| LS[\"LocalStorage\"]\n    React --> User\n```\n\n## Key Services\n- **Netlify Functions**: API proxy for Perplexity\n- **Perplexity API**: Theory exploration and research queries\n- **LocalStorage**: Calculator state and history persistence\n",
+    "contentPreview": "# Theorazine Data Flow  Calculator and theory exploration tool with Perplexity AI integration.  ```mermaid flowchart LR     User([User]) --> React[\"React SPA<br/>Vite + Tailwind\"]     React -->|fetch| NF[\"Netlify Functions\"]     NF -->|API key| Perplexity[\"Perplexity API\"]     Perplexity --> NF",
+    "category": "diagrams",
+    "visibility": "public"
+  },
+  {
+    "path": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/code-wiki/wiki/diagrams/valueape-flow.md",
+    "relativePath": "diagrams/valueape-flow.md",
+    "title": "ValueApe — Data Flow",
+    "description": "Architecture flow for ValueApe: multi-provider stock analysis with AI recommendations, sentiment analysis, and cloud sync.",
+    "tags": [
+      "architecture",
+      "ai",
+      "finance",
+      "multi-provider"
+    ],
+    "language": "typescript",
+    "updated": "2026-03-30",
+    "sourceRepo": "ValueApe",
+    "content": "\n# ValueApe Data Flow\n\nStock analysis dashboard with multi-provider data, AI recommendations, FinGPT sentiment analysis, and Cloudflare D1 cloud sync.\n\n```mermaid\nflowchart LR\n    User([User]) --> React[\"React SPA<br/>Vite + Tailwind\"]\n\n    subgraph NF[\"Netlify Functions\"]\n      AP[\"api-proxy\"]\n      YP[\"yahoo-proxy\"]\n      GP[\"gemini-proxy\"]\n      PP[\"perplexity-query\"]\n      FP[\"fingpt-proxy\"]\n      Auth[\"auth-*<br/>Supabase\"]\n      Sync[\"sync-data\"]\n    end\n\n    React --> AP & YP & GP & PP & FP & Auth & Sync\n\n    subgraph Stock[\"Stock Data Providers\"]\n      Yahoo[\"Yahoo Finance<br/>(primary)\"]\n      AV[\"Alpha Vantage\"]\n      FH[\"Finnhub\"]\n      TG[\"Tiingo\"]\n      FMP[\"FMP\"]\n    end\n\n    YP --> Yahoo\n    AP --> AV & FH & TG & FMP\n\n    subgraph AI[\"AI / LLM\"]\n      Gemini[\"Gemini<br/>(query parsing)\"]\n      Perplexity[\"Perplexity<br/>(recommendations)\"]\n      HF[\"HuggingFace<br/>FinBERT / FinGPT\"]\n    end\n\n    GP --> Gemini\n    PP --> Perplexity\n    FP --> HF\n\n    React -->|direct| SEC[\"SEC EDGAR<br/>Filings\"]\n\n    subgraph Storage[\"Storage\"]\n      LS[\"localStorage\"]\n      IDB[\"IndexedDB\"]\n      D1[\"Cloudflare D1<br/>(cloud sync)\"]\n    end\n\n    React --> LS & IDB\n    Sync --> D1\n    Auth --> Supa[\"Supabase\"]\n    React --> User\n```\n\n## Key Services\n- **Netlify Functions**: Server-side proxies protecting all API keys (api-proxy, yahoo-proxy, gemini-proxy, perplexity-query, fingpt-proxy)\n- **Stock data providers**: Yahoo Finance (primary, crumb/cookie auth), Alpha Vantage, Finnhub, Tiingo, FMP (all with fallback chain)\n- **AI/LLM**: Gemini for natural language query parsing, Perplexity for AI stock recommendations, HuggingFace FinBERT/FinGPT for sentiment analysis\n- **SEC EDGAR**: Direct client-side access (no API key required, 10 req/sec rate limit)\n- **Storage**: localStorage + IndexedDB client-side, Cloudflare D1 for cloud sync, Supabase for auth\n\n## Query Modes\n- **Quick mode**: Single primary data provider, fastest response\n- **Synthesis mode**: Fetches from all available providers, averages numeric fields\n- **Difference mode**: Fetches from all providers, highlights >10% deviations\n",
+    "contentPreview": "# ValueApe Data Flow  Stock analysis dashboard with multi-provider data, AI recommendations, FinGPT sentiment analysis, and Cloudflare D1 cloud sync.  ```mermaid flowchart LR     User([User]) --> React[\"React SPA<br/>Vite + Tailwind\"]      subgraph NF[\"Netlify Functions\"]       AP[\"api-proxy\"]",
     "category": "diagrams",
     "visibility": "public"
   }

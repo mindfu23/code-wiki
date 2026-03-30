@@ -2551,6 +2551,7 @@ document.addEventListener('change', (e) => {
 const PROJECT_DIAGRAMS = [
   {
     id: 'metabot',
+    repoName: 'Metabot',
     name: 'Metabot',
     description: 'Multi-AI aggregation — queries multiple LLM providers and merges responses.',
     stack: ['react', 'node'],
@@ -2569,22 +2570,62 @@ const PROJECT_DIAGRAMS = [
   },
   {
     id: 'valueape',
+    repoName: 'ValueApe',
     name: 'ValueApe',
-    description: 'Stock analysis dashboard with AI chat, Ko-fi integration, and API usage tracking.',
-    stack: ['react'],
+    description: 'Stock analysis with multi-provider data, AI recommendations, sentiment analysis, and cloud sync.',
+    stack: ['react', 'node', 'cloudflare'],
     diagram: `flowchart LR
     User([User]) --> React["React SPA<br/>Vite + Tailwind"]
-    React -->|fetch| NF["Netlify Functions<br/>API Proxy"]
-    NF -->|API key| Claude["Claude API"]
-    NF -->|API key| Stock["Stock Data API"]
-    Claude --> NF
-    Stock --> NF
-    NF --> React
-    React -->|persist| IDB["IndexedDB<br/>Client Storage"]
+
+    subgraph NF["Netlify Functions"]
+      AP["api-proxy"]
+      YP["yahoo-proxy"]
+      GP["gemini-proxy"]
+      PP["perplexity-query"]
+      FP["fingpt-proxy"]
+      Auth["auth-*<br/>Supabase"]
+      Sync["sync-data"]
+    end
+
+    React --> AP & YP & GP & PP & FP & Auth & Sync
+
+    subgraph Stock["Stock Data Providers"]
+      Yahoo["Yahoo Finance<br/>(primary)"]
+      AV["Alpha Vantage"]
+      FH["Finnhub"]
+      TG["Tiingo"]
+      FMP["FMP"]
+    end
+
+    YP --> Yahoo
+    AP --> AV & FH & TG & FMP
+
+    subgraph AI["AI / LLM"]
+      Gemini["Gemini<br/>(query parsing)"]
+      Perplexity["Perplexity<br/>(recommendations)"]
+      HF["HuggingFace<br/>FinBERT / FinGPT"]
+    end
+
+    GP --> Gemini
+    PP --> Perplexity
+    FP --> HF
+
+    React -->|direct| SEC["SEC EDGAR<br/>Filings"]
+
+    subgraph Storage["Storage"]
+      LS["localStorage"]
+      IDB["IndexedDB"]
+      D1["Cloudflare D1<br/>(cloud sync)"]
+    end
+
+    React --> LS & IDB
+    Sync --> D1
+    Auth --> Supa["Supabase"]
     React --> User`
   },
   {
     id: 'ethicalaiditor',
+    repoName: 'EthicalAIditor',
     name: 'EthicalAIditor',
     description: 'AI-powered document editing and ethical analysis tool.',
     stack: ['react'],
@@ -2601,6 +2642,7 @@ const PROJECT_DIAGRAMS = [
   },
   {
     id: 'datastic',
+    repoName: 'Datastic',
     name: 'Datastic',
     description: 'Data analytics dashboard — GH Archive + HuggingFace via BigQuery and dbt.',
     stack: ['react', 'python'],
@@ -2618,6 +2660,7 @@ const PROJECT_DIAGRAMS = [
   },
   {
     id: 'novelizer',
+    repoName: 'Novelizer',
     name: 'Novelizer',
     description: 'Novel writing assistant with document import/export.',
     stack: ['react'],
@@ -2632,6 +2675,7 @@ const PROJECT_DIAGRAMS = [
   },
   {
     id: 'code-wiki',
+    repoName: 'code-wiki',
     name: 'Code Wiki',
     description: 'This project — personal knowledge base with MCP server and Observatory.',
     stack: ['react', 'node'],
@@ -2649,6 +2693,7 @@ const PROJECT_DIAGRAMS = [
   },
   {
     id: 'n8n-workflows',
+    repoName: 'n8n_workflows',
     name: 'n8n Workflows',
     description: 'Novel orchestration pipeline — self-hosted n8n on GCP.',
     stack: ['node'],
@@ -2663,6 +2708,7 @@ const PROJECT_DIAGRAMS = [
   },
   {
     id: 'lensquery',
+    repoName: 'LensQuery',
     name: 'LensQuery',
     description: 'Cross-platform photo library query tool — Tauri desktop + web.',
     stack: ['react', 'tauri'],
@@ -2683,6 +2729,7 @@ const PROJECT_DIAGRAMS = [
   },
   {
     id: 'searchbard',
+    repoName: 'SearchBard',
     name: 'SearchBard',
     description: 'AI-powered search with multi-provider fallback.',
     stack: ['react', 'python'],
@@ -2698,6 +2745,7 @@ const PROJECT_DIAGRAMS = [
   },
   {
     id: 'theorazine',
+    repoName: 'Theorazine',
     name: 'Theorazine',
     description: 'Calculator and theory exploration tool with Perplexity integration.',
     stack: ['react'],
@@ -2712,6 +2760,7 @@ const PROJECT_DIAGRAMS = [
   },
   {
     id: 'gastown',
+    repoName: 'gastown',
     name: 'Gastown',
     description: 'Multi-agent orchestration CLI written in Go.',
     stack: ['go'],
@@ -2728,6 +2777,7 @@ const PROJECT_DIAGRAMS = [
   },
   {
     id: 'storyplot',
+    repoName: 'StoryPlot',
     name: 'StoryPlot',
     description: 'Interactive story plot generator based on Plotto system.',
     stack: ['react'],
@@ -2742,6 +2792,7 @@ const PROJECT_DIAGRAMS = [
   },
   {
     id: 'jbwordpresstheme',
+    repoName: 'JBWordPressTheme',
     name: 'Technicalistic WP Theme',
     description: 'WordPress Full Site Editing block theme submitted to wordpress.org.',
     stack: ['wordpress'],
@@ -2756,6 +2807,7 @@ const PROJECT_DIAGRAMS = [
   },
   {
     id: 'photophreaker',
+    repoName: 'PhotoPhreaker',
     name: 'PhotoPhreaker',
     description: 'AI image decomposition with Topaz and Photoshop integration.',
     stack: ['python'],
@@ -2806,18 +2858,42 @@ async function loadDiagrams() {
   const searchInput = document.getElementById('diagram-search');
   const stackFilter = document.getElementById('diagram-stack-filter');
 
-  renderDiagramCards(container, PROJECT_DIAGRAMS);
+  // Fetch staleness signals
+  let signals = {};
+  try {
+    const resp = await fetch('/data/diagram-signals.json');
+    if (resp.ok) signals = await resp.json();
+  } catch {}
+
+  // Build set of repo names visible in the current index (public for anon, all for owner)
+  const indexRepoNames = new Set(
+    (wikiIndex?.repos || []).map(r => r.name.toLowerCase())
+  );
+
+  // Tag each diagram with visibility and staleness based on the loaded index
+  const taggedDiagrams = PROJECT_DIAGRAMS.map(d => ({
+    ...d,
+    _isPrivate: !indexRepoNames.has((d.repoName || d.id).toLowerCase()),
+    _stale: signals[d.id]?.stale || false,
+  }));
+
+  // Filter: hide private diagrams unless user is logged in
+  const getVisibleDiagrams = (query, stack) => {
+    return taggedDiagrams.filter(d => {
+      if (d._isPrivate && !currentUser) return false;
+      const matchesQuery = !query || d.name.toLowerCase().includes(query) || d.description.toLowerCase().includes(query);
+      const matchesStack = !stack || d.stack.includes(stack);
+      return matchesQuery && matchesStack;
+    });
+  };
+
+  renderDiagramCards(container, getVisibleDiagrams('', ''));
 
   // Wire up filters
   const applyFilter = () => {
     const query = (searchInput?.value || '').toLowerCase();
     const stack = stackFilter?.value || '';
-    const filtered = PROJECT_DIAGRAMS.filter(d => {
-      const matchesQuery = !query || d.name.toLowerCase().includes(query) || d.description.toLowerCase().includes(query);
-      const matchesStack = !stack || d.stack.includes(stack);
-      return matchesQuery && matchesStack;
-    });
-    renderDiagramCards(container, filtered);
+    renderDiagramCards(container, getVisibleDiagrams(query, stack));
   };
 
   searchInput?.addEventListener('input', applyFilter);
@@ -2835,6 +2911,8 @@ async function renderDiagramCards(container, diagrams) {
       <div class="diagram-card-header" data-diagram-id="${d.id}">
         <div class="diagram-card-title">
           <h4>${d.name}</h4>
+          ${d._isPrivate ? '<span class="visibility-badge private">Private</span>' : ''}
+          ${d._stale ? '<span class="diagram-stale-badge" title="Project structure has changed since this diagram was last updated">May need update</span>' : ''}
           <div class="diagram-stack-tags">${d.stack.map(s => `<span class="stack-tag">${s}</span>`).join('')}</div>
         </div>
         <p class="diagram-card-desc">${d.description}</p>
