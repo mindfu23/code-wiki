@@ -68,7 +68,7 @@ export function loadConfig(): Config {
     preferencesDirectory: process.env.PREFERENCES_DIR || undefined,
     cacheDirectory: process.env.CACHE_DIR || './data',
     githubUsername: process.env.GITHUB_USERNAME || '',
-    githubToken: process.env.GITHUB_TOKEN,
+    githubToken: process.env.GH_API_TOKEN || process.env.GITHUB_TOKEN,
     syncIntervalMinutes: parseInt(process.env.SYNC_INTERVAL_MINUTES || '60', 10),
     indexOnStartup: process.env.INDEX_ON_STARTUP !== 'false',
     maxSearchResults: parseInt(process.env.MAX_SEARCH_RESULTS || '50', 10),
