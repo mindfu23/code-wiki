@@ -182,7 +182,7 @@ function setupEventListeners() {
 
 // Navigate to a page
 function navigateTo(page, params = {}) {
-  const slugMap = { search: '', browse: 'contents', dashboard: 'observatory' };
+  const slugMap = { search: '', browse: 'contents', dashboard: 'observatory', diagrams: 'diagrams' };
   let url = '/' + (slugMap[page] !== undefined ? slugMap[page] : page);
   if (params.doc) url += '?doc=' + encodeURIComponent(params.doc);
   if (params.category) url += '?category=' + encodeURIComponent(params.category);
@@ -205,6 +205,7 @@ function handleNavigation() {
   else if (path === '/document' || params.get('doc')) page = 'document';
   else if (path === '/observatory') page = 'dashboard';
   else if (path === '/dashboard') page = 'dashboard';
+  else if (path === '/diagrams' || path === '/flows') page = 'diagrams';
 
   const pageParams = {};
   if (params.get('doc')) pageParams.doc = params.get('doc');
@@ -262,6 +263,9 @@ function showPage(page, params = {}) {
       break;
     case 'dashboard':
       loadDashboard();
+      break;
+    case 'diagrams':
+      loadDiagrams();
       break;
   }
 }
@@ -2536,6 +2540,351 @@ document.addEventListener('change', (e) => {
   if (e.target.id === 'dashboard-filter') {
     const tbody = document.getElementById('dashboard-tbody');
     if (dashboardCache && tbody) renderDashboardTable(dashboardCache, tbody);
+  }
+});
+
+// ============================================
+// DIAGRAMS PAGE (Project Flows)
+// ============================================
+
+// Diagram definitions — each entry describes one project's data flow
+const PROJECT_DIAGRAMS = [
+  {
+    id: 'metabot',
+    name: 'Metabot',
+    description: 'Multi-AI aggregation — queries multiple LLM providers and merges responses.',
+    stack: ['react', 'node'],
+    diagram: `flowchart LR
+    User([User]) --> React["React SPA<br/>Vite + Tailwind"]
+    React -->|fetch| Express["Express Backend"]
+    Express -->|API key| Claude["Claude API"]
+    Express -->|API key| GPT["OpenAI API"]
+    Express -->|API key| Gemini["Gemini API"]
+    Claude --> Express
+    GPT --> Express
+    Gemini --> Express
+    Express -->|merged response| React
+    React -->|save as .md| Files["Local Files"]
+    React --> User`
+  },
+  {
+    id: 'valueape',
+    name: 'ValueApe',
+    description: 'Stock analysis dashboard with AI chat, Ko-fi integration, and API usage tracking.',
+    stack: ['react'],
+    diagram: `flowchart LR
+    User([User]) --> React["React SPA<br/>Vite + Tailwind"]
+    React -->|fetch| NF["Netlify Functions<br/>API Proxy"]
+    NF -->|API key| Claude["Claude API"]
+    NF -->|API key| Stock["Stock Data API"]
+    Claude --> NF
+    Stock --> NF
+    NF --> React
+    React -->|persist| IDB["IndexedDB<br/>Client Storage"]
+    React --> User`
+  },
+  {
+    id: 'ethicalaiditor',
+    name: 'EthicalAIditor',
+    description: 'AI-powered document editing and ethical analysis tool.',
+    stack: ['react'],
+    diagram: `flowchart LR
+    User([User]) --> React["React SPA<br/>Vite + Tailwind"]
+    User -->|upload .docx| React
+    React -->|fetch| NF["Netlify Functions<br/>API Proxy"]
+    NF -->|API key| Claude["Claude API"]
+    NF -->|API key| Pleias["Pleias API"]
+    Claude --> NF
+    Pleias --> NF
+    NF --> React
+    React -->|export .docx| User`
+  },
+  {
+    id: 'datastic',
+    name: 'Datastic',
+    description: 'Data analytics dashboard — GH Archive + HuggingFace via BigQuery and dbt.',
+    stack: ['react', 'python'],
+    diagram: `flowchart LR
+    User([User]) --> React["React SPA<br/>Netlify"]
+    React -->|fetch| NF["Netlify Functions"]
+    NF -->|query| BQ["BigQuery"]
+    GHA["GH Archive"] -->|daily| dbt["dbt Models"]
+    HF["HuggingFace Hub"] -->|daily| dbt
+    dbt --> BQ
+    BQ --> NF
+    NF --> React
+    React --> User
+    GA["GitHub Actions"] -->|schedule| dbt`
+  },
+  {
+    id: 'novelizer',
+    name: 'Novelizer',
+    description: 'Novel writing assistant with document import/export.',
+    stack: ['react'],
+    diagram: `flowchart LR
+    User([User]) --> React["React SPA<br/>Vite + Tailwind"]
+    User -->|upload manuscript| React
+    React -->|fetch| NF["Netlify Functions"]
+    NF -->|API key| Claude["Claude API"]
+    Claude --> NF
+    NF --> React
+    React -->|export| User`
+  },
+  {
+    id: 'code-wiki',
+    name: 'Code Wiki',
+    description: 'This project — personal knowledge base with MCP server and Observatory.',
+    stack: ['react', 'node'],
+    diagram: `flowchart LR
+    User([User]) --> SPA["Vanilla SPA<br/>Netlify"]
+    Claude["Claude Code"] --> MCP["MCP Server<br/>TypeScript"]
+    MCP -->|read| Wiki["Wiki Markdown<br/>Files"]
+    MCP -->|git ops| GH["GitHub API"]
+    SPA -->|fetch| NF["Netlify Functions"]
+    NF -->|OAuth| GH
+    NF -->|read| Index["Static JSON<br/>Index"]
+    NF -->|metrics| Netlify["Netlify API"]
+    GA["GitHub Actions"] -->|rebuild| Index
+    SPA --> User`
+  },
+  {
+    id: 'n8n-workflows',
+    name: 'n8n Workflows',
+    description: 'Novel orchestration pipeline — self-hosted n8n on GCP.',
+    stack: ['node'],
+    diagram: `flowchart LR
+    Trigger["Manual / Schedule"] --> n8n["n8n<br/>GCP e2-micro"]
+    n8n -->|read chapters| Sheets["Google Sheets"]
+    n8n -->|API key| Claude["Claude API"]
+    Claude -->|chapter text| n8n
+    n8n -->|write chapter| Docs["Google Docs"]
+    n8n -->|log| Sheets
+    Caddy["Caddy Proxy"] --> n8n`
+  },
+  {
+    id: 'lensquery',
+    name: 'LensQuery',
+    description: 'Cross-platform photo library query tool — Tauri desktop + web.',
+    stack: ['react', 'tauri'],
+    diagram: `flowchart LR
+    User([User]) --> Tauri["Tauri Shell<br/>Rust + React"]
+    User --> Web["Web SPA<br/>Vite + React"]
+    Tauri -->|read catalog| LR["Lightroom DB<br/>SQLite"]
+    Tauri -->|read catalog| C1["Capture One<br/>Sessions"]
+    Tauri -->|thumbnails| FS["Local Filesystem"]
+    Tauri -->|analyze| API["API Server"]
+    Web -->|analyze| API
+    API -->|API key| Claude["Claude API"]
+    API -->|API key| Gemini["Gemini API"]
+    Claude --> API
+    Gemini --> API
+    API --> Tauri
+    API --> Web`
+  },
+  {
+    id: 'searchbard',
+    name: 'SearchBard',
+    description: 'AI-powered search with multi-provider fallback.',
+    stack: ['react', 'python'],
+    diagram: `flowchart LR
+    User([User]) --> React["React SPA<br/>Vite + Tailwind"]
+    React -->|fetch| NF["Netlify Functions"]
+    NF -->|API key| Perplexity["Perplexity API"]
+    NF -->|fallback| Claude["Claude API"]
+    Perplexity --> NF
+    Claude --> NF
+    NF --> React
+    React --> User`
+  },
+  {
+    id: 'theorazine',
+    name: 'Theorazine',
+    description: 'Calculator and theory exploration tool with Perplexity integration.',
+    stack: ['react'],
+    diagram: `flowchart LR
+    User([User]) --> React["React SPA<br/>Vite + Tailwind"]
+    React -->|fetch| NF["Netlify Functions"]
+    NF -->|API key| Perplexity["Perplexity API"]
+    Perplexity --> NF
+    NF --> React
+    React -->|persist| LS["LocalStorage"]
+    React --> User`
+  },
+  {
+    id: 'gastown',
+    name: 'Gastown',
+    description: 'Multi-agent orchestration CLI written in Go.',
+    stack: ['go'],
+    diagram: `flowchart LR
+    User([User]) --> CLI["Go CLI"]
+    CLI -->|spawn| Agents["Agent Processes"]
+    Agents -->|API key| Claude["Claude API"]
+    Agents -->|API key| GPT["OpenAI API"]
+    Claude --> Agents
+    GPT --> Agents
+    Agents -->|results| CLI
+    CLI -->|file ops| FS["Local Filesystem"]
+    CLI --> User`
+  },
+  {
+    id: 'storyplot',
+    name: 'StoryPlot',
+    description: 'Interactive story plot generator based on Plotto system.',
+    stack: ['react'],
+    diagram: `flowchart LR
+    User([User]) --> React["React SPA<br/>Vite + Tailwind"]
+    React -->|fetch| NF["Netlify Functions"]
+    NF -->|API key| Claude["Claude API"]
+    Claude --> NF
+    NF --> React
+    React -->|parse| XML["Plotto XML<br/>Data"]
+    React --> User`
+  },
+  {
+    id: 'jbwordpresstheme',
+    name: 'Technicalistic WP Theme',
+    description: 'WordPress Full Site Editing block theme submitted to wordpress.org.',
+    stack: ['wordpress'],
+    diagram: `flowchart LR
+    Visitor([Visitor]) --> WP["WordPress<br/>PHP + Block Editor"]
+    WP -->|FSE| Theme["Technicalistic Theme<br/>theme.json + templates"]
+    Theme -->|block patterns| Blocks["Custom Block<br/>Patterns"]
+    Theme -->|styles| CSS["Style Variations"]
+    WP -->|query| DB["MySQL Database"]
+    DB --> WP
+    WP --> Visitor`
+  },
+  {
+    id: 'photophreaker',
+    name: 'PhotoPhreaker',
+    description: 'AI image decomposition with Topaz and Photoshop integration.',
+    stack: ['python'],
+    diagram: `flowchart LR
+    User([User]) --> UI["Desktop UI<br/>Python"]
+    User -->|input images| UI
+    UI -->|process| Topaz["Topaz AI"]
+    UI -->|process| PS["Photoshop<br/>Scripting"]
+    UI -->|analyze| Claude["Claude API"]
+    Topaz --> UI
+    PS --> UI
+    Claude --> UI
+    UI -->|output images| FS["Local Filesystem"]
+    UI --> User`
+  },
+];
+
+// Initialize Mermaid with dark theme
+let mermaidInitialized = false;
+function initMermaid() {
+  if (mermaidInitialized) return;
+  mermaid.initialize({
+    startOnLoad: false,
+    theme: 'dark',
+    themeVariables: {
+      primaryColor: '#0891b2',
+      primaryTextColor: '#e2e8f0',
+      primaryBorderColor: '#06b6d4',
+      lineColor: '#64748b',
+      secondaryColor: '#1e293b',
+      tertiaryColor: '#334155',
+      fontFamily: '-apple-system, BlinkMacSystemFont, Segoe UI, Roboto, sans-serif',
+    },
+    flowchart: {
+      htmlLabels: true,
+      curve: 'basis',
+      padding: 12,
+    },
+  });
+  mermaidInitialized = true;
+}
+
+async function loadDiagrams() {
+  initMermaid();
+  const container = document.getElementById('diagrams-list');
+  if (!container) return;
+
+  const searchInput = document.getElementById('diagram-search');
+  const stackFilter = document.getElementById('diagram-stack-filter');
+
+  renderDiagramCards(container, PROJECT_DIAGRAMS);
+
+  // Wire up filters
+  const applyFilter = () => {
+    const query = (searchInput?.value || '').toLowerCase();
+    const stack = stackFilter?.value || '';
+    const filtered = PROJECT_DIAGRAMS.filter(d => {
+      const matchesQuery = !query || d.name.toLowerCase().includes(query) || d.description.toLowerCase().includes(query);
+      const matchesStack = !stack || d.stack.includes(stack);
+      return matchesQuery && matchesStack;
+    });
+    renderDiagramCards(container, filtered);
+  };
+
+  searchInput?.addEventListener('input', applyFilter);
+  stackFilter?.addEventListener('change', applyFilter);
+}
+
+async function renderDiagramCards(container, diagrams) {
+  if (diagrams.length === 0) {
+    container.innerHTML = '<p class="placeholder-text">No matching project diagrams found.</p>';
+    return;
+  }
+
+  container.innerHTML = diagrams.map(d => `
+    <div class="diagram-card" id="diagram-card-${d.id}">
+      <div class="diagram-card-header" data-diagram-id="${d.id}">
+        <div class="diagram-card-title">
+          <h4>${d.name}</h4>
+          <div class="diagram-stack-tags">${d.stack.map(s => `<span class="stack-tag">${s}</span>`).join('')}</div>
+        </div>
+        <p class="diagram-card-desc">${d.description}</p>
+        <button class="diagram-toggle-btn" data-diagram-id="${d.id}" aria-expanded="false">Show Flow</button>
+      </div>
+      <div class="diagram-card-body" id="diagram-body-${d.id}" style="display: none;">
+        <div class="diagram-render" id="diagram-render-${d.id}"></div>
+      </div>
+    </div>
+  `).join('');
+
+  // Attach toggle handlers
+  container.querySelectorAll('.diagram-toggle-btn').forEach(btn => {
+    btn.addEventListener('click', async (e) => {
+      const id = e.target.dataset.diagramId;
+      const body = document.getElementById(`diagram-body-${id}`);
+      const renderEl = document.getElementById(`diagram-render-${id}`);
+      const isOpen = body.style.display !== 'none';
+
+      if (isOpen) {
+        body.style.display = 'none';
+        e.target.textContent = 'Show Flow';
+        e.target.setAttribute('aria-expanded', 'false');
+      } else {
+        body.style.display = 'block';
+        e.target.textContent = 'Hide Flow';
+        e.target.setAttribute('aria-expanded', 'true');
+
+        // Render mermaid if not yet rendered
+        if (!renderEl.dataset.rendered) {
+          const diagramDef = PROJECT_DIAGRAMS.find(d => d.id === id);
+          if (diagramDef) {
+            try {
+              const { svg } = await mermaid.render(`mermaid-${id}`, diagramDef.diagram);
+              renderEl.innerHTML = svg;
+              renderEl.dataset.rendered = 'true';
+            } catch (err) {
+              renderEl.innerHTML = `<p class="diagram-error">Failed to render diagram: ${err.message}</p>`;
+            }
+          }
+        }
+      }
+    });
+  });
+}
+
+// Diagram page filter listeners (delegated)
+document.addEventListener('click', (e) => {
+  if (e.target.classList.contains('diagram-expand-all')) {
+    document.querySelectorAll('.diagram-toggle-btn[aria-expanded="false"]').forEach(btn => btn.click());
   }
 });
 

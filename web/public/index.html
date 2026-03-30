@@ -24,6 +24,7 @@
         <a href="/" class="nav-link" data-page="search">Main</a>
         <a href="/contents" class="nav-link" data-page="browse">Contents</a>
         <a href="/observatory" class="nav-link" data-page="dashboard">Observatory</a>
+        <a href="/diagrams" class="nav-link" data-page="diagrams">Flows</a>
         <a href="/login" class="nav-link" data-page="login" id="login-nav-link">Login</a>
         <div id="user-nav" class="user-nav" style="display: none;">
           <button id="new-doc-btn" class="btn btn-primary btn-sm">+ New</button>
@@ -324,6 +325,31 @@
       </div>
     </section>
 
+    <!-- Diagrams Page (Project Flows) -->
+    <section id="page-diagrams" class="page">
+      <div class="diagrams-container" style="max-width: 1200px; margin: 0 auto; padding: 1rem;">
+        <div class="section-header-accent">
+          <div class="cyan-accent-bar"></div>
+          <h3>Project Flows</h3>
+        </div>
+        <p class="diagrams-subtitle">Architecture and data flow diagrams for each project.</p>
+        <div class="diagrams-filters">
+          <input type="text" id="diagram-search" placeholder="Filter projects..." class="diagram-search-input">
+          <select id="diagram-stack-filter" class="diagram-stack-select">
+            <option value="">All Stacks</option>
+            <option value="react">React</option>
+            <option value="python">Python</option>
+            <option value="go">Go</option>
+            <option value="tauri">Tauri</option>
+            <option value="wordpress">WordPress</option>
+          </select>
+        </div>
+        <div id="diagrams-list" class="diagrams-list">
+          <p class="loading">Loading project diagrams...</p>
+        </div>
+      </div>
+    </section>
+
     <!-- Login Page -->
     <section id="page-login" class="page">
       <div class="auth-container">
@@ -404,6 +430,7 @@
     <p>Docsy McDocsface <a href="https://github.com/mindfu23/code-wiki" target="_blank">GitHub</a></p>
   </footer>
 
+  <script src="https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4/dist/chart.umd.min.js"></script>
   <script src="/app.js"></script>
 </body>

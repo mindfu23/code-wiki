@@ -28,6 +28,7 @@ import { getPreferencesTool, handleGetPreferences } from './tools/getPreferences
 import { projectHealthTool, handleProjectHealth } from './tools/projectHealth.js';
 import { deployStatusTool, handleDeployStatus } from './tools/deployStatus.js';
 import { infraOverviewTool, handleInfraOverview } from './tools/infraOverview.js';
+import { getProjectFlowTool, handleGetProjectFlow } from './tools/getProjectFlow.js';
 
 import { logger } from './utils/logger.js';
 
@@ -86,6 +87,7 @@ export class CodeWikiServer {
         projectHealthTool,
         deployStatusTool,
         infraOverviewTool,
+        getProjectFlowTool,
       ],
     }));
 
@@ -172,6 +174,13 @@ export class CodeWikiServer {
             result = await handleInfraOverview(
               args as Record<string, never>,
               this.metricsService
+            );
+            break;
+
+          case 'get_project_flow':
+            result = await handleGetProjectFlow(
+              args as { project: string },
+              this.wikiService
             );
             break;
 

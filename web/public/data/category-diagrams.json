@@ -1,0 +1,56 @@
+[
+  {
+    "path": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/code-wiki/wiki/diagrams/code-wiki-flow.md",
+    "relativePath": "diagrams/code-wiki-flow.md",
+    "title": "Code Wiki — Data Flow",
+    "description": "Architecture flow for Code Wiki: MCP server + Netlify SPA + GitHub Actions index pipeline.",
+    "tags": [
+      "architecture",
+      "mcp",
+      "knowledge-base"
+    ],
+    "language": "typescript",
+    "updated": "2026-03-30",
+    "sourceRepo": "code-wiki",
+    "content": "\n# Code Wiki Data Flow\n\nPersonal knowledge base with dual interfaces: web SPA and MCP server for AI agents.\n\n```mermaid\nflowchart LR\n    User([User]) --> SPA[\"Vanilla SPA<br/>Netlify\"]\n    Claude[\"Claude Code\"] --> MCP[\"MCP Server<br/>TypeScript\"]\n    MCP -->|read| Wiki[\"Wiki Markdown<br/>Files\"]\n    MCP -->|git ops| GH[\"GitHub API\"]\n    SPA -->|fetch| NF[\"Netlify Functions\"]\n    NF -->|OAuth| GH\n    NF -->|read| Index[\"Static JSON<br/>Index\"]\n    NF -->|metrics| Netlify[\"Netlify API\"]\n    GA[\"GitHub Actions\"] -->|rebuild| Index\n    SPA --> User\n```\n\n## Key Services\n- **MCP Server**: Exposes wiki search, document retrieval, and health tools to Claude Code\n- **Netlify Functions**: API proxy for OAuth, index serving, and metrics\n- **GitHub Actions**: Daily index rebuild from wiki markdown + repo metadata\n- **Observatory**: Dashboard pulling deploy status from Netlify and GitHub APIs\n",
+    "contentPreview": "# Code Wiki Data Flow  Personal knowledge base with dual interfaces: web SPA and MCP server for AI agents.  ```mermaid flowchart LR     User([User]) --> SPA[\"Vanilla SPA<br/>Netlify\"]     Claude[\"Claude Code\"] --> MCP[\"MCP Server<br/>TypeScript\"]     MCP -->|read| Wiki[\"Wiki Markdown<br/>Files\"]",
+    "category": "diagrams",
+    "visibility": "public"
+  },
+  {
+    "path": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/code-wiki/wiki/diagrams/datastic-flow.md",
+    "relativePath": "diagrams/datastic-flow.md",
+    "title": "Datastic — Data Flow",
+    "description": "Architecture flow for Datastic: GH Archive + HuggingFace analytics via BigQuery, dbt, and GitHub Actions.",
+    "tags": [
+      "architecture",
+      "data-pipeline",
+      "bigquery"
+    ],
+    "language": "typescript",
+    "updated": "2026-03-30",
+    "sourceRepo": "Datastic",
+    "content": "\n# Datastic Data Flow\n\nData analytics dashboard pulling from GH Archive and HuggingFace Hub via BigQuery.\n\n```mermaid\nflowchart LR\n    User([User]) --> React[\"React SPA<br/>Netlify\"]\n    React -->|fetch| NF[\"Netlify Functions\"]\n    NF -->|query| BQ[\"BigQuery\"]\n    GHA[\"GH Archive\"] -->|daily| dbt[\"dbt Models\"]\n    HF[\"HuggingFace Hub\"] -->|daily| dbt\n    dbt --> BQ\n    BQ --> NF\n    NF --> React\n    React --> User\n    GA[\"GitHub Actions\"] -->|schedule| dbt\n```\n\n## Key Services\n- **GitHub Actions**: Scheduled dbt runs to transform raw data\n- **dbt**: Data modeling layer on top of BigQuery\n- **BigQuery**: Warehouse for GH Archive and HuggingFace data\n- **Netlify Functions**: Query proxy to BigQuery (server-side credentials)\n",
+    "contentPreview": "# Datastic Data Flow  Data analytics dashboard pulling from GH Archive and HuggingFace Hub via BigQuery.  ```mermaid flowchart LR     User([User]) --> React[\"React SPA<br/>Netlify\"]     React -->|fetch| NF[\"Netlify Functions\"]     NF -->|query| BQ[\"BigQuery\"]     GHA[\"GH Archive\"] -->|daily| dbt[\"d",
+    "category": "diagrams",
+    "visibility": "public"
+  },
+  {
+    "path": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/code-wiki/wiki/diagrams/metabot-flow.md",
+    "relativePath": "diagrams/metabot-flow.md",
+    "title": "Metabot — Data Flow",
+    "description": "Architecture flow for Metabot: multi-AI aggregation with Express backend and React/Expo frontends.",
+    "tags": [
+      "architecture",
+      "ai",
+      "multi-provider"
+    ],
+    "language": "typescript",
+    "updated": "2026-03-30",
+    "sourceRepo": "Metabot",
+    "content": "\n# Metabot Data Flow\n\nMulti-AI aggregation app that queries multiple LLM providers and merges responses.\n\n```mermaid\nflowchart LR\n    User([User]) --> React[\"React SPA<br/>Vite + Tailwind\"]\n    React -->|fetch| Express[\"Express Backend\"]\n    Express -->|API key| Claude[\"Claude API\"]\n    Express -->|API key| GPT[\"OpenAI API\"]\n    Express -->|API key| Gemini[\"Gemini API\"]\n    Claude --> Express\n    GPT --> Express\n    Gemini --> Express\n    Express -->|merged response| React\n    React -->|save as .md| Files[\"Local Files\"]\n    React --> User\n```\n\n## Key Services\n- **Express backend**: Aggregates responses from multiple LLM providers\n- **React SPA + Expo mobile**: Dual frontend (web and mobile)\n- **Local file storage**: Conversations saved as .md files\n",
+    "contentPreview": "# Metabot Data Flow  Multi-AI aggregation app that queries multiple LLM providers and merges responses.  ```mermaid flowchart LR     User([User]) --> React[\"React SPA<br/>Vite + Tailwind\"]     React -->|fetch| Express[\"Express Backend\"]     Express -->|API key| Claude[\"Claude API\"]     Express -->|",
+    "category": "diagrams",
+    "visibility": "public"
+  }
+]

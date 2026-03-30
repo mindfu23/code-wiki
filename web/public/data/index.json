@@ -1,7 +1,7 @@
 {
   "documents": [
     {
-      "path": "/home/runner/work/code-wiki/code-wiki/wiki/AGENTS.md",
+      "path": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/code-wiki/wiki/AGENTS.md",
       "relativePath": "AGENTS.md",
       "title": "AGENTS",
       "tags": [],
@@ -11,7 +11,7 @@
       "visibility": "public"
     },
     {
-      "path": "/home/runner/work/code-wiki/code-wiki/wiki/_index.md",
+      "path": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/code-wiki/wiki/_index.md",
       "relativePath": "_index.md",
       "title": "Contents",
       "description": "Wiki table of contents",
@@ -25,7 +25,61 @@
       "visibility": "public"
     },
     {
-      "path": "/home/runner/work/code-wiki/code-wiki/wiki/integrations/_index.md",
+      "path": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/code-wiki/wiki/diagrams/code-wiki-flow.md",
+      "relativePath": "diagrams/code-wiki-flow.md",
+      "title": "Code Wiki — Data Flow",
+      "description": "Architecture flow for Code Wiki: MCP server + Netlify SPA + GitHub Actions index pipeline.",
+      "tags": [
+        "architecture",
+        "mcp",
+        "knowledge-base"
+      ],
+      "language": "typescript",
+      "updated": "2026-03-30",
+      "sourceRepo": "code-wiki",
+      "content": "\n# Code Wiki Data Flow\n\nPersonal knowledge base with dual interfaces: web SPA and MCP server for AI agents.\n\n```mermaid\nflowchart LR\n    User([User]) --> SPA[\"Vanilla SPA<br/>Netlify\"]\n    Claude[\"Claude Code\"] --> MCP[\"MCP Server<br/>TypeScript\"]\n    MCP -->|read| Wiki[\"Wiki Markdown<br/>Files\"]\n    MCP -->|git ops| GH[\"GitHub API\"]\n    SPA -->|fetch| NF[\"Netlify Functions\"]\n    NF -->|OAuth| GH\n    NF -->|read| Index[\"Static JSON<br/>Index\"]\n    NF -->|metrics| Netlify[\"Netlify API\"]\n    GA[\"GitHub Actions\"] -->|rebuild| Index\n    SPA --> User\n```\n\n## Key Services\n- **MCP Server**: Exposes wiki search, document retrieval, and health tools to Claude Code\n- **Netlify Functions**: API proxy for OAuth, index serving, and metrics\n- **GitHub Actions**: Daily index rebuild from wiki markdown + repo metadata\n- **Observatory**: Dashboard pulling deploy status from Netlify and GitHub APIs\n",
+      "contentPreview": "# Code Wiki Data Flow  Personal knowledge base with dual interfaces: web SPA and MCP server for AI agents.  ```mermaid flowchart LR     User([User]) --> SPA[\"Vanilla SPA<br/>Netlify\"]     Claude[\"Claude Code\"] --> MCP[\"MCP Server<br/>TypeScript\"]     MCP -->|read| Wiki[\"Wiki Markdown<br/>Files\"]",
+      "category": "diagrams",
+      "visibility": "public"
+    },
+    {
+      "path": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/code-wiki/wiki/diagrams/datastic-flow.md",
+      "relativePath": "diagrams/datastic-flow.md",
+      "title": "Datastic — Data Flow",
+      "description": "Architecture flow for Datastic: GH Archive + HuggingFace analytics via BigQuery, dbt, and GitHub Actions.",
+      "tags": [
+        "architecture",
+        "data-pipeline",
+        "bigquery"
+      ],
+      "language": "typescript",
+      "updated": "2026-03-30",
+      "sourceRepo": "Datastic",
+      "content": "\n# Datastic Data Flow\n\nData analytics dashboard pulling from GH Archive and HuggingFace Hub via BigQuery.\n\n```mermaid\nflowchart LR\n    User([User]) --> React[\"React SPA<br/>Netlify\"]\n    React -->|fetch| NF[\"Netlify Functions\"]\n    NF -->|query| BQ[\"BigQuery\"]\n    GHA[\"GH Archive\"] -->|daily| dbt[\"dbt Models\"]\n    HF[\"HuggingFace Hub\"] -->|daily| dbt\n    dbt --> BQ\n    BQ --> NF\n    NF --> React\n    React --> User\n    GA[\"GitHub Actions\"] -->|schedule| dbt\n```\n\n## Key Services\n- **GitHub Actions**: Scheduled dbt runs to transform raw data\n- **dbt**: Data modeling layer on top of BigQuery\n- **BigQuery**: Warehouse for GH Archive and HuggingFace data\n- **Netlify Functions**: Query proxy to BigQuery (server-side credentials)\n",
+      "contentPreview": "# Datastic Data Flow  Data analytics dashboard pulling from GH Archive and HuggingFace Hub via BigQuery.  ```mermaid flowchart LR     User([User]) --> React[\"React SPA<br/>Netlify\"]     React -->|fetch| NF[\"Netlify Functions\"]     NF -->|query| BQ[\"BigQuery\"]     GHA[\"GH Archive\"] -->|daily| dbt[\"d",
+      "category": "diagrams",
+      "visibility": "public"
+    },
+    {
+      "path": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/code-wiki/wiki/diagrams/metabot-flow.md",
+      "relativePath": "diagrams/metabot-flow.md",
+      "title": "Metabot — Data Flow",
+      "description": "Architecture flow for Metabot: multi-AI aggregation with Express backend and React/Expo frontends.",
+      "tags": [
+        "architecture",
+        "ai",
+        "multi-provider"
+      ],
+      "language": "typescript",
+      "updated": "2026-03-30",
+      "sourceRepo": "Metabot",
+      "content": "\n# Metabot Data Flow\n\nMulti-AI aggregation app that queries multiple LLM providers and merges responses.\n\n```mermaid\nflowchart LR\n    User([User]) --> React[\"React SPA<br/>Vite + Tailwind\"]\n    React -->|fetch| Express[\"Express Backend\"]\n    Express -->|API key| Claude[\"Claude API\"]\n    Express -->|API key| GPT[\"OpenAI API\"]\n    Express -->|API key| Gemini[\"Gemini API\"]\n    Claude --> Express\n    GPT --> Express\n    Gemini --> Express\n    Express -->|merged response| React\n    React -->|save as .md| Files[\"Local Files\"]\n    React --> User\n```\n\n## Key Services\n- **Express backend**: Aggregates responses from multiple LLM providers\n- **React SPA + Expo mobile**: Dual frontend (web and mobile)\n- **Local file storage**: Conversations saved as .md files\n",
+      "contentPreview": "# Metabot Data Flow  Multi-AI aggregation app that queries multiple LLM providers and merges responses.  ```mermaid flowchart LR     User([User]) --> React[\"React SPA<br/>Vite + Tailwind\"]     React -->|fetch| Express[\"Express Backend\"]     Express -->|API key| Claude[\"Claude API\"]     Express -->|",
+      "category": "diagrams",
+      "visibility": "public"
+    },
+    {
+      "path": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/code-wiki/wiki/integrations/_index.md",
       "relativePath": "integrations/_index.md",
       "title": "Integrations Index",
       "description": "Third-party API connectors and service integrations",
@@ -41,7 +95,7 @@
       "visibility": "public"
     },
     {
-      "path": "/home/runner/work/code-wiki/code-wiki/wiki/integrations/databricks-observatory.md",
+      "path": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/code-wiki/wiki/integrations/databricks-observatory.md",
       "relativePath": "integrations/databricks-observatory.md",
       "title": "Databricks Observatory Setup",
       "description": "Guide for ingesting observatory metrics into Databricks Community Edition using the medallion architecture",
@@ -53,13 +107,13 @@
       ],
       "language": "python",
       "updated": "2026-03-22",
-      "content": "\n# Databricks Observatory — Setup Guide\n\nThis guide walks through ingesting metrics from the code-wiki Observatory into Databricks Community Edition, building a medallion lakehouse (bronze → silver → gold), and creating SQL dashboards.\n\n## 1. Sign Up for Databricks Community Edition\n\n1. Go to [community.cloud.databricks.com](https://community.cloud.databricks.com/)\n2. Click \"Get Started — Free\"\n3. Select \"Community Edition\" (not the full trial)\n4. Create your account — no credit card required\n5. Once in, create a cluster: Compute → Create Cluster → use defaults → Start\n\nCommunity Edition gives you:\n- One small cluster (terminates after 2 hours of inactivity)\n- Delta Lake support\n- Notebooks (Python, SQL, Scala)\n- No Delta Live Tables or Workflows (paid features), but you can demonstrate the medallion pattern manually\n\n## 2. Export Endpoint\n\nThe Observatory exposes a bronze data export at:\n\n```\nhttps://mindfu23code-wiki.netlify.app/.netlify/functions/export-bronze\n```\n\nQuery params:\n- `?source=github,netlify` — filter to specific sources\n- `?format=ndjson` — newline-delimited JSON (useful for streaming)\n\n## 3. Bronze Layer — Raw Ingestion\n\nCreate a Python notebook and run:\n\n```python\nimport requests\nimport json\n\n# Fetch raw metrics from Observatory\nurl = \"https://mindfu23code-wiki.netlify.app/.netlify/functions/export-bronze\"\nresponse = requests.get(url)\ndata = response.json()\n\n# Create bronze tables per source\nfor source_name, source_data in data.get(\"sources\", {}).items():\n    df = spark.createDataFrame([{\n        \"source\": source_name,\n        \"snapshot_time\": data[\"snapshotTime\"],\n        \"raw_json\": json.dumps(source_data),\n        \"ingested_at\": data[\"exportedAt\"],\n    }])\n\n    df.write.format(\"delta\") \\\n      .mode(\"append\") \\\n      .saveAsTable(f\"bronze_{source_name}\")\n\n    print(f\"Saved bronze_{source_name}\")\n```\n\n### GitHub-specific bronze table\n\n```python\ngithub_data = data[\"sources\"].get(\"github\", {})\nrepos = github_data.get(\"repos\", [])\n\n# Flatten to simple types (raw API responses have nested objects Spark can't auto-infer)\nflat_repos = [{\n    \"name\": r.get(\"name\", \"\"),\n    \"full_name\": r.get(\"full_name\", \"\"),\n    \"language\": r.get(\"language\") or \"Unknown\",\n    \"private\": bool(r.get(\"private\", False)),\n    \"fork\": bool(r.get(\"fork\", False)),\n    \"stargazers_count\": int(r.get(\"stargazers_count\", 0)),\n    \"open_issues_count\": int(r.get(\"open_issues_count\", 0)),\n    \"pushed_at\": r.get(\"pushed_at\", \"\"),\n    \"created_at\": r.get(\"created_at\", \"\"),\n    \"updated_at\": r.get(\"updated_at\", \"\"),\n    \"html_url\": r.get(\"html_url\", \"\"),\n    \"description\": r.get(\"description\") or \"\",\n    \"default_branch\": r.get(\"default_branch\", \"main\"),\n    \"size\": int(r.get(\"size\", 0)),\n} for r in repos]\n\ngithub_df = spark.createDataFrame(flat_repos)\ngithub_df.write.format(\"delta\") \\\n  .mode(\"overwrite\") \\\n  .saveAsTable(\"bronze_github_repos\")\n\ndisplay(github_df)\n```\n\n### Netlify-specific bronze table\n\n```python\nnetlify_data = data[\"sources\"].get(\"netlify\", {})\nsites = netlify_data.get(\"sites\", [])\n\n# Flatten to simple types\nflat_sites = [{\n    \"site_id\": s.get(\"id\", \"\"),\n    \"name\": s.get(\"name\", \"\"),\n    \"url\": s.get(\"url\", \"\"),\n    \"ssl_url\": s.get(\"ssl_url\", \"\"),\n    \"admin_url\": s.get(\"admin_url\", \"\"),\n    \"created_at\": s.get(\"created_at\", \"\"),\n    \"updated_at\": s.get(\"updated_at\", \"\"),\n    \"repo_url\": (s.get(\"build_settings\") or {}).get(\"repo_url\", \"\"),\n    \"repo_branch\": (s.get(\"build_settings\") or {}).get(\"repo_branch\", \"\"),\n    \"build_command\": (s.get(\"build_settings\") or {}).get(\"cmd\", \"\"),\n    \"publish_dir\": (s.get(\"build_settings\") or {}).get(\"dir\", \"\"),\n    \"deploy_state\": (s.get(\"published_deploy\") or {}).get(\"state\", \"\"),\n} for s in sites]\n\nnetlify_df = spark.createDataFrame(flat_sites)\nnetlify_df.write.format(\"delta\") \\\n  .mode(\"overwrite\") \\\n  .saveAsTable(\"bronze_netlify_sites\")\n\ndisplay(netlify_df)\n```\n\n## 4. Silver Layer — Cleaned & Normalized\n\n```sql\n-- Silver: normalized project-level view joining GitHub and Netlify data\nCREATE OR REPLACE TABLE silver_project_metrics AS\nSELECT\n  g.name AS project_name,\n  g.language,\n  g.open_issues_count AS open_issues,\n  g.pushed_at AS last_commit_date,\n  g.stargazers_count AS stars,\n  g.size AS repo_size_kb,\n  n.name AS netlify_site,\n  n.ssl_url AS site_url,\n  CASE\n    WHEN n.deploy_state = 'ready' THEN 'healthy'\n    WHEN n.deploy_state = 'error' THEN 'error'\n    ELSE 'unknown'\n  END AS deploy_status,\n  current_timestamp() AS processed_at\nFROM bronze_github_repos g\nLEFT JOIN bronze_netlify_sites n\n  ON lower(n.repo_url) LIKE concat('%/', lower(g.name), '%')\n```\n\n## 5. Gold Layer — Business-Ready Aggregations\n\n```sql\n-- Gold: project health summary\nCREATE OR REPLACE TABLE gold_project_health AS\nSELECT\n  project_name,\n  language,\n  last_commit_date,\n  datediff(current_date(), to_date(last_commit_date)) AS days_since_commit,\n  stars,\n  deploy_status,\n  open_issues,\n  CASE\n    WHEN deploy_status = 'error' THEN 'needs-attention'\n    WHEN datediff(current_date(), to_date(last_commit_date)) > 90 THEN 'stale'\n    ELSE 'healthy'\n  END AS health_category\nFROM silver_project_metrics\n```\n\n```sql\n-- Gold: infrastructure overview\nCREATE OR REPLACE TABLE gold_infra_overview AS\nSELECT\n  count(*) AS total_projects,\n  count(netlify_site) AS deployed_projects,\n  sum(CASE WHEN deploy_status = 'error' THEN 1 ELSE 0 END) AS projects_with_errors,\n  sum(CASE WHEN datediff(current_date(), to_date(last_commit_date)) > 90 THEN 1 ELSE 0 END) AS stale_projects,\n  sum(open_issues) AS total_open_issues\nFROM silver_project_metrics\n```\n\n## 6. SQL Dashboard Queries\n\n### Stalest Projects\n\n```sql\nSELECT project_name, days_since_commit, language, deploy_status, health_category\nFROM gold_project_health\nWHERE days_since_commit > 30\nORDER BY days_since_commit DESC\n```\n\n### Language Distribution\n\n```sql\nSELECT language, count(*) AS project_count\nFROM gold_project_health\nGROUP BY language\nORDER BY project_count DESC\n```\n\n## 7. Scheduling (Manual in Community Edition)\n\nCommunity Edition doesn't have Workflows/Jobs. To accumulate historical data:\n\n1. Run the bronze ingestion notebook manually each day (or whenever you collect new metrics)\n2. Use `mode(\"append\")` for bronze tables to build history\n3. Silver/gold tables use `CREATE OR REPLACE` to always reflect the latest snapshot\n\nIn production Databricks, you'd use:\n- **Delta Live Tables** for declarative bronze → silver → gold pipeline\n- **Workflows** for scheduled notebook execution\n- **Auto Loader** for incremental file ingestion\n\n## 8. Portfolio Presentation Notes\n\nWhen presenting this as a proof of concept:\n\n- **Emphasize the architecture**: \"The same medallion pipeline handles an org with 5,000 repos without structural changes\"\n- **Show real data**: Navigate the dashboard, then show the same data flowing through Databricks\n- **Highlight cross-source joins**: The silver layer joining GitHub commits with Netlify deploys is a genuine data engineering challenge\n- **Address scale honestly**: \"This is portfolio-scale data. The design decisions — partitioning, Delta format, incremental loading — are the patterns that matter at enterprise scale\"\n- **Point out what's real**: \"I can explain why this traffic spike happened, or why this n8n workflow failed — because it's my actual infrastructure\"\n",
+      "content": "\n# Databricks Observatory — Setup Guide\n\nThis guide walks through ingesting metrics from the code-wiki Observatory into Databricks Community Edition, building a medallion lakehouse (bronze → silver → gold), and creating SQL dashboards.\n\n## 1. Sign Up for Databricks Community Edition\n\n1. Go to [community.cloud.databricks.com](https://community.cloud.databricks.com/)\n2. Click \"Get Started — Free\"\n3. Select \"Community Edition\" (not the full trial)\n4. Create your account — no credit card required\n5. Once in, create a cluster: Compute → Create Cluster → use defaults → Start\n\nCommunity Edition gives you:\n- One small cluster (terminates after 2 hours of inactivity)\n- Delta Lake support\n- Notebooks (Python, SQL, Scala)\n- No Delta Live Tables or Workflows (paid features), but you can demonstrate the medallion pattern manually\n\n## 2. Export Endpoint\n\nThe Observatory exposes a bronze data export at:\n\n```\nhttps://mindfu23code-wiki.netlify.app/.netlify/functions/export-bronze\n```\n\nQuery params:\n- `?source=github,netlify` — filter to specific sources\n- `?format=ndjson` — newline-delimited JSON (useful for streaming)\n\n## 3. Bronze Layer — Raw Ingestion\n\nCreate a Python notebook and run:\n\n```python\nimport requests\nimport json\n\n# Fetch raw metrics from Observatory\nurl = \"https://mindfu23code-wiki.netlify.app/.netlify/functions/export-bronze\"\nresponse = requests.get(url)\ndata = response.json()\n\n# Create bronze tables per source\nfor source_name, source_data in data.get(\"sources\", {}).items():\n    df = spark.createDataFrame([{\n        \"source\": source_name,\n        \"snapshot_time\": data[\"snapshotTime\"],\n        \"raw_json\": json.dumps(source_data),\n        \"ingested_at\": data[\"exportedAt\"],\n    }])\n\n    df.write.format(\"delta\") \\\n      .mode(\"append\") \\\n      .saveAsTable(f\"bronze_{source_name}\")\n\n    print(f\"Saved bronze_{source_name}\")\n```\n\n### GitHub-specific bronze table\n\n```python\ngithub_data = data[\"sources\"].get(\"github\", {})\nrepos = github_data.get(\"repos\", [])\n\n# Flatten to simple types (raw API responses have nested objects Spark can't auto-infer)\nflat_repos = [{\n    \"name\": r.get(\"name\", \"\"),\n    \"full_name\": r.get(\"full_name\", \"\"),\n    \"language\": r.get(\"language\") or \"Unknown\",\n    \"private\": bool(r.get(\"private\", False)),\n    \"fork\": bool(r.get(\"fork\", False)),\n    \"stargazers_count\": int(r.get(\"stargazers_count\", 0)),\n    \"open_issues_count\": int(r.get(\"open_issues_count\", 0)),\n    \"pushed_at\": r.get(\"pushed_at\", \"\"),\n    \"created_at\": r.get(\"created_at\", \"\"),\n    \"updated_at\": r.get(\"updated_at\", \"\"),\n    \"html_url\": r.get(\"html_url\", \"\"),\n    \"description\": r.get(\"description\") or \"\",\n    \"default_branch\": r.get(\"default_branch\", \"main\"),\n    \"size\": int(r.get(\"size\", 0)),\n} for r in repos]\n\ngithub_df = spark.createDataFrame(flat_repos)\ngithub_df.write.format(\"delta\") \\\n  .mode(\"overwrite\") \\\n  .saveAsTable(\"bronze_github_repos\")\n\ndisplay(github_df)\n```\n\n### Netlify-specific bronze table\n\n```python\nnetlify_data = data[\"sources\"].get(\"netlify\", {})\nsites = netlify_data.get(\"sites\", [])\n\n# Flatten to simple types\nflat_sites = [{\n    \"site_id\": s.get(\"id\", \"\"),\n    \"name\": s.get(\"name\", \"\"),\n    \"url\": s.get(\"url\", \"\"),\n    \"ssl_url\": s.get(\"ssl_url\", \"\"),\n    \"admin_url\": s.get(\"admin_url\", \"\"),\n    \"created_at\": s.get(\"created_at\", \"\"),\n    \"updated_at\": s.get(\"updated_at\", \"\"),\n    \"repo_url\": (s.get(\"build_settings\") or {}).get(\"repo_url\", \"\"),\n    \"repo_branch\": (s.get(\"build_settings\") or {}).get(\"repo_branch\", \"\"),\n    \"build_command\": (s.get(\"build_settings\") or {}).get(\"cmd\", \"\"),\n    \"publish_dir\": (s.get(\"build_settings\") or {}).get(\"dir\", \"\"),\n    \"deploy_state\": (s.get(\"published_deploy\") or {}).get(\"state\", \"\"),\n} for s in sites]\n\nnetlify_df = spark.createDataFrame(flat_sites)\nnetlify_df.write.format(\"delta\") \\\n  .mode(\"overwrite\") \\\n  .saveAsTable(\"bronze_netlify_sites\")\n\ndisplay(netlify_df)\n```\n\n## 4. Silver Layer — Cleaned & Normalized\n\n```sql\n-- Silver: normalized project-level view joining GitHub and Netlify data\nCREATE OR REPLACE TABLE silver_project_metrics AS\nSELECT\n  g.name AS project_name,\n  g.language,\n  g.open_issues_count AS open_issues,\n  g.pushed_at AS last_commit_date,\n  g.stargazers_count AS stars,\n  g.size AS repo_size_kb,\n  n.name AS netlify_site,\n  n.ssl_url AS site_url,\n  CASE\n    WHEN n.deploy_state = 'ready' THEN 'healthy'\n    WHEN n.deploy_state = 'error' THEN 'error'\n    ELSE 'unknown'\n  END AS deploy_status,\n  current_timestamp() AS processed_at\nFROM bronze_github_repos g\nLEFT JOIN bronze_netlify_sites n\n  ON lower(n.repo_url) LIKE concat('%/', lower(g.name), '%')\n```\n\n## 5. Gold Layer — Business-Ready Aggregations\n\n```sql\n-- Gold: project health summary\nCREATE OR REPLACE TABLE gold_project_health AS\nSELECT\n  project_name,\n  language,\n  last_commit_date,\n  datediff(current_date(), to_date(last_commit_date)) AS days_since_commit,\n  stars,\n  deploy_status,\n  open_issues,\n  CASE\n    WHEN deploy_status = 'error' THEN 'needs-attention'\n    WHEN datediff(current_date(), to_date(last_commit_date)) > 90 THEN 'stale'\n    ELSE 'healthy'\n  END AS health_category\nFROM silver_project_metrics\n```\n\n```sql\n-- Gold: infrastructure overview\nCREATE OR REPLACE TABLE gold_infra_overview AS\nSELECT\n  count(*) AS total_projects,\n  count(netlify_site) AS deployed_projects,\n  sum(CASE WHEN deploy_status = 'error' THEN 1 ELSE 0 END) AS projects_with_errors,\n  sum(CASE WHEN datediff(current_date(), to_date(last_commit_date)) > 90 THEN 1 ELSE 0 END) AS stale_projects,\n  sum(open_issues) AS total_open_issues\nFROM silver_project_metrics\n```\n\n## 6. SQL Dashboard Visualizations\n\nAfter running each SQL cell, click the **\"+\"** button (or chart icon) below the results table to add a visualization. The recommended chart type is noted for each query.\n\n### 6a. Health Category Breakdown\n**Visualization: Pie chart** — Keys: `health_category`, Values: `project_count`\n\n```sql\nSELECT health_category, count(*) AS project_count\nFROM gold_project_health\nGROUP BY health_category\nORDER BY project_count DESC\n```\n\n### 6b. Language Distribution\n**Visualization: Bar chart** — X: `language`, Y: `project_count`\n\n```sql\nSELECT language, count(*) AS project_count\nFROM gold_project_health\nGROUP BY language\nORDER BY project_count DESC\n```\n\n### 6c. Deploy Status Overview\n**Visualization: Pie chart** — Keys: `deploy_status`, Values: `project_count`\n\n```sql\nSELECT deploy_status, count(*) AS project_count\nFROM gold_project_health\nGROUP BY deploy_status\n```\n\n### 6d. Stalest Projects (days since last commit)\n**Visualization: Bar chart** — X: `project_name`, Y: `days_since_commit`, Color: `health_category`\n\n```sql\nSELECT project_name, days_since_commit, language, deploy_status, health_category\nFROM gold_project_health\nWHERE days_since_commit > 30\nORDER BY days_since_commit DESC\n```\n\n### 6e. Project Activity Heatmap\n**Visualization: Bar chart** — X: `project_name`, Y: `days_since_commit`, Color: `language`\n\n```sql\nSELECT project_name, days_since_commit, stars, open_issues, language\nFROM gold_project_health\nORDER BY days_since_commit ASC\nLIMIT 20\n```\n\n### 6f. Infrastructure Summary (single row KPIs)\n**Visualization: Counter** — select each column as a separate counter, or leave as table\n\n```sql\nSELECT\n  total_projects,\n  deployed_projects,\n  (total_projects - deployed_projects) AS not_deployed,\n  projects_with_errors,\n  stale_projects,\n  total_open_issues\nFROM gold_infra_overview\n```\n\n### 6g. Projects with Open Issues\n**Visualization: Bar chart** — X: `project_name`, Y: `open_issues`\n\n```sql\nSELECT project_name, open_issues, language, deploy_status\nFROM gold_project_health\nWHERE open_issues > 0\nORDER BY open_issues DESC\n```\n\n### 6h. Repo Size Distribution\n**Visualization: Bar chart** — X: `project_name`, Y: `repo_size_kb`\n\n```sql\nSELECT project_name, repo_size_kb, language\nFROM silver_project_metrics\nWHERE repo_size_kb > 0\nORDER BY repo_size_kb DESC\nLIMIT 20\n```\n\n## 7. Scheduling (Manual in Community Edition)\n\nCommunity Edition doesn't have Workflows/Jobs. To accumulate historical data:\n\n1. Run the bronze ingestion notebook manually each day (or whenever you collect new metrics)\n2. Use `mode(\"append\")` for bronze tables to build history\n3. Silver/gold tables use `CREATE OR REPLACE` to always reflect the latest snapshot\n\nIn production Databricks, you'd use:\n- **Delta Live Tables** for declarative bronze → silver → gold pipeline\n- **Workflows** for scheduled notebook execution\n- **Auto Loader** for incremental file ingestion\n\n## 8. Portfolio Presentation Notes\n\nWhen presenting this as a proof of concept:\n\n- **Emphasize the architecture**: \"The same medallion pipeline handles an org with 5,000 repos without structural changes\"\n- **Show real data**: Navigate the dashboard, then show the same data flowing through Databricks\n- **Highlight cross-source joins**: The silver layer joining GitHub commits with Netlify deploys is a genuine data engineering challenge\n- **Address scale honestly**: \"This is portfolio-scale data. The design decisions — partitioning, Delta format, incremental loading — are the patterns that matter at enterprise scale\"\n- **Point out what's real**: \"I can explain why this traffic spike happened, or why this n8n workflow failed — because it's my actual infrastructure\"\n",
       "contentPreview": "# Databricks Observatory — Setup Guide  This guide walks through ingesting metrics from the code-wiki Observatory into Databricks Community Edition, building a medallion lakehouse (bronze → silver → gold), and creating SQL dashboards.  ## 1. Sign Up for Databricks Community Edition  1. Go to [commu",
       "category": "integrations",
       "visibility": "public"
     },
     {
-      "path": "/home/runner/work/code-wiki/code-wiki/wiki/patterns/_index.md",
+      "path": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/code-wiki/wiki/patterns/_index.md",
       "relativePath": "patterns/_index.md",
       "title": "Patterns Index",
       "description": "Architectural patterns and design approaches",
@@ -73,7 +127,7 @@
       "visibility": "public"
     },
     {
-      "path": "/home/runner/work/code-wiki/code-wiki/wiki/projects/_index.md",
+      "path": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/code-wiki/wiki/projects/_index.md",
       "relativePath": "projects/_index.md",
       "title": "Projects Index",
       "description": "Documentation for active repositories",
@@ -87,7 +141,7 @@
       "visibility": "public"
     },
     {
-      "path": "/home/runner/work/code-wiki/code-wiki/wiki/projects/app-prices-notes.md",
+      "path": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/code-wiki/wiki/projects/app-prices-notes.md",
       "relativePath": "projects/app-prices-notes.md",
       "title": "app-prices-notes",
       "tags": [],
@@ -97,7 +151,7 @@
       "visibility": "public"
     },
     {
-      "path": "/home/runner/work/code-wiki/code-wiki/wiki/projects/repo-locations.md",
+      "path": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/code-wiki/wiki/projects/repo-locations.md",
       "relativePath": "projects/repo-locations.md",
       "title": "Repository Locations",
       "description": "Mapping of repositories to local file system paths and GitHub URLs",
@@ -113,7 +167,7 @@
       "visibility": "public"
     },
     {
-      "path": "/home/runner/work/code-wiki/code-wiki/wiki/projects/setup_cheatsheet.md",
+      "path": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/code-wiki/wiki/projects/setup_cheatsheet.md",
       "relativePath": "projects/setup_cheatsheet.md",
       "title": "New Project Setup Cheatsheet",
       "description": "Step-by-step commands and URLs for wiring up a new React+Vite+Supabase+Netlify project from scaffold to live prototype",
@@ -133,7 +187,7 @@
       "visibility": "public"
     },
     {
-      "path": "/home/runner/work/code-wiki/code-wiki/wiki/snippets/_index.md",
+      "path": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/code-wiki/wiki/snippets/_index.md",
       "relativePath": "snippets/_index.md",
       "title": "Snippets Index",
       "description": "Small, focused code pieces",
@@ -147,7 +201,7 @@
       "visibility": "public"
     },
     {
-      "path": "/home/runner/work/code-wiki/code-wiki/wiki/templates/_index.md",
+      "path": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/code-wiki/wiki/templates/_index.md",
       "relativePath": "templates/_index.md",
       "title": "Templates Index",
       "description": "Project and file starters",
@@ -162,7 +216,7 @@
       "visibility": "public"
     },
     {
-      "path": "/home/runner/work/code-wiki/code-wiki/wiki/utilities/_index.md",
+      "path": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/code-wiki/wiki/utilities/_index.md",
       "relativePath": "utilities/_index.md",
       "title": "Utilities Index",
       "description": "Standalone helper functions and utilities",
@@ -178,52 +232,12 @@
   ],
   "repos": [
     {
-      "name": "apiTracker",
-      "description": "A simple GUI tracker for health and number of remaining calls for my various APIs used in my other apps.",
-      "githubUrl": "https://github.com/mindfu23/apiTracker",
-      "languages": [
-        "JavaScript"
-      ],
-      "lastCommitDate": "2026-03-29T00:25:36Z",
-      "status": "synced",
-      "visibility": "public",
-      "localPath": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/apiTracker",
-      "notes": "also implemented as a browser extension, and further developed there.",
-      "markdownFiles": [
-        {
-          "relativePath": "browser-extension/README.md",
-          "name": "README.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "dist-platforms/firefox/README.md",
-          "name": "README.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "dist-platforms/safari/API Usage Scraper Extension/Resources/README.md",
-          "name": "README.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "dist-platforms/safari/README.md",
-          "name": "README.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "platforms/README.md",
-          "name": "README.md",
-          "fileType": "md"
-        }
-      ]
-    },
-    {
       "name": "code-wiki",
       "githubUrl": "https://github.com/mindfu23/code-wiki",
       "languages": [
         "TypeScript"
       ],
-      "lastCommitDate": "2026-03-29T00:23:05Z",
+      "lastCommitDate": "2026-03-30T18:17:27Z",
       "status": "github-only",
       "visibility": "public",
       "markdownFiles": [
@@ -346,7 +360,7 @@
       "languages": [
         "PHP"
       ],
-      "lastCommitDate": "2026-03-22T17:50:39Z",
+      "lastCommitDate": "2026-03-30T16:15:07Z",
       "status": "github-only",
       "visibility": "public",
       "markdownFiles": [
@@ -368,101 +382,13 @@
       ]
     },
     {
-      "name": "EthicalAIditor",
-      "description": "An interface and AI wrapper for writers and editors, that's linked to LLMs trained only on legally and publicly available writing materials. ",
-      "githubUrl": "https://github.com/mindfu23/EthicalAIditor",
-      "languages": [
-        "JavaScript"
-      ],
-      "lastCommitDate": "2026-03-19T16:07:03Z",
-      "status": "synced",
-      "visibility": "public",
-      "localPath": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/EthicalAIditor",
-      "markdownFiles": [
-        {
-          "relativePath": "DEPLOYMENT.md",
-          "name": "DEPLOYMENT.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "Ethical_Aiditor_Front_End/README.md",
-          "name": "README.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "Ethical_Aiditor_Front_End/src/Attributions.md",
-          "name": "Attributions.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "HANDOFF.md",
-          "name": "HANDOFF.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "llm-api/requirements.txt",
-          "name": "requirements.txt",
-          "fileType": "txt"
-        },
-        {
-          "relativePath": "plugins/capacitor-llama-cpp/android/src/main/cpp/CMakeLists.txt",
-          "name": "CMakeLists.txt",
-          "fileType": "txt"
-        },
-        {
-          "relativePath": "README.md",
-          "name": "README.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "TODO.md",
-          "name": "TODO.md",
-          "fileType": "md"
-        }
-      ]
-    },
-    {
-      "name": "weirdchess",
-      "description": "A game with 5 variants of 10x10 chess.",
-      "githubUrl": "https://github.com/mindfu23/weirdchess",
-      "languages": [
-        "Dart"
-      ],
-      "lastCommitDate": "2026-03-14T21:08:07Z",
-      "status": "synced",
-      "visibility": "public",
-      "localPath": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/weirdchess",
-      "markdownFiles": [
-        {
-          "relativePath": "ios/Runner/Assets.xcassets/LaunchImage.imageset/README.md",
-          "name": "README.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "README.md",
-          "name": "README.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "TODO.md",
-          "name": "TODO.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "weirdchess-store-text.md",
-          "name": "weirdchess-store-text.md",
-          "fileType": "md"
-        }
-      ]
-    },
-    {
       "name": "gastown-mission-district",
       "description": "An alternate setup for the AI orchestration setup Gastown. This version enables different LLM models as agents. It also includes testing and fully automated image generation through one of those models.",
       "githubUrl": "https://github.com/mindfu23/gastown-mission-district",
       "languages": [
         "Go"
       ],
-      "lastCommitDate": "2026-03-13T18:55:34Z",
+      "lastCommitDate": "2026-03-30T05:43:18Z",
       "status": "synced",
       "visibility": "public",
       "localPath": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/gastown-mission-district",
@@ -905,6 +831,134 @@
         {
           "relativePath": "weirdchess/crew/README.md",
           "name": "README.md",
+          "fileType": "md"
+        }
+      ]
+    },
+    {
+      "name": "apiTracker",
+      "description": "A simple GUI tracker for health and number of remaining calls for my various APIs used in my other apps.",
+      "githubUrl": "https://github.com/mindfu23/apiTracker",
+      "languages": [
+        "JavaScript"
+      ],
+      "lastCommitDate": "2026-03-30T00:26:07Z",
+      "status": "synced",
+      "visibility": "public",
+      "localPath": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/apiTracker",
+      "notes": "also implemented as a browser extension, and further developed there.",
+      "markdownFiles": [
+        {
+          "relativePath": "browser-extension/README.md",
+          "name": "README.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "dist-platforms/firefox/README.md",
+          "name": "README.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "dist-platforms/safari/API Usage Scraper Extension/Resources/README.md",
+          "name": "README.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "dist-platforms/safari/README.md",
+          "name": "README.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "platforms/README.md",
+          "name": "README.md",
+          "fileType": "md"
+        }
+      ]
+    },
+    {
+      "name": "EthicalAIditor",
+      "description": "An interface and AI wrapper for writers and editors, that's linked to LLMs trained only on legally and publicly available writing materials. ",
+      "githubUrl": "https://github.com/mindfu23/EthicalAIditor",
+      "languages": [
+        "JavaScript"
+      ],
+      "lastCommitDate": "2026-03-19T16:07:03Z",
+      "status": "synced",
+      "visibility": "public",
+      "localPath": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/EthicalAIditor",
+      "markdownFiles": [
+        {
+          "relativePath": "DEPLOYMENT.md",
+          "name": "DEPLOYMENT.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "Ethical_Aiditor_Front_End/README.md",
+          "name": "README.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "Ethical_Aiditor_Front_End/src/Attributions.md",
+          "name": "Attributions.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "HANDOFF.md",
+          "name": "HANDOFF.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "llm-api/requirements.txt",
+          "name": "requirements.txt",
+          "fileType": "txt"
+        },
+        {
+          "relativePath": "plugins/capacitor-llama-cpp/android/src/main/cpp/CMakeLists.txt",
+          "name": "CMakeLists.txt",
+          "fileType": "txt"
+        },
+        {
+          "relativePath": "README.md",
+          "name": "README.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "TODO.md",
+          "name": "TODO.md",
+          "fileType": "md"
+        }
+      ]
+    },
+    {
+      "name": "weirdchess",
+      "description": "A game with 5 variants of 10x10 chess.",
+      "githubUrl": "https://github.com/mindfu23/weirdchess",
+      "languages": [
+        "Dart"
+      ],
+      "lastCommitDate": "2026-03-14T21:08:07Z",
+      "status": "synced",
+      "visibility": "public",
+      "localPath": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/weirdchess",
+      "markdownFiles": [
+        {
+          "relativePath": "ios/Runner/Assets.xcassets/LaunchImage.imageset/README.md",
+          "name": "README.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "README.md",
+          "name": "README.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "TODO.md",
+          "name": "TODO.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "weirdchess-store-text.md",
+          "name": "weirdchess-store-text.md",
           "fileType": "md"
         }
       ]
@@ -1722,6 +1776,7 @@
     }
   ],
   "categories": [
+    "diagrams",
     "general",
     "integrations",
     "patterns",
@@ -1731,6 +1786,6 @@
     "templates",
     "utilities"
   ],
-  "buildTime": "2026-03-30T00:23:25.148Z",
+  "buildTime": "2026-03-30T18:37:21.057Z",
   "version": "1.0.0"
 }
