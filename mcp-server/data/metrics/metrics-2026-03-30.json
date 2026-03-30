@@ -1,23 +1,31 @@
 {
-  "collectedAt": "2026-03-30T16:12:38.628Z",
+  "collectedAt": "2026-03-30T18:17:27.294Z",
   "version": "1.0.0",
   "sources": {
     "github": {
-      "collectedAt": "2026-03-30T16:12:38.628Z",
+      "collectedAt": "2026-03-30T18:17:27.294Z",
       "repos": [
         {
+          "name": "JBWordPressTheme",
+          "lastCommitDate": "2026-03-30T16:15:07Z",
+          "language": "PHP",
+          "openIssues": 0,
+          "commits30d": 14,
+          "workflows": []
+        },
+        {
           "name": "code-wiki",
-          "lastCommitDate": "2026-03-30T16:08:40Z",
+          "lastCommitDate": "2026-03-30T16:12:39Z",
           "language": "TypeScript",
           "openIssues": 0,
-          "commits30d": 75,
+          "commits30d": 76,
           "workflows": [
             {
               "name": "Collect Observatory Metrics",
               "workflowId": 249907935,
-              "lastRun": "2026-03-30T16:12:15Z",
+              "lastRun": "2026-03-30T18:17:10Z",
               "conclusion": "in_progress",
-              "durationSeconds": 7,
+              "durationSeconds": 4,
               "runCount30d": 24
             },
             {
@@ -35,7 +43,7 @@
           "lastCommitDate": "2026-03-30T05:43:18Z",
           "language": "Go",
           "openIssues": 0,
-          "commits30d": 24,
+          "commits30d": 20,
           "workflows": [
             {
               "name": "Close stale needs-info / needs-repro issues",
@@ -103,14 +111,6 @@
               "runCount30d": 30
             }
           ]
-        },
-        {
-          "name": "JBWordPressTheme",
-          "lastCommitDate": "2026-03-22T17:50:39Z",
-          "language": "PHP",
-          "openIssues": 0,
-          "commits30d": 13,
-          "workflows": []
         },
         {
           "name": "EthicalAIditor",
@@ -388,7 +388,7 @@
       ]
     },
     "netlify": {
-      "collectedAt": "2026-03-30T16:12:34.953Z",
+      "collectedAt": "2026-03-30T18:17:25.648Z",
       "sites": [
         {
           "siteId": "acdb728a-2585-4258-9790-6ca6708f8903",
@@ -396,12 +396,12 @@
           "url": "https://datastic.netlify.app",
           "repoUrl": "https://github.com/mindfu23/Datastic",
           "lastDeploy": {
-            "id": "69ca0df1963a4b0008b838a6",
+            "id": "69cabc01d48a8e0008741489",
             "state": "ready",
-            "createdAt": "2026-03-30T05:45:21.529Z",
+            "createdAt": "2026-03-30T18:08:01.234Z",
             "deployTimeSeconds": 19
           },
-          "deploysLast30d": 10,
+          "deploysLast30d": 15,
           "deploySuccessRate": 1
         },
         {
@@ -438,11 +438,10 @@
           "url": "https://mindfu23code-wiki.netlify.app",
           "repoUrl": "https://github.com/mindfu23/code-wiki",
           "lastDeploy": {
-            "id": "69caa00a6909fd000855f5f0",
-            "state": "error",
-            "createdAt": "2026-03-30T16:08:42.437Z",
-            "deployTimeSeconds": 0,
-            "errorMessage": "Failed during stage 'checking build content for changes': Canceled build due to no content change"
+            "id": "69caa0f88735f90008769ca2",
+            "state": "ready",
+            "createdAt": "2026-03-30T16:12:40.445Z",
+            "deployTimeSeconds": 22
           },
           "deploysLast30d": 30,
           "deploySuccessRate": 0.93
