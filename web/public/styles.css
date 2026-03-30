@@ -2222,6 +2222,17 @@ footer a:hover {
   padding: 1rem;
 }
 
+.diagram-stale-badge {
+  font-size: 0.65rem;
+  padding: 0.15rem 0.5rem;
+  border-radius: 10px;
+  background: #fef3c7;
+  color: #92400e;
+  font-weight: 500;
+  cursor: help;
+  white-space: nowrap;
+}
+
 @media (max-width: 768px) {
   .diagrams-filters {
     flex-direction: column;

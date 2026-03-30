@@ -6,6 +6,7 @@
   "scripts": {
     "build": "npm run build:index && npm run build:functions",
     "build:index": "tsx src/indexBuilder.ts",
+    "build:signals": "tsx src/diagramSignals.ts",
     "build:functions": "tsc -p tsconfig.functions.json",
     "dev": "netlify dev",
     "typecheck": "tsc --noEmit",
