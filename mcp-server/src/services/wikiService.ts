@@ -8,7 +8,7 @@ import { WikiDocument, WikiFrontmatter } from '../types/index.js';
 import { parseMarkdownWithFrontmatter, extractContentPreview, extractTitleFromContent } from '../utils/frontmatter.js';
 import { logger } from '../utils/logger.js';
 
-export const WIKI_CATEGORIES = ['patterns', 'utilities', 'integrations', 'templates', 'snippets', 'projects'] as const;
+export const WIKI_CATEGORIES = ['patterns', 'utilities', 'integrations', 'templates', 'snippets', 'projects', 'diagrams'] as const;
 export type WikiCategory = typeof WIKI_CATEGORIES[number];
 
 export class WikiService {
