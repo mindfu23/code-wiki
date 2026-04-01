@@ -1,38 +1,13 @@
 {
-  "collectedAt": "2026-04-01T00:19:36.298Z",
+  "collectedAt": "2026-04-01T06:33:03.972Z",
   "version": "1.0.0",
   "sources": {
     "github": {
-      "collectedAt": "2026-04-01T00:19:36.298Z",
+      "collectedAt": "2026-04-01T06:33:03.972Z",
       "repos": [
         {
-          "name": "code-wiki",
-          "lastCommitDate": "2026-03-31T18:17:41Z",
-          "language": "TypeScript",
-          "openIssues": 0,
-          "commits30d": 83,
-          "workflows": [
-            {
-              "name": "Collect Observatory Metrics",
-              "workflowId": 249907935,
-              "lastRun": "2026-04-01T00:19:16Z",
-              "conclusion": "in_progress",
-              "durationSeconds": 3,
-              "runCount30d": 25
-            },
-            {
-              "name": "Update Wiki Index",
-              "workflowId": 227681858,
-              "lastRun": "2026-03-31T00:22:01Z",
-              "conclusion": "success",
-              "durationSeconds": 52,
-              "runCount30d": 5
-            }
-          ]
-        },
-        {
           "name": "apiTracker",
-          "lastCommitDate": "2026-03-31T00:24:55Z",
+          "lastCommitDate": "2026-04-01T00:27:45Z",
           "language": "JavaScript",
           "openIssues": 0,
           "commits30d": 30,
@@ -40,10 +15,35 @@
             {
               "name": "Update API Usage",
               "workflowId": 220876257,
-              "lastRun": "2026-03-31T00:24:48Z",
+              "lastRun": "2026-04-01T00:27:38Z",
               "conclusion": "success",
-              "durationSeconds": 10,
+              "durationSeconds": 11,
               "runCount30d": 30
+            }
+          ]
+        },
+        {
+          "name": "code-wiki",
+          "lastCommitDate": "2026-04-01T00:25:17Z",
+          "language": "TypeScript",
+          "openIssues": 0,
+          "commits30d": 85,
+          "workflows": [
+            {
+              "name": "Collect Observatory Metrics",
+              "workflowId": 249907935,
+              "lastRun": "2026-04-01T06:32:47Z",
+              "conclusion": "in_progress",
+              "durationSeconds": 3,
+              "runCount30d": 24
+            },
+            {
+              "name": "Update Wiki Index",
+              "workflowId": 227681858,
+              "lastRun": "2026-04-01T00:24:27Z",
+              "conclusion": "success",
+              "durationSeconds": 54,
+              "runCount30d": 6
             }
           ]
         },
@@ -158,7 +158,7 @@
           "lastCommitDate": "2026-03-02T00:29:35Z",
           "language": "JavaScript",
           "openIssues": 0,
-          "commits30d": 1,
+          "commits30d": 0,
           "workflows": []
         },
         {
@@ -388,7 +388,7 @@
       ]
     },
     "netlify": {
-      "collectedAt": "2026-04-01T00:19:34.537Z",
+      "collectedAt": "2026-04-01T06:33:02.705Z",
       "sites": [
         {
           "siteId": "acdb728a-2585-4258-9790-6ca6708f8903",
@@ -438,10 +438,10 @@
           "url": "https://mindfu23code-wiki.netlify.app",
           "repoUrl": "https://github.com/mindfu23/code-wiki",
           "lastDeploy": {
-            "id": "69cc0fc6469d9f0008d11c1c",
+            "id": "69cc65ee74480900082bf542",
             "state": "ready",
-            "createdAt": "2026-03-31T18:17:42.970Z",
-            "deployTimeSeconds": 21
+            "createdAt": "2026-04-01T00:25:18.450Z",
+            "deployTimeSeconds": 20
           },
           "deploysLast30d": 30,
           "deploySuccessRate": 0.93
@@ -509,10 +509,10 @@
           "url": "https://apitrack.netlify.app",
           "repoUrl": "https://github.com/mindfu23/apiTracker",
           "lastDeploy": {
-            "id": "69cb14584b1d820008575aa0",
+            "id": "69cc66833387590008536f8c",
             "state": "ready",
-            "createdAt": "2026-03-31T00:24:56.399Z",
-            "deployTimeSeconds": 14
+            "createdAt": "2026-04-01T00:27:47.205Z",
+            "deployTimeSeconds": 16
           },
           "deploysLast30d": 30,
           "deploySuccessRate": 1
