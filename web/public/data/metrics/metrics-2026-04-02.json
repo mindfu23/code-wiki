@@ -1,21 +1,21 @@
 {
-  "collectedAt": "2026-04-02T12:15:56.292Z",
+  "collectedAt": "2026-04-02T18:15:41.353Z",
   "version": "1.0.0",
   "sources": {
     "github": {
-      "collectedAt": "2026-04-02T12:15:56.292Z",
+      "collectedAt": "2026-04-02T18:15:41.353Z",
       "repos": [
         {
           "name": "code-wiki",
-          "lastCommitDate": "2026-04-02T06:24:22Z",
+          "lastCommitDate": "2026-04-02T12:15:56Z",
           "language": "TypeScript",
           "openIssues": 0,
-          "commits30d": 90,
+          "commits30d": 91,
           "workflows": [
             {
               "name": "Collect Observatory Metrics",
               "workflowId": 249907935,
-              "lastRun": "2026-04-02T12:15:34Z",
+              "lastRun": "2026-04-02T18:15:25Z",
               "conclusion": "in_progress",
               "durationSeconds": 3,
               "runCount30d": 24
@@ -388,7 +388,7 @@
       ]
     },
     "netlify": {
-      "collectedAt": "2026-04-02T12:15:54.497Z",
+      "collectedAt": "2026-04-02T18:15:39.544Z",
       "sites": [
         {
           "siteId": "acdb728a-2585-4258-9790-6ca6708f8903",
@@ -438,9 +438,9 @@
           "url": "https://mindfu23code-wiki.netlify.app",
           "repoUrl": "https://github.com/mindfu23/code-wiki",
           "lastDeploy": {
-            "id": "69ce0b9733ebce0008760271",
+            "id": "69ce5dfdf1aedf00085eb855",
             "state": "ready",
-            "createdAt": "2026-04-02T06:24:23.667Z",
+            "createdAt": "2026-04-02T12:15:57.756Z",
             "deployTimeSeconds": 19
           },
           "deploysLast30d": 30,
