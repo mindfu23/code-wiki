@@ -1,10 +1,35 @@
 {
-  "collectedAt": "2026-04-03T06:23:50.605Z",
+  "collectedAt": "2026-04-03T12:10:54.981Z",
   "version": "1.0.0",
   "sources": {
     "github": {
-      "collectedAt": "2026-04-03T06:23:50.605Z",
+      "collectedAt": "2026-04-03T12:10:54.980Z",
       "repos": [
+        {
+          "name": "code-wiki",
+          "lastCommitDate": "2026-04-03T06:23:51Z",
+          "language": "TypeScript",
+          "openIssues": 0,
+          "commits30d": 94,
+          "workflows": [
+            {
+              "name": "Collect Observatory Metrics",
+              "workflowId": 249907935,
+              "lastRun": "2026-04-03T12:10:38Z",
+              "conclusion": "in_progress",
+              "durationSeconds": 4,
+              "runCount30d": 24
+            },
+            {
+              "name": "Update Wiki Index",
+              "workflowId": 227681858,
+              "lastRun": "2026-04-03T00:22:05Z",
+              "conclusion": "success",
+              "durationSeconds": 53,
+              "runCount30d": 6
+            }
+          ]
+        },
         {
           "name": "apiTracker",
           "lastCommitDate": "2026-04-03T00:25:16Z",
@@ -19,31 +44,6 @@
               "conclusion": "success",
               "durationSeconds": 9,
               "runCount30d": 30
-            }
-          ]
-        },
-        {
-          "name": "code-wiki",
-          "lastCommitDate": "2026-04-03T00:22:53Z",
-          "language": "TypeScript",
-          "openIssues": 0,
-          "commits30d": 93,
-          "workflows": [
-            {
-              "name": "Collect Observatory Metrics",
-              "workflowId": 249907935,
-              "lastRun": "2026-04-03T06:23:36Z",
-              "conclusion": "in_progress",
-              "durationSeconds": 3,
-              "runCount30d": 24
-            },
-            {
-              "name": "Update Wiki Index",
-              "workflowId": 227681858,
-              "lastRun": "2026-04-03T00:22:05Z",
-              "conclusion": "success",
-              "durationSeconds": 53,
-              "runCount30d": 6
             }
           ]
         },
@@ -65,23 +65,23 @@
             {
               "name": "Close stale needs-info / needs-repro issues",
               "workflowId": 239934958,
-              "lastRun": "2026-04-02T09:58:06Z",
+              "lastRun": "2026-04-03T09:56:28Z",
               "conclusion": "success",
-              "durationSeconds": 7,
+              "durationSeconds": 11,
               "runCount30d": 9
             },
             {
               "name": "Sync Upstream",
               "workflowId": 253625952,
-              "lastRun": "2026-04-02T08:31:11Z",
+              "lastRun": "2026-04-03T08:27:20Z",
               "conclusion": "failure",
-              "durationSeconds": 25,
-              "runCount30d": 4
+              "durationSeconds": 23,
+              "runCount30d": 5
             },
             {
               "name": "E2E Tests",
               "workflowId": 239934959,
-              "lastRun": "2026-04-02T06:28:05Z",
+              "lastRun": "2026-04-03T06:27:55Z",
               "conclusion": "success",
               "durationSeconds": 490,
               "runCount30d": 8
@@ -108,7 +108,7 @@
               "lastRun": "2026-03-30T05:07:46Z",
               "conclusion": "failure",
               "durationSeconds": 766,
-              "runCount30d": 5
+              "runCount30d": 4
             }
           ]
         },
@@ -388,7 +388,7 @@
       ]
     },
     "netlify": {
-      "collectedAt": "2026-04-03T06:23:49.186Z",
+      "collectedAt": "2026-04-03T12:10:53.332Z",
       "sites": [
         {
           "siteId": "acdb728a-2585-4258-9790-6ca6708f8903",
@@ -438,10 +438,10 @@
           "url": "https://mindfu23code-wiki.netlify.app",
           "repoUrl": "https://github.com/mindfu23/code-wiki",
           "lastDeploy": {
-            "id": "69cf085ea0fa920008c73cf0",
+            "id": "69cf5cf81329de0008b1ac04",
             "state": "ready",
-            "createdAt": "2026-04-03T00:22:54.678Z",
-            "deployTimeSeconds": 14
+            "createdAt": "2026-04-03T06:23:52.401Z",
+            "deployTimeSeconds": 19
           },
           "deploysLast30d": 30,
           "deploySuccessRate": 0.97
