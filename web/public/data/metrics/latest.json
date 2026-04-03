@@ -1,24 +1,24 @@
 {
-  "collectedAt": "2026-04-02T18:15:41.353Z",
+  "collectedAt": "2026-04-03T00:18:08.768Z",
   "version": "1.0.0",
   "sources": {
     "github": {
-      "collectedAt": "2026-04-02T18:15:41.353Z",
+      "collectedAt": "2026-04-03T00:18:08.768Z",
       "repos": [
         {
           "name": "code-wiki",
-          "lastCommitDate": "2026-04-02T12:15:56Z",
+          "lastCommitDate": "2026-04-02T18:15:42Z",
           "language": "TypeScript",
           "openIssues": 0,
-          "commits30d": 91,
+          "commits30d": 92,
           "workflows": [
             {
               "name": "Collect Observatory Metrics",
               "workflowId": 249907935,
-              "lastRun": "2026-04-02T18:15:25Z",
+              "lastRun": "2026-04-03T00:17:19Z",
               "conclusion": "in_progress",
-              "durationSeconds": 3,
-              "runCount30d": 24
+              "durationSeconds": 36,
+              "runCount30d": 25
             },
             {
               "name": "Update Wiki Index",
@@ -26,7 +26,7 @@
               "lastRun": "2026-04-02T00:20:47Z",
               "conclusion": "success",
               "durationSeconds": 38,
-              "runCount30d": 6
+              "runCount30d": 5
             }
           ]
         },
@@ -388,7 +388,7 @@
       ]
     },
     "netlify": {
-      "collectedAt": "2026-04-02T18:15:39.544Z",
+      "collectedAt": "2026-04-03T00:18:06.651Z",
       "sites": [
         {
           "siteId": "acdb728a-2585-4258-9790-6ca6708f8903",
@@ -438,10 +438,10 @@
           "url": "https://mindfu23code-wiki.netlify.app",
           "repoUrl": "https://github.com/mindfu23/code-wiki",
           "lastDeploy": {
-            "id": "69ce5dfdf1aedf00085eb855",
+            "id": "69ceb24fdbd4a000086df369",
             "state": "ready",
-            "createdAt": "2026-04-02T12:15:57.756Z",
-            "deployTimeSeconds": 19
+            "createdAt": "2026-04-02T18:15:43.477Z",
+            "deployTimeSeconds": 20
           },
           "deploysLast30d": 30,
           "deploySuccessRate": 0.97
