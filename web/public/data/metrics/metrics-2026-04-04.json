@@ -1,38 +1,13 @@
 {
-  "collectedAt": "2026-04-04T00:16:37.443Z",
+  "collectedAt": "2026-04-04T06:20:29.161Z",
   "version": "1.0.0",
   "sources": {
     "github": {
-      "collectedAt": "2026-04-04T00:16:37.443Z",
+      "collectedAt": "2026-04-04T06:20:29.161Z",
       "repos": [
         {
-          "name": "code-wiki",
-          "lastCommitDate": "2026-04-03T18:10:31Z",
-          "language": "TypeScript",
-          "openIssues": 0,
-          "commits30d": 96,
-          "workflows": [
-            {
-              "name": "Collect Observatory Metrics",
-              "workflowId": 249907935,
-              "lastRun": "2026-04-04T00:16:20Z",
-              "conclusion": "in_progress",
-              "durationSeconds": 3,
-              "runCount30d": 25
-            },
-            {
-              "name": "Update Wiki Index",
-              "workflowId": 227681858,
-              "lastRun": "2026-04-03T00:22:05Z",
-              "conclusion": "success",
-              "durationSeconds": 53,
-              "runCount30d": 5
-            }
-          ]
-        },
-        {
           "name": "apiTracker",
-          "lastCommitDate": "2026-04-03T00:25:16Z",
+          "lastCommitDate": "2026-04-04T00:23:38Z",
           "language": "JavaScript",
           "openIssues": 0,
           "commits30d": 30,
@@ -40,10 +15,35 @@
             {
               "name": "Update API Usage",
               "workflowId": 220876257,
-              "lastRun": "2026-04-03T00:25:10Z",
+              "lastRun": "2026-04-04T00:23:30Z",
               "conclusion": "success",
-              "durationSeconds": 9,
+              "durationSeconds": 11,
               "runCount30d": 30
+            }
+          ]
+        },
+        {
+          "name": "code-wiki",
+          "lastCommitDate": "2026-04-04T00:21:43Z",
+          "language": "TypeScript",
+          "openIssues": 0,
+          "commits30d": 97,
+          "workflows": [
+            {
+              "name": "Collect Observatory Metrics",
+              "workflowId": 249907935,
+              "lastRun": "2026-04-04T06:20:05Z",
+              "conclusion": "in_progress",
+              "durationSeconds": 5,
+              "runCount30d": 24
+            },
+            {
+              "name": "Update Wiki Index",
+              "workflowId": 227681858,
+              "lastRun": "2026-04-04T00:20:58Z",
+              "conclusion": "success",
+              "durationSeconds": 48,
+              "runCount30d": 6
             }
           ]
         },
@@ -388,7 +388,7 @@
       ]
     },
     "netlify": {
-      "collectedAt": "2026-04-04T00:16:36.055Z",
+      "collectedAt": "2026-04-04T06:20:28.412Z",
       "sites": [
         {
           "siteId": "acdb728a-2585-4258-9790-6ca6708f8903",
@@ -438,13 +438,13 @@
           "url": "https://mindfu23code-wiki.netlify.app",
           "repoUrl": "https://github.com/mindfu23/code-wiki",
           "lastDeploy": {
-            "id": "69d00298f31537000856dce3",
+            "id": "69d059989df29f00090333aa",
             "state": "ready",
-            "createdAt": "2026-04-03T18:10:32.540Z",
-            "deployTimeSeconds": 19
+            "createdAt": "2026-04-04T00:21:44.658Z",
+            "deployTimeSeconds": 15
           },
           "deploysLast30d": 30,
-          "deploySuccessRate": 0.97
+          "deploySuccessRate": 1
         },
         {
           "siteId": "9f12b59c-32f5-4994-bd53-12078d783ce2",
@@ -509,9 +509,9 @@
           "url": "https://apitrack.netlify.app",
           "repoUrl": "https://github.com/mindfu23/apiTracker",
           "lastDeploy": {
-            "id": "69cf08edd18f1b000898b3b3",
+            "id": "69d05a0d94da52000810b2ab",
             "state": "ready",
-            "createdAt": "2026-04-03T00:25:17.331Z",
+            "createdAt": "2026-04-04T00:23:41.173Z",
             "deployTimeSeconds": 11
           },
           "deploysLast30d": 30,
