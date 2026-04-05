@@ -435,55 +435,12 @@
   ],
   "repos": [
     {
-      "name": "apiTracker",
-      "description": "A simple GUI tracker for health and number of remaining calls for my various APIs used in my other apps.",
-      "githubUrl": "https://github.com/mindfu23/apiTracker",
-      "languages": [
-        "JavaScript"
-      ],
-      "lastCommitDate": "2026-04-05T00:25:54Z",
-      "status": "synced",
-      "visibility": "public",
-      "localPaths": [
-        "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/apiTracker"
-      ],
-      "localPath": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/apiTracker",
-      "notes": "also implemented as a browser extension, and further developed there.",
-      "markdownFiles": [
-        {
-          "relativePath": "browser-extension/README.md",
-          "name": "README.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "dist-platforms/firefox/README.md",
-          "name": "README.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "dist-platforms/safari/API Usage Scraper Extension/Resources/README.md",
-          "name": "README.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "dist-platforms/safari/README.md",
-          "name": "README.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "platforms/README.md",
-          "name": "README.md",
-          "fileType": "md"
-        }
-      ]
-    },
-    {
       "name": "code-wiki",
       "githubUrl": "https://github.com/mindfu23/code-wiki",
       "languages": [
         "TypeScript"
       ],
-      "lastCommitDate": "2026-04-05T00:23:03Z",
+      "lastCommitDate": "2026-04-05T01:50:47Z",
       "status": "github-only",
       "visibility": "public",
       "markdownFiles": [
@@ -667,7 +624,112 @@
           "name": "_index.md",
           "fileType": "md"
         }
-      ]
+      ],
+      "sentinels": {
+        "hasReadme": true,
+        "hasClaudeMd": false,
+        "hasPackageManifest": true,
+        "hasDeployConfig": true,
+        "hasCi": true,
+        "hasTests": false,
+        "hasEnvExample": false,
+        "sourceFileCount": 64
+      },
+      "completion": {
+        "stage": "in-progress",
+        "signals": {
+          "scaffold": 3,
+          "implementation": 3,
+          "deployed": 1,
+          "maintained": 4
+        },
+        "reasons": [
+          "has README",
+          "has package manifest",
+          "has source files",
+          "64 source files",
+          "non-trivial size",
+          "committed in last 90 days",
+          "has deploy config",
+          "committed in last 30 days",
+          "CI configured",
+          "0 open issues"
+        ]
+      }
+    },
+    {
+      "name": "apiTracker",
+      "description": "A simple GUI tracker for health and number of remaining calls for my various APIs used in my other apps.",
+      "githubUrl": "https://github.com/mindfu23/apiTracker",
+      "languages": [
+        "JavaScript"
+      ],
+      "lastCommitDate": "2026-04-05T00:25:54Z",
+      "status": "synced",
+      "visibility": "public",
+      "localPaths": [
+        "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/apiTracker"
+      ],
+      "localPath": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/apiTracker",
+      "notes": "also implemented as a browser extension, and further developed there.",
+      "markdownFiles": [
+        {
+          "relativePath": "browser-extension/README.md",
+          "name": "README.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "dist-platforms/firefox/README.md",
+          "name": "README.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "dist-platforms/safari/API Usage Scraper Extension/Resources/README.md",
+          "name": "README.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "dist-platforms/safari/README.md",
+          "name": "README.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "platforms/README.md",
+          "name": "README.md",
+          "fileType": "md"
+        }
+      ],
+      "sentinels": {
+        "hasReadme": false,
+        "hasClaudeMd": false,
+        "hasPackageManifest": true,
+        "hasDeployConfig": true,
+        "hasCi": true,
+        "hasTests": false,
+        "hasEnvExample": false,
+        "sourceFileCount": 80
+      },
+      "completion": {
+        "stage": "in-progress",
+        "signals": {
+          "scaffold": 3,
+          "implementation": 3,
+          "deployed": 1,
+          "maintained": 4
+        },
+        "reasons": [
+          "has description",
+          "has package manifest",
+          "has source files",
+          "80 source files",
+          "non-trivial size",
+          "committed in last 90 days",
+          "has deploy config",
+          "committed in last 30 days",
+          "CI configured",
+          "0 open issues"
+        ]
+      }
     },
     {
       "name": "gastown",
@@ -682,6 +744,21 @@
       ],
       "localPath": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/gastown",
       "markdownFiles": [
+        {
+          "relativePath": ".github/ISSUE_TEMPLATE/bug_report.md",
+          "name": "bug_report.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": ".github/ISSUE_TEMPLATE/feature_request.md",
+          "name": "feature_request.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": ".github/PULL_REQUEST_TEMPLATE.md",
+          "name": "PULL_REQUEST_TEMPLATE.md",
+          "fileType": "md"
+        },
         {
           "relativePath": "AGENTS.md",
           "name": "AGENTS.md",
@@ -867,7 +944,37 @@
           "name": "witness-CLAUDE.md",
           "fileType": "md"
         }
-      ]
+      ],
+      "sentinels": {
+        "hasReadme": true,
+        "hasClaudeMd": false,
+        "hasPackageManifest": true,
+        "hasDeployConfig": false,
+        "hasCi": true,
+        "hasTests": false,
+        "hasEnvExample": false,
+        "sourceFileCount": 484
+      },
+      "completion": {
+        "stage": "in-progress",
+        "signals": {
+          "scaffold": 4,
+          "implementation": 3,
+          "deployed": 0,
+          "maintained": 3
+        },
+        "reasons": [
+          "has README",
+          "has description",
+          "has package manifest",
+          "has source files",
+          "484 source files",
+          "non-trivial size",
+          "committed in last 90 days",
+          "CI configured",
+          "0 open issues"
+        ]
+      }
     },
     {
       "name": "JBWordPressTheme",
@@ -895,7 +1002,36 @@
           "name": "readme.txt",
           "fileType": "txt"
         }
-      ]
+      ],
+      "sentinels": {
+        "hasReadme": true,
+        "hasClaudeMd": false,
+        "hasPackageManifest": false,
+        "hasDeployConfig": false,
+        "hasCi": false,
+        "hasTests": false,
+        "hasEnvExample": false,
+        "sourceFileCount": 30
+      },
+      "completion": {
+        "stage": "in-progress",
+        "signals": {
+          "scaffold": 3,
+          "implementation": 3,
+          "deployed": 0,
+          "maintained": 3
+        },
+        "reasons": [
+          "has README",
+          "has description",
+          "has source files",
+          "30 source files",
+          "non-trivial size",
+          "committed in last 90 days",
+          "committed in last 30 days",
+          "0 open issues"
+        ]
+      }
     },
     {
       "name": "gastown-mission-district",
@@ -912,6 +1048,21 @@
       ],
       "localPath": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/gastown-mission-district",
       "markdownFiles": [
+        {
+          "relativePath": ".github/ISSUE_TEMPLATE/bug_report.md",
+          "name": "bug_report.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": ".github/ISSUE_TEMPLATE/feature_request.md",
+          "name": "feature_request.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": ".github/PULL_REQUEST_TEMPLATE.md",
+          "name": "PULL_REQUEST_TEMPLATE.md",
+          "fileType": "md"
+        },
         {
           "relativePath": "agent_router/AGENTS.md",
           "name": "AGENTS.md",
@@ -1352,7 +1503,38 @@
           "name": "README.md",
           "fileType": "md"
         }
-      ]
+      ],
+      "sentinels": {
+        "hasReadme": true,
+        "hasClaudeMd": false,
+        "hasPackageManifest": true,
+        "hasDeployConfig": false,
+        "hasCi": true,
+        "hasTests": true,
+        "hasEnvExample": false,
+        "sourceFileCount": 907
+      },
+      "completion": {
+        "stage": "in-progress",
+        "signals": {
+          "scaffold": 4,
+          "implementation": 3,
+          "deployed": 0,
+          "maintained": 4
+        },
+        "reasons": [
+          "has README",
+          "has description",
+          "has package manifest",
+          "has source files",
+          "907 source files",
+          "non-trivial size",
+          "committed in last 90 days",
+          "committed in last 30 days",
+          "CI configured",
+          "0 open issues"
+        ]
+      }
     },
     {
       "name": "EthicalAIditor",
@@ -1369,6 +1551,11 @@
       ],
       "localPath": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/EthicalAIditor",
       "markdownFiles": [
+        {
+          "relativePath": ".github/copilot-instructions.md",
+          "name": "copilot-instructions.md",
+          "fileType": "md"
+        },
         {
           "relativePath": "DEPLOYMENT.md",
           "name": "DEPLOYMENT.md",
@@ -1409,7 +1596,38 @@
           "name": "TODO.md",
           "fileType": "md"
         }
-      ]
+      ],
+      "sentinels": {
+        "hasReadme": true,
+        "hasClaudeMd": false,
+        "hasPackageManifest": true,
+        "hasDeployConfig": true,
+        "hasCi": false,
+        "hasTests": false,
+        "hasEnvExample": false,
+        "sourceFileCount": 115
+      },
+      "completion": {
+        "stage": "in-progress",
+        "signals": {
+          "scaffold": 4,
+          "implementation": 3,
+          "deployed": 1,
+          "maintained": 3
+        },
+        "reasons": [
+          "has README",
+          "has description",
+          "has package manifest",
+          "has source files",
+          "115 source files",
+          "non-trivial size",
+          "committed in last 90 days",
+          "has deploy config",
+          "committed in last 30 days",
+          "0 open issues"
+        ]
+      }
     },
     {
       "name": "weirdchess",
@@ -1446,7 +1664,38 @@
           "name": "weirdchess-store-text.md",
           "fileType": "md"
         }
-      ]
+      ],
+      "sentinels": {
+        "hasReadme": true,
+        "hasClaudeMd": false,
+        "hasPackageManifest": true,
+        "hasDeployConfig": true,
+        "hasCi": false,
+        "hasTests": true,
+        "hasEnvExample": false,
+        "sourceFileCount": 70
+      },
+      "completion": {
+        "stage": "in-progress",
+        "signals": {
+          "scaffold": 4,
+          "implementation": 3,
+          "deployed": 1,
+          "maintained": 3
+        },
+        "reasons": [
+          "has README",
+          "has description",
+          "has package manifest",
+          "has source files",
+          "70 source files",
+          "non-trivial size",
+          "committed in last 90 days",
+          "has deploy config",
+          "committed in last 30 days",
+          "0 open issues"
+        ]
+      }
     },
     {
       "name": "n8n_workflows",
@@ -1499,7 +1748,34 @@
           "name": "VALUEAPE_INTEGRATION_GUIDE.md",
           "fileType": "md"
         }
-      ]
+      ],
+      "sentinels": {
+        "hasReadme": true,
+        "hasClaudeMd": false,
+        "hasPackageManifest": false,
+        "hasDeployConfig": false,
+        "hasCi": false,
+        "hasTests": false,
+        "hasEnvExample": false,
+        "sourceFileCount": 4
+      },
+      "completion": {
+        "stage": "scaffold",
+        "signals": {
+          "scaffold": 3,
+          "implementation": 1,
+          "deployed": 0,
+          "maintained": 3
+        },
+        "reasons": [
+          "has README",
+          "has description",
+          "has source files",
+          "committed in last 90 days",
+          "committed in last 30 days",
+          "0 open issues"
+        ]
+      }
     },
     {
       "name": "CoverJudge",
@@ -1549,7 +1825,38 @@
           "name": "README.md",
           "fileType": "md"
         }
-      ]
+      ],
+      "sentinels": {
+        "hasReadme": true,
+        "hasClaudeMd": false,
+        "hasPackageManifest": true,
+        "hasDeployConfig": true,
+        "hasCi": false,
+        "hasTests": false,
+        "hasEnvExample": false,
+        "sourceFileCount": 26
+      },
+      "completion": {
+        "stage": "in-progress",
+        "signals": {
+          "scaffold": 4,
+          "implementation": 3,
+          "deployed": 1,
+          "maintained": 3
+        },
+        "reasons": [
+          "has README",
+          "has description",
+          "has package manifest",
+          "has source files",
+          "26 source files",
+          "non-trivial size",
+          "committed in last 90 days",
+          "has deploy config",
+          "committed in last 30 days",
+          "0 open issues"
+        ]
+      }
     },
     {
       "name": "Namerrific",
@@ -1561,7 +1868,36 @@
       "lastCommitDate": "2026-03-02T00:29:35Z",
       "status": "github-only",
       "visibility": "public",
-      "markdownFiles": []
+      "markdownFiles": [],
+      "sentinels": {
+        "hasReadme": false,
+        "hasClaudeMd": false,
+        "hasPackageManifest": true,
+        "hasDeployConfig": true,
+        "hasCi": false,
+        "hasTests": false,
+        "hasEnvExample": false,
+        "sourceFileCount": 27
+      },
+      "completion": {
+        "stage": "in-progress",
+        "signals": {
+          "scaffold": 3,
+          "implementation": 3,
+          "deployed": 1,
+          "maintained": 2
+        },
+        "reasons": [
+          "has description",
+          "has package manifest",
+          "has source files",
+          "27 source files",
+          "non-trivial size",
+          "committed in last 90 days",
+          "has deploy config",
+          "0 open issues"
+        ]
+      }
     },
     {
       "name": "takehome_q",
@@ -1592,7 +1928,33 @@
           "name": "README.md",
           "fileType": "md"
         }
-      ]
+      ],
+      "sentinels": {
+        "hasReadme": true,
+        "hasClaudeMd": false,
+        "hasPackageManifest": false,
+        "hasDeployConfig": false,
+        "hasCi": false,
+        "hasTests": false,
+        "hasEnvExample": false,
+        "sourceFileCount": 2
+      },
+      "completion": {
+        "stage": "scaffold",
+        "signals": {
+          "scaffold": 3,
+          "implementation": 1,
+          "deployed": 0,
+          "maintained": 2
+        },
+        "reasons": [
+          "has README",
+          "has description",
+          "has source files",
+          "committed in last 90 days",
+          "0 open issues"
+        ]
+      }
     },
     {
       "name": "ManuscriptReview",
@@ -1614,7 +1976,35 @@
           "name": "TODO.md",
           "fileType": "md"
         }
-      ]
+      ],
+      "sentinels": {
+        "hasReadme": true,
+        "hasClaudeMd": false,
+        "hasPackageManifest": true,
+        "hasDeployConfig": true,
+        "hasCi": false,
+        "hasTests": false,
+        "hasEnvExample": false,
+        "sourceFileCount": 18
+      },
+      "completion": {
+        "stage": "in-progress",
+        "signals": {
+          "scaffold": 3,
+          "implementation": 2,
+          "deployed": 1,
+          "maintained": 2
+        },
+        "reasons": [
+          "has README",
+          "has package manifest",
+          "has source files",
+          "18 source files",
+          "committed in last 90 days",
+          "has deploy config",
+          "0 open issues"
+        ]
+      }
     },
     {
       "name": "FreeWillEstimator",
@@ -1636,7 +2026,34 @@
           "name": "README.md",
           "fileType": "md"
         }
-      ]
+      ],
+      "sentinels": {
+        "hasReadme": true,
+        "hasClaudeMd": false,
+        "hasPackageManifest": false,
+        "hasDeployConfig": true,
+        "hasCi": false,
+        "hasTests": false,
+        "hasEnvExample": false,
+        "sourceFileCount": 3
+      },
+      "completion": {
+        "stage": "scaffold",
+        "signals": {
+          "scaffold": 3,
+          "implementation": 1,
+          "deployed": 1,
+          "maintained": 2
+        },
+        "reasons": [
+          "has README",
+          "has description",
+          "has source files",
+          "committed in last 90 days",
+          "has deploy config",
+          "0 open issues"
+        ]
+      }
     },
     {
       "name": "Create",
@@ -1668,7 +2085,37 @@
           "name": "README.md",
           "fileType": "md"
         }
-      ]
+      ],
+      "sentinels": {
+        "hasReadme": true,
+        "hasClaudeMd": false,
+        "hasPackageManifest": true,
+        "hasDeployConfig": true,
+        "hasCi": false,
+        "hasTests": false,
+        "hasEnvExample": false,
+        "sourceFileCount": 125
+      },
+      "completion": {
+        "stage": "in-progress",
+        "signals": {
+          "scaffold": 4,
+          "implementation": 3,
+          "deployed": 1,
+          "maintained": 2
+        },
+        "reasons": [
+          "has README",
+          "has description",
+          "has package manifest",
+          "has source files",
+          "125 source files",
+          "non-trivial size",
+          "committed in last 90 days",
+          "has deploy config",
+          "0 open issues"
+        ]
+      }
     },
     {
       "name": "plottoxml",
@@ -1695,7 +2142,32 @@
           "name": "README.md",
           "fileType": "md"
         }
-      ]
+      ],
+      "sentinels": {
+        "hasReadme": true,
+        "hasClaudeMd": false,
+        "hasPackageManifest": false,
+        "hasDeployConfig": false,
+        "hasCi": false,
+        "hasTests": false,
+        "hasEnvExample": false,
+        "sourceFileCount": 0
+      },
+      "completion": {
+        "stage": "reference",
+        "signals": {
+          "scaffold": 2,
+          "implementation": 0,
+          "deployed": 0,
+          "maintained": 2
+        },
+        "reasons": [
+          "has README",
+          "has description",
+          "0 open issues",
+          "docs-only repository"
+        ]
+      }
     },
     {
       "name": "meme-renamer",
@@ -1722,7 +2194,33 @@
           "name": "requirements.txt",
           "fileType": "txt"
         }
-      ]
+      ],
+      "sentinels": {
+        "hasReadme": true,
+        "hasClaudeMd": false,
+        "hasPackageManifest": true,
+        "hasDeployConfig": false,
+        "hasCi": false,
+        "hasTests": false,
+        "hasEnvExample": false,
+        "sourceFileCount": 3
+      },
+      "completion": {
+        "stage": "scaffold",
+        "signals": {
+          "scaffold": 4,
+          "implementation": 0,
+          "deployed": 0,
+          "maintained": 2
+        },
+        "reasons": [
+          "has README",
+          "has description",
+          "has package manifest",
+          "has source files",
+          "0 open issues"
+        ]
+      }
     },
     {
       "name": "SearchBard",
@@ -1783,7 +2281,35 @@
           "name": "SEARCHBARD_DOCS.md",
           "fileType": "md"
         }
-      ]
+      ],
+      "sentinels": {
+        "hasReadme": true,
+        "hasClaudeMd": false,
+        "hasPackageManifest": true,
+        "hasDeployConfig": true,
+        "hasCi": false,
+        "hasTests": true,
+        "hasEnvExample": false,
+        "sourceFileCount": 24
+      },
+      "completion": {
+        "stage": "in-progress",
+        "signals": {
+          "scaffold": 3,
+          "implementation": 2,
+          "deployed": 1,
+          "maintained": 2
+        },
+        "reasons": [
+          "has README",
+          "has package manifest",
+          "has source files",
+          "24 source files",
+          "non-trivial size",
+          "has deploy config",
+          "0 open issues"
+        ]
+      }
     },
     {
       "name": "Postboi",
@@ -1865,7 +2391,36 @@
           "name": "README.md",
           "fileType": "md"
         }
-      ]
+      ],
+      "sentinels": {
+        "hasReadme": true,
+        "hasClaudeMd": false,
+        "hasPackageManifest": true,
+        "hasDeployConfig": false,
+        "hasCi": false,
+        "hasTests": false,
+        "hasEnvExample": false,
+        "sourceFileCount": 25
+      },
+      "completion": {
+        "stage": "in-progress",
+        "signals": {
+          "scaffold": 4,
+          "implementation": 3,
+          "deployed": 0,
+          "maintained": 2
+        },
+        "reasons": [
+          "has README",
+          "has description",
+          "has package manifest",
+          "has source files",
+          "25 source files",
+          "non-trivial size",
+          "committed in last 90 days",
+          "0 open issues"
+        ]
+      }
     },
     {
       "name": "GNN",
@@ -1908,7 +2463,34 @@
           "name": "USER_GUIDE.md",
           "fileType": "md"
         }
-      ]
+      ],
+      "sentinels": {
+        "hasReadme": true,
+        "hasClaudeMd": false,
+        "hasPackageManifest": true,
+        "hasDeployConfig": false,
+        "hasCi": false,
+        "hasTests": false,
+        "hasEnvExample": false,
+        "sourceFileCount": 14
+      },
+      "completion": {
+        "stage": "scaffold",
+        "signals": {
+          "scaffold": 4,
+          "implementation": 1,
+          "deployed": 0,
+          "maintained": 2
+        },
+        "reasons": [
+          "has README",
+          "has description",
+          "has package manifest",
+          "has source files",
+          "14 source files",
+          "0 open issues"
+        ]
+      }
     },
     {
       "name": "SacredGeometryOutliner",
@@ -1930,7 +2512,33 @@
           "name": "README.md",
           "fileType": "md"
         }
-      ]
+      ],
+      "sentinels": {
+        "hasReadme": true,
+        "hasClaudeMd": false,
+        "hasPackageManifest": false,
+        "hasDeployConfig": true,
+        "hasCi": false,
+        "hasTests": false,
+        "hasEnvExample": false,
+        "sourceFileCount": 3
+      },
+      "completion": {
+        "stage": "scaffold",
+        "signals": {
+          "scaffold": 3,
+          "implementation": 0,
+          "deployed": 1,
+          "maintained": 2
+        },
+        "reasons": [
+          "has README",
+          "has description",
+          "has source files",
+          "has deploy config",
+          "0 open issues"
+        ]
+      }
     },
     {
       "name": "SierraTrails",
@@ -1962,7 +2570,34 @@
           "name": "README.md",
           "fileType": "md"
         }
-      ]
+      ],
+      "sentinels": {
+        "hasReadme": true,
+        "hasClaudeMd": false,
+        "hasPackageManifest": true,
+        "hasDeployConfig": false,
+        "hasCi": false,
+        "hasTests": false,
+        "hasEnvExample": false,
+        "sourceFileCount": 8
+      },
+      "completion": {
+        "stage": "scaffold",
+        "signals": {
+          "scaffold": 4,
+          "implementation": 1,
+          "deployed": 0,
+          "maintained": 2
+        },
+        "reasons": [
+          "has README",
+          "has description",
+          "has package manifest",
+          "has source files",
+          "8 source files",
+          "0 open issues"
+        ]
+      }
     },
     {
       "name": "IsHe",
@@ -2004,7 +2639,34 @@
           "name": "README.md",
           "fileType": "md"
         }
-      ]
+      ],
+      "sentinels": {
+        "hasReadme": true,
+        "hasClaudeMd": false,
+        "hasPackageManifest": true,
+        "hasDeployConfig": true,
+        "hasCi": false,
+        "hasTests": true,
+        "hasEnvExample": false,
+        "sourceFileCount": 17
+      },
+      "completion": {
+        "stage": "scaffold",
+        "signals": {
+          "scaffold": 3,
+          "implementation": 1,
+          "deployed": 1,
+          "maintained": 2
+        },
+        "reasons": [
+          "has README",
+          "has package manifest",
+          "has source files",
+          "17 source files",
+          "has deploy config",
+          "0 open issues"
+        ]
+      }
     },
     {
       "name": "Theorazine",
@@ -2036,7 +2698,35 @@
           "name": "README.md",
           "fileType": "md"
         }
-      ]
+      ],
+      "sentinels": {
+        "hasReadme": true,
+        "hasClaudeMd": false,
+        "hasPackageManifest": true,
+        "hasDeployConfig": true,
+        "hasCi": false,
+        "hasTests": false,
+        "hasEnvExample": false,
+        "sourceFileCount": 11
+      },
+      "completion": {
+        "stage": "scaffold",
+        "signals": {
+          "scaffold": 4,
+          "implementation": 1,
+          "deployed": 1,
+          "maintained": 2
+        },
+        "reasons": [
+          "has README",
+          "has description",
+          "has package manifest",
+          "has source files",
+          "11 source files",
+          "has deploy config",
+          "0 open issues"
+        ]
+      }
     },
     {
       "name": "Musix",
@@ -2058,7 +2748,34 @@
           "name": "README.md",
           "fileType": "md"
         }
-      ]
+      ],
+      "sentinels": {
+        "hasReadme": true,
+        "hasClaudeMd": false,
+        "hasPackageManifest": true,
+        "hasDeployConfig": false,
+        "hasCi": false,
+        "hasTests": false,
+        "hasEnvExample": false,
+        "sourceFileCount": 9
+      },
+      "completion": {
+        "stage": "scaffold",
+        "signals": {
+          "scaffold": 4,
+          "implementation": 1,
+          "deployed": 0,
+          "maintained": 2
+        },
+        "reasons": [
+          "has README",
+          "has description",
+          "has package manifest",
+          "has source files",
+          "9 source files",
+          "0 open issues"
+        ]
+      }
     },
     {
       "name": "KorassViewer",
@@ -2072,7 +2789,36 @@
         "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/KorassViewer"
       ],
       "localPath": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/KorassViewer",
-      "markdownFiles": []
+      "markdownFiles": [
+        {
+          "relativePath": "CLAUDE.md",
+          "name": "CLAUDE.md",
+          "fileType": "md"
+        }
+      ],
+      "sentinels": {
+        "hasReadme": false,
+        "hasClaudeMd": true,
+        "hasPackageManifest": false,
+        "hasDeployConfig": false,
+        "hasCi": false,
+        "hasTests": false,
+        "hasEnvExample": false,
+        "sourceFileCount": 0
+      },
+      "completion": {
+        "stage": "abandoned",
+        "signals": {
+          "scaffold": 1,
+          "implementation": 0,
+          "deployed": 0,
+          "maintained": 2
+        },
+        "reasons": [
+          "has description",
+          "0 open issues"
+        ]
+      }
     },
     {
       "name": "FutureSketch",
@@ -2119,7 +2865,33 @@
           "name": "UnitA.txt",
           "fileType": "txt"
         }
-      ]
+      ],
+      "sentinels": {
+        "hasReadme": true,
+        "hasClaudeMd": false,
+        "hasPackageManifest": false,
+        "hasDeployConfig": false,
+        "hasCi": false,
+        "hasTests": false,
+        "hasEnvExample": false,
+        "sourceFileCount": 15
+      },
+      "completion": {
+        "stage": "abandoned",
+        "signals": {
+          "scaffold": 3,
+          "implementation": 1,
+          "deployed": 0,
+          "maintained": 2
+        },
+        "reasons": [
+          "has README",
+          "has description",
+          "has source files",
+          "15 source files",
+          "0 open issues"
+        ]
+      }
     }
   ],
   "categories": [
@@ -2133,6 +2905,6 @@
     "templates",
     "utilities"
   ],
-  "buildTime": "2026-04-05T01:45:19.828Z",
+  "buildTime": "2026-04-05T02:06:53.858Z",
   "version": "1.0.0"
 }
