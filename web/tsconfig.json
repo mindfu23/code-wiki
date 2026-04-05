@@ -10,8 +10,8 @@
     "resolveJsonModule": true,
     "declaration": true,
     "outDir": "./dist",
-    "rootDir": "./src"
+    "noEmit": true
   },
-  "include": ["src/**/*"],
-  "exclude": ["node_modules", "dist", "netlify"]
+  "include": ["src/**/*", "netlify/functions/_shared/**/*"],
+  "exclude": ["node_modules", "dist", "netlify/functions-dist", "netlify/functions/*.ts"]
 }
