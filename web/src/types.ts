@@ -31,6 +31,8 @@ export interface RepoInfo {
   description?: string;
   githubUrl?: string;
   localPath?: string;
+  localPaths?: string[];  // All local checkouts pointing at the same GitHub URL (e.g., a scratch clone plus a main working copy). localPath is always localPaths[0] when set.
+  aliases?: string[];     // Former names for this repo (renames detected via GitHub redirects) and names of merged duplicate local entries.
   languages: string[];
   lastCommitDate?: string;
   status: 'synced' | 'local-only' | 'github-only';
