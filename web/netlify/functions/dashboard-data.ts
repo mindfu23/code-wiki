@@ -54,6 +54,11 @@ interface ProjectHealthRow {
   openIssues: number;
   siteUrl?: string;
   githubUrl?: string;
+  /** Direct link to the most recent failing Actions run, when actionsStatus is
+   *  error or warning. Falls back to the repo's /actions tab when we know CI
+   *  is configured but can't pinpoint a specific failing run. Absent for repos
+   *  with no CI history. */
+  actionsUrl?: string;
   /** Lifecycle-stage classification — static sentinels from the index,
    *  refined with live deploy/actions/issues data at request time. */
   completion?: CompletionAssessment;
@@ -141,7 +146,11 @@ async function fetchWorkflowRuns(fullName: string, token: string) {
     );
     if (!response.ok) return [];
     const data = await response.json() as {
-      workflow_runs: Array<{ conclusion: string | null; status: string }>;
+      workflow_runs: Array<{
+        conclusion: string | null;
+        status: string;
+        html_url: string;
+      }>;
     };
     return data.workflow_runs || [];
   } catch {
@@ -294,15 +303,23 @@ const handler: Handler = async (event: HandlerEvent) => {
 
           // Fetch Actions runs only for GitHub repos
           let actionsStatus: ProjectHealthRow['actionsStatus'] = 'unknown';
+          let actionsUrl: string | undefined;
           if (ghRepo) {
             const runs = await fetchWorkflowRuns(ghRepo.full_name, githubToken);
             if (runs.length > 0) {
-              const hasFailure = runs.some((r: { conclusion: string | null }) => r.conclusion === 'failure');
+              const hasFailure = runs.some((r) => r.conclusion === 'failure');
               const allSuccess = runs.every(
-                (r: { conclusion: string | null; status: string }) =>
-                  r.conclusion === 'success' || r.conclusion === 'skipped'
+                (r) => r.conclusion === 'success' || r.conclusion === 'skipped'
               );
               actionsStatus = hasFailure ? 'error' : allSuccess ? 'healthy' : 'warning';
+
+              // Deep-link the Actions badge: point at the first failing run
+              // (most recent, since the API returns newest-first) so clicking
+              // the red dot jumps directly to the error page in GitHub. For
+              // warning or healthy states we link to the most recent run.
+              // Repos with no run history get no link (plain dot).
+              const failingRun = runs.find((r) => r.conclusion === 'failure');
+              actionsUrl = failingRun?.html_url ?? runs[0]?.html_url;
             }
           }
 
@@ -359,6 +376,7 @@ const handler: Handler = async (event: HandlerEvent) => {
             openIssues,
             siteUrl,
             githubUrl: ghRepo?.html_url,
+            actionsUrl,
             completion,
           };
         })
