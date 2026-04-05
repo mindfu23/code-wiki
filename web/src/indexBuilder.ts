@@ -445,62 +445,213 @@ async function fetchAllGitHubRepos(
 }
 
 /**
- * Merge GitHub-discovered repos with repo-locations.md data
- * GitHub is the source of truth for: existence, visibility, description, languages
- * repo-locations.md provides: local paths, notes, status overrides
+ * Normalize a GitHub URL to a canonical `owner/repo` key (lowercased).
+ * Strips `.git` suffixes, trailing slashes, and case variation so two local
+ * entries pointing at the same repo via slightly different URLs collapse together.
+ * Returns the original URL lowercased if parsing fails (rare).
  */
-function mergeRepoData(
-  githubRepos: RepoInfo[],
-  localRepos: RepoInfo[]
-): RepoInfo[] {
-  const merged: RepoInfo[] = [];
-  const localRepoMap = new Map<string, RepoInfo>();
+function normalizeGitHubUrl(url: string): string {
+  const parsed = parseGitHubUrl(url);
+  if (!parsed) return url.toLowerCase();
+  return `${parsed.owner.toLowerCase()}/${parsed.repo.toLowerCase()}`;
+}
 
-  // Index local repos by name (case-insensitive)
-  for (const repo of localRepos) {
-    localRepoMap.set(repo.name.toLowerCase(), repo);
+/**
+ * Resolve a GitHub repo reference through the API, following 301 redirects
+ * for renamed repos. Octokit follows redirects by default, so a request for a
+ * repo that has been renamed returns the canonical owner/name of the new repo.
+ * Returns null for 404 (deleted / transferred / no access).
+ */
+async function resolveGitHubRepo(
+  octokit: Octokit,
+  owner: string,
+  repo: string
+): Promise<{ canonicalOwner: string; canonicalRepo: string; visibility: 'public' | 'private' } | null> {
+  try {
+    const { data } = await octokit.repos.get({ owner, repo });
+    return {
+      canonicalOwner: data.owner.login,
+      canonicalRepo: data.name,
+      visibility: data.visibility === 'public' ? 'public' : 'private',
+    };
+  } catch (err: unknown) {
+    const status = (err as { status?: number }).status;
+    if (status === 404) return null;
+    throw err;
+  }
+}
+
+/**
+ * Attach a local entry's paths, notes, and alias name to an existing merged repo.
+ * Used when we discover that a local entry is really a duplicate or an old name
+ * for a repo that's already in the merged list.
+ */
+function attachLocalToMergedEntry(mergedEntry: RepoInfo, localRepo: RepoInfo): void {
+  if (localRepo.localPath) {
+    const existingPaths = mergedEntry.localPaths
+      ?? (mergedEntry.localPath ? [mergedEntry.localPath] : []);
+    if (!existingPaths.includes(localRepo.localPath)) {
+      existingPaths.push(localRepo.localPath);
+    }
+    mergedEntry.localPaths = existingPaths;
+    if (!mergedEntry.localPath) mergedEntry.localPath = existingPaths[0];
+  }
+  if (localRepo.notes && !mergedEntry.notes) {
+    mergedEntry.notes = localRepo.notes;
+  }
+  if (localRepo.name.toLowerCase() !== mergedEntry.name.toLowerCase()) {
+    mergedEntry.aliases = mergedEntry.aliases ?? [];
+    if (!mergedEntry.aliases.includes(localRepo.name)) {
+      mergedEntry.aliases.push(localRepo.name);
+    }
+  }
+  if (mergedEntry.status === 'github-only' && (mergedEntry.localPaths?.length ?? 0) > 0) {
+    mergedEntry.status = 'synced';
+  }
+}
+
+/**
+ * Merge GitHub-discovered repos with repo-locations.md data.
+ *
+ * GitHub is the source of truth for existence, canonical name, visibility,
+ * description, and languages. repo-locations.md contributes local paths and notes.
+ *
+ * The merge handles three cases that naive name-matching gets wrong:
+ *   1. **Renamed repos** — a local entry (e.g. "BookLarner") that was renamed on
+ *      GitHub (to "CoverJudge") no longer matches any API-returned name. We resolve
+ *      the old URL through the API; GitHub follows the redirect and returns the
+ *      canonical name, so we can attach the local entry as an alias instead of
+ *      creating a phantom duplicate.
+ *   2. **Duplicate local clones** — two local folders whose git remotes point at
+ *      the same GitHub URL (e.g. a scratch copy "friendli-assessment" alongside
+ *      the primary "takehome_q") collapse into a single entry with multiple
+ *      `localPaths`, rather than appearing as separate repos.
+ *   3. **Unseen-in-API entries** — a local entry with a GitHub URL that the API
+ *      didn't return gets its visibility resolved via a direct `repos.get` call
+ *      instead of blindly defaulting to private (the previous behavior
+ *      misclassified renamed public repos as private).
+ *
+ * An `octokit` client is required for cases 1 and 3 to do the resolution calls.
+ * Without it, the merge falls back to name-matching only, and orphan local
+ * entries with GitHub URLs default to private — the pre-fix behavior.
+ */
+async function mergeRepoData(
+  githubRepos: RepoInfo[],
+  localRepos: RepoInfo[],
+  octokit?: Octokit
+): Promise<RepoInfo[]> {
+  const processedLocal = new Set<string>();
+  const mergedEntries: RepoInfo[] = [];
+
+  // First pass: for each GitHub repo, find all local entries that match by name
+  // OR by normalized GitHub URL (fix #3: de-dupe by URL, not name).
+  for (const ghRepo of githubRepos) {
+    const ghKey = ghRepo.githubUrl ? normalizeGitHubUrl(ghRepo.githubUrl) : null;
+    const matches: RepoInfo[] = [];
+
+    for (const localRepo of localRepos) {
+      if (processedLocal.has(localRepo.name.toLowerCase())) continue;
+
+      const nameMatch = localRepo.name.toLowerCase() === ghRepo.name.toLowerCase();
+      const urlMatch = ghKey
+        && localRepo.githubUrl
+        && normalizeGitHubUrl(localRepo.githubUrl) === ghKey;
+
+      if (nameMatch || urlMatch) {
+        matches.push(localRepo);
+        processedLocal.add(localRepo.name.toLowerCase());
+      }
+    }
+
+    // Start with the GitHub record as the source of truth.
+    const entry: RepoInfo = { ...ghRepo };
+    for (const localRepo of matches) {
+      attachLocalToMergedEntry(entry, localRepo);
+      if (localRepo.name.toLowerCase() !== ghRepo.name.toLowerCase()) {
+        console.log(`  Associated local "${localRepo.name}" with GitHub repo "${ghRepo.name}" via shared URL`);
+      }
+    }
+    mergedEntries.push(entry);
   }
 
-  // Start with GitHub repos as the source of truth
-  for (const ghRepo of githubRepos) {
-    const localRepo = localRepoMap.get(ghRepo.name.toLowerCase());
-
-    if (localRepo) {
-      // Merge: GitHub wins for visibility/description, local wins for paths/notes
-      merged.push({
-        ...ghRepo,
-        localPath: localRepo.localPath,
-        notes: localRepo.notes,
-        status: localRepo.localPath ? 'synced' : 'github-only',
-        // Keep GitHub's languages but could merge if needed
-      });
-      localRepoMap.delete(ghRepo.name.toLowerCase());
-    } else {
-      // GitHub-only repo
-      merged.push(ghRepo);
+  // Build an index of merged entries by normalized URL for the second pass.
+  const mergedByUrl = new Map<string, RepoInfo>();
+  for (const entry of mergedEntries) {
+    if (entry.githubUrl) {
+      mergedByUrl.set(normalizeGitHubUrl(entry.githubUrl), entry);
     }
   }
 
-  // Add remaining local repos not found via GitHub API
-  for (const localRepo of localRepoMap.values()) {
+  // Second pass: handle local entries that weren't matched above.
+  for (const localRepo of localRepos) {
+    if (processedLocal.has(localRepo.name.toLowerCase())) continue;
+
     if (!localRepo.githubUrl) {
-      // Truly local-only (no GitHub URL)
-      merged.push({
+      // Truly local-only (no remote) — keep as private local entry.
+      mergedEntries.push({
         ...localRepo,
         status: 'local-only',
         visibility: 'private',
       });
-    } else {
-      // Has a GitHub URL but wasn't returned by API - likely a private repo
-      // the token can't see. Keep it in the index rather than dropping it.
-      merged.push({
-        ...localRepo,
-        visibility: 'private',
-      });
+      continue;
     }
+
+    // Local entry has a GitHub URL but didn't match any API result by name or URL.
+    // Possibilities: (a) the repo was renamed on GitHub, (b) it was deleted/
+    // transferred, (c) it's a private repo our token can't see.
+    // Fix #1 + #2: resolve via API to distinguish these cases.
+    if (octokit) {
+      const parsed = parseGitHubUrl(localRepo.githubUrl);
+      if (parsed) {
+        try {
+          const resolved = await resolveGitHubRepo(octokit, parsed.owner, parsed.repo);
+          if (resolved) {
+            const canonicalKey = `${resolved.canonicalOwner.toLowerCase()}/${resolved.canonicalRepo.toLowerCase()}`;
+            const existing = mergedByUrl.get(canonicalKey);
+            if (existing) {
+              // Rename or duplicate remote: the canonical repo is already in the merged list.
+              // Attach this local entry as an alias and move on.
+              attachLocalToMergedEntry(existing, localRepo);
+              console.log(`  Merged stale alias "${localRepo.name}" into "${existing.name}" (renamed or duplicate remote)`);
+              processedLocal.add(localRepo.name.toLowerCase());
+              continue;
+            }
+            // Genuinely unseen repo (e.g. auto-discovery didn't list it but we can still fetch it).
+            // Use the canonical name and real visibility from the API — not the blind "private" default.
+            const newEntry: RepoInfo = {
+              ...localRepo,
+              name: resolved.canonicalRepo,
+              visibility: resolved.visibility,
+              aliases: resolved.canonicalRepo.toLowerCase() !== localRepo.name.toLowerCase()
+                ? [localRepo.name]
+                : undefined,
+            };
+            mergedEntries.push(newEntry);
+            mergedByUrl.set(canonicalKey, newEntry);
+            processedLocal.add(localRepo.name.toLowerCase());
+            console.log(`  Resolved orphan local "${localRepo.name}" → canonical "${resolved.canonicalRepo}" (${resolved.visibility})`);
+            continue;
+          }
+          // 404: repo no longer exists. Drop silently with a note — stale markdown entry.
+          console.log(`  Dropping stale local entry "${localRepo.name}" (GitHub URL returns 404)`);
+          processedLocal.add(localRepo.name.toLowerCase());
+          continue;
+        } catch (err: unknown) {
+          const msg = (err as { message?: string }).message ?? String(err);
+          console.log(`  Could not resolve ${parsed.owner}/${parsed.repo}: ${msg}`);
+        }
+      }
+    }
+
+    // Fallback when no octokit is provided or resolution failed: default to private
+    // (preserves pre-fix behavior so the builder still works without a token).
+    mergedEntries.push({
+      ...localRepo,
+      visibility: 'private',
+    });
   }
 
-  return merged;
+  return mergedEntries;
 }
 
 async function buildIndex(): Promise<void> {
@@ -568,10 +719,12 @@ async function buildIndex(): Promise<void> {
     // Fetch all repos from GitHub
     const githubRepos = await fetchAllGitHubRepos(octokit, GITHUB_USERNAME);
 
-    // If auto-discovery returned results, merge with local data
-    // Otherwise fall back to repo-locations.md (auto-discovery may fail with repo-scoped tokens)
+    // If auto-discovery returned results, merge with local data.
+    // The merge resolves renamed repos via GitHub redirects, de-dupes local
+    // clones that share a remote URL, and fetches actual visibility for
+    // orphan entries instead of defaulting to "private".
     if (githubRepos.length > 0) {
-      repos = mergeRepoData(githubRepos, localRepoData);
+      repos = await mergeRepoData(githubRepos, localRepoData, octokit);
       console.log(`Total repos after merge: ${repos.length} (${repos.filter(r => r.visibility === 'public').length} public, ${repos.filter(r => r.visibility === 'private').length} private)`);
     } else {
       console.log('Auto-discovery returned no repos (token may not have user scope). Falling back to repo-locations.md...');

@@ -1,6 +1,6 @@
 [
   {
-    "path": "/home/runner/work/code-wiki/code-wiki/wiki/diagrams/code-wiki-flow.md",
+    "path": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/code-wiki/wiki/diagrams/code-wiki-flow.md",
     "relativePath": "diagrams/code-wiki-flow.md",
     "title": "Code Wiki — Data Flow",
     "description": "Architecture flow for Code Wiki: MCP server + Netlify SPA + GitHub Actions index pipeline.",
@@ -18,7 +18,7 @@
     "visibility": "public"
   },
   {
-    "path": "/home/runner/work/code-wiki/code-wiki/wiki/diagrams/datastic-flow.md",
+    "path": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/code-wiki/wiki/diagrams/datastic-flow.md",
     "relativePath": "diagrams/datastic-flow.md",
     "title": "Datastic — Data Flow",
     "description": "Architecture flow for Datastic: GH Archive + HuggingFace analytics via BigQuery, dbt, and GitHub Actions.",
@@ -36,7 +36,7 @@
     "visibility": "public"
   },
   {
-    "path": "/home/runner/work/code-wiki/code-wiki/wiki/diagrams/ethicalaiditor-flow.md",
+    "path": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/code-wiki/wiki/diagrams/ethicalaiditor-flow.md",
     "relativePath": "diagrams/ethicalaiditor-flow.md",
     "title": "EthicalAIditor — Data Flow",
     "description": "Architecture flow for EthicalAIditor: AI-powered document editing and ethical analysis.",
@@ -54,7 +54,7 @@
     "visibility": "public"
   },
   {
-    "path": "/home/runner/work/code-wiki/code-wiki/wiki/diagrams/gastown-flow.md",
+    "path": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/code-wiki/wiki/diagrams/gastown-flow.md",
     "relativePath": "diagrams/gastown-flow.md",
     "title": "Gastown — Data Flow",
     "description": "Architecture flow for Gastown: multi-agent orchestration CLI written in Go.",
@@ -73,7 +73,7 @@
     "visibility": "public"
   },
   {
-    "path": "/home/runner/work/code-wiki/code-wiki/wiki/diagrams/jbwordpresstheme-flow.md",
+    "path": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/code-wiki/wiki/diagrams/jbwordpresstheme-flow.md",
     "relativePath": "diagrams/jbwordpresstheme-flow.md",
     "title": "Technicalistic WP Theme — Data Flow",
     "description": "Architecture flow for Technicalistic: WordPress Full Site Editing block theme.",
@@ -91,7 +91,7 @@
     "visibility": "public"
   },
   {
-    "path": "/home/runner/work/code-wiki/code-wiki/wiki/diagrams/lensquery-flow.md",
+    "path": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/code-wiki/wiki/diagrams/lensquery-flow.md",
     "relativePath": "diagrams/lensquery-flow.md",
     "title": "LensQuery — Data Flow",
     "description": "Architecture flow for LensQuery: cross-platform photo library query tool with Tauri desktop and web interfaces.",
@@ -110,7 +110,7 @@
     "visibility": "public"
   },
   {
-    "path": "/home/runner/work/code-wiki/code-wiki/wiki/diagrams/metabot-flow.md",
+    "path": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/code-wiki/wiki/diagrams/metabot-flow.md",
     "relativePath": "diagrams/metabot-flow.md",
     "title": "Metabot — Data Flow",
     "description": "Architecture flow for Metabot: multi-AI aggregation with Express backend and React/Expo frontends.",
@@ -128,7 +128,7 @@
     "visibility": "public"
   },
   {
-    "path": "/home/runner/work/code-wiki/code-wiki/wiki/diagrams/n8n-workflows-flow.md",
+    "path": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/code-wiki/wiki/diagrams/n8n-workflows-flow.md",
     "relativePath": "diagrams/n8n-workflows-flow.md",
     "title": "n8n Workflows — Data Flow",
     "description": "Architecture flow for n8n Workflows: novel orchestration pipeline on self-hosted GCP.",
@@ -146,7 +146,7 @@
     "visibility": "public"
   },
   {
-    "path": "/home/runner/work/code-wiki/code-wiki/wiki/diagrams/novelizer-flow.md",
+    "path": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/code-wiki/wiki/diagrams/novelizer-flow.md",
     "relativePath": "diagrams/novelizer-flow.md",
     "title": "Novelizer — Data Flow",
     "description": "Architecture flow for Novelizer: novel writing assistant with document import/export.",
@@ -164,7 +164,7 @@
     "visibility": "public"
   },
   {
-    "path": "/home/runner/work/code-wiki/code-wiki/wiki/diagrams/photophreaker-flow.md",
+    "path": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/code-wiki/wiki/diagrams/photophreaker-flow.md",
     "relativePath": "diagrams/photophreaker-flow.md",
     "title": "PhotoPhreaker — Data Flow",
     "description": "Architecture flow for PhotoPhreaker: AI image decomposition with Topaz and Photoshop integration.",
@@ -183,7 +183,7 @@
     "visibility": "public"
   },
   {
-    "path": "/home/runner/work/code-wiki/code-wiki/wiki/diagrams/searchbard-flow.md",
+    "path": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/code-wiki/wiki/diagrams/searchbard-flow.md",
     "relativePath": "diagrams/searchbard-flow.md",
     "title": "SearchBard — Data Flow",
     "description": "Architecture flow for SearchBard: AI-powered search with multi-provider fallback.",
@@ -201,7 +201,7 @@
     "visibility": "public"
   },
   {
-    "path": "/home/runner/work/code-wiki/code-wiki/wiki/diagrams/storyplot-flow.md",
+    "path": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/code-wiki/wiki/diagrams/storyplot-flow.md",
     "relativePath": "diagrams/storyplot-flow.md",
     "title": "StoryPlot — Data Flow",
     "description": "Architecture flow for StoryPlot: interactive story plot generator based on the Plotto system.",
@@ -220,7 +220,7 @@
     "visibility": "public"
   },
   {
-    "path": "/home/runner/work/code-wiki/code-wiki/wiki/diagrams/theorazine-flow.md",
+    "path": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/code-wiki/wiki/diagrams/theorazine-flow.md",
     "relativePath": "diagrams/theorazine-flow.md",
     "title": "Theorazine — Data Flow",
     "description": "Architecture flow for Theorazine: calculator and theory exploration tool with Perplexity integration.",
@@ -238,7 +238,7 @@
     "visibility": "public"
   },
   {
-    "path": "/home/runner/work/code-wiki/code-wiki/wiki/diagrams/valueape-flow.md",
+    "path": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/code-wiki/wiki/diagrams/valueape-flow.md",
     "relativePath": "diagrams/valueape-flow.md",
     "title": "ValueApe — Data Flow",
     "description": "Architecture flow for ValueApe: multi-provider stock analysis with AI recommendations, sentiment analysis, and cloud sync.",

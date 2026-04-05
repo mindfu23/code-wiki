@@ -1,7 +1,7 @@
 {
   "documents": [
     {
-      "path": "/home/runner/work/code-wiki/code-wiki/wiki/AGENTS.md",
+      "path": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/code-wiki/wiki/AGENTS.md",
       "relativePath": "AGENTS.md",
       "title": "AGENTS",
       "tags": [],
@@ -11,7 +11,7 @@
       "visibility": "public"
     },
     {
-      "path": "/home/runner/work/code-wiki/code-wiki/wiki/_index.md",
+      "path": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/code-wiki/wiki/_index.md",
       "relativePath": "_index.md",
       "title": "Contents",
       "description": "Wiki table of contents",
@@ -25,7 +25,7 @@
       "visibility": "public"
     },
     {
-      "path": "/home/runner/work/code-wiki/code-wiki/wiki/diagrams/code-wiki-flow.md",
+      "path": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/code-wiki/wiki/diagrams/code-wiki-flow.md",
       "relativePath": "diagrams/code-wiki-flow.md",
       "title": "Code Wiki — Data Flow",
       "description": "Architecture flow for Code Wiki: MCP server + Netlify SPA + GitHub Actions index pipeline.",
@@ -43,7 +43,7 @@
       "visibility": "public"
     },
     {
-      "path": "/home/runner/work/code-wiki/code-wiki/wiki/diagrams/datastic-flow.md",
+      "path": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/code-wiki/wiki/diagrams/datastic-flow.md",
       "relativePath": "diagrams/datastic-flow.md",
       "title": "Datastic — Data Flow",
       "description": "Architecture flow for Datastic: GH Archive + HuggingFace analytics via BigQuery, dbt, and GitHub Actions.",
@@ -61,7 +61,7 @@
       "visibility": "public"
     },
     {
-      "path": "/home/runner/work/code-wiki/code-wiki/wiki/diagrams/ethicalaiditor-flow.md",
+      "path": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/code-wiki/wiki/diagrams/ethicalaiditor-flow.md",
       "relativePath": "diagrams/ethicalaiditor-flow.md",
       "title": "EthicalAIditor — Data Flow",
       "description": "Architecture flow for EthicalAIditor: AI-powered document editing and ethical analysis.",
@@ -79,7 +79,7 @@
       "visibility": "public"
     },
     {
-      "path": "/home/runner/work/code-wiki/code-wiki/wiki/diagrams/gastown-flow.md",
+      "path": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/code-wiki/wiki/diagrams/gastown-flow.md",
       "relativePath": "diagrams/gastown-flow.md",
       "title": "Gastown — Data Flow",
       "description": "Architecture flow for Gastown: multi-agent orchestration CLI written in Go.",
@@ -98,7 +98,7 @@
       "visibility": "public"
     },
     {
-      "path": "/home/runner/work/code-wiki/code-wiki/wiki/diagrams/jbwordpresstheme-flow.md",
+      "path": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/code-wiki/wiki/diagrams/jbwordpresstheme-flow.md",
       "relativePath": "diagrams/jbwordpresstheme-flow.md",
       "title": "Technicalistic WP Theme — Data Flow",
       "description": "Architecture flow for Technicalistic: WordPress Full Site Editing block theme.",
@@ -116,7 +116,7 @@
       "visibility": "public"
     },
     {
-      "path": "/home/runner/work/code-wiki/code-wiki/wiki/diagrams/lensquery-flow.md",
+      "path": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/code-wiki/wiki/diagrams/lensquery-flow.md",
       "relativePath": "diagrams/lensquery-flow.md",
       "title": "LensQuery — Data Flow",
       "description": "Architecture flow for LensQuery: cross-platform photo library query tool with Tauri desktop and web interfaces.",
@@ -135,7 +135,7 @@
       "visibility": "public"
     },
     {
-      "path": "/home/runner/work/code-wiki/code-wiki/wiki/diagrams/metabot-flow.md",
+      "path": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/code-wiki/wiki/diagrams/metabot-flow.md",
       "relativePath": "diagrams/metabot-flow.md",
       "title": "Metabot — Data Flow",
       "description": "Architecture flow for Metabot: multi-AI aggregation with Express backend and React/Expo frontends.",
@@ -153,7 +153,7 @@
       "visibility": "public"
     },
     {
-      "path": "/home/runner/work/code-wiki/code-wiki/wiki/diagrams/n8n-workflows-flow.md",
+      "path": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/code-wiki/wiki/diagrams/n8n-workflows-flow.md",
       "relativePath": "diagrams/n8n-workflows-flow.md",
       "title": "n8n Workflows — Data Flow",
       "description": "Architecture flow for n8n Workflows: novel orchestration pipeline on self-hosted GCP.",
@@ -171,7 +171,7 @@
       "visibility": "public"
     },
     {
-      "path": "/home/runner/work/code-wiki/code-wiki/wiki/diagrams/novelizer-flow.md",
+      "path": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/code-wiki/wiki/diagrams/novelizer-flow.md",
       "relativePath": "diagrams/novelizer-flow.md",
       "title": "Novelizer — Data Flow",
       "description": "Architecture flow for Novelizer: novel writing assistant with document import/export.",
@@ -189,7 +189,7 @@
       "visibility": "public"
     },
     {
-      "path": "/home/runner/work/code-wiki/code-wiki/wiki/diagrams/photophreaker-flow.md",
+      "path": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/code-wiki/wiki/diagrams/photophreaker-flow.md",
       "relativePath": "diagrams/photophreaker-flow.md",
       "title": "PhotoPhreaker — Data Flow",
       "description": "Architecture flow for PhotoPhreaker: AI image decomposition with Topaz and Photoshop integration.",
@@ -208,7 +208,7 @@
       "visibility": "public"
     },
     {
-      "path": "/home/runner/work/code-wiki/code-wiki/wiki/diagrams/searchbard-flow.md",
+      "path": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/code-wiki/wiki/diagrams/searchbard-flow.md",
       "relativePath": "diagrams/searchbard-flow.md",
       "title": "SearchBard — Data Flow",
       "description": "Architecture flow for SearchBard: AI-powered search with multi-provider fallback.",
@@ -226,7 +226,7 @@
       "visibility": "public"
     },
     {
-      "path": "/home/runner/work/code-wiki/code-wiki/wiki/diagrams/storyplot-flow.md",
+      "path": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/code-wiki/wiki/diagrams/storyplot-flow.md",
       "relativePath": "diagrams/storyplot-flow.md",
       "title": "StoryPlot — Data Flow",
       "description": "Architecture flow for StoryPlot: interactive story plot generator based on the Plotto system.",
@@ -245,7 +245,7 @@
       "visibility": "public"
     },
     {
-      "path": "/home/runner/work/code-wiki/code-wiki/wiki/diagrams/theorazine-flow.md",
+      "path": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/code-wiki/wiki/diagrams/theorazine-flow.md",
       "relativePath": "diagrams/theorazine-flow.md",
       "title": "Theorazine — Data Flow",
       "description": "Architecture flow for Theorazine: calculator and theory exploration tool with Perplexity integration.",
@@ -263,7 +263,7 @@
       "visibility": "public"
     },
     {
-      "path": "/home/runner/work/code-wiki/code-wiki/wiki/diagrams/valueape-flow.md",
+      "path": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/code-wiki/wiki/diagrams/valueape-flow.md",
       "relativePath": "diagrams/valueape-flow.md",
       "title": "ValueApe — Data Flow",
       "description": "Architecture flow for ValueApe: multi-provider stock analysis with AI recommendations, sentiment analysis, and cloud sync.",
@@ -282,7 +282,7 @@
       "visibility": "public"
     },
     {
-      "path": "/home/runner/work/code-wiki/code-wiki/wiki/integrations/_index.md",
+      "path": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/code-wiki/wiki/integrations/_index.md",
       "relativePath": "integrations/_index.md",
       "title": "Integrations Index",
       "description": "Third-party API connectors and service integrations",
@@ -298,7 +298,7 @@
       "visibility": "public"
     },
     {
-      "path": "/home/runner/work/code-wiki/code-wiki/wiki/integrations/databricks-observatory.md",
+      "path": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/code-wiki/wiki/integrations/databricks-observatory.md",
       "relativePath": "integrations/databricks-observatory.md",
       "title": "Databricks Observatory Setup",
       "description": "Guide for ingesting observatory metrics into Databricks Community Edition using the medallion architecture",
@@ -316,7 +316,7 @@
       "visibility": "public"
     },
     {
-      "path": "/home/runner/work/code-wiki/code-wiki/wiki/patterns/_index.md",
+      "path": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/code-wiki/wiki/patterns/_index.md",
       "relativePath": "patterns/_index.md",
       "title": "Patterns Index",
       "description": "Architectural patterns and design approaches",
@@ -330,7 +330,7 @@
       "visibility": "public"
     },
     {
-      "path": "/home/runner/work/code-wiki/code-wiki/wiki/projects/_index.md",
+      "path": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/code-wiki/wiki/projects/_index.md",
       "relativePath": "projects/_index.md",
       "title": "Projects Index",
       "description": "Documentation for active repositories",
@@ -344,7 +344,7 @@
       "visibility": "public"
     },
     {
-      "path": "/home/runner/work/code-wiki/code-wiki/wiki/projects/app-prices-notes.md",
+      "path": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/code-wiki/wiki/projects/app-prices-notes.md",
       "relativePath": "projects/app-prices-notes.md",
       "title": "app-prices-notes",
       "tags": [],
@@ -354,7 +354,7 @@
       "visibility": "public"
     },
     {
-      "path": "/home/runner/work/code-wiki/code-wiki/wiki/projects/repo-locations.md",
+      "path": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/code-wiki/wiki/projects/repo-locations.md",
       "relativePath": "projects/repo-locations.md",
       "title": "Repository Locations",
       "description": "Mapping of repositories to local file system paths and GitHub URLs",
@@ -370,7 +370,7 @@
       "visibility": "public"
     },
     {
-      "path": "/home/runner/work/code-wiki/code-wiki/wiki/projects/setup_cheatsheet.md",
+      "path": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/code-wiki/wiki/projects/setup_cheatsheet.md",
       "relativePath": "projects/setup_cheatsheet.md",
       "title": "New Project Setup Cheatsheet",
       "description": "Step-by-step commands and URLs for wiring up a new React+Vite+Supabase+Netlify project from scaffold to live prototype",
@@ -390,7 +390,7 @@
       "visibility": "public"
     },
     {
-      "path": "/home/runner/work/code-wiki/code-wiki/wiki/snippets/_index.md",
+      "path": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/code-wiki/wiki/snippets/_index.md",
       "relativePath": "snippets/_index.md",
       "title": "Snippets Index",
       "description": "Small, focused code pieces",
@@ -404,7 +404,7 @@
       "visibility": "public"
     },
     {
-      "path": "/home/runner/work/code-wiki/code-wiki/wiki/templates/_index.md",
+      "path": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/code-wiki/wiki/templates/_index.md",
       "relativePath": "templates/_index.md",
       "title": "Templates Index",
       "description": "Project and file starters",
@@ -419,7 +419,7 @@
       "visibility": "public"
     },
     {
-      "path": "/home/runner/work/code-wiki/code-wiki/wiki/utilities/_index.md",
+      "path": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/code-wiki/wiki/utilities/_index.md",
       "relativePath": "utilities/_index.md",
       "title": "Utilities Index",
       "description": "Standalone helper functions and utilities",
@@ -435,12 +435,55 @@
   ],
   "repos": [
     {
+      "name": "apiTracker",
+      "description": "A simple GUI tracker for health and number of remaining calls for my various APIs used in my other apps.",
+      "githubUrl": "https://github.com/mindfu23/apiTracker",
+      "languages": [
+        "JavaScript"
+      ],
+      "lastCommitDate": "2026-04-05T00:25:54Z",
+      "status": "synced",
+      "visibility": "public",
+      "localPaths": [
+        "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/apiTracker"
+      ],
+      "localPath": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/apiTracker",
+      "notes": "also implemented as a browser extension, and further developed there.",
+      "markdownFiles": [
+        {
+          "relativePath": "browser-extension/README.md",
+          "name": "README.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "dist-platforms/firefox/README.md",
+          "name": "README.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "dist-platforms/safari/API Usage Scraper Extension/Resources/README.md",
+          "name": "README.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "dist-platforms/safari/README.md",
+          "name": "README.md",
+          "fileType": "md"
+        },
+        {
+          "relativePath": "platforms/README.md",
+          "name": "README.md",
+          "fileType": "md"
+        }
+      ]
+    },
+    {
       "name": "code-wiki",
       "githubUrl": "https://github.com/mindfu23/code-wiki",
       "languages": [
         "TypeScript"
       ],
-      "lastCommitDate": "2026-04-05T00:18:11Z",
+      "lastCommitDate": "2026-04-05T00:23:03Z",
       "status": "github-only",
       "visibility": "public",
       "markdownFiles": [
@@ -627,46 +670,6 @@
       ]
     },
     {
-      "name": "apiTracker",
-      "description": "A simple GUI tracker for health and number of remaining calls for my various APIs used in my other apps.",
-      "githubUrl": "https://github.com/mindfu23/apiTracker",
-      "languages": [
-        "JavaScript"
-      ],
-      "lastCommitDate": "2026-04-04T00:23:38Z",
-      "status": "synced",
-      "visibility": "public",
-      "localPath": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/apiTracker",
-      "notes": "also implemented as a browser extension, and further developed there.",
-      "markdownFiles": [
-        {
-          "relativePath": "browser-extension/README.md",
-          "name": "README.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "dist-platforms/firefox/README.md",
-          "name": "README.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "dist-platforms/safari/API Usage Scraper Extension/Resources/README.md",
-          "name": "README.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "dist-platforms/safari/README.md",
-          "name": "README.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "platforms/README.md",
-          "name": "README.md",
-          "fileType": "md"
-        }
-      ]
-    },
-    {
       "name": "gastown",
       "description": "Gas Town - multi-agent workspace manager",
       "githubUrl": "https://github.com/mindfu23/gastown",
@@ -674,6 +677,9 @@
       "lastCommitDate": "2026-02-28T19:38:57Z",
       "status": "synced",
       "visibility": "public",
+      "localPaths": [
+        "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/gastown"
+      ],
       "localPath": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/gastown",
       "markdownFiles": [
         {
@@ -901,6 +907,9 @@
       "lastCommitDate": "2026-03-30T05:43:18Z",
       "status": "synced",
       "visibility": "public",
+      "localPaths": [
+        "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/gastown-mission-district"
+      ],
       "localPath": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/gastown-mission-district",
       "markdownFiles": [
         {
@@ -1355,6 +1364,9 @@
       "lastCommitDate": "2026-03-19T16:07:03Z",
       "status": "synced",
       "visibility": "public",
+      "localPaths": [
+        "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/EthicalAIditor"
+      ],
       "localPath": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/EthicalAIditor",
       "markdownFiles": [
         {
@@ -1409,6 +1421,9 @@
       "lastCommitDate": "2026-03-14T21:08:07Z",
       "status": "synced",
       "visibility": "public",
+      "localPaths": [
+        "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/weirdchess"
+      ],
       "localPath": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/weirdchess",
       "markdownFiles": [
         {
@@ -1443,6 +1458,9 @@
       "lastCommitDate": "2026-03-11T20:10:59Z",
       "status": "synced",
       "visibility": "public",
+      "localPaths": [
+        "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/n8n_workflows"
+      ],
       "localPath": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/n8n_workflows",
       "notes": "Not deployed directly, will put URL in once it's set up.",
       "markdownFiles": [
@@ -1491,8 +1509,15 @@
         "JavaScript"
       ],
       "lastCommitDate": "2026-03-06T20:06:04Z",
-      "status": "github-only",
+      "status": "synced",
       "visibility": "public",
+      "localPaths": [
+        "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/BookLarner"
+      ],
+      "localPath": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/BookLarner",
+      "aliases": [
+        "BookLarner"
+      ],
       "markdownFiles": [
         {
           "relativePath": "docs/adding-ai-provider.md",
@@ -1548,7 +1573,14 @@
       "lastCommitDate": "2026-02-02T20:49:32Z",
       "status": "synced",
       "visibility": "public",
-      "localPath": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/takehome_q",
+      "localPaths": [
+        "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/friendli-assessment",
+        "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/takehome_q"
+      ],
+      "localPath": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/friendli-assessment",
+      "aliases": [
+        "friendli-assessment"
+      ],
       "markdownFiles": [
         {
           "relativePath": "ANALYSIS.md",
@@ -1594,6 +1626,9 @@
       "lastCommitDate": "2026-01-27T23:58:51Z",
       "status": "synced",
       "visibility": "public",
+      "localPaths": [
+        "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/FreeWillEstimator"
+      ],
       "localPath": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/FreeWillEstimator",
       "markdownFiles": [
         {
@@ -1613,6 +1648,9 @@
       "lastCommitDate": "2026-01-05T17:15:05Z",
       "status": "synced",
       "visibility": "public",
+      "localPaths": [
+        "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/Create"
+      ],
       "localPath": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/Create",
       "markdownFiles": [
         {
@@ -1642,6 +1680,9 @@
       "lastCommitDate": "2025-12-28T06:35:23Z",
       "status": "synced",
       "visibility": "public",
+      "localPaths": [
+        "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/plottoxml"
+      ],
       "localPath": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/plottoxml",
       "markdownFiles": [
         {
@@ -1666,6 +1707,9 @@
       "lastCommitDate": "2025-12-27T23:12:00Z",
       "status": "synced",
       "visibility": "public",
+      "localPaths": [
+        "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/meme-renamer"
+      ],
       "localPath": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/meme-renamer",
       "markdownFiles": [
         {
@@ -1689,6 +1733,9 @@
       "lastCommitDate": "2025-12-27T17:17:53Z",
       "status": "synced",
       "visibility": "public",
+      "localPaths": [
+        "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/SearchBard"
+      ],
       "localPath": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/SearchBard",
       "markdownFiles": [
         {
@@ -1748,6 +1795,9 @@
       "lastCommitDate": "2026-02-28T18:03:45Z",
       "status": "synced",
       "visibility": "public",
+      "localPaths": [
+        "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/Postboi"
+      ],
       "localPath": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/Postboi",
       "markdownFiles": [
         {
@@ -1827,6 +1877,9 @@
       "lastCommitDate": "2025-12-25T20:15:43Z",
       "status": "synced",
       "visibility": "public",
+      "localPaths": [
+        "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/GNN"
+      ],
       "localPath": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/GNN",
       "notes": "TBD, mobile dev versions need UX. future track for this is \"my good news\" or similar, where the user picks their good news and it's formatted how they want it. TBD",
       "markdownFiles": [
@@ -1867,6 +1920,9 @@
       "lastCommitDate": "2025-12-22T17:47:44Z",
       "status": "synced",
       "visibility": "public",
+      "localPaths": [
+        "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/SacredGeometryOutliner"
+      ],
       "localPath": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/SacredGeometryOutliner",
       "markdownFiles": [
         {
@@ -1886,6 +1942,9 @@
       "lastCommitDate": "2025-12-21T02:18:19Z",
       "status": "synced",
       "visibility": "public",
+      "localPaths": [
+        "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/SierraTrails"
+      ],
       "localPath": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/SierraTrails",
       "markdownFiles": [
         {
@@ -1914,6 +1973,9 @@
       "lastCommitDate": "2025-12-10T17:51:44Z",
       "status": "synced",
       "visibility": "public",
+      "localPaths": [
+        "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/IsHe"
+      ],
       "localPath": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/IsHe",
       "notes": "TBD",
       "markdownFiles": [
@@ -1954,6 +2016,9 @@
       "lastCommitDate": "2025-12-09T21:15:05Z",
       "status": "synced",
       "visibility": "public",
+      "localPaths": [
+        "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/Theorazine"
+      ],
       "localPath": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/Theorazine",
       "markdownFiles": [
         {
@@ -1983,6 +2048,9 @@
       "lastCommitDate": "2025-12-08T22:22:32Z",
       "status": "synced",
       "visibility": "public",
+      "localPaths": [
+        "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/Musix"
+      ],
       "localPath": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/Musix",
       "markdownFiles": [
         {
@@ -2000,6 +2068,9 @@
       "lastCommitDate": "2025-09-18T07:46:25Z",
       "status": "synced",
       "visibility": "public",
+      "localPaths": [
+        "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/KorassViewer"
+      ],
       "localPath": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/KorassViewer",
       "markdownFiles": []
     },
@@ -2013,6 +2084,9 @@
       "lastCommitDate": "2025-08-10T23:49:19Z",
       "status": "synced",
       "visibility": "public",
+      "localPaths": [
+        "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/FutureSketch"
+      ],
       "localPath": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/FutureSketch",
       "markdownFiles": [
         {
@@ -2059,6 +2133,6 @@
     "templates",
     "utilities"
   ],
-  "buildTime": "2026-04-05T00:22:59.922Z",
+  "buildTime": "2026-04-05T01:45:19.828Z",
   "version": "1.0.0"
 }

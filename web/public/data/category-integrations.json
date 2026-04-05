@@ -1,6 +1,6 @@
 [
   {
-    "path": "/home/runner/work/code-wiki/code-wiki/wiki/integrations/_index.md",
+    "path": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/code-wiki/wiki/integrations/_index.md",
     "relativePath": "integrations/_index.md",
     "title": "Integrations Index",
     "description": "Third-party API connectors and service integrations",
@@ -16,7 +16,7 @@
     "visibility": "public"
   },
   {
-    "path": "/home/runner/work/code-wiki/code-wiki/wiki/integrations/databricks-observatory.md",
+    "path": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/code-wiki/wiki/integrations/databricks-observatory.md",
     "relativePath": "integrations/databricks-observatory.md",
     "title": "Databricks Observatory Setup",
     "description": "Guide for ingesting observatory metrics into Databricks Community Edition using the medallion architecture",

@@ -4,11 +4,13 @@ A personal code wiki with MCP server integration for AI agents. Provides searcha
 
 ## Features
 
-- **GitHub-based indexing**: Indexes documentation files from your GitHub repositories
+- **GitHub-based indexing**: Indexes documentation files from your GitHub repositories, with GitHub as the source of truth for existence, canonical name, and visibility
 - **Web interface**: Search and browse wiki content and repo documentation
 - **Curated wiki**: Store reusable patterns, utilities, and snippets
 - **MCP integration**: AI agents can search and retrieve code via MCP tools
 - **Automatic updates**: GitHub Actions rebuilds the index daily or on changes
+- **Observatory**: Cross-project infrastructure health dashboard aggregating GitHub and Netlify metrics
+- **Flows**: Per-project Mermaid architecture diagrams with automatic staleness detection
 
 ## Web Interface
 
@@ -29,6 +31,18 @@ When you set `GITHUB_USERNAME` (or `GITHUB_REPO_OWNER`) and `GITHUB_TOKEN`, the 
 - **Stays in sync**: Changes to repo visibility on GitHub are picked up on next build
 
 The `wiki/projects/repo-locations.md` file is optional - use it only if you need to add local paths or notes to specific repos.
+
+### How Syncing Works
+
+The index builder treats GitHub as the authoritative source of truth and layers local data from `wiki/projects/repo-locations.md` on top of it. The merge is designed to handle the common drift cases that naive name-matching gets wrong:
+
+1. **Renamed repos are detected automatically.** When you rename a repo on GitHub (e.g. `BookLarner` → `CoverJudge`), the old name may still exist as a stale entry in `repo-locations.md` or via a local checkout whose git remote points at the old URL. The builder resolves any unmatched entry through the GitHub API; since GitHub returns the canonical current name after following its rename redirect, the builder recognizes the match, attaches the old name as an alias on the canonical entry, and avoids creating a phantom duplicate. Console output: `Merged stale alias "OldName" into "NewName" (renamed or duplicate remote)`.
+
+2. **Unseen-in-API entries get their real visibility from GitHub, not a default.** Previously, any local entry whose GitHub URL wasn't returned by the authenticated user's repo listing was blindly marked `visibility: private`. That misclassified renamed public repos. The builder now makes a direct `repos.get` call on orphan entries, so visibility reflects what GitHub actually reports. Only entries that 404 or fail to resolve fall back to the private default.
+
+3. **De-dupes local checkouts by canonical GitHub URL, not folder name.** If two local directories both have git remotes pointing at the same GitHub repo (for example, a scratch clone alongside your primary working copy), they collapse into a single merged entry. The canonical entry uses the GitHub repo's name, and both local paths are preserved in a new `localPaths` array on `RepoInfo`. Console output: `Associated local "scratch-copy-name" with GitHub repo "canonical-name" via shared URL`.
+
+A "local-only" repo still means a directory with no git remote at all — these continue to be skipped from the indexed list (the console shows `Skipping N local-only repos (not on GitHub)`). A directory with a remote, even a stale or incorrect one, is treated as belonging to whichever canonical repo that URL resolves to after the API pass.
 
 ### Running the Index Builder
 
@@ -51,6 +65,8 @@ The indexer finds these documentation file types in your repos:
 | `.rst` | reStructuredText |
 | `.adoc`, `.asciidoc` | AsciiDoc |
 | `.org` | Org Mode |
+
+Note that when using this app as an index for local agents and MCPs, you should git pull the latest updated index before starting in order to have the latest information for all the repos in your account. 
 
 ## Setup
 
@@ -240,6 +256,29 @@ Set these in your Netlify dashboard and/or `.env` file:
 | `N8N_API_KEY` | n8n API key | Phase 2 |
 
 > Further observability improvements (Cloudflare Workers analytics, GCP Cloud Run metrics, Supabase monitoring, n8n workflow tracking, historical trend charts) are TBD — see `TODO.md` for the roadmap.
+
+## Flows — Project Architecture Diagrams
+
+The Flows page provides per-project Mermaid architecture diagrams, accessible from the "Flows" nav link. Each diagram is a hand-curated or AI-generated snapshot of a project's data flow, component boundaries, and external integrations, saved as a markdown file with a fenced Mermaid block.
+
+### Features
+
+- **Per-project diagrams** — each repo with a registered diagram gets its own Flows entry at `wiki/diagrams/{id}-flow.md`. The page renders the Mermaid client-side so diagrams remain version-controlled as plain text.
+- **Stack filtering** — diagrams are tagged with stack metadata (React, Python, Go, Tauri, WordPress, etc.) and the Flows page offers one-click filters to narrow the list by stack.
+- **Automatic staleness detection** — `npm run build:signals` runs `src/diagramSignals.ts`, which hashes structural signals for each diagrammed project (dependency names from `package.json` / `requirements.txt`, function files under `netlify/functions/`, top-level `src/` directories) and compares them against the last stored snapshot. When signals change, the diagram is flagged as stale so the owner knows to regenerate it.
+- **Visibility auto-detection** — diagrams inherit their project's visibility from the index merge described above, so private-repo diagrams only appear when the owner is authenticated.
+- **GitHub Actions integration** — staleness checks can run on a schedule (e.g. nightly alongside the index rebuild) and write `public/data/diagram-signals.json`, which the Flows UI consumes to show per-diagram stale/fresh state.
+
+### Adding a New Project Diagram
+
+1. Add an entry to `PROJECT_DIAGRAMS` in `web/public/app.js` with `repoName` matching the GitHub repo name, plus its stack tag.
+2. Create `wiki/diagrams/{id}-flow.md` containing a fenced ```` ```mermaid ```` block with the diagram source.
+3. Add the repo to `DIAGRAM_REPOS` in `web/src/diagramSignals.ts` so staleness detection starts tracking it.
+4. Run `npm run build` in `web/` to refresh both the index and the staleness signals, then commit the generated JSON output.
+
+### Flows Environment Variables
+
+`build:signals` uses the same `GITHUB_TOKEN` and `GITHUB_USERNAME` as the main index builder — no additional configuration is required.
 
 ## MCP Tools
 
