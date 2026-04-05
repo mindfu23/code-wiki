@@ -21,7 +21,7 @@ import {
   detectSentinels,
   emptySentinels,
   type RepoSentinels,
-} from './completionAssessment.js';
+} from '../netlify/functions/_shared/completionAssessment.js';
 
 /**
  * Load environment variables from a .env file if they're not already set.

@@ -2,7 +2,7 @@
  * Shared types for Code Wiki Web Interface
  */
 
-import type { RepoSentinels, CompletionAssessment } from './completionAssessment.js';
+import type { RepoSentinels, CompletionAssessment } from '../netlify/functions/_shared/completionAssessment.js';
 
 export type { RepoSentinels, CompletionAssessment };
 

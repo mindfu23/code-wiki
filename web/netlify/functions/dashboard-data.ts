@@ -17,7 +17,7 @@ import {
   emptySentinels,
   type RepoSentinels,
   type CompletionAssessment,
-} from '../../src/completionAssessment.js';
+} from './_shared/completionAssessment.js';
 
 const SESSION_SECRET = process.env.SESSION_SECRET;
 const GITHUB_REPO_OWNER = process.env.GITHUB_REPO_OWNER || '';
