@@ -2441,11 +2441,19 @@ function renderDashboardTable(data, tbody) {
       issuesCell = String(p.openIssues);
     }
 
+    // When we know the URL of the most recent (or most recent failing) Actions
+    // run, wrap the dot in a link that opens directly to that run's page on
+    // GitHub. Red dots jump straight to the failing run's log; healthy dots
+    // open the most recent successful run for quick inspection.
+    const actionsCell = p.actionsUrl
+      ? `<a href="${escapeHtml(p.actionsUrl)}" target="_blank" rel="noopener" title="Open latest ${p.actionsStatus === 'error' ? 'failing ' : ''}Actions run">${actionsDot}</a>`
+      : actionsDot;
+
     return `<tr>
       <td><strong>${escapeHtml(p.name)}</strong>${p.language ? ` <span class="lang-badge">${escapeHtml(p.language)}</span>` : ''}</td>
       <td title="${escapeHtml(p.lastCommitDate)}">${commitAge}</td>
       <td>${deployDot} ${siteLink}</td>
-      <td>${actionsDot}</td>
+      <td>${actionsCell}</td>
       <td>${issuesCell}</td>
       <td>${p.deploySuccessRate < 1 ? Math.round(p.deploySuccessRate * 100) + '%' : p.deployPlatform ? '100%' : '-'}</td>
       <td>${completionBadge(p.completion)}</td>
