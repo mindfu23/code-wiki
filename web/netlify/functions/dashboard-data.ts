@@ -12,6 +12,12 @@ import { Handler, HandlerEvent } from '@netlify/functions';
 import * as crypto from 'crypto';
 import * as fs from 'fs';
 import * as path from 'path';
+import {
+  assessCompletion,
+  emptySentinels,
+  type RepoSentinels,
+  type CompletionAssessment,
+} from '../../src/completionAssessment.js';
 
 const SESSION_SECRET = process.env.SESSION_SECRET;
 const GITHUB_REPO_OWNER = process.env.GITHUB_REPO_OWNER || '';
@@ -48,6 +54,9 @@ interface ProjectHealthRow {
   openIssues: number;
   siteUrl?: string;
   githubUrl?: string;
+  /** Lifecycle-stage classification — static sentinels from the index,
+   *  refined with live deploy/actions/issues data at request time. */
+  completion?: CompletionAssessment;
 }
 
 // --- Auth helpers (same pattern as full-index.ts) ---
@@ -187,6 +196,8 @@ interface IndexRepoInfo {
   languages: string[];
   lastCommitDate?: string;
   status: 'synced' | 'local-only' | 'github-only';
+  sentinels?: RepoSentinels;
+  completion?: CompletionAssessment;
 }
 
 function loadWikiIndex(includePrivate: boolean): IndexRepoInfo[] {
@@ -315,6 +326,25 @@ const handler: Handler = async (event: HandlerEvent) => {
             }
           }
 
+          // Completion assessment: start from the sentinels captured at index
+          // build time, then refine with the live metrics we just collected.
+          // If the wiki index has no sentinels for this repo (e.g. a GitHub-only
+          // repo the index builder hasn't seen yet), fall back to empty sentinels
+          // so the assessment is driven purely by live data + commit recency.
+          const sentinels = wikiRepo?.sentinels ?? emptySentinels();
+          const completion = assessCompletion(sentinels, {
+            description: (wikiRepo as unknown as { description?: string } | undefined)?.description,
+            lastCommitDate: lastCommitDate || undefined,
+            live: {
+              deployStatus,
+              deployPlatform: deployPlatform || undefined,
+              actionsStatus,
+              openIssues,
+              lastDeployDate: lastDeployDate || undefined,
+              deploySuccessRate,
+            },
+          });
+
           return {
             name,
             lastCommitDate,
@@ -329,6 +359,7 @@ const handler: Handler = async (event: HandlerEvent) => {
             openIssues,
             siteUrl,
             githubUrl: ghRepo?.html_url,
+            completion,
           };
         })
       );

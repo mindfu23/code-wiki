@@ -2,6 +2,10 @@
  * Shared types for Code Wiki Web Interface
  */
 
+import type { RepoSentinels, CompletionAssessment } from './completionAssessment.js';
+
+export type { RepoSentinels, CompletionAssessment };
+
 export interface WikiDocument {
   path: string;
   relativePath: string;
@@ -39,6 +43,8 @@ export interface RepoInfo {
   visibility?: 'public' | 'private';  // Repo visibility (default: public)
   markdownFiles?: RepoDocFile[];  // Documentation files in the repo (.md, .txt, .rst, .adoc, .org)
   notes?: string;  // User-added notes about the repo
+  sentinels?: RepoSentinels;  // Static structural signals detected from the repo's file tree (see completionAssessment.ts)
+  completion?: CompletionAssessment;  // Lifecycle-stage classification derived from sentinels + commit recency; refined with live metrics by dashboard-data.ts
 }
 
 export interface NetlifySite {

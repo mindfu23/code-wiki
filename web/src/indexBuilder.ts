@@ -16,6 +16,12 @@ import { fileURLToPath } from 'url';
 import matter from 'gray-matter';
 import { Octokit } from '@octokit/rest';
 import { WikiDocument, RepoInfo, RepoDocFile, WikiIndex } from './types.js';
+import {
+  assessCompletion,
+  detectSentinels,
+  emptySentinels,
+  type RepoSentinels,
+} from './completionAssessment.js';
 
 /**
  * Load environment variables from a .env file if they're not already set.
@@ -262,8 +268,25 @@ async function parseRepoLocations(wikiDir: string): Promise<RepoInfo[]> {
   return githubRepos;
 }
 
-async function scanRepoForDocFiles(repoPath: string): Promise<RepoDocFile[]> {
+/**
+ * Scan a local repo for doc files AND collect every non-skipped file path
+ * so sentinels can be computed in the same traversal. Returns doc files
+ * (for the existing `markdownFiles` field) and the full relative-path list
+ * (consumed by `detectSentinels`).
+ */
+async function scanRepoForDocFiles(
+  repoPath: string
+): Promise<{ docFiles: RepoDocFile[]; allPaths: string[] }> {
   const docFiles: RepoDocFile[] = [];
+  const allPaths: string[] = [];
+
+  // Allow traversal into .github (for workflow CI detection) while still
+  // skipping other dotted directories and common build/dep folders.
+  const SKIP_DIRS = new Set([
+    '.git', 'node_modules', '.next', 'dist', 'build',
+    '.cache', 'coverage', '__pycache__', 'venv', '.venv',
+    'vendor', '.turbo', '.parcel-cache',
+  ]);
 
   async function scanDir(dir: string, baseDir: string): Promise<void> {
     try {
@@ -272,47 +295,54 @@ async function scanRepoForDocFiles(repoPath: string): Promise<RepoDocFile[]> {
       for (const entry of entries) {
         const fullPath = path.join(dir, entry.name);
 
-        // Skip hidden directories, node_modules, and common non-source directories
         if (entry.isDirectory()) {
-          const skipDirs = ['.git', 'node_modules', '.next', 'dist', 'build', '.cache', 'coverage', '__pycache__', 'venv', '.venv'];
-          if (!entry.name.startsWith('.') && !skipDirs.includes(entry.name)) {
-            await scanDir(fullPath, baseDir);
-          }
-        } else if (entry.isFile() && isDocFile(entry.name)) {
+          if (SKIP_DIRS.has(entry.name)) continue;
+          // Allow .github (CI detection); skip other dotfiles
+          if (entry.name.startsWith('.') && entry.name !== '.github') continue;
+          await scanDir(fullPath, baseDir);
+        } else if (entry.isFile()) {
           const relativePath = path.relative(baseDir, fullPath);
-          const fileType = getFileType(entry.name);
-          if (fileType) {
-            docFiles.push({
-              relativePath,
-              name: entry.name,
-              fileType,
-            });
+          allPaths.push(relativePath);
+
+          if (isDocFile(entry.name) && !shouldSkipFile(entry.name)) {
+            const fileType = getFileType(entry.name);
+            if (fileType) {
+              docFiles.push({ relativePath, name: entry.name, fileType });
+            }
           }
         }
       }
-    } catch (error) {
+    } catch {
       // Directory might not exist or be inaccessible
     }
   }
 
   await scanDir(repoPath, repoPath);
-  return docFiles.sort((a, b) => a.relativePath.localeCompare(b.relativePath));
+  docFiles.sort((a, b) => a.relativePath.localeCompare(b.relativePath));
+  return { docFiles, allPaths };
 }
 
 /**
- * Fetch documentation files from a GitHub repo using the Trees API
- * This is efficient - one API call per repo to get the entire file tree
- * Supports: .md, .txt, .rst, .adoc, .asciidoc, .org
+ * Fetch the full file tree for a GitHub repo via the Trees API (one request).
+ * Returns both the filtered doc-file list AND the full set of relative paths
+ * so callers can run sentinel detection in the same pass.
+ *
+ * Supports doc file types: .md, .txt, .rst, .adoc, .asciidoc, .org
  */
 async function fetchRepoDocFilesFromGitHub(
   octokit: Octokit,
   owner: string,
   repo: string
-): Promise<RepoDocFile[]> {
+): Promise<{ docFiles: RepoDocFile[]; allPaths: string[] }> {
   const docFiles: RepoDocFile[] = [];
+  const allPaths: string[] = [];
 
-  // Directories to skip (same as local scan)
-  const skipDirs = ['node_modules', '.next', 'dist', 'build', '.cache', 'coverage', '__pycache__', 'venv', '.venv'];
+  // Allow .github/workflows for CI detection; otherwise skip dotfiles and heavy build dirs.
+  const SKIP_DIRS = new Set([
+    'node_modules', '.next', 'dist', 'build', '.cache',
+    'coverage', '__pycache__', 'venv', '.venv',
+    'vendor', '.turbo', '.parcel-cache',
+  ]);
 
   try {
     // Get the default branch first
@@ -327,22 +357,25 @@ async function fetchRepoDocFilesFromGitHub(
       recursive: 'true',
     });
 
-    // Filter for doc files, excluding common non-source directories
     for (const item of tree.tree) {
-      if (item.type === 'blob' && item.path && isDocFile(item.path)) {
-        // Check if path contains any skip directories
-        const pathParts = item.path.split('/');
-        const shouldSkip = pathParts.some(part => skipDirs.includes(part) || part.startsWith('.'));
+      if (item.type !== 'blob' || !item.path) continue;
 
-        if (!shouldSkip) {
-          const fileType = getFileType(item.path);
-          if (fileType) {
-            docFiles.push({
-              relativePath: item.path,
-              name: path.basename(item.path),
-              fileType,
-            });
-          }
+      const pathParts = item.path.split('/');
+      const inSkipDir = pathParts.some(
+        (part) => SKIP_DIRS.has(part) || (part.startsWith('.') && part !== '.github')
+      );
+      if (inSkipDir) continue;
+
+      allPaths.push(item.path);
+
+      if (isDocFile(item.path)) {
+        const fileType = getFileType(item.path);
+        if (fileType) {
+          docFiles.push({
+            relativePath: item.path,
+            name: path.basename(item.path),
+            fileType,
+          });
         }
       }
     }
@@ -358,7 +391,8 @@ async function fetchRepoDocFilesFromGitHub(
     }
   }
 
-  return docFiles.sort((a, b) => a.relativePath.localeCompare(b.relativePath));
+  docFiles.sort((a, b) => a.relativePath.localeCompare(b.relativePath));
+  return { docFiles, allPaths };
 }
 
 /**
@@ -654,6 +688,48 @@ async function mergeRepoData(
   return mergedEntries;
 }
 
+/**
+ * Populate `markdownFiles`, `sentinels`, and `completion` on a repo by scanning
+ * its file tree (via GitHub API if possible, local filesystem otherwise).
+ * Returns the number of doc files found so the caller can tally totals.
+ */
+async function populateRepoSignals(
+  repo: RepoInfo,
+  octokit: Octokit | null
+): Promise<number> {
+  let docFiles: RepoDocFile[] = [];
+  let allPaths: string[] = [];
+
+  // Prefer GitHub API when we can — it gives the canonical tree regardless of
+  // whether the local clone is current.
+  if (octokit && repo.githubUrl) {
+    const parsed = parseGitHubUrl(repo.githubUrl);
+    if (parsed) {
+      const result = await fetchRepoDocFilesFromGitHub(octokit, parsed.owner, parsed.repo);
+      docFiles = result.docFiles;
+      allPaths = result.allPaths;
+    }
+  }
+
+  // Fall back to local scan if GitHub didn't give us anything and we have a local path.
+  if (allPaths.length === 0 && repo.localPath) {
+    const result = await scanRepoForDocFiles(repo.localPath);
+    docFiles = result.docFiles;
+    allPaths = result.allPaths;
+  }
+
+  repo.markdownFiles = docFiles;
+  repo.sentinels = allPaths.length > 0 ? detectSentinels(allPaths) : emptySentinels();
+  repo.completion = assessCompletion(repo.sentinels, {
+    description: repo.description,
+    lastCommitDate: repo.lastCommitDate,
+    // No live metrics at index-build time — dashboard-data.ts refines these
+    // per-request using the Observatory collectors.
+  });
+
+  return docFiles.length;
+}
+
 async function buildIndex(): Promise<void> {
   console.log('Building Code Wiki index...');
   console.log(`Wiki directory: ${WIKI_DIR}`);
@@ -732,20 +808,11 @@ async function buildIndex(): Promise<void> {
       console.log(`Using ${repos.length} repos from repo-locations.md`);
     }
 
-    // Fetch documentation files for each repo
+    // Fetch documentation files and structural sentinels for each repo.
+    // populateRepoSignals fills markdownFiles + sentinels + completion in one pass.
     console.log('\nFetching documentation files...');
     for (const repo of repos) {
-      if (repo.githubUrl) {
-        const parsed = parseGitHubUrl(repo.githubUrl);
-        if (parsed) {
-          repo.markdownFiles = await fetchRepoDocFilesFromGitHub(octokit, parsed.owner, parsed.repo);
-          totalDocFiles += repo.markdownFiles.length;
-        }
-      } else if (repo.localPath) {
-        // Local-only repo
-        repo.markdownFiles = await scanRepoForDocFiles(repo.localPath);
-        totalDocFiles += repo.markdownFiles.length;
-      }
+      totalDocFiles += await populateRepoSignals(repo, octokit);
     }
   } else if (USE_GITHUB_API) {
     // Legacy mode: Use repo-locations.md with GitHub API
@@ -764,8 +831,7 @@ async function buildIndex(): Promise<void> {
         if (parsed) {
           console.log(`  Fetching ${parsed.owner}/${parsed.repo}...`);
           repo.visibility = await fetchRepoVisibility(octokit, parsed.owner, parsed.repo);
-          repo.markdownFiles = await fetchRepoDocFilesFromGitHub(octokit, parsed.owner, parsed.repo);
-          totalDocFiles += repo.markdownFiles.length;
+          totalDocFiles += await populateRepoSignals(repo, octokit);
         }
       }
     }
@@ -783,18 +849,16 @@ async function buildIndex(): Promise<void> {
     }
 
     for (const repo of repos) {
-      if (repo.localPath) {
-        repo.markdownFiles = await scanRepoForDocFiles(repo.localPath);
-        totalDocFiles += repo.markdownFiles.length;
-      }
-
-      // Fetch visibility from GitHub if we have a token and URL
+      // Fetch visibility from GitHub if we have a token and URL (before scanning,
+      // so completion assessment sees correct visibility in logs if needed later)
       if (octokit && repo.githubUrl) {
         const parsed = parseGitHubUrl(repo.githubUrl);
         if (parsed) {
           repo.visibility = await fetchRepoVisibility(octokit, parsed.owner, parsed.repo);
         }
       }
+
+      totalDocFiles += await populateRepoSignals(repo, octokit);
     }
   }
 
