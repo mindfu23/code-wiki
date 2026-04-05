@@ -2362,11 +2362,52 @@ function sortDashboardProjects(projects) {
       return dir * ((av || 0) - (bv || 0));
     }
 
+    // Completion stage: sort by lifecycle order so mature/deployed cluster together
+    if (key === 'completionStage') {
+      const stageOrder = {
+        mature: 0,
+        deployed: 1,
+        'in-progress': 2,
+        scaffold: 3,
+        stub: 4,
+        reference: 5,
+        stale: 6,
+        abandoned: 7,
+      };
+      const aStage = a.completion?.stage ?? 'stub';
+      const bStage = b.completion?.stage ?? 'stub';
+      return dir * ((stageOrder[aStage] ?? 99) - (stageOrder[bStage] ?? 99));
+    }
+
     // String columns (name)
     av = (av || '').toString().toLowerCase();
     bv = (bv || '').toString().toLowerCase();
     return dir * av.localeCompare(bv);
   });
+}
+
+// Color + label metadata for completion stage badges in the Observatory table.
+const COMPLETION_STAGE_META = {
+  mature:        { label: 'Mature',      color: '#15803d', bg: '#dcfce7' },
+  deployed:      { label: 'Deployed',    color: '#166534', bg: '#d1fae5' },
+  'in-progress': { label: 'In Progress', color: '#a16207', bg: '#fef9c3' },
+  scaffold:      { label: 'Scaffold',    color: '#1d4ed8', bg: '#dbeafe' },
+  stub:          { label: 'Stub',        color: '#475569', bg: '#e2e8f0' },
+  reference:     { label: 'Reference',   color: '#6d28d9', bg: '#ede9fe' },
+  stale:         { label: 'Stale',       color: '#c2410c', bg: '#ffedd5' },
+  abandoned:     { label: 'Abandoned',   color: '#b91c1c', bg: '#fee2e2' },
+};
+
+function completionBadge(completion) {
+  if (!completion || !completion.stage) return '-';
+  const meta = COMPLETION_STAGE_META[completion.stage] || COMPLETION_STAGE_META.stub;
+  // Build a tooltip showing axis scores and reasons so a user can trace *why*
+  // a project was classified the way it was.
+  const s = completion.signals || {};
+  const axisLine = `scaffold ${s.scaffold ?? 0}/4  ·  implementation ${s.implementation ?? 0}/3  ·  deployed ${s.deployed ?? 0}/4  ·  maintained ${s.maintained ?? 0}/4`;
+  const reasons = (completion.reasons || []).join(' · ');
+  const tooltip = `${axisLine}\n${reasons}`;
+  return `<span class="completion-badge" title="${escapeHtml(tooltip)}" style="display:inline-block;padding:2px 8px;border-radius:10px;font-size:0.72rem;font-weight:600;color:${meta.color};background:${meta.bg};white-space:nowrap;">${meta.label}</span>`;
 }
 
 function renderDashboardTable(data, tbody) {
@@ -2380,7 +2421,7 @@ function renderDashboardTable(data, tbody) {
   projects = sortDashboardProjects(projects);
 
   if (projects.length === 0) {
-    tbody.innerHTML = '<tr><td colspan="6">No projects match this filter.</td></tr>';
+    tbody.innerHTML = '<tr><td colspan="7">No projects match this filter.</td></tr>';
     return;
   }
 
@@ -2407,6 +2448,7 @@ function renderDashboardTable(data, tbody) {
       <td>${actionsDot}</td>
       <td>${issuesCell}</td>
       <td>${p.deploySuccessRate < 1 ? Math.round(p.deploySuccessRate * 100) + '%' : p.deployPlatform ? '100%' : '-'}</td>
+      <td>${completionBadge(p.completion)}</td>
     </tr>`;
   }).join('');
 }

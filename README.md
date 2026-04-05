@@ -9,7 +9,7 @@ A personal code wiki with MCP server integration for AI agents. Provides searcha
 - **Curated wiki**: Store reusable patterns, utilities, and snippets
 - **MCP integration**: AI agents can search and retrieve code via MCP tools
 - **Automatic updates**: GitHub Actions rebuilds the index daily or on changes
-- **Observatory**: Cross-project infrastructure health dashboard aggregating GitHub and Netlify metrics
+- **Observatory**: Cross-project infrastructure health dashboard aggregating GitHub and Netlify metrics, including per-repo lifecycle-stage classification (stub → scaffold → in-progress → deployed → mature, plus stale/abandoned/reference)
 - **Flows**: Per-project Mermaid architecture diagrams with automatic staleness detection
 
 ## Web Interface
@@ -256,6 +256,82 @@ Set these in your Netlify dashboard and/or `.env` file:
 | `N8N_API_KEY` | n8n API key | Phase 2 |
 
 > Further observability improvements (Cloudflare Workers analytics, GCP Cloud Run metrics, Supabase monitoring, n8n workflow tracking, historical trend charts) are TBD — see `TODO.md` for the roadmap.
+
+### Completion Stage — lifecycle classification per project
+
+The Project Health Matrix includes a **Completion** column that classifies each repo into one of eight lifecycle stages. The classifier combines static structural signals collected from each repo's file tree (at index build time) with live deploy and activity metrics pulled by the Observatory collectors (at request time). Every classification carries a tooltip listing the contributing reasons so the judgment is always traceable back to the underlying data.
+
+#### The eight stages
+
+| Stage | Color | Meaning |
+|---|---|---|
+| **Mature** | dark green | Deployed, healthy, actively maintained, CI passing, high deploy success rate |
+| **Deployed** | green | Shipped and reachable; stable but not necessarily polished |
+| **In Progress** | amber | Real source code and recent commits, but no working deploy yet |
+| **Scaffold** | blue | Project initialized — README, package manifest, maybe some code — but not yet substantial |
+| **Stub** | gray | Idea placeholder with almost no structure (no README, no manifest, no source) |
+| **Reference** | purple | Docs-only repository (README + markdown, no source code) — classified separately so reference material doesn't get mis-labeled as abandoned |
+| **Stale** | orange | Was deployed at some point, but no commits in 90+ days |
+| **Abandoned** | red | Started but never shipped, and no activity in 180+ days |
+
+#### The rubric
+
+Each repo is scored on four axes, with every "+1" contributing a human-readable entry to the tooltip's reasons list:
+
+**Scaffold (0–4)** — does this exist as a project at all?
+- +1 has README at repo root
+- +1 has a description
+- +1 has a package manifest (`package.json`, `requirements.txt`, `Cargo.toml`, `go.mod`, `pyproject.toml`, `Gemfile`, `composer.json`, `pubspec.yaml`) — root **or** one level deep, so monorepo layouts like `web/package.json` are detected
+- +1 has at least one source file
+
+**Implementation (0–3)** — has real work been done beyond scaffolding?
+- +1 source file count ≥ 5
+- +1 source file count ≥ 20 (non-trivial size)
+- +1 committed in the last 90 days
+
+**Deployed (0–4)** — is it reachable by users?
+- +1 has a deploy config file (`netlify.toml`, `vercel.json`, `Dockerfile`, `fly.toml`, `app.yaml`, `railway.toml`, `render.yaml`, `wrangler.toml`, `serverless.yml`) — root or one level deep
+- +1 has a live deploy platform detected by the Observatory (Netlify in Phase 1; Cloudflare/GCP/Supabase in Phase 2)
+- +1 current deploy status is healthy
+- +1 deploy success rate ≥ 80%
+
+**Maintained (0–4)** — is someone still actively working on it?
+- +1 committed in the last 30 days
+- +1 CI passing (or `.github/workflows/` present when live CI status is unavailable)
+- +1 fewer than 5 open issues
+- +1 deployed in the last 30 days, **or** project has no deploy platform (non-deployed projects aren't penalized on deploy recency)
+
+#### Stage selection
+
+The four axis scores plus commit and deploy recency are combined into a single stage using this order of checks (first match wins):
+
+1. **Reference** — has README, zero source files, no package manifest (pure docs repo)
+2. **Abandoned** — no commits in 180+ days and deployed < 2
+3. **Stale** — no commits in 90+ days but deployed ≥ 2
+4. **Mature** — maintained ≥ 3 and deployed = 4 (all four deploy signals present)
+5. **Deployed** — deployed ≥ 2 and maintained ≥ 2
+6. **In Progress** — implementation ≥ 2
+7. **Scaffold** — scaffold ≥ 2
+8. **Stub** — everything else
+
+The ordering is deliberately "worst-first" for inactivity signals (abandoned, stale) and "best-first" for positive signals (mature, deployed), so a project that was once shipped but is now silent surfaces as stale rather than being generously counted as deployed.
+
+#### Where the data comes from
+
+- **Static signals** (sentinels, source file count, package manifest, deploy config, CI, tests, env example) are detected during the normal index build in the same tree traversal that already collects doc files — zero extra API calls. They're written to `index-full.json` / `index.json` as a `sentinels` object on each repo entry, plus a baseline `completion` assessment.
+- **Live signals** (deploy status, deploy success rate, actions status, open issues, last deploy date) are pulled by the Observatory's `dashboard-data` function per request and used to refine the baseline assessment. This means the Completion column reflects *current* platform state, not just what was true at the last index build.
+- **MCP exposure** — the `sentinels` and `completion` fields are part of the public `RepoInfo` type, so they're automatically available to any MCP tool that queries the wiki index. Agents can ask "which of my projects are stale?" without re-deriving the rubric.
+
+#### Caveats
+
+The rubric is heuristic and has predictable failure modes:
+
+- **Subfolder deploys** beyond one level deep (e.g. `services/backend/deploy/Dockerfile`) won't be detected. Move the config up or add a root-level marker file.
+- **Private infrastructure** not yet covered by Observatory collectors (Cloudflare Workers, GCP Cloud Run, Supabase projects, mobile app store submissions) will undercount on the deployed axis until those collectors ship. The static `hasDeployConfig` signal provides a partial credit of 1/4 in the meantime.
+- **Forks and scratch clones** (now correctly de-duped by the URL-based merge) appear once under the canonical repo, so their aliases don't distort the pipeline view.
+- **Unusual project layouts** (documentation-only with source, CI-only repos, asset repositories) may classify in counterintuitive ways — the tooltip's reasons list is the fastest way to understand any surprising result.
+
+The classifier's job isn't to be right in every case — it's to be *consistently wrong in understandable ways* so that when a stage looks off, you can trace it to a rule in [web/src/completionAssessment.ts](web/src/completionAssessment.ts) and either correct the data or adjust the rubric.
 
 ## Flows — Project Architecture Diagrams
 
