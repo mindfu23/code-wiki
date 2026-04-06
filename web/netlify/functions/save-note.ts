@@ -9,8 +9,18 @@ import * as crypto from 'crypto';
 
 const SESSION_SECRET = process.env.SESSION_SECRET;
 const GITHUB_REPO_OWNER = process.env.GITHUB_REPO_OWNER || '';
-const GITHUB_REPO_NAME = process.env.GITHUB_REPO_NAME || 'code-wiki';
 const REPO_LOCATIONS_PATH = 'wiki/projects/repo-locations.md';
+
+// repo-locations.md now lives in the private content repo (contains private repo info).
+// See HANDOFF-rearchitecture.md decision #10.
+const PRIVATE_CONTENT_REPO = process.env.PRIVATE_CONTENT_REPO || '';
+
+function parsePrivateContentRepo(): { owner: string; repo: string } | null {
+  if (!PRIVATE_CONTENT_REPO) return null;
+  const parts = PRIVATE_CONTENT_REPO.split('/');
+  if (parts.length !== 2) return null;
+  return { owner: parts[0], repo: parts[1] };
+}
 
 // Validate required configuration
 function validateConfig(): string | null {
@@ -223,13 +233,26 @@ const handler: Handler = async (event: HandlerEvent, context: HandlerContext) =>
   const sanitizedNote = (request.note || '').trim();
 
   try {
+    // repo-locations.md lives in the private content repo
+    const privateRepo = parsePrivateContentRepo();
+    if (!privateRepo) {
+      return {
+        statusCode: 500,
+        headers,
+        body: JSON.stringify({
+          error: 'PRIVATE_CONTENT_REPO environment variable is not configured. ' +
+            'Set it to owner/repo (e.g. mindfu23/code-wiki-content) in Netlify env vars.',
+        }),
+      };
+    }
+
     // Initialize Octokit with user's token
     const octokit = new Octokit({ auth: session.access_token });
 
-    // Get current repo-locations.md content
+    // Get current repo-locations.md content from private content repo
     const { data: existingFile } = await octokit.repos.getContent({
-      owner: GITHUB_REPO_OWNER,
-      repo: GITHUB_REPO_NAME,
+      owner: privateRepo.owner,
+      repo: privateRepo.repo,
       path: REPO_LOCATIONS_PATH,
     });
 
@@ -270,8 +293,8 @@ const handler: Handler = async (event: HandlerEvent, context: HandlerContext) =>
       : `Clear note for ${request.repoName}`;
 
     const commitResponse = await octokit.repos.createOrUpdateFileContents({
-      owner: GITHUB_REPO_OWNER,
-      repo: GITHUB_REPO_NAME,
+      owner: privateRepo.owner,
+      repo: privateRepo.repo,
       path: REPO_LOCATIONS_PATH,
       message: commitMessage,
       content: Buffer.from(updatedContent).toString('base64'),

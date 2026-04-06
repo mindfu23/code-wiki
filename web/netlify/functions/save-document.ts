@@ -1,7 +1,7 @@
 /**
  * Save Document API - Commits wiki document to GitHub
  * Uses user's GitHub token for commit attribution
- * Also updates the index.json so new documents appear immediately
+ * Triggers a Netlify rebuild so the document appears after the next build cycle.
  */
 
 import { Handler, HandlerEvent, HandlerContext } from '@netlify/functions';
@@ -12,75 +12,6 @@ const SESSION_SECRET = process.env.SESSION_SECRET;
 const GITHUB_REPO_OWNER = process.env.GITHUB_REPO_OWNER || '';
 const GITHUB_REPO_NAME = process.env.GITHUB_REPO_NAME || 'code-wiki';
 const WIKI_PATH_PREFIX = 'wiki/';
-
-// Document structure matching the index
-interface WikiDocument {
-  path: string;
-  relativePath: string;
-  title: string;
-  description?: string;
-  tags: string[];
-  language?: string;
-  updated?: string;
-  content: string;
-  contentPreview: string;
-  category: string;
-  visibility?: 'public' | 'private';
-}
-
-interface WikiIndex {
-  documents: WikiDocument[];
-  repos: unknown[];
-  categories: string[];
-  buildTime: string;
-  version: string;
-}
-
-// Simple frontmatter parser (no external dependency)
-function parseFrontmatter(content: string): { data: Record<string, unknown>; body: string } {
-  const data: Record<string, unknown> = {};
-  let body = content;
-
-  if (content.startsWith('---')) {
-    const endIndex = content.indexOf('---', 3);
-    if (endIndex !== -1) {
-      const frontmatter = content.slice(3, endIndex).trim();
-      body = content.slice(endIndex + 3).trim();
-
-      // Parse YAML-like frontmatter
-      frontmatter.split('\n').forEach(line => {
-        const colonIndex = line.indexOf(':');
-        if (colonIndex > 0) {
-          const key = line.slice(0, colonIndex).trim();
-          let value = line.slice(colonIndex + 1).trim();
-
-          // Remove quotes
-          if ((value.startsWith('"') && value.endsWith('"')) ||
-              (value.startsWith("'") && value.endsWith("'"))) {
-            value = value.slice(1, -1);
-          }
-
-          // Parse arrays like [tag1, tag2]
-          if (value.startsWith('[') && value.endsWith(']')) {
-            const items = value.slice(1, -1).split(',').map(s => {
-              let item = s.trim();
-              if ((item.startsWith('"') && item.endsWith('"')) ||
-                  (item.startsWith("'") && item.endsWith("'"))) {
-                item = item.slice(1, -1);
-              }
-              return item;
-            }).filter(Boolean);
-            data[key] = items;
-          } else {
-            data[key] = value;
-          }
-        }
-      });
-    }
-  }
-
-  return { data, body };
-}
 
 // Validate required configuration
 function validateConfig(): string | null {
@@ -323,112 +254,9 @@ const handler: Handler = async (event: HandlerEvent, context: HandlerContext) =>
       },
     });
 
-    // Update the index.json with the new/updated document
-    // This makes the document immediately available without waiting for GitHub Actions
-    let indexUpdated = false;
-    try {
-      // Parse the document content to extract metadata
-      const { data: frontmatter, body } = parseFrontmatter(request.content);
-
-      // Build document entry
-      const category = sanitizedPath.split('/')[0] || 'uncategorized';
-      const fileName = sanitizedPath.split('/').pop()?.replace('.md', '') || '';
-
-      const visibility = (frontmatter.visibility as string)?.toLowerCase() === 'private' ? 'private' as const : 'public' as const;
-
-      const docEntry: WikiDocument = {
-        path: fullPath,
-        relativePath: sanitizedPath,
-        title: (frontmatter.title as string) || fileName,
-        description: frontmatter.description as string | undefined,
-        tags: (frontmatter.tags as string[]) || [],
-        language: frontmatter.language as string | undefined,
-        updated: (frontmatter.updated as string) || new Date().toISOString().split('T')[0],
-        content: body,
-        contentPreview: body.slice(0, 300).replace(/\n/g, ' ').trim(),
-        category,
-        visibility,
-      };
-
-      // Update index files
-      // Private docs: only in index-full.json (remove from index.json if previously public)
-      // Public docs: in both index.json and index-full.json
-      for (const indexPath of ['web/public/data/index.json', 'web/public/data/index-full.json']) {
-        const isPublicIndex = !indexPath.includes('index-full');
-        try {
-          // Fetch current index
-          const { data: indexFile } = await octokit.repos.getContent({
-            owner: GITHUB_REPO_OWNER,
-            repo: GITHUB_REPO_NAME,
-            path: indexPath,
-          });
-
-          if (Array.isArray(indexFile) || indexFile.type !== 'file' || !indexFile.content) {
-            continue;
-          }
-
-          const indexContent = Buffer.from(indexFile.content, 'base64').toString('utf-8');
-          const index: WikiIndex = JSON.parse(indexContent);
-
-          const existingIndex = index.documents.findIndex(d => d.relativePath === sanitizedPath);
-
-          if (isPublicIndex && visibility === 'private') {
-            // Private doc should NOT be in public index — remove if present
-            if (existingIndex >= 0) {
-              index.documents.splice(existingIndex, 1);
-              index.buildTime = new Date().toISOString();
-              await octokit.repos.createOrUpdateFileContents({
-                owner: GITHUB_REPO_OWNER,
-                repo: GITHUB_REPO_NAME,
-                path: indexPath,
-                message: `Update index: remove private doc ${sanitizedPath}`,
-                content: Buffer.from(JSON.stringify(index, null, 2)).toString('base64'),
-                sha: indexFile.sha,
-                committer: { name: 'Docsy McDocsface', email: 'docsy@users.noreply.github.com' },
-              });
-              indexUpdated = true;
-            }
-            continue;
-          }
-
-          // Public doc or full index — add/update normally
-          if (existingIndex >= 0) {
-            index.documents[existingIndex] = docEntry;
-          } else {
-            index.documents.push(docEntry);
-          }
-
-          // Update build time
-          index.buildTime = new Date().toISOString();
-
-          // Commit updated index
-          await octokit.repos.createOrUpdateFileContents({
-            owner: GITHUB_REPO_OWNER,
-            repo: GITHUB_REPO_NAME,
-            path: indexPath,
-            message: `Update index: ${request.isNew ? 'add' : 'update'} ${sanitizedPath}`,
-            content: Buffer.from(JSON.stringify(index, null, 2)).toString('base64'),
-            sha: indexFile.sha,
-            committer: {
-              name: 'Docsy McDocsface',
-              email: 'docsy@users.noreply.github.com',
-            },
-          });
-
-          indexUpdated = true;
-        } catch (indexErr: any) {
-          console.error(`Failed to update ${indexPath}:`, indexErr.message);
-          // Continue - document was saved, index update is optional
-        }
-      }
-
-      if (indexUpdated) {
-        console.log('Index updated with new document');
-      }
-    } catch (indexErr) {
-      console.error('Failed to update index:', indexErr);
-      // Don't fail the save if index update fails - document is saved
-    }
+    // Index files are now in the private content repo and rebuilt by GitHub Actions.
+    // Instead of updating them inline, trigger a Netlify rebuild so the overlay
+    // picks up the committed document on next build. See HANDOFF-rearchitecture.md decision #7.
 
     // Trigger Netlify rebuild if build hook is configured
     const buildHook = process.env.NETLIFY_BUILD_HOOK;
@@ -456,7 +284,6 @@ const handler: Handler = async (event: HandlerEvent, context: HandlerContext) =>
           path: fullPath,
           sha: commitResponse.data.content?.sha,
         },
-        indexUpdated,
       }),
     };
   } catch (err: any) {

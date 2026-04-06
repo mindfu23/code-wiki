@@ -1,0 +1,8 @@
+{
+  "mcpServers": {
+    "code-wiki": {
+      "command": "node",
+      "args": ["/path/to/code-wiki/mcp-server/dist/index.js"]
+    }
+  }
+}

@@ -8,6 +8,22 @@ wiki/personal/
 # Documents with sensitive content
 wiki/projects/specstory-markdown-for-review.md
 
+# Generated build outputs (now in private content repo)
+# See HANDOFF-rearchitecture.md for the Phase 1 rearchitecture plan.
+web/public/data/index.json
+web/public/data/index-full.json
+web/public/data/category-*.json
+web/public/data/diagram-signals.json
+web/public/data/metrics/
+mcp-server/data/metrics/
+wiki/projects/repo-locations.md
+
+# Private content overlay (cloned locally for dev)
+private-content/
+
+# MCP server config (contains local paths — see .mcp.json.example)
+.mcp.json
+
 # Claude Code
 .claude/
 CLAUDE.md

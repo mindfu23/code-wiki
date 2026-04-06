@@ -98,12 +98,9 @@ async function main(): Promise<void> {
 
   // Initialize Observatory metrics service
   const metricsConfig = loadMetricsConfig();
-  const metricsDir = path.join(
-    path.isAbsolute(config.cacheDirectory)
-      ? config.cacheDirectory
-      : path.join(__dirname, '..', config.cacheDirectory),
-    'metrics'
-  );
+  // Metrics are now consolidated in web/public/data/metrics/ (single source of truth).
+  // Previously read from mcp-server/data/metrics/ — see HANDOFF-rearchitecture.md decision #5.
+  const metricsDir = path.join(__dirname, '..', '..', 'web', 'public', 'data', 'metrics');
   const metricsService = new MetricsService(config, metricsConfig, indexService, metricsDir);
 
   // Start background metrics collection if any API tokens are configured

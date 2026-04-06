@@ -3,7 +3,7 @@
 /**
  * Standalone metrics collection script.
  * Run by GitHub Actions to collect and persist observatory metrics.
- * Saves to both mcp-server/data/metrics/ and web/public/data/metrics/
+ * Saves to web/public/data/metrics/ (single authoritative location)
  */
 
 import * as fs from 'fs/promises';
@@ -76,21 +76,17 @@ async function main(): Promise<void> {
 
   snapshot.collectedAt = new Date().toISOString();
 
-  // Save to both locations
+  // Save to single authoritative location (web/public/data/metrics/)
+  // Previously dual-wrote to mcp-server/data/metrics/ as well — consolidated
+  // as part of Phase 1 rearchitecture (see HANDOFF-rearchitecture.md decision #5).
   const date = new Date().toISOString().split('T')[0];
   const jsonContent = JSON.stringify(snapshot, null, 2);
 
-  const outputDirs = [
-    path.join(__dirname, '..', '..', 'data', 'metrics'),
-    path.join(__dirname, '..', '..', '..', 'web', 'public', 'data', 'metrics'),
-  ];
-
-  for (const dir of outputDirs) {
-    await fs.mkdir(dir, { recursive: true });
-    await fs.writeFile(path.join(dir, `metrics-${date}.json`), jsonContent, 'utf-8');
-    await fs.writeFile(path.join(dir, 'latest.json'), jsonContent, 'utf-8');
-    logger.info('CollectMetrics', `Saved to ${dir}`);
-  }
+  const outputDir = path.join(__dirname, '..', '..', '..', 'web', 'public', 'data', 'metrics');
+  await fs.mkdir(outputDir, { recursive: true });
+  await fs.writeFile(path.join(outputDir, `metrics-${date}.json`), jsonContent, 'utf-8');
+  await fs.writeFile(path.join(outputDir, 'latest.json'), jsonContent, 'utf-8');
+  logger.info('CollectMetrics', `Saved to ${outputDir}`);
 
   logger.info('CollectMetrics', `Collection complete. Sources: ${Object.keys(snapshot.sources).join(', ')}`);
 }
