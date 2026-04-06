@@ -277,6 +277,8 @@ const handler: Handler = async (event: HandlerEvent) => {
       Promise.resolve(loadWikiIndex(includePrivate)),
     ]);
 
+    console.log(`[dashboard-data] GitHub repos: ${githubRepos.length}, wiki repos: ${wikiRepos.length}, includePrivate: ${includePrivate}`);
+
     // Build repo-to-Netlify-site mapping
     const repoToSite = new Map<string, NetlifySite>();
     for (const site of netlifySites) {
