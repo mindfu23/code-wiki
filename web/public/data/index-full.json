@@ -1,7 +1,7 @@
 {
   "documents": [
     {
-      "path": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/code-wiki/wiki/AGENTS.md",
+      "path": "/home/runner/work/code-wiki/code-wiki/wiki/AGENTS.md",
       "relativePath": "AGENTS.md",
       "title": "AGENTS",
       "tags": [],
@@ -11,7 +11,7 @@
       "visibility": "public"
     },
     {
-      "path": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/code-wiki/wiki/_index.md",
+      "path": "/home/runner/work/code-wiki/code-wiki/wiki/_index.md",
       "relativePath": "_index.md",
       "title": "Contents",
       "description": "Wiki table of contents",
@@ -25,7 +25,7 @@
       "visibility": "public"
     },
     {
-      "path": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/code-wiki/wiki/diagrams/code-wiki-flow.md",
+      "path": "/home/runner/work/code-wiki/code-wiki/wiki/diagrams/code-wiki-flow.md",
       "relativePath": "diagrams/code-wiki-flow.md",
       "title": "Code Wiki — Data Flow",
       "description": "Architecture flow for Code Wiki: MCP server + Netlify SPA + GitHub Actions index pipeline.",
@@ -43,7 +43,7 @@
       "visibility": "public"
     },
     {
-      "path": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/code-wiki/wiki/diagrams/datastic-flow.md",
+      "path": "/home/runner/work/code-wiki/code-wiki/wiki/diagrams/datastic-flow.md",
       "relativePath": "diagrams/datastic-flow.md",
       "title": "Datastic — Data Flow",
       "description": "Architecture flow for Datastic: GH Archive + HuggingFace analytics via BigQuery, dbt, and GitHub Actions.",
@@ -61,7 +61,7 @@
       "visibility": "public"
     },
     {
-      "path": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/code-wiki/wiki/diagrams/ethicalaiditor-flow.md",
+      "path": "/home/runner/work/code-wiki/code-wiki/wiki/diagrams/ethicalaiditor-flow.md",
       "relativePath": "diagrams/ethicalaiditor-flow.md",
       "title": "EthicalAIditor — Data Flow",
       "description": "Architecture flow for EthicalAIditor: AI-powered document editing and ethical analysis.",
@@ -79,7 +79,7 @@
       "visibility": "public"
     },
     {
-      "path": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/code-wiki/wiki/diagrams/gastown-flow.md",
+      "path": "/home/runner/work/code-wiki/code-wiki/wiki/diagrams/gastown-flow.md",
       "relativePath": "diagrams/gastown-flow.md",
       "title": "Gastown — Data Flow",
       "description": "Architecture flow for Gastown: multi-agent orchestration CLI written in Go.",
@@ -98,7 +98,7 @@
       "visibility": "public"
     },
     {
-      "path": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/code-wiki/wiki/diagrams/jbwordpresstheme-flow.md",
+      "path": "/home/runner/work/code-wiki/code-wiki/wiki/diagrams/jbwordpresstheme-flow.md",
       "relativePath": "diagrams/jbwordpresstheme-flow.md",
       "title": "Technicalistic WP Theme — Data Flow",
       "description": "Architecture flow for Technicalistic: WordPress Full Site Editing block theme.",
@@ -116,7 +116,7 @@
       "visibility": "public"
     },
     {
-      "path": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/code-wiki/wiki/diagrams/lensquery-flow.md",
+      "path": "/home/runner/work/code-wiki/code-wiki/wiki/diagrams/lensquery-flow.md",
       "relativePath": "diagrams/lensquery-flow.md",
       "title": "LensQuery — Data Flow",
       "description": "Architecture flow for LensQuery: cross-platform photo library query tool with Tauri desktop and web interfaces.",
@@ -135,7 +135,7 @@
       "visibility": "public"
     },
     {
-      "path": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/code-wiki/wiki/diagrams/metabot-flow.md",
+      "path": "/home/runner/work/code-wiki/code-wiki/wiki/diagrams/metabot-flow.md",
       "relativePath": "diagrams/metabot-flow.md",
       "title": "Metabot — Data Flow",
       "description": "Architecture flow for Metabot: multi-AI aggregation with Express backend and React/Expo frontends.",
@@ -153,7 +153,7 @@
       "visibility": "public"
     },
     {
-      "path": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/code-wiki/wiki/diagrams/n8n-workflows-flow.md",
+      "path": "/home/runner/work/code-wiki/code-wiki/wiki/diagrams/n8n-workflows-flow.md",
       "relativePath": "diagrams/n8n-workflows-flow.md",
       "title": "n8n Workflows — Data Flow",
       "description": "Architecture flow for n8n Workflows: novel orchestration pipeline on self-hosted GCP.",
@@ -171,7 +171,7 @@
       "visibility": "public"
     },
     {
-      "path": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/code-wiki/wiki/diagrams/novelizer-flow.md",
+      "path": "/home/runner/work/code-wiki/code-wiki/wiki/diagrams/novelizer-flow.md",
       "relativePath": "diagrams/novelizer-flow.md",
       "title": "Novelizer — Data Flow",
       "description": "Architecture flow for Novelizer: novel writing assistant with document import/export.",
@@ -189,7 +189,7 @@
       "visibility": "public"
     },
     {
-      "path": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/code-wiki/wiki/diagrams/photophreaker-flow.md",
+      "path": "/home/runner/work/code-wiki/code-wiki/wiki/diagrams/photophreaker-flow.md",
       "relativePath": "diagrams/photophreaker-flow.md",
       "title": "PhotoPhreaker — Data Flow",
       "description": "Architecture flow for PhotoPhreaker: AI image decomposition with Topaz and Photoshop integration.",
@@ -208,7 +208,7 @@
       "visibility": "public"
     },
     {
-      "path": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/code-wiki/wiki/diagrams/searchbard-flow.md",
+      "path": "/home/runner/work/code-wiki/code-wiki/wiki/diagrams/searchbard-flow.md",
       "relativePath": "diagrams/searchbard-flow.md",
       "title": "SearchBard — Data Flow",
       "description": "Architecture flow for SearchBard: AI-powered search with multi-provider fallback.",
@@ -226,7 +226,7 @@
       "visibility": "public"
     },
     {
-      "path": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/code-wiki/wiki/diagrams/storyplot-flow.md",
+      "path": "/home/runner/work/code-wiki/code-wiki/wiki/diagrams/storyplot-flow.md",
       "relativePath": "diagrams/storyplot-flow.md",
       "title": "StoryPlot — Data Flow",
       "description": "Architecture flow for StoryPlot: interactive story plot generator based on the Plotto system.",
@@ -245,7 +245,7 @@
       "visibility": "public"
     },
     {
-      "path": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/code-wiki/wiki/diagrams/theorazine-flow.md",
+      "path": "/home/runner/work/code-wiki/code-wiki/wiki/diagrams/theorazine-flow.md",
       "relativePath": "diagrams/theorazine-flow.md",
       "title": "Theorazine — Data Flow",
       "description": "Architecture flow for Theorazine: calculator and theory exploration tool with Perplexity integration.",
@@ -263,7 +263,7 @@
       "visibility": "public"
     },
     {
-      "path": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/code-wiki/wiki/diagrams/valueape-flow.md",
+      "path": "/home/runner/work/code-wiki/code-wiki/wiki/diagrams/valueape-flow.md",
       "relativePath": "diagrams/valueape-flow.md",
       "title": "ValueApe — Data Flow",
       "description": "Architecture flow for ValueApe: multi-provider stock analysis with AI recommendations, sentiment analysis, and cloud sync.",
@@ -282,7 +282,7 @@
       "visibility": "public"
     },
     {
-      "path": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/code-wiki/wiki/integrations/_index.md",
+      "path": "/home/runner/work/code-wiki/code-wiki/wiki/integrations/_index.md",
       "relativePath": "integrations/_index.md",
       "title": "Integrations Index",
       "description": "Third-party API connectors and service integrations",
@@ -298,7 +298,7 @@
       "visibility": "public"
     },
     {
-      "path": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/code-wiki/wiki/integrations/databricks-observatory.md",
+      "path": "/home/runner/work/code-wiki/code-wiki/wiki/integrations/databricks-observatory.md",
       "relativePath": "integrations/databricks-observatory.md",
       "title": "Databricks Observatory Setup",
       "description": "Guide for ingesting observatory metrics into Databricks Community Edition using the medallion architecture",
@@ -316,7 +316,7 @@
       "visibility": "public"
     },
     {
-      "path": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/code-wiki/wiki/patterns/_index.md",
+      "path": "/home/runner/work/code-wiki/code-wiki/wiki/patterns/_index.md",
       "relativePath": "patterns/_index.md",
       "title": "Patterns Index",
       "description": "Architectural patterns and design approaches",
@@ -330,7 +330,7 @@
       "visibility": "public"
     },
     {
-      "path": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/code-wiki/wiki/patterns/overall-mcp-info.md",
+      "path": "/home/runner/work/code-wiki/code-wiki/wiki/patterns/overall-mcp-info.md",
       "relativePath": "patterns/overall-mcp-info.md",
       "title": "Overall MCP info",
       "description": "Info on my personal MCP setups",
@@ -342,7 +342,7 @@
       "visibility": "private"
     },
     {
-      "path": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/code-wiki/wiki/preferences/standard-setups.md",
+      "path": "/home/runner/work/code-wiki/code-wiki/wiki/preferences/standard-setups.md",
       "relativePath": "preferences/standard-setups.md",
       "title": "standard-setups",
       "tags": [],
@@ -353,7 +353,7 @@
       "visibility": "private"
     },
     {
-      "path": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/code-wiki/wiki/projects/_index.md",
+      "path": "/home/runner/work/code-wiki/code-wiki/wiki/projects/_index.md",
       "relativePath": "projects/_index.md",
       "title": "Projects Index",
       "description": "Documentation for active repositories",
@@ -367,7 +367,7 @@
       "visibility": "public"
     },
     {
-      "path": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/code-wiki/wiki/projects/app-prices-notes.md",
+      "path": "/home/runner/work/code-wiki/code-wiki/wiki/projects/app-prices-notes.md",
       "relativePath": "projects/app-prices-notes.md",
       "title": "app-prices-notes",
       "tags": [],
@@ -377,7 +377,7 @@
       "visibility": "public"
     },
     {
-      "path": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/code-wiki/wiki/projects/overall-current-status.md",
+      "path": "/home/runner/work/code-wiki/code-wiki/wiki/projects/overall-current-status.md",
       "relativePath": "projects/overall-current-status.md",
       "title": "Overall current status",
       "description": "status across many or all repos",
@@ -389,7 +389,7 @@
       "visibility": "private"
     },
     {
-      "path": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/code-wiki/wiki/projects/overall-novel-processes.md",
+      "path": "/home/runner/work/code-wiki/code-wiki/wiki/projects/overall-novel-processes.md",
       "relativePath": "projects/overall-novel-processes.md",
       "title": "Overall novel processes and workflows",
       "tags": [],
@@ -400,7 +400,7 @@
       "visibility": "private"
     },
     {
-      "path": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/code-wiki/wiki/projects/repo-locations.md",
+      "path": "/home/runner/work/code-wiki/code-wiki/wiki/projects/repo-locations.md",
       "relativePath": "projects/repo-locations.md",
       "title": "Repository Locations",
       "description": "Mapping of repositories to local file system paths and GitHub URLs",
@@ -416,7 +416,7 @@
       "visibility": "public"
     },
     {
-      "path": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/code-wiki/wiki/projects/setup_cheatsheet.md",
+      "path": "/home/runner/work/code-wiki/code-wiki/wiki/projects/setup_cheatsheet.md",
       "relativePath": "projects/setup_cheatsheet.md",
       "title": "New Project Setup Cheatsheet",
       "description": "Step-by-step commands and URLs for wiring up a new React+Vite+Supabase+Netlify project from scaffold to live prototype",
@@ -436,7 +436,7 @@
       "visibility": "public"
     },
     {
-      "path": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/code-wiki/wiki/projects/weird-chess-to-do.md",
+      "path": "/home/runner/work/code-wiki/code-wiki/wiki/projects/weird-chess-to-do.md",
       "relativePath": "projects/weird-chess-to-do.md",
       "title": "Weird Chess To  Do",
       "tags": [],
@@ -447,7 +447,7 @@
       "visibility": "private"
     },
     {
-      "path": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/code-wiki/wiki/snippets/_index.md",
+      "path": "/home/runner/work/code-wiki/code-wiki/wiki/snippets/_index.md",
       "relativePath": "snippets/_index.md",
       "title": "Snippets Index",
       "description": "Small, focused code pieces",
@@ -461,7 +461,7 @@
       "visibility": "public"
     },
     {
-      "path": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/code-wiki/wiki/templates/_index.md",
+      "path": "/home/runner/work/code-wiki/code-wiki/wiki/templates/_index.md",
       "relativePath": "templates/_index.md",
       "title": "Templates Index",
       "description": "Project and file starters",
@@ -476,7 +476,7 @@
       "visibility": "public"
     },
     {
-      "path": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/code-wiki/wiki/utilities/_index.md",
+      "path": "/home/runner/work/code-wiki/code-wiki/wiki/utilities/_index.md",
       "relativePath": "utilities/_index.md",
       "title": "Utilities Index",
       "description": "Standalone helper functions and utilities",
@@ -522,17 +522,6 @@
       "tags": [],
       "content": "\n# Mobile App Store Preparation\n\nNotes for preparing Flutter and React Native (Expo) apps for iOS App Store and Android Play Store submission.\nValidated against: Flutter 3.38.7 stable, Xcode 26.2, macOS 26.3, CocoaPods 1.16.2 (Homebrew).\n\n---\n\n## Expo Policy\n\nExpo SDK libraries (expo-file-system, expo-sharing, expo-constants, etc.) are permitted\nin React Native projects. They are open-source, free, and do not require an account.\n\n**Do NOT use Expo's cloud build service (EAS Build).** All builds must be done locally\nvia Xcode after `expo prebuild`. Do not add `expo-dev-client` or use Expo Go for\ndevelopment — use the native Xcode build with Metro bundler instead.\n\n---\n\n## React Native (Expo) — Local Build Without Expo Account\n\nFor Expo-based React Native apps, use `expo prebuild` to generate native Xcode project\nfiles locally. This avoids needing an Expo account or EAS Build cloud service. The workflow\nmirrors the familiar Xcode signing/archiving process used for Flutter apps.\n\n### Generating the Xcode project\n\n```bash\ncd mobile\nnpm install\nnpx expo prebuild --platform ios\n```\n\nThis creates an `ios/` directory with a full Xcode workspace.\n\n### Building and submitting\n\n1. Open `ios/<AppName>.xcworkspace` in Xcode (use `.xcworkspace`, not `.xcodeproj`)\n2. Select the app target → Signing & Capabilities → set your Apple Developer team\n3. Product → Archive\n4. Organizer → Validate App → Distribute App → App Store Connect → Upload\n\n### Passing the APP_SECRET_TOKEN at build time\n\nIn the Expo `app.config.js`, the token is read from `process.env.APP_SECRET_TOKEN` into\n`extra.appSecretToken`. The `expo prebuild` step bakes whatever is in `app.config.js` into\nthe native project. To include the token:\n\n```bash\nAPP_SECRET_TOKEN=<your-token> npx expo prebuild --platform ios --clean\n```\n\nThe app code reads it at runtime via `expo-constants`:\n```typescript\nimport Constants from 'expo-constants';\nconst token = Constants.expoConfig?.extra?.appSecretToken || '';\n```\n\n### Key differences from Flutter workflow\n\n| | Flutter | Expo (React Native) |\n|---|---------|-------------------|\n| Native project generation | Built-in (`ios/Runner/`) | `npx expo prebuild` generates `ios/` |\n| Bundle ID config | `project.pbxproj` manual edits | `app.config.js` → `ios.bundleIdentifier` |\n| Privacy manifest | Manual `.xcprivacy` file + pbxproj edits | `app.config.js` → `ios.privacyManifests` |\n| Deployment target | Manual in `Podfile` + `project.pbxproj` | Handled by Expo SDK version |\n| App icon | `flutter_launcher_icons` package | Place 1024x1024 `icon.png` in `assets/` |\n| Build token passing | `--dart-define=KEY=value` | `APP_SECRET_TOKEN=x npx expo prebuild` |\n\n### No Expo account needed\n\nEAS Build (cloud) is optional. All builds can be done locally via Xcode after `expo prebuild`.\nThe `eas.json` file is only needed if using EAS cloud builds.\n\n---\n\n## iOS App Store — Required Code Changes (Flutter)\n\nBefore submitting a Flutter app to the iOS App Store, make these changes in the repo:\n\n### 1. Bundle ID\nReplace the default `com.example.<appname>` with your real bundle ID everywhere:\n\n- `android/app/build.gradle.kts` — `namespace` and `applicationId`\n- `ios/Runner.xcodeproj/project.pbxproj` — all occurrences of `PRODUCT_BUNDLE_IDENTIFIER`\n  (typically 5 times: 2× for Runner, 3× for RunnerTests)\n\nUse lowercase for bundle IDs: `com.anideasmith.weirdchess` not `com.AnIdeaSmith.WeirdChess`.\n\n### 2. iOS Deployment Target\nApple requires iOS 16.0+ for new App Store submissions (as of 2025/2026).\n\nIn `ios/Runner.xcodeproj/project.pbxproj`, set all occurrences of:\n```\nIPHONEOS_DEPLOYMENT_TARGET = 13.0;\n```\nto `16.0` (typically 3 occurrences at the project level).\n\nAlso uncomment/set in `ios/Podfile`:\n```ruby\nplatform :ios, '16.0'\n```\n\n### 3. Display Name\n- `ios/Runner/Info.plist` — set `CFBundleDisplayName` to the properly capitalised name\n- `android/app/src/main/AndroidManifest.xml` — set `android:label=\"YourAppName\"`\n\n### 4. iOS Icon — Remove Alpha Channel\nApp Store Connect rejects icons with an alpha channel. In `pubspec.yaml`:\n```yaml\nflutter_launcher_icons:\n  android: true\n  ios: true\n  remove_alpha_ios: true          # <-- required\n  image_path: \"assets/images/icon_1024.png\"\n  web:\n    generate: true\n    image_path: \"assets/images/icon_1024.png\"\n    favicon_image_path: \"assets/images/icon_1024.png\"\n```\nThen regenerate: `dart run flutter_launcher_icons`\n\n### 5. INTERNET Permission (Android)\nFlutter's HTTP package needs this explicitly declared in `android/app/src/main/AndroidManifest.xml`:\n```xml\n<manifest xmlns:android=\"http://schemas.android.com/apk/res/android\">\n    <uses-permission android:name=\"android.permission.INTERNET\"/>\n    ...\n```\n\n### 6. Privacy Manifest (iOS)\nRequired for any package that uses `NSUserDefaults` (e.g. `shared_preferences`).\nCreate `ios/Runner/PrivacyInfo.xcprivacy`:\n```xml\n<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<!DOCTYPE plist PUBLIC \"-//Apple//DTD PLIST 1.0//EN\" \"http://www.apple.com/DTDs/PropertyList-1.0.dtd\">\n<plist version=\"1.0\">\n<dict>\n    <key>NSPrivacyAccessedAPITypes</key>\n    <array>\n        <dict>\n            <key>NSPrivacyAccessedAPIType</key>\n            <string>NSPrivacyAccessedAPICategoryUserDefaults</string>\n            <key>NSPrivacyAccessedAPITypeReasons</key>\n            <array>\n                <string>CA92.1</string>\n            </array>\n        </dict>\n    </array>\n    <key>NSPrivacyCollectedDataTypes</key>\n    <array/>\n    <key>NSPrivacyTracking</key>\n    <false/>\n    <key>NSPrivacyTrackingDomains</key>\n    <array/>\n</dict>\n</plist>\n```\n\nAlso add the file to `ios/Runner.xcodeproj/project.pbxproj` in three places:\n1. A `PBXFileReference` entry\n2. The Runner `PBXGroup` children list\n3. The Runner `PBXResourcesBuildPhase` files list\n\n---\n\n## Known Issue: Homebrew LLVM Clang Breaks iOS Builds on Xcode 26\n\n### Symptom\n`flutter build ios` fails immediately with a cascade of parse errors:\n```\nParse Issue (Xcode): Module '_c_standard_library_obsolete' requires feature\n  'found_incompatible_headers__check_search_paths'\n  .../iPhoneOS26.2.sdk/usr/include/DarwinFoundation1.modulemap:287:7\n\nParse Issue (Xcode): Could not build module '_Builtin_float'\nParse Issue (Xcode): Could not build module 'CoreFoundation'\nParse Issue (Xcode): Could not build module 'Foundation'\n.../Pods-Runner-dummy.m:0:8\n```\n\nThe Xcode build completes in 1–5 seconds (too fast — nothing actually compiled).\n\n### Root Cause\nXcode 26 rewrote its C standard library module maps (`DarwinFoundation1.modulemap`).\nIf Homebrew LLVM (`/opt/homebrew/opt/llvm/bin/clang`) appears before Xcode's own clang\non the `PATH`, Xcode resolves `CC` to the Homebrew clang. The Homebrew clang does not\nunderstand Xcode 26's new SDK module maps, causing all Objective-C compilation to fail.\n\n**How to confirm:** Run `xcodebuild` with verbose output and check which clang binary is\nbeing invoked for C/ObjC compilation. If it shows `/opt/homebrew/opt/llvm/bin/clang`,\nthis is the issue.\n\n### Fix\nForce Xcode's own toolchain clang via build settings in two places:\n\n**1. `ios/Runner.xcodeproj/project.pbxproj`** — add to both project-level Debug and Release\n`XCBuildConfiguration` sections:\n```\nCC = \"$(DT_TOOLCHAIN_DIR)/usr/bin/clang\";\nCXX = \"$(DT_TOOLCHAIN_DIR)/usr/bin/clang++\";\n```\n\n**2. `ios/Podfile`** — add to the `post_install` hook:\n```ruby\npost_install do |installer|\n  installer.pods_project.targets.each do |target|\n    flutter_additional_ios_build_settings(target)\n    target.build_configurations.each do |config|\n      config.build_settings['IPHONEOS_DEPLOYMENT_TARGET'] = '16.0'\n      config.build_settings['CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER'] = 'NO'\n      # Force Xcode's own clang rather than any Homebrew-installed LLVM on the PATH\n      config.build_settings['CC'] = '$(DT_TOOLCHAIN_DIR)/usr/bin/clang'\n      config.build_settings['CXX'] = '$(DT_TOOLCHAIN_DIR)/usr/bin/clang++'\n    end\n  end\nend\n```\n\nAfter applying the fix, delete `ios/Pods/`, `ios/Podfile.lock`, and the Xcode DerivedData\nfor the project (`~/Library/Developer/Xcode/DerivedData/Runner-*/`), then rebuild.\n\n### Alternative (simpler but less portable)\n`brew unlink llvm` removes the Homebrew clang from PATH. Only do this if you don't need\nthe Homebrew LLVM for other projects.\n\n---\n\n## Installing CocoaPods\n\nDo NOT use `sudo gem install cocoapods` on macOS 26+ — the system Ruby is 2.6,\nwhich is too old and the gems directory is locked. Use Homebrew instead:\n```bash\nbrew install cocoapods\n```\n\n---\n\n## Xcode Command Line Tools Setup\n\nAfter installing Xcode from the App Store, you must point the command-line tools at it\n(Flutter doctor will show Xcode as broken until you do this):\n```bash\nsudo xcode-select --switch /Applications/Xcode.app/Contents/Developer\nsudo xcodebuild -runFirstLaunch\n```\n\n---\n\n## Bundle ID and Developer Account Notes\n\n- Bundle ID is **permanent** once registered in App Store Connect — choose carefully.\n- Convention: `com.<brandname>.<appname>` — all lowercase, no spaces.\n- The Apple Developer account **seller/display name** (shown on the App Store) is\n  independent of the bundle ID and can be changed at any time in App Store Connect\n  without affecting any existing app.\n- To change seller name: appstoreconnect.apple.com → Users and Access → your account → edit.\n\n---\n\n## LLM Commentary on Mobile — Proxy Architecture\n\nMobile apps cannot call `/.netlify/functions/…` (a relative URL with no host).\nThe solution is to proxy all mobile requests through the absolute Netlify URL,\nprotected by an app token and IP-based rate limiting.\n\n### How it works\n\n```\niOS/Android app  →  https://weirdchess.netlify.app/.netlify/functions/chess-commentary\n                        ↓  (validates X-App-Token header)\n                        ↓  (rate limits by IP: 30 req / 10 min)\n                        ↓  (uses ANTHROPIC_API_KEY env var)\n                   Anthropic / OpenAI / Google API\n```\n\n- The Netlify function holds your real API key server-side (never in the app binary).\n- The app sends a static `X-App-Token` header compiled in at build time via\n  `--dart-define`. This raises the bar against casual abuse of the endpoint.\n- In-memory IP rate limiting (30 requests / 10 min) limits burst usage per device.\n\n### Setup steps\n\n**1. Generate a secret token** (run this once, save the output):\n```bash\nopenssl rand -hex 32\n# e.g. a1b2c3d4e5f6789012345678901234567890abcdef0123456789012345678901\n```\n\n**2. Add the token to Netlify** (this is where the real validation lives):\n- Netlify Dashboard → your site → Site configuration → Environment variables\n- Add: `APP_SECRET_TOKEN = <your generated value>`\n- Redeploy the site (or it picks up on next deploy)\n\n**3. Build Flutter with the token baked in** (the token is compiled into the binary,\nnot stored in source code):\n```bash\n# iOS release build:\nflutter build ios --release --dart-define=APP_SECRET_TOKEN=<your-token>\n\n# Web release build:\nflutter build web --release --dart-define=APP_SECRET_TOKEN=<your-token>\n\n# Local dev:\nflutter run --dart-define=APP_SECRET_TOKEN=<your-token>\n```\n\n**4. Xcode Archive** — when building via Xcode for App Store upload, the\n`--dart-define` must be passed via the scheme's build arguments:\n- Xcode → Product menu → Scheme → Edit Scheme → Run → Arguments → Additional\n  Arguments: `--dart-define=APP_SECRET_TOKEN=<your-token>`\n- Or set it in `ios/Flutter/Debug.xcconfig` / `Release.xcconfig`:\n  ```\n  DART_DEFINES=APP_SECRET_TOKEN%3D<your-token>\n  ```\n\n### Key files changed\n\n| File | What changed |\n|------|-------------|\n| `lib/services/llm_service.dart` | Added `appToken` to `LlmConfig`; sends `X-App-Token` header in proxy calls |\n| `lib/main.dart` | On mobile, sets absolute Netlify URL + `directMode=false`; reads token via `String.fromEnvironment` |\n| `netlify/functions/chess-commentary.js` | Validates `X-App-Token` header; IP rate limiting 30 req/10 min |\n\n### Protecting against abuse\n\n| Mechanism | What it stops |\n|-----------|---------------|\n| `X-App-Token` header check | Casual URL discovery — requests without the token get 403 |\n| IP rate limiting (30/10 min) | Burst abuse from a single device |\n| Anthropic spending cap | Set at anthropic.com to cap worst-case cost |\n| App-level token in binary | Requires reverse-engineering the app to bypass |\n\n### Long-term upgrades (when adding subscriptions / monetisation)\n\nWhen the app grows to the point of needing per-user quotas or billing:\n\n1. **Apple DeviceCheck / Google Play Integrity** — cryptographically verifies\n   that requests come from a genuine, unmodified copy of your app. Requires a\n   backend call to Apple/Google to validate the device assertion token.\n2. **Cloudflare Workers** with built-in rate limiting (free tier: 100k req/day,\n   per-IP rules as first-class config, no code needed).\n3. **Google Cloud Run** proxy — full control, per-user quotas via Firestore,\n   scales to zero, integrates with Firebase Auth for subscription gating.\n4. **RevenueCat** + **Superwall** — standard Flutter subscription SDKs; pair\n   with Cloud Run backend that checks entitlement before forwarding LLM requests.\n\n---\n\n## Submitting to the App Store (after build succeeds)\n\n**Important:** Complete App Store Connect metadata BEFORE uploading the build.\nThe build upload will succeed without metadata, but you cannot submit for review until\nall required fields are filled in.\n\n### Correct submission order\n\n1. Go to appstoreconnect.apple.com → create the app record with the correct bundle ID\n2. Fill in all required metadata (see section below)\n3. Open `ios/Runner.xcworkspace` in Xcode (use `.xcworkspace`, not `.xcodeproj`)\n4. Runner target → Signing & Capabilities → select your Apple Developer team\n5. Build the release IPA via CLI (passes --dart-define correctly):\n   ```bash\n   flutter build ipa --release --dart-define=APP_SECRET_TOKEN=<token>\n   ```\n6. Open the archive in Xcode Organizer:\n   ```bash\n   open build/ios/archive/Runner.xcarchive\n   ```\n7. Organizer → **Validate App** first (catches signing/metadata issues, ~1–5 min)\n8. Organizer → **Distribute App → App Store Connect → Upload**\n9. Wait 5–30 minutes for Apple to process the build (you'll get an email)\n10. Back in App Store Connect: select the processed build, then **Add for Review**\n\n### Taking screenshots for App Store Connect\n\nApp Store Connect requires specific screenshot dimensions. The current Xcode 26 simulators\n(iPhone 17 Pro, etc.) produce screenshots at sizes Apple does not accept for the required slots.\n\n**Required dimensions and which simulator to use:**\n\n| Slot | Dimensions | Simulator |\n|------|-----------|-----------|\n| 6.5\" Display | 1242×2688 or 1284×2778 | iPhone 13 Pro Max (iOS 17.5) |\n| 6.7\" Display | 1290×2796 | iPhone 15 Pro Max (iOS 17.5) |\n\n**To install an older simulator runtime:**\nXcode → Settings → Platforms → download iOS 17.5 (~5GB). This adds iPhone 13 Pro Max\nand iPhone 15 Pro Max to the simulator list.\n\n**To target a specific simulator from CLI:**\n```bash\nflutter run -d \"iPhone 15 Pro Max\" --dart-define=APP_SECRET_TOKEN=<token>\n```\nWithout `-d`, Flutter may default to building for macOS, which fails with CoreFoundation errors.\n\n**To take screenshots:** `Cmd+S` in the Simulator window — saves to Desktop.\n\n**Quick resize alternative:** If you have screenshots from the wrong simulator, resize in\nmacOS Preview → Tools → Adjust Size → set to 1284×2778.\n\n---\n\n## App Store Connect — Required Metadata\n\n### Text fields\n\n| Field | Notes |\n|-------|-------|\n| **App Name** | Set here, not in Xcode. Must be unique on the App Store. |\n| **Promotional Text** | Up to 170 chars. Shown at top of listing. Can be updated without a new build. |\n| **Description** | Up to 4000 chars. Main marketing copy. |\n| **Keywords** | Up to 100 chars total, comma-separated, no spaces after commas. Don't repeat words already in the app name. |\n| **Support URL** | Required. Any live webpage — GitHub repo, Ko-Fi page, or simple Netlify page works. |\n| **Privacy Policy URL** | Required for all apps. Must be a live URL containing actual privacy policy text. |\n| **Category** | e.g. Games → Board |\n\n### Privacy policy\n\nRequired even for apps that collect no data. Quickest options:\n- Use a free generator (e.g. app-privacy-policy-generator.nisrulz.com) — select no data collected\n- Add a short privacy note to your Ko-Fi page and use that URL\n- Host a simple page on Netlify or GitHub Pages\n\nMinimum text for a no-data-collection app:\n> This app does not collect, store, or share any personal data. Network requests are made\n> solely to retrieve AI-generated content. No user data is transmitted or retained.\n\n### Fields to leave blank / ignore\n\n| Field | Action |\n|-------|--------|\n| App Clip | Leave blank (only for lightweight app experiences) |\n| iMessage App | Leave blank (only if building an iMessage extension) |\n| Routing App Coverage File | Leave blank (only for navigation/mapping apps) |\n| Game Center | Leave unchecked (only if using leaderboards or multiplayer matchmaking) |\n| Sign-In Required | Uncheck (only for apps that require login to use) |\n\n### Encryption question\n\nWhen asked \"What type of encryption algorithms does your app implement?\":\n- Select **\"None of the algorithms mentioned above\"** for apps that only use Apple's\n  built-in HTTPS networking (no custom crypto). No export documentation required.\n\n### Build processing\n\nAfter uploading via Xcode Organizer, the build takes **5–30 minutes** to process before\nit appears in App Store Connect. You'll receive an email when it's ready to select.\n\n---\n\n## App Store Review — Timelines and Notes\n\n- **First submission:** 3–7 days (app reviewed fresh)\n- **Subsequent updates:** Often under 24 hours\n- **Expedited review:** Available for critical bug fixes at appstoreconnect.apple.com\n\n### Ko-Fi / external payment links\nApple guideline 3.1.1 restricts in-app buttons that link directly to external payment or\ndonation flows. A direct \"Donate\" button linking to Ko-Fi may be rejected.\n**Safe approach:** Link to your own website/support page, which can mention Ko-Fi.\n\n### Sign in with Apple\nIf you add any third-party login (Google, email, etc.), Apple **requires** Sign in with\nApple to be offered alongside it. Plan for this before adding any auth system.\n\n### Developer display name\nThe \"Apps by ___\" name shown on the App Store is your account seller name, separate from\nthe bundle ID. Can be changed at any time:\nappstoreconnect.apple.com → Users and Access → your account → edit.\n",
       "contentPreview": "# Mobile App Store Preparation  Notes for preparing Flutter and React Native (Expo) apps for iOS App Store and Android Play Store submission. Validated against: Flutter 3.38.7 stable, Xcode 26.2, macOS 26.3, CocoaPods 1.16.2 (Homebrew).  ---  ## Expo Policy  Expo SDK libraries (expo-file-system, ex",
-      "category": "preferences",
-      "visibility": "private"
-    },
-    {
-      "path": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/code-wiki/wiki/personal/preferences/standard-setups.md",
-      "relativePath": "preferences/standard-setups.md",
-      "title": "standard-setups",
-      "tags": [],
-      "updated": "2026-02-28",
-      "content": "\n\n#Standard setups#\n\nNote: this current file itself is available to the local mcp via .claude and is also stored in code-wiki/wiki/preferences.\n\n##Some standard components\n\nWhen asked to build something that can involve several components, either directly or indirectly, check here first to see if something similar has already been used here. Also check to see if something is available that is open source which covers the same basic functionality. If you find anything in either case, present that to the user.\n\n-> Standard AI chat tools - recently using Vercel AI SDK -\n\n-> Signup / Login flow - recently using what is currently in Create. Most recent version should also have forgot password flow\n\n-> Database storage when needed - for always on / fast starts currently using Google cloud, which is still on free tier for me for the next 12 months\n\n-> User credentials and document storage from apps - Cloudflare, which also has worker setups. Previously Supabase was used.\n\n-> Standard UI for saving chats - for now, saving as md files for what's in practice in ValueApe and Metabot. Future note is to see if Vercel has some similar functionality.\n\n-> same code base for web app and mobile - mainly using React with Capacitor. Sometimes using Github Actions for python functionality.\n\n-> Health checks - if the application is going to be used on Netlify or a mobile app, ask first and then integrate the health check currently in \nHealth checks are currently monitored in the free tier of Uptime Robot. \n\n-> API / AI usage tracking - had made my own app for this, in my GitHub as apiTracker. \n\n-> Ko-fi link - my most recent favorite version of this is in the ValueApe app.\n\n-> Doc import / export functions have been set up in the Novelizer app, the EthicalAIditor app and the StoryCircle-dev app\n\n## Standard overall user preferences\n\n-> I as a user generally prefer a code base that can also be relatively conveniently ported to multiple different platforms. So I generally want it work as a web app that I will also host and test on Netlify, and also for it to be relatively easy to wrap the same core code in any needed functionality for porting to iOS and Android and placing in those stores. \n\n-> smaller items that are suitable for users basic information is stored locally on the users' individual device, often via IndexDB\n\n-> Python scripts and similar for more advanced functionality than can conveniently run on the user's browser or mobile app.\n\n-> larger databases or files including custom LLM models I'm typically hosting on Google Drive\n\n->I overall prefer using app resources at either free tier or my current typically low paid tier for services. I currently have free or paid access on:\n\n- Google including Gemini (Pro, at $2/mo for intro 3 months as of Jan 2026)\n- Perplexity (pro at $20)\n- Figma (pro at $20)\n- Open AI (pro at $20)\n- Github Copilot (pro at $39, looking at reducing if I can)\n- Anthropic at $100/mo \n\n- Friendli.ai (free)\n- Supabase (free)\n- Hugging Face (free)\n- Open Router (free)\n\n-> LLMs and other similar items I'm typically preferring to reach on the free tier of Hugging Face\n\n-> For UI and UX, I typically prefer the app to provide some feedback to the user when a user's input search returns no info, or when the user inputs information that does not work for some reason.\n\n-> When developing app code that will be for use with iOS and Android, and Flutter or some similar option is being used, testing might occur on Netlify. To make sure that Netlify hosted versions have the latest changes, rebuild what Netlify will need to display those changes. Make this part of the git repo update process as needed for this.\n\n-> If an app has a logo as part of the UI, such as in the top bar or similar, also make this logo the default thumbnail to appear if the web app is made a shortcut on iOS or Android. Also if the app code is made or remade for potential use in the iOS or Android app stores, have this same thumbnail be the default thumbnail offered. Of course if another thumbnail is created after this point that I want instead, use the thumbnail that I want.\n\n// ignore this for now, until the next double slashes. \n-> Pay attention to if the app being designed, redesigned or used is using real-world data or is creating new / mock / simulation data. Unless the app is for creating art such as fiction, or fill-in data for historical simulations, let the user know if and when this will be part of the design. //\n\n##MCP setup\n\nWhen creating or adding an MCP, add the .mcp.json file at the workspace root. A global settings.json config alone is apparently not enough for the VSCode extension — it needs the project-level .mcp.json to discover the server. \n\nAlso make sure that needed aspects of individual MCPs aren't overruled by global MCPs - create exceptions in global MCPs or manuever local MCPs around global rules as necessary. ALso always notify the user when changing global MCPs. \n\n##n8n workflows\n\nThere are specific difficulties with Open AI and Chat GPT. Specifically there is a known known n8n bug (GitHub issues #15996, #21882) — n8n validates the JSON template before expression resolution, so dynamic expressions in the \"Using JSON\" field will frequently fail regardless of whether the output is valid.\n\nThe most reliable workaround: make the HTTP call directly from the Code node using n8n's built-in $http helper, bypassing the HTTP Request node entirely.\n\nIt may in fact be easier to just use other models in nodes.\n\n##Some standard features\n\n-> Unless otherwise asked, set up front end so that the web version can be viewed in a narrow browser, such as on a mobile device. \n\n-> Unless otherwise asked, if there are top menu nav items then have them move to a \"hamburger menu\" list when the web version of the app is viewed in a narrow browser, such as on a mobile device. \n\n-> Unless otherwise asked, a default saving and exporting setup is in /Users/jamesbeach/Documents/visual-studio-code/github-copilot/EthicalAIditor \n\n-> If there is any button or similar that causes an action, make the button has useful and appropriate label text\n\n-> If Flutter is used to create builds for iOS versions, including but not necessarily limited to baking in an API key value, update the Netlify .toml build so that the Flutter build is made and output for the web deploy also.\n\n## Standard .gitignore entries\n\nEvery project's `.gitignore` should include at minimum:\n- `node_modules/`, `dist/`, `.env`, `.DS_Store`, `*.log`\n- `.specstory/` — SpecStory session transcripts (may contain API keys or sensitive chat content)\n- `.claude/`, `CLAUDE.md`\n\n##Standard things to check for\n\n-> When using Netlify, make sure the netlify.toml file will skip scanning for variables, example:\n\n[build.environment]\n  NODE_VERSION = \"20\"\n  SECRETS_SCAN_OMIT_KEYS = \"VITE_API_URL\"\n  \n-> If a requirements.txt file exists or is needed, make sure it matches the current needs for the app. It could be out of date.\n  \n-> Check for typescript errors that might also block Netlify builds \n\n-> For new projects or significant reworkings of existing projects, test via npm locally and fix issues before pushing changes to remote\n  \n-> Check and confirm ahead of time that there will not be CORS violations on Netlify\n\n-> CORS Configuration Gotcha: When using FastAPI (or similar) with CORSMiddleware, wildcard subdomain patterns like `https://*.netlify.app` do NOT work when `allow_credentials=True`. You must specify the exact domain:\n  - BAD: `allow_origins=[\"https://*.netlify.app\"]` with `allow_credentials=True`\n  - GOOD: `allow_origins=[\"https://my-app.netlify.app\"]` with `allow_credentials=True`\n  - ALTERNATIVE: Use `allow_origins=[\"*\"]` with `allow_credentials=False` (less secure, no cookies/auth headers)\n\n-> have a standard way set up for an agent to connect with my github repo if it's set to private\n\n-> For apps that are using data from other sources, once testing is complete and the app is going live such as to Netlify or similar, make sure that the app is using real data and not mock data",
-      "contentPreview": "#Standard setups#  Note: this current file itself is available to the local mcp via .claude and is also stored in code-wiki/wiki/preferences.  ##Some standard components  When asked to build something that can involve several components, either directly or indirectly, check here first to see if so",
       "category": "preferences",
       "visibility": "private"
     },
@@ -603,17 +592,6 @@
       "visibility": "private"
     },
     {
-      "path": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/code-wiki/wiki/personal/projects/weird-chess-to-do.md",
-      "relativePath": "projects/weird-chess-to-do.md",
-      "title": "Weird Chess To  Do",
-      "tags": [],
-      "updated": "2026-02-23",
-      "content": "\nApp completed and submitted to app store.\n\nUsed ko-fi link, https://ko-fi.com/mindfu/\n\nCreated privacy policy, https://jamesmbeach.com/archives/5604\n\nStore link so far: https://appstoreconnect.apple.com/apps/6759537454/distribution/reviewsubmissions/details/eb044204-305d-4f74-a7a1-3ff67c852527",
-      "contentPreview": "App completed and submitted to app store.  Used ko-fi link, https://ko-fi.com/mindfu/  Created privacy policy, https://jamesmbeach.com/archives/5604  Store link so far: https://appstoreconnect.apple.com/apps/6759537454/distribution/reviewsubmissions/details/eb044204-305d-4f74-a7a1-3ff67c852527",
-      "category": "projects",
-      "visibility": "private"
-    },
-    {
       "path": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/code-wiki/wiki/personal/snippets/code-wiki-overview.md",
       "relativePath": "snippets/code-wiki-overview.md",
       "title": "Code wiki overview",
@@ -632,7 +610,7 @@
       "languages": [
         "TypeScript"
       ],
-      "lastCommitDate": "2026-04-05T02:14:53Z",
+      "lastCommitDate": "2026-04-06T00:18:21Z",
       "status": "github-only",
       "visibility": "public",
       "markdownFiles": [
@@ -919,266 +897,6 @@
           "has deploy config",
           "committed in last 30 days",
           "CI configured",
-          "0 open issues"
-        ]
-      }
-    },
-    {
-      "name": "ValueApe",
-      "githubUrl": "https://github.com/mindfu23/ValueApe",
-      "languages": [
-        "TypeScript"
-      ],
-      "lastCommitDate": "2026-04-04T06:31:01Z",
-      "status": "synced",
-      "visibility": "private",
-      "localPaths": [
-        "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/ValueApe"
-      ],
-      "localPath": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/ValueApe",
-      "markdownFiles": [
-        {
-          "relativePath": "autotrade-proposed-code.md",
-          "name": "autotrade-proposed-code.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "docs/architecture.md",
-          "name": "architecture.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "docs/DATA_PROVIDERS.md",
-          "name": "DATA_PROVIDERS.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "docs/finrl-integration.md",
-          "name": "finrl-integration.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "docs/INTEGRATION_EXAMPLES.md",
-          "name": "INTEGRATION_EXAMPLES.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "docs/REAL_TIME_DATA.md",
-          "name": "REAL_TIME_DATA.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "docs/schwab-integration.md",
-          "name": "schwab-integration.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "docs/stock-search-macro-plan.md",
-          "name": "stock-search-macro-plan.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "docs/SUPABASE_SETUP.md",
-          "name": "SUPABASE_SETUP.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "netlify/functions/requirements.txt",
-          "name": "requirements.txt",
-          "fileType": "txt"
-        },
-        {
-          "relativePath": "PRD.md",
-          "name": "PRD.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "README.md",
-          "name": "README.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "SECURITY.md",
-          "name": "SECURITY.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "TODO.md",
-          "name": "TODO.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "value-ape-stock-picks_2026_1.txt",
-          "name": "value-ape-stock-picks_2026_1.txt",
-          "fileType": "txt"
-        },
-        {
-          "relativePath": "webscraper/README.md",
-          "name": "README.md",
-          "fileType": "md"
-        }
-      ],
-      "sentinels": {
-        "hasReadme": true,
-        "hasClaudeMd": false,
-        "hasPackageManifest": true,
-        "hasDeployConfig": true,
-        "hasCi": true,
-        "hasTests": true,
-        "hasEnvExample": false,
-        "sourceFileCount": 278
-      },
-      "completion": {
-        "stage": "in-progress",
-        "signals": {
-          "scaffold": 3,
-          "implementation": 3,
-          "deployed": 1,
-          "maintained": 4
-        },
-        "reasons": [
-          "has README",
-          "has package manifest",
-          "has source files",
-          "278 source files",
-          "non-trivial size",
-          "committed in last 90 days",
-          "has deploy config",
-          "committed in last 30 days",
-          "CI configured",
-          "0 open issues"
-        ]
-      }
-    },
-    {
-      "name": "Datastic",
-      "description": "Data research and analytics POC and ongoing info workflow for apps and LLMs",
-      "githubUrl": "https://github.com/mindfu23/Datastic",
-      "languages": [
-        "Python"
-      ],
-      "lastCommitDate": "2026-04-01T22:57:42Z",
-      "status": "github-only",
-      "visibility": "private",
-      "markdownFiles": [
-        {
-          "relativePath": "dashboard-streamlit/README.md",
-          "name": "README.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "README.md",
-          "name": "README.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "requirements.txt",
-          "name": "requirements.txt",
-          "fileType": "txt"
-        }
-      ],
-      "sentinels": {
-        "hasReadme": true,
-        "hasClaudeMd": false,
-        "hasPackageManifest": true,
-        "hasDeployConfig": true,
-        "hasCi": true,
-        "hasTests": false,
-        "hasEnvExample": false,
-        "sourceFileCount": 61
-      },
-      "completion": {
-        "stage": "in-progress",
-        "signals": {
-          "scaffold": 4,
-          "implementation": 3,
-          "deployed": 1,
-          "maintained": 4
-        },
-        "reasons": [
-          "has README",
-          "has description",
-          "has package manifest",
-          "has source files",
-          "61 source files",
-          "non-trivial size",
-          "committed in last 90 days",
-          "has deploy config",
-          "committed in last 30 days",
-          "CI configured",
-          "0 open issues"
-        ]
-      }
-    },
-    {
-      "name": "CreatiCoach",
-      "description": "Working repo for a creative coaching calendar system and possible associated apps.",
-      "githubUrl": "https://github.com/mindfu23/CreatiCoach",
-      "languages": [
-        "TypeScript"
-      ],
-      "lastCommitDate": "2026-04-01T22:28:33Z",
-      "status": "github-only",
-      "visibility": "private",
-      "markdownFiles": [
-        {
-          "relativePath": "creative-2/CLAUDE.md",
-          "name": "CLAUDE.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "creative-2/README.md",
-          "name": "README.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "creative-2/requirements.txt",
-          "name": "requirements.txt",
-          "fileType": "txt"
-        },
-        {
-          "relativePath": "previous-PLAN.md",
-          "name": "previous-PLAN.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "previous-RESEARCH.md",
-          "name": "previous-RESEARCH.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "README.md",
-          "name": "README.md",
-          "fileType": "md"
-        }
-      ],
-      "sentinels": {
-        "hasReadme": true,
-        "hasClaudeMd": false,
-        "hasPackageManifest": true,
-        "hasDeployConfig": false,
-        "hasCi": false,
-        "hasTests": false,
-        "hasEnvExample": false,
-        "sourceFileCount": 21
-      },
-      "completion": {
-        "stage": "in-progress",
-        "signals": {
-          "scaffold": 4,
-          "implementation": 3,
-          "deployed": 0,
-          "maintained": 3
-        },
-        "reasons": [
-          "has README",
-          "has description",
-          "has package manifest",
-          "has source files",
-          "21 source files",
-          "non-trivial size",
-          "committed in last 90 days",
-          "committed in last 30 days",
           "0 open issues"
         ]
       }
@@ -1989,120 +1707,6 @@
       }
     },
     {
-      "name": "Metabot",
-      "description": "A bot that will take any query and send it to at least 4 different current AIs. This currently is Chat GPT, Anthropic's Claude, Google's Gemini and Perplexity AI. It will then provide a synthesis and summary of the received information, by default via Perplexity but also user-configurable for any other AI to be the summary agent.",
-      "githubUrl": "https://github.com/mindfu23/Metabot",
-      "languages": [
-        "TypeScript"
-      ],
-      "lastCommitDate": "2026-03-25T03:21:38Z",
-      "status": "synced",
-      "visibility": "private",
-      "localPaths": [
-        "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/Metabot"
-      ],
-      "localPath": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/Metabot",
-      "markdownFiles": [
-        {
-          "relativePath": "API.md",
-          "name": "API.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "ARCHITECTURE.md",
-          "name": "ARCHITECTURE.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "CONTRIBUTING.md",
-          "name": "CONTRIBUTING.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "DEPLOYMENT.md",
-          "name": "DEPLOYMENT.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "DOCKER.md",
-          "name": "DOCKER.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "figma-export/README.md",
-          "name": "README.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "figma-export/src/Attributions.md",
-          "name": "Attributions.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "figma-export/src/guidelines/Guidelines.md",
-          "name": "Guidelines.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "IMPLEMENTATION_SUMMARY.md",
-          "name": "IMPLEMENTATION_SUMMARY.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "MCP_INTEGRATION.md",
-          "name": "MCP_INTEGRATION.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "quantum-retreiver-store-text.md",
-          "name": "quantum-retreiver-store-text.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "README.md",
-          "name": "README.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "VERIFICATION.md",
-          "name": "VERIFICATION.md",
-          "fileType": "md"
-        }
-      ],
-      "sentinels": {
-        "hasReadme": true,
-        "hasClaudeMd": false,
-        "hasPackageManifest": true,
-        "hasDeployConfig": true,
-        "hasCi": true,
-        "hasTests": true,
-        "hasEnvExample": false,
-        "sourceFileCount": 200
-      },
-      "completion": {
-        "stage": "in-progress",
-        "signals": {
-          "scaffold": 4,
-          "implementation": 3,
-          "deployed": 1,
-          "maintained": 4
-        },
-        "reasons": [
-          "has README",
-          "has description",
-          "has package manifest",
-          "has source files",
-          "200 source files",
-          "non-trivial size",
-          "committed in last 90 days",
-          "has deploy config",
-          "committed in last 30 days",
-          "CI configured",
-          "0 open issues"
-        ]
-      }
-    },
-    {
       "name": "EthicalAIditor",
       "description": "An interface and AI wrapper for writers and editors, that's linked to LLMs trained only on legally and publicly available writing materials. ",
       "githubUrl": "https://github.com/mindfu23/EthicalAIditor",
@@ -2264,61 +1868,6 @@
       }
     },
     {
-      "name": "StoryLoft",
-      "description": "Repo for prototypes of author community website and app.",
-      "githubUrl": "https://github.com/mindfu23/StoryLoft",
-      "languages": [
-        "TypeScript"
-      ],
-      "lastCommitDate": "2026-03-14T19:23:49Z",
-      "status": "github-only",
-      "visibility": "private",
-      "markdownFiles": [
-        {
-          "relativePath": "PLANNING.md",
-          "name": "PLANNING.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "README.md",
-          "name": "README.md",
-          "fileType": "md"
-        }
-      ],
-      "sentinels": {
-        "hasReadme": true,
-        "hasClaudeMd": false,
-        "hasPackageManifest": true,
-        "hasDeployConfig": true,
-        "hasCi": true,
-        "hasTests": false,
-        "hasEnvExample": false,
-        "sourceFileCount": 43
-      },
-      "completion": {
-        "stage": "in-progress",
-        "signals": {
-          "scaffold": 4,
-          "implementation": 3,
-          "deployed": 1,
-          "maintained": 4
-        },
-        "reasons": [
-          "has README",
-          "has description",
-          "has package manifest",
-          "has source files",
-          "43 source files",
-          "non-trivial size",
-          "committed in last 90 days",
-          "has deploy config",
-          "committed in last 30 days",
-          "CI configured",
-          "0 open issues"
-        ]
-      }
-    },
-    {
       "name": "n8n_workflows",
       "description": "Private repo for n8n workflows",
       "githubUrl": "https://github.com/mindfu23/n8n_workflows",
@@ -2399,143 +1948,6 @@
       }
     },
     {
-      "name": "Novelizer",
-      "description": "My own personal multi-agentic app for creative novel writing and editing ",
-      "githubUrl": "https://github.com/mindfu23/Novelizer",
-      "languages": [
-        "TypeScript"
-      ],
-      "lastCommitDate": "2026-03-08T22:25:13Z",
-      "status": "synced",
-      "visibility": "private",
-      "localPaths": [
-        "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/Novelizer"
-      ],
-      "localPath": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/Novelizer",
-      "markdownFiles": [
-        {
-          "relativePath": "DEVELOPMENT_PLAN.md",
-          "name": "DEVELOPMENT_PLAN.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "NOTES.md",
-          "name": "NOTES.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "NOVELIZER-ENHANCEMENTS.md",
-          "name": "NOVELIZER-ENHANCEMENTS.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "POSSIBLE-EXPANSION.md",
-          "name": "POSSIBLE-EXPANSION.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "README.md",
-          "name": "README.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "TODO_alt.md",
-          "name": "TODO_alt.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "TODO.md",
-          "name": "TODO.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "web/README.md",
-          "name": "README.md",
-          "fileType": "md"
-        }
-      ],
-      "sentinels": {
-        "hasReadme": true,
-        "hasClaudeMd": false,
-        "hasPackageManifest": true,
-        "hasDeployConfig": true,
-        "hasCi": true,
-        "hasTests": false,
-        "hasEnvExample": false,
-        "sourceFileCount": 58
-      },
-      "completion": {
-        "stage": "in-progress",
-        "signals": {
-          "scaffold": 4,
-          "implementation": 3,
-          "deployed": 1,
-          "maintained": 4
-        },
-        "reasons": [
-          "has README",
-          "has description",
-          "has package manifest",
-          "has source files",
-          "58 source files",
-          "non-trivial size",
-          "committed in last 90 days",
-          "has deploy config",
-          "committed in last 30 days",
-          "CI configured",
-          "0 open issues"
-        ]
-      }
-    },
-    {
-      "name": "WebToFigma",
-      "description": "App for generating a basic wireframe of a pre-existing site and then putting it into a format that can be opened by Figma for review and changes. ",
-      "githubUrl": "https://github.com/mindfu23/WebToFigma",
-      "languages": [
-        "JavaScript"
-      ],
-      "lastCommitDate": "2026-03-06T20:12:21Z",
-      "status": "github-only",
-      "visibility": "private",
-      "markdownFiles": [
-        {
-          "relativePath": "README.md",
-          "name": "README.md",
-          "fileType": "md"
-        }
-      ],
-      "sentinels": {
-        "hasReadme": true,
-        "hasClaudeMd": false,
-        "hasPackageManifest": true,
-        "hasDeployConfig": true,
-        "hasCi": false,
-        "hasTests": false,
-        "hasEnvExample": false,
-        "sourceFileCount": 9
-      },
-      "completion": {
-        "stage": "in-progress",
-        "signals": {
-          "scaffold": 4,
-          "implementation": 2,
-          "deployed": 1,
-          "maintained": 3
-        },
-        "reasons": [
-          "has README",
-          "has description",
-          "has package manifest",
-          "has source files",
-          "9 source files",
-          "committed in last 90 days",
-          "has deploy config",
-          "committed in last 30 days",
-          "0 open issues"
-        ]
-      }
-    },
-    {
       "name": "CoverJudge",
       "description": "A website, iOS and Android app that will:",
       "githubUrl": "https://github.com/mindfu23/CoverJudge",
@@ -2600,7 +2012,7 @@
           "scaffold": 4,
           "implementation": 3,
           "deployed": 1,
-          "maintained": 3
+          "maintained": 2
         },
         "reasons": [
           "has README",
@@ -2611,230 +2023,7 @@
           "non-trivial size",
           "committed in last 90 days",
           "has deploy config",
-          "committed in last 30 days",
           "0 open issues"
-        ]
-      }
-    },
-    {
-      "name": "StoryPlot",
-      "description": "A fiction story plot generator. Work in progress.",
-      "githubUrl": "https://github.com/mindfu23/StoryPlot",
-      "languages": [
-        "JavaScript"
-      ],
-      "lastCommitDate": "2026-03-26T06:43:51Z",
-      "status": "synced",
-      "visibility": "private",
-      "localPaths": [
-        "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/StoryPlot"
-      ],
-      "localPath": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/StoryPlot",
-      "markdownFiles": [
-        {
-          "relativePath": "docs/story-circle/DEVELOPMENT_PLAN.md",
-          "name": "DEVELOPMENT_PLAN.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "docs/story-circle/reference/fat-outline.txt",
-          "name": "fat-outline.txt",
-          "fileType": "txt"
-        },
-        {
-          "relativePath": "docs/story-circle/reference/lester-dent-plot-basics.txt",
-          "name": "lester-dent-plot-basics.txt",
-          "fileType": "txt"
-        },
-        {
-          "relativePath": "docs/story-circle/reference/Mckee-story-and-scenes.txt",
-          "name": "Mckee-story-and-scenes.txt",
-          "fileType": "txt"
-        },
-        {
-          "relativePath": "docs/story-circle/reference/michael-moorcock-novel-in-3-days.txt",
-          "name": "michael-moorcock-novel-in-3-days.txt",
-          "fileType": "txt"
-        },
-        {
-          "relativePath": "docs/story-circle/TODO.md",
-          "name": "TODO.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "README.md",
-          "name": "README.md",
-          "fileType": "md"
-        }
-      ],
-      "sentinels": {
-        "hasReadme": true,
-        "hasClaudeMd": false,
-        "hasPackageManifest": true,
-        "hasDeployConfig": true,
-        "hasCi": false,
-        "hasTests": false,
-        "hasEnvExample": false,
-        "sourceFileCount": 42
-      },
-      "completion": {
-        "stage": "in-progress",
-        "signals": {
-          "scaffold": 4,
-          "implementation": 3,
-          "deployed": 1,
-          "maintained": 3
-        },
-        "reasons": [
-          "has README",
-          "has description",
-          "has package manifest",
-          "has source files",
-          "42 source files",
-          "non-trivial size",
-          "committed in last 90 days",
-          "has deploy config",
-          "committed in last 30 days",
-          "0 open issues"
-        ]
-      }
-    },
-    {
-      "name": "Fractasy",
-      "description": "Repo for my graphics generating app",
-      "githubUrl": "https://github.com/mindfu23/Fractasy",
-      "languages": [
-        "Dart"
-      ],
-      "lastCommitDate": "2026-03-06T17:30:39Z",
-      "status": "github-only",
-      "visibility": "private",
-      "markdownFiles": [
-        {
-          "relativePath": "ios/Runner/Assets.xcassets/LaunchImage.imageset/README.md",
-          "name": "README.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "linux/CMakeLists.txt",
-          "name": "CMakeLists.txt",
-          "fileType": "txt"
-        },
-        {
-          "relativePath": "linux/flutter/CMakeLists.txt",
-          "name": "CMakeLists.txt",
-          "fileType": "txt"
-        },
-        {
-          "relativePath": "linux/runner/CMakeLists.txt",
-          "name": "CMakeLists.txt",
-          "fileType": "txt"
-        },
-        {
-          "relativePath": "README.md",
-          "name": "README.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "windows/CMakeLists.txt",
-          "name": "CMakeLists.txt",
-          "fileType": "txt"
-        },
-        {
-          "relativePath": "windows/flutter/CMakeLists.txt",
-          "name": "CMakeLists.txt",
-          "fileType": "txt"
-        },
-        {
-          "relativePath": "windows/runner/CMakeLists.txt",
-          "name": "CMakeLists.txt",
-          "fileType": "txt"
-        }
-      ],
-      "sentinels": {
-        "hasReadme": true,
-        "hasClaudeMd": false,
-        "hasPackageManifest": true,
-        "hasDeployConfig": false,
-        "hasCi": false,
-        "hasTests": true,
-        "hasEnvExample": false,
-        "sourceFileCount": 71
-      },
-      "completion": {
-        "stage": "in-progress",
-        "signals": {
-          "scaffold": 4,
-          "implementation": 3,
-          "deployed": 0,
-          "maintained": 3
-        },
-        "reasons": [
-          "has README",
-          "has description",
-          "has package manifest",
-          "has source files",
-          "71 source files",
-          "non-trivial size",
-          "committed in last 90 days",
-          "committed in last 30 days",
-          "0 open issues"
-        ]
-      }
-    },
-    {
-      "name": "ambient-gallery",
-      "githubUrl": "https://github.com/mindfu23/ambient-gallery",
-      "languages": [],
-      "lastCommitDate": "2026-03-06T17:13:58Z",
-      "status": "github-only",
-      "visibility": "private",
-      "markdownFiles": [
-        {
-          "relativePath": "docs/project-brief.md",
-          "name": "project-brief.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "docs/project-structure.md",
-          "name": "project-structure.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "docs/vizio-research.md",
-          "name": "vizio-research.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "README.md",
-          "name": "README.md",
-          "fileType": "md"
-        }
-      ],
-      "sentinels": {
-        "hasReadme": true,
-        "hasClaudeMd": false,
-        "hasPackageManifest": false,
-        "hasDeployConfig": false,
-        "hasCi": false,
-        "hasTests": false,
-        "hasEnvExample": false,
-        "sourceFileCount": 0
-      },
-      "completion": {
-        "stage": "reference",
-        "signals": {
-          "scaffold": 1,
-          "implementation": 1,
-          "deployed": 0,
-          "maintained": 3
-        },
-        "reasons": [
-          "has README",
-          "committed in last 90 days",
-          "committed in last 30 days",
-          "0 open issues",
-          "docs-only repository"
         ]
       }
     },
@@ -2875,996 +2064,6 @@
           "non-trivial size",
           "committed in last 90 days",
           "has deploy config",
-          "0 open issues"
-        ]
-      }
-    },
-    {
-      "name": "antigravity-and-others",
-      "description": "Private repo for working on docs",
-      "githubUrl": "https://github.com/mindfu23/antigravity-and-others",
-      "languages": [
-        "Python"
-      ],
-      "lastCommitDate": "2026-02-28T20:40:44Z",
-      "status": "synced",
-      "visibility": "private",
-      "localPaths": [
-        "/Users/jamesbeach/Documents/visual-studio-code/antigravity-and-others"
-      ],
-      "localPath": "/Users/jamesbeach/Documents/visual-studio-code/antigravity-and-others",
-      "markdownFiles": [
-        {
-          "relativePath": "initial-notes.md",
-          "name": "initial-notes.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "novel-editing-tools/AI-MODEL-ANALYSIS.md",
-          "name": "AI-MODEL-ANALYSIS.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "novel-editing-tools/antigravity-mission-config.md",
-          "name": "antigravity-mission-config.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "novel-editing-tools/antigravity-prompts.md",
-          "name": "antigravity-prompts.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "novel-editing-tools/lined-editor-personal-1.md",
-          "name": "lined-editor-personal-1.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "novel-editing-tools/novel-ingestion-notes.MD",
-          "name": "novel-ingestion-notes.MD",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "novel-editing-tools/PORTABLE-EDITING-WORKFLOW.md",
-          "name": "PORTABLE-EDITING-WORKFLOW.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "novel-editing-tools/requirements.txt",
-          "name": "requirements.txt",
-          "fileType": "txt"
-        },
-        {
-          "relativePath": "novel-workspace/2fjt2/2fjt2-revision-workflow-steps.txt",
-          "name": "2fjt2-revision-workflow-steps.txt",
-          "fileType": "txt"
-        },
-        {
-          "relativePath": "novel-workspace/2fjt2/manuscript/chapters/00-front-matter.md",
-          "name": "00-front-matter.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "novel-workspace/2fjt2/manuscript/chapters/01-arrival-in-hell.md",
-          "name": "01-arrival-in-hell.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "novel-workspace/2fjt2/manuscript/chapters/02-the-woman-he-must-be-here-to-save.md",
-          "name": "02-the-woman-he-must-be-here-to-save.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "novel-workspace/2fjt2/manuscript/chapters/03-the-devil-you-think-you-know.md",
-          "name": "03-the-devil-you-think-you-know.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "novel-workspace/2fjt2/manuscript/chapters/04-frisbee-duel-with-the-devil.md",
-          "name": "04-frisbee-duel-with-the-devil.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "novel-workspace/2fjt2/manuscript/chapters/05-jesus-signs-a-contract-with-the-devil-an.md",
-          "name": "05-jesus-signs-a-contract-with-the-devil-an.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "novel-workspace/2fjt2/manuscript/chapters/06-jesus-returns-to-earth-in-st-louis-and-r.md",
-          "name": "06-jesus-returns-to-earth-in-st-louis-and-r.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "novel-workspace/2fjt2/manuscript/chapters/07-jesus-recruits-followers-in-a-small-miss.md",
-          "name": "07-jesus-recruits-followers-in-a-small-miss.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "novel-workspace/2fjt2/manuscript/chapters/08-marci-and-the-new-disciples-hide-in-colo.md",
-          "name": "08-marci-and-the-new-disciples-hide-in-colo.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "novel-workspace/2fjt2/manuscript/chapters/09-the-new-disciples-are-attacked-by-bomrak.md",
-          "name": "09-the-new-disciples-are-attacked-by-bomrak.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "novel-workspace/2fjt2/manuscript/chapters/10-jesus-and-the-disciples-survive-an-attac.md",
-          "name": "10-jesus-and-the-disciples-survive-an-attac.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "novel-workspace/2fjt2/manuscript/chapters/11-jesus-and-disciples-plan-to-reach-colora.md",
-          "name": "11-jesus-and-disciples-plan-to-reach-colora.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "novel-workspace/2fjt2/manuscript/chapters/12-the-new-disciples-move-forward-in-the-en.md",
-          "name": "12-the-new-disciples-move-forward-in-the-en.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "novel-workspace/2fjt2/manuscript/chapters/13-the-new-disciples-fight-and-defeat-the-s.md",
-          "name": "13-the-new-disciples-fight-and-defeat-the-s.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "novel-workspace/2fjt2/manuscript/chapters/14-jesus-decides-they-will-next-attack-los.md",
-          "name": "14-jesus-decides-they-will-next-attack-los.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "novel-workspace/2fjt2/manuscript/chapters/15-the-new-disciples-and-jesus-leave-the-ba.md",
-          "name": "15-the-new-disciples-and-jesus-leave-the-ba.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "novel-workspace/2fjt2/manuscript/chapters/16-bomraka-has-a-meeting.md",
-          "name": "16-bomraka-has-a-meeting.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "novel-workspace/2fjt2/manuscript/chapters/17-the-team-is-attacked-by-black-helicopter.md",
-          "name": "17-the-team-is-attacked-by-black-helicopter.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "novel-workspace/2fjt2/manuscript/chapters/18-jesus-shoots-the-governor-of-utah-dead-t.md",
-          "name": "18-jesus-shoots-the-governor-of-utah-dead-t.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "novel-workspace/2fjt2/manuscript/chapters/19-the-new-disciples-and-jesus-make-it-to-o.md",
-          "name": "19-the-new-disciples-and-jesus-make-it-to-o.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "novel-workspace/2fjt2/manuscript/chapters/20-the-new-disciples-plan-their-attack.md",
-          "name": "20-the-new-disciples-plan-their-attack.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "novel-workspace/2fjt2/manuscript/chapters/21-jesus-attacks-a-feminist-research-center.md",
-          "name": "21-jesus-attacks-a-feminist-research-center.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "novel-workspace/2fjt2/manuscript/chapters/22-continuing-the-fight-inside-the-liberal.md",
-          "name": "22-continuing-the-fight-inside-the-liberal.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "novel-workspace/2fjt2/manuscript/chapters/23-fighting-the-monster-blabber-strident-an.md",
-          "name": "23-fighting-the-monster-blabber-strident-an.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "novel-workspace/2fjt2/manuscript/chapters/24-jesus-et-all-battle-further-against-the.md",
-          "name": "24-jesus-et-all-battle-further-against-the.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "novel-workspace/2fjt2/manuscript/chapters/25-jesus-fights-and-rescues-lily.md",
-          "name": "25-jesus-fights-and-rescues-lily.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "novel-workspace/2fjt2/manuscript/chapters/26-jesus-fight-against-lily-continues.md",
-          "name": "26-jesus-fight-against-lily-continues.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "novel-workspace/2fjt2/manuscript/chapters/27-this-is-jesus-christ-speaking.md",
-          "name": "27-this-is-jesus-christ-speaking.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "novel-workspace/2fjt2/manuscript/chapters/28-jesus-christ-speaks-cont.md",
-          "name": "28-jesus-christ-speaks-cont.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "novel-workspace/2fjt2/manuscript/chapters/29-jesus-checks-in-with-reagan-and-sasquatc.md",
-          "name": "29-jesus-checks-in-with-reagan-and-sasquatc.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "novel-workspace/2fjt2/manuscript/chapters/30-situation-outside-los-angeles.md",
-          "name": "30-situation-outside-los-angeles.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "novel-workspace/2fjt2/manuscript/chapters/31-flight-to-stanford-reagan-helping.md",
-          "name": "31-flight-to-stanford-reagan-helping.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "novel-workspace/2fjt2/manuscript/chapters/32-the-next-morning-in-stanford-making-plan.md",
-          "name": "32-the-next-morning-in-stanford-making-plan.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "novel-workspace/2fjt2/manuscript/chapters/33-war-continues-is-fought-after-stanford-t.md",
-          "name": "33-war-continues-is-fought-after-stanford-t.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "novel-workspace/2fjt2/manuscript/chapters/34-steve-is-selected-to-infiltrate-and-is-s.md",
-          "name": "34-steve-is-selected-to-infiltrate-and-is-s.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "novel-workspace/2fjt2/manuscript/chapters/35-steve-floats-back-to-san-francisco.md",
-          "name": "35-steve-floats-back-to-san-francisco.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "novel-workspace/2fjt2/manuscript/chapters/36-jesus-prays-for-guidance-he-finds-some-i.md",
-          "name": "36-jesus-prays-for-guidance-he-finds-some-i.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "novel-workspace/2fjt2/manuscript/chapters/37-flashback-to-jesus-with-his-parents-jose.md",
-          "name": "37-flashback-to-jesus-with-his-parents-jose.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "novel-workspace/2fjt2/manuscript/chapters/38-steve-in-san-francisco.md",
-          "name": "38-steve-in-san-francisco.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "novel-workspace/2fjt2/manuscript/chapters/39-jesus-discusses-his-football-epiphany-wi.md",
-          "name": "39-jesus-discusses-his-football-epiphany-wi.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "novel-workspace/2fjt2/manuscript/chapters/40-jesus-ministers-to-lily-and-admits-priva.md",
-          "name": "40-jesus-ministers-to-lily-and-admits-priva.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "novel-workspace/2fjt2/manuscript/chapters/41-steve-in-san-francisco.md",
-          "name": "41-steve-in-san-francisco.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "novel-workspace/2fjt2/manuscript/chapters/42-jesus-reconvenes-the-new-disciples-to-mo.md",
-          "name": "42-jesus-reconvenes-the-new-disciples-to-mo.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "novel-workspace/2fjt2/manuscript/chapters/43-steve-struggles-with-doubt-in-san-franci.md",
-          "name": "43-steve-struggles-with-doubt-in-san-franci.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "novel-workspace/2fjt2/manuscript/chapters/44-bomraka-conference.md",
-          "name": "44-bomraka-conference.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "novel-workspace/2fjt2/manuscript/chapters/45-steve-discovers-the-rainbow-shield-gener.md",
-          "name": "45-steve-discovers-the-rainbow-shield-gener.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "novel-workspace/2fjt2/manuscript/chapters/46-the-rainbow-dome-falls-and-jesus-mobiliz.md",
-          "name": "46-the-rainbow-dome-falls-and-jesus-mobiliz.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "novel-workspace/2fjt2/manuscript/chapters/47-san-francisco-offers-unexpected-surrende.md",
-          "name": "47-san-francisco-offers-unexpected-surrende.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "novel-workspace/2fjt2/manuscript/chapters/48-jesus-commands-norad-and-prepares-his-ad.md",
-          "name": "48-jesus-commands-norad-and-prepares-his-ad.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "novel-workspace/2fjt2/manuscript/chapters/49-theo-hardwicke-celebrates-the-great-floo.md",
-          "name": "49-theo-hardwicke-celebrates-the-great-floo.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "novel-workspace/2fjt2/manuscript/chapters/50-media-marvels-at-the-miracle-of-the-floo.md",
-          "name": "50-media-marvels-at-the-miracle-of-the-floo.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "novel-workspace/2fjt2/manuscript/chapters/51-securing-san-francisco-and-los-angeles.md",
-          "name": "51-securing-san-francisco-and-los-angeles.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "novel-workspace/2fjt2/manuscript/chapters/52-bomraka-slays-his-generals-in-rage.md",
-          "name": "52-bomraka-slays-his-generals-in-rage.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "novel-workspace/2fjt2/manuscript/chapters/53-aaron-confides-his-worries-to-jesus.md",
-          "name": "53-aaron-confides-his-worries-to-jesus.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "novel-workspace/2fjt2/manuscript/chapters/54-jesus-prepares-for-the-final-confrontati.md",
-          "name": "54-jesus-prepares-for-the-final-confrontati.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "novel-workspace/2fjt2/manuscript/chapters/55-jesus-challenges-bomraka-to-the-crucibow.md",
-          "name": "55-jesus-challenges-bomraka-to-the-crucibow.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "novel-workspace/2fjt2/manuscript/chapters/56-jesus-secretly-modifies-his-motorcycle.md",
-          "name": "56-jesus-secretly-modifies-his-motorcycle.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "novel-workspace/2fjt2/manuscript/chapters/57-jesus-departs-in-the-tyrannoslayer.md",
-          "name": "57-jesus-departs-in-the-tyrannoslayer.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "novel-workspace/2fjt2/manuscript/chapters/58-into-the-crucibowl.md",
-          "name": "58-into-the-crucibowl.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "novel-workspace/2fjt2/manuscript/chapters/59-aaron-watches-jesuss-defeat-on-msnbc.md",
-          "name": "59-aaron-watches-jesuss-defeat-on-msnbc.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "novel-workspace/2fjt2/manuscript/chapters/60-bomraka-declares-victory-over-christs-fo.md",
-          "name": "60-bomraka-declares-victory-over-christs-fo.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "novel-workspace/2fjt2/manuscript/chapters/61-jesus-has-broken-into-the-oval-office.md",
-          "name": "61-jesus-has-broken-into-the-oval-office.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "novel-workspace/2fjt2/manuscript/chapters/62-jesus-hunts-bomraka-in-the-white-house-b.md",
-          "name": "62-jesus-hunts-bomraka-in-the-white-house-b.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "novel-workspace/2fjt2/manuscript/chapters/63-aaron-confronts-bomraka-at-gunpoint.md",
-          "name": "63-aaron-confronts-bomraka-at-gunpoint.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "novel-workspace/2fjt2/manuscript/chapters/64-jesus-scans-bomrakas-palm-for-the-nuclea.md",
-          "name": "64-jesus-scans-bomrakas-palm-for-the-nuclea.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "novel-workspace/2fjt2/manuscript/chapters/65-jesus-threatens-governors-with-nuclear-s.md",
-          "name": "65-jesus-threatens-governors-with-nuclear-s.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "novel-workspace/2fjt2/manuscript/chapters/66-jesus-holds-his-first-press-conference.md",
-          "name": "66-jesus-holds-his-first-press-conference.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "novel-workspace/2fjt2/manuscript/chapters/67-jesus-plans-to-end-abortion-nationwide.md",
-          "name": "67-jesus-plans-to-end-abortion-nationwide.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "novel-workspace/2fjt2/manuscript/chapters/68-a-secret-celebration-at-the-kennedy-cent.md",
-          "name": "68-a-secret-celebration-at-the-kennedy-cent.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "novel-workspace/2fjt2/manuscript/chapters/69-aaron-reveals-the-betrayal-to-jesus.md",
-          "name": "69-aaron-reveals-the-betrayal-to-jesus.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "novel-workspace/2fjt2/manuscript/chapters/70-jesus-learns-the-truth-about-his-creatio.md",
-          "name": "70-jesus-learns-the-truth-about-his-creatio.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "novel-workspace/2fjt2/manuscript/chapters/71-closing-quotes.md",
-          "name": "71-closing-quotes.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "novel-workspace/2fjt2/manuscript/chapters/72-author-note.md",
-          "name": "72-author-note.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "novel-workspace/2fjt2/manuscript/chapters/INDEX.md",
-          "name": "INDEX.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "novel-workspace/2fjt2/manuscript/high-level/2fjt_author_notes.md",
-          "name": "2fjt_author_notes.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "novel-workspace/2fjt2/manuscript/high-level/2FJT2_dev-review.md",
-          "name": "2FJT2_dev-review.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "novel-workspace/2fjt2/manuscript/high-level/2FJT2_summary_v1.md",
-          "name": "2FJT2_summary_v1.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "novel-workspace/2fjt2/manuscript/high-level/2FJT2-character-and-plot-arcs.md",
-          "name": "2FJT2-character-and-plot-arcs.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "novel-workspace/2fjt2/manuscript/high-level/author-notes.md",
-          "name": "author-notes.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "novel-workspace/2fjt2/manuscript/high-level/chapter-revisions.md",
-          "name": "chapter-revisions.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "novel-workspace/2fjt2/manuscript/high-level/notebookLM_notes-plot-threads.md",
-          "name": "notebookLM_notes-plot-threads.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "novel-workspace/2fjt2/manuscript/high-level/notebookLM_summary.md",
-          "name": "notebookLM_summary.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "novel-workspace/abc/ABC - eDGEforce_-_military_SF_-_v3_complete-compile_76_7.md",
-          "name": "ABC - eDGEforce_-_military_SF_-_v3_complete-compile_76_7.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "novel-workspace/abc/ABC - eDGEforce_-_military_SF_-_v3_complete-compile_77_7.md",
-          "name": "ABC - eDGEforce_-_military_SF_-_v3_complete-compile_77_7.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "novel-workspace/EDGEforce/EDGEforce-preview-report.md",
-          "name": "EDGEforce-preview-report.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "novel-workspace/EDGEforce/nano-scriv-orig-consolidated/_consolidation-report.md",
-          "name": "_consolidation-report.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "novel-workspace/EDGEforce/nano-scriv-orig-consolidated/journal/eDGEforce_-_military_SF_alt-to-diff-at-end-of-nano.md",
-          "name": "eDGEforce_-_military_SF_alt-to-diff-at-end-of-nano.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "novel-workspace/EDGEforce/nano-scriv-orig-consolidated/main-story/_source-files.md",
-          "name": "_source-files.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "novel-workspace/EDGEforce/nano-scriv-orig-consolidated/main-story/scenes/eDGEforce_-_military_SF_alt-to-diff-at-end-of-nano.md",
-          "name": "eDGEforce_-_military_SF_alt-to-diff-at-end-of-nano.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "novel-workspace/EDGEforce/nano-scriv-orig-consolidated/main-story/scenes/edgeforce-book1-2022-nano-rewrite_10_8.md",
-          "name": "edgeforce-book1-2022-nano-rewrite_10_8.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "novel-workspace/EDGEforce/nano-scriv-orig-consolidated/main-story/scenes/edgeforce-book1-2022-nano-rewrite_11_9.md",
-          "name": "edgeforce-book1-2022-nano-rewrite_11_9.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "novel-workspace/EDGEforce/nano-scriv-orig-consolidated/main-story/scenes/edgeforce-book1-2022-nano-rewrite_12_10.md",
-          "name": "edgeforce-book1-2022-nano-rewrite_12_10.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "novel-workspace/EDGEforce/nano-scriv-orig-consolidated/main-story/scenes/edgeforce-book1-2022-nano-rewrite_13_11.md",
-          "name": "edgeforce-book1-2022-nano-rewrite_13_11.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "novel-workspace/EDGEforce/nano-scriv-orig-consolidated/main-story/scenes/edgeforce-book1-2022-nano-rewrite_16_14.md",
-          "name": "edgeforce-book1-2022-nano-rewrite_16_14.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "novel-workspace/EDGEforce/nano-scriv-orig-consolidated/main-story/scenes/edgeforce-book1-2022-nano-rewrite_2_0.md",
-          "name": "edgeforce-book1-2022-nano-rewrite_2_0.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "novel-workspace/EDGEforce/nano-scriv-orig-consolidated/main-story/scenes/edgeforce-book1-2022-nano-rewrite_21_19.md",
-          "name": "edgeforce-book1-2022-nano-rewrite_21_19.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "novel-workspace/EDGEforce/nano-scriv-orig-consolidated/main-story/scenes/edgeforce-book1-2022-nano-rewrite_3_1.md",
-          "name": "edgeforce-book1-2022-nano-rewrite_3_1.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "novel-workspace/EDGEforce/nano-scriv-orig-consolidated/main-story/scenes/edgeforce-book1-2022-nano-rewrite_4_2.md",
-          "name": "edgeforce-book1-2022-nano-rewrite_4_2.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "novel-workspace/EDGEforce/nano-scriv-orig-consolidated/main-story/scenes/edgeforce-book1-2022-nano-rewrite_5_3.md",
-          "name": "edgeforce-book1-2022-nano-rewrite_5_3.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "novel-workspace/EDGEforce/nano-scriv-orig-consolidated/main-story/scenes/edgeforce-book1-2022-nano-rewrite_7_5.md",
-          "name": "edgeforce-book1-2022-nano-rewrite_7_5.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "novel-workspace/EDGEforce/nano-scriv-orig-consolidated/main-story/scenes/edgeforce-book1-2022-nano-rewrite_8_6.md",
-          "name": "edgeforce-book1-2022-nano-rewrite_8_6.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "novel-workspace/EDGEforce/nano-scriv-orig-consolidated/main-story/scenes/edgeforce-book1-2022-nano-rewrite_9_7.md",
-          "name": "edgeforce-book1-2022-nano-rewrite_9_7.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "novel-workspace/EDGEforce/nano-scriv-orig-consolidated/notes/eDGEforce_-_military_SF_alt-to-diff-at-end-of-nano.md",
-          "name": "eDGEforce_-_military_SF_alt-to-diff-at-end-of-nano.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "novel-workspace/EDGEforce/nano-scriv-orig-consolidated/templates/eDGEforce_-_military_SF_alt-to-diff-at-end-of-nano.md",
-          "name": "eDGEforce_-_military_SF_alt-to-diff-at-end-of-nano.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "novel-workspace/EDGEforce/nano-scriv-orig-consolidated/templates/EDGEforce_Military_SF-book_2_rough-plot-outline_sc.md",
-          "name": "EDGEforce_Military_SF-book_2_rough-plot-outline_sc.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "novel-workspace/EDGEforce/nano-scriv-orig-consolidated/unsorted/eDGEforce_-_military_SF_-_v3_complete-compile_68_6.md",
-          "name": "eDGEforce_-_military_SF_-_v3_complete-compile_68_6.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "novel-workspace/EDGEforce/nano-scriv-orig-consolidated/unsorted/eDGEforce_-_military_SF_-_v3_complete-compile_75_7.md",
-          "name": "eDGEforce_-_military_SF_-_v3_complete-compile_75_7.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "novel-workspace/EDGEforce/nano-scriv-orig-consolidated/unsorted/eDGEforce_-_military_SF_alt-to-diff-at-end-of-nano.md",
-          "name": "eDGEforce_-_military_SF_alt-to-diff-at-end-of-nano.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "novel-workspace/hyperspace-radio_01/grammar_review.txt",
-          "name": "grammar_review.txt",
-          "fileType": "txt"
-        },
-        {
-          "relativePath": "novel-workspace/Karsh_heroic_fantasy/long-note.txt",
-          "name": "long-note.txt",
-          "fileType": "txt"
-        },
-        {
-          "relativePath": "novel-workspace/porn-star-pi/book2/Rough outline - sleazy cozy 2.txt",
-          "name": "Rough outline - sleazy cozy 2.txt",
-          "fileType": "txt"
-        },
-        {
-          "relativePath": "novel-workspace/shorter-story-drafts/hunted by sadness - eDGEforce_-_military_SF_-_v3_complete-compile_63_5.md",
-          "name": "hunted by sadness - eDGEforce_-_military_SF_-_v3_complete-compile_63_5.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "novel-workspace/shorter-story-drafts/Night math - eDGEforce_-_military_SF_-_v3_complete-compile_74_6.md",
-          "name": "Night math - eDGEforce_-_military_SF_-_v3_complete-compile_74_6.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "novel-workspace/shorter-story-drafts/the beautiful creation - eDGEforce_-_military_SF_-_v3_complete-compile_65_6.md",
-          "name": "the beautiful creation - eDGEforce_-_military_SF_-_v3_complete-compile_65_6.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "novel-workspace/shorter-story-drafts/The three stoners and the muscle van from outerspace - eDGEforce_-_military_SF_-_v3_complete-compile_73_6.md",
-          "name": "The three stoners and the muscle van from outerspace - eDGEforce_-_military_SF_-_v3_complete-compile_73_6.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "novel-workspace/shorter-story-drafts/UUUsi- ending eDGEforce_-_military_SF_-_v3_complete-compile_72_6.md",
-          "name": "UUUsi- ending eDGEforce_-_military_SF_-_v3_complete-compile_72_6.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "novel-workspace/simple-plot-template.docx/possible plot- horizontal - eDGEforce 1 MetaData.txt",
-          "name": "possible plot- horizontal - eDGEforce 1 MetaData.txt",
-          "fileType": "txt"
-        },
-        {
-          "relativePath": "novel-workspace/vampirium/vampirium_furthernotes.md",
-          "name": "vampirium_furthernotes.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "possible-workflows/ai-fiction-writing-workflows.md",
-          "name": "ai-fiction-writing-workflows.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "possible-workflows/n8n-workflows-summary.md",
-          "name": "n8n-workflows-summary.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "resources/potential-gastown-rig/README.md",
-          "name": "README.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "weasel-words-raw.txt",
-          "name": "weasel-words-raw.txt",
-          "fileType": "txt"
-        }
-      ],
-      "sentinels": {
-        "hasReadme": false,
-        "hasClaudeMd": false,
-        "hasPackageManifest": true,
-        "hasDeployConfig": true,
-        "hasCi": true,
-        "hasTests": false,
-        "hasEnvExample": false,
-        "sourceFileCount": 20
-      },
-      "completion": {
-        "stage": "in-progress",
-        "signals": {
-          "scaffold": 3,
-          "implementation": 3,
-          "deployed": 1,
-          "maintained": 3
-        },
-        "reasons": [
-          "has description",
-          "has package manifest",
-          "has source files",
-          "20 source files",
-          "non-trivial size",
-          "committed in last 90 days",
-          "has deploy config",
-          "CI configured",
-          "0 open issues"
-        ]
-      }
-    },
-    {
-      "name": "RedditUF",
-      "description": "An intention to provide a free shell for using Reddit",
-      "githubUrl": "https://github.com/mindfu23/RedditUF",
-      "languages": [
-        "JavaScript"
-      ],
-      "lastCommitDate": "2026-02-28T18:13:14Z",
-      "status": "github-only",
-      "visibility": "private",
-      "markdownFiles": [
-        {
-          "relativePath": "CAPACITOR_INSTRUCTIONS.md",
-          "name": "CAPACITOR_INSTRUCTIONS.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "README.md",
-          "name": "README.md",
-          "fileType": "md"
-        }
-      ],
-      "sentinels": {
-        "hasReadme": true,
-        "hasClaudeMd": false,
-        "hasPackageManifest": true,
-        "hasDeployConfig": false,
-        "hasCi": false,
-        "hasTests": false,
-        "hasEnvExample": false,
-        "sourceFileCount": 17
-      },
-      "completion": {
-        "stage": "in-progress",
-        "signals": {
-          "scaffold": 4,
-          "implementation": 2,
-          "deployed": 0,
-          "maintained": 2
-        },
-        "reasons": [
-          "has README",
-          "has description",
-          "has package manifest",
-          "has source files",
-          "17 source files",
-          "committed in last 90 days",
-          "0 open issues"
-        ]
-      }
-    },
-    {
-      "name": "TrollJar",
-      "description": "A web browser extension to turn negative internet interactions into positive charitable outcomes.",
-      "githubUrl": "https://github.com/mindfu23/TrollJar",
-      "languages": [
-        "JavaScript"
-      ],
-      "lastCommitDate": "2026-02-28T17:58:31Z",
-      "status": "github-only",
-      "visibility": "private",
-      "markdownFiles": [
-        {
-          "relativePath": "CODE_REVIEW_FIXES.md",
-          "name": "CODE_REVIEW_FIXES.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "DEVELOPMENT.md",
-          "name": "DEVELOPMENT.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "extension/src/assets/icons/README.md",
-          "name": "README.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "icons/README.md",
-          "name": "README.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "IMPLEMENTATION_SUMMARY.md",
-          "name": "IMPLEMENTATION_SUMMARY.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "init.md",
-          "name": "init.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "README.md",
-          "name": "README.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "standard-setups.md",
-          "name": "standard-setups.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "SUMMARY.md",
-          "name": "SUMMARY.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "TESTING.md",
-          "name": "TESTING.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "TrollJar_claude.md",
-          "name": "TrollJar_claude.md",
-          "fileType": "md"
-        }
-      ],
-      "sentinels": {
-        "hasReadme": true,
-        "hasClaudeMd": false,
-        "hasPackageManifest": true,
-        "hasDeployConfig": true,
-        "hasCi": false,
-        "hasTests": false,
-        "hasEnvExample": false,
-        "sourceFileCount": 26
-      },
-      "completion": {
-        "stage": "in-progress",
-        "signals": {
-          "scaffold": 4,
-          "implementation": 3,
-          "deployed": 1,
-          "maintained": 2
-        },
-        "reasons": [
-          "has README",
-          "has description",
-          "has package manifest",
-          "has source files",
-          "26 source files",
-          "non-trivial size",
-          "committed in last 90 days",
-          "has deploy config",
-          "0 open issues"
-        ]
-      }
-    },
-    {
-      "name": "NewsJuicer",
-      "description": "Script to run via Google to assemble and summarize the news from various emailed newsletters.",
-      "githubUrl": "https://github.com/mindfu23/NewsJuicer",
-      "languages": [
-        "JavaScript"
-      ],
-      "lastCommitDate": "2026-02-26T22:29:07Z",
-      "status": "github-only",
-      "visibility": "private",
-      "markdownFiles": [
-        {
-          "relativePath": "NewsJuicer_SETUP_GUIDE.md",
-          "name": "NewsJuicer_SETUP_GUIDE.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "README.md",
-          "name": "README.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "Unsubscribe_Guide.md",
-          "name": "Unsubscribe_Guide.md",
-          "fileType": "md"
-        }
-      ],
-      "sentinels": {
-        "hasReadme": true,
-        "hasClaudeMd": false,
-        "hasPackageManifest": false,
-        "hasDeployConfig": false,
-        "hasCi": false,
-        "hasTests": false,
-        "hasEnvExample": false,
-        "sourceFileCount": 0
-      },
-      "completion": {
-        "stage": "reference",
-        "signals": {
-          "scaffold": 2,
-          "implementation": 1,
-          "deployed": 0,
-          "maintained": 2
-        },
-        "reasons": [
-          "has README",
-          "has description",
-          "committed in last 90 days",
-          "0 open issues",
-          "docs-only repository"
-        ]
-      }
-    },
-    {
-      "name": "JobSearcher",
-      "description": "Automated daily job search using Claude AI with web search",
-      "githubUrl": "https://github.com/mindfu23/JobSearcher",
-      "languages": [
-        "Python"
-      ],
-      "lastCommitDate": "2026-02-20T15:16:06Z",
-      "status": "github-only",
-      "visibility": "private",
-      "markdownFiles": [
-        {
-          "relativePath": "README.md",
-          "name": "README.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "results/job-search-2026-02-13.md",
-          "name": "job-search-2026-02-13.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "results/job-search-2026-02-14.md",
-          "name": "job-search-2026-02-14.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "results/job-search-2026-02-15.md",
-          "name": "job-search-2026-02-15.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "results/job-search-2026-02-16.md",
-          "name": "job-search-2026-02-16.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "results/job-search-2026-02-17.md",
-          "name": "job-search-2026-02-17.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "results/job-search-2026-02-18.md",
-          "name": "job-search-2026-02-18.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "results/job-search-2026-02-19.md",
-          "name": "job-search-2026-02-19.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "results/job-search-2026-02-20.md",
-          "name": "job-search-2026-02-20.md",
-          "fileType": "md"
-        }
-      ],
-      "sentinels": {
-        "hasReadme": true,
-        "hasClaudeMd": false,
-        "hasPackageManifest": false,
-        "hasDeployConfig": false,
-        "hasCi": true,
-        "hasTests": false,
-        "hasEnvExample": false,
-        "sourceFileCount": 1
-      },
-      "completion": {
-        "stage": "scaffold",
-        "signals": {
-          "scaffold": 3,
-          "implementation": 1,
-          "deployed": 0,
-          "maintained": 3
-        },
-        "reasons": [
-          "has README",
-          "has description",
-          "has source files",
-          "committed in last 90 days",
-          "CI configured",
           "0 open issues"
         ]
       }
@@ -4026,57 +2225,6 @@
       }
     },
     {
-      "name": "manuscript-editor",
-      "description": "web app for editing .md files as part of my workflow for revising manuscrips. ",
-      "githubUrl": "https://github.com/mindfu23/manuscript-editor",
-      "languages": [
-        "JavaScript"
-      ],
-      "lastCommitDate": "2026-01-26T20:56:07Z",
-      "status": "synced",
-      "visibility": "private",
-      "localPaths": [
-        "/Users/jamesbeach/Documents/visual-studio-code/antigravity-and-others/manuscript-editor"
-      ],
-      "localPath": "/Users/jamesbeach/Documents/visual-studio-code/antigravity-and-others/manuscript-editor",
-      "markdownFiles": [
-        {
-          "relativePath": "README.md",
-          "name": "README.md",
-          "fileType": "md"
-        }
-      ],
-      "sentinels": {
-        "hasReadme": true,
-        "hasClaudeMd": false,
-        "hasPackageManifest": true,
-        "hasDeployConfig": true,
-        "hasCi": false,
-        "hasTests": false,
-        "hasEnvExample": false,
-        "sourceFileCount": 12
-      },
-      "completion": {
-        "stage": "in-progress",
-        "signals": {
-          "scaffold": 4,
-          "implementation": 2,
-          "deployed": 1,
-          "maintained": 2
-        },
-        "reasons": [
-          "has README",
-          "has description",
-          "has package manifest",
-          "has source files",
-          "12 source files",
-          "committed in last 90 days",
-          "has deploy config",
-          "0 open issues"
-        ]
-      }
-    },
-    {
       "name": "Create",
       "description": "An app to introduce kids to some methods of creating and encourage them in doing it. ",
       "githubUrl": "https://github.com/mindfu23/Create",
@@ -4121,7 +2269,7 @@
         "stage": "in-progress",
         "signals": {
           "scaffold": 4,
-          "implementation": 3,
+          "implementation": 2,
           "deployed": 1,
           "maintained": 2
         },
@@ -4132,54 +2280,8 @@
           "has source files",
           "125 source files",
           "non-trivial size",
-          "committed in last 90 days",
           "has deploy config",
           "0 open issues"
-        ]
-      }
-    },
-    {
-      "name": "WeirdTarot",
-      "description": "App for display of different possible Tarot and other diviniation systems",
-      "githubUrl": "https://github.com/mindfu23/WeirdTarot",
-      "languages": [],
-      "lastCommitDate": "2025-12-28T19:38:19Z",
-      "status": "synced",
-      "visibility": "private",
-      "localPaths": [
-        "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/WeirdTarot"
-      ],
-      "localPath": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/WeirdTarot",
-      "markdownFiles": [
-        {
-          "relativePath": "README.md",
-          "name": "README.md",
-          "fileType": "md"
-        }
-      ],
-      "sentinels": {
-        "hasReadme": true,
-        "hasClaudeMd": false,
-        "hasPackageManifest": false,
-        "hasDeployConfig": false,
-        "hasCi": false,
-        "hasTests": false,
-        "hasEnvExample": false,
-        "sourceFileCount": 0
-      },
-      "completion": {
-        "stage": "reference",
-        "signals": {
-          "scaffold": 2,
-          "implementation": 0,
-          "deployed": 0,
-          "maintained": 2
-        },
-        "reasons": [
-          "has README",
-          "has description",
-          "0 open issues",
-          "docs-only repository"
         ]
       }
     },
@@ -4285,52 +2387,6 @@
           "has package manifest",
           "has source files",
           "0 open issues"
-        ]
-      }
-    },
-    {
-      "name": "FinGPT",
-      "description": "My experiments with Fin GPT",
-      "githubUrl": "https://github.com/mindfu23/FinGPT",
-      "languages": [],
-      "lastCommitDate": "2025-12-27T18:31:54Z",
-      "status": "github-only",
-      "visibility": "private",
-      "markdownFiles": [
-        {
-          "relativePath": "pre-dev-notes.md",
-          "name": "pre-dev-notes.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "README.md",
-          "name": "README.md",
-          "fileType": "md"
-        }
-      ],
-      "sentinels": {
-        "hasReadme": true,
-        "hasClaudeMd": false,
-        "hasPackageManifest": false,
-        "hasDeployConfig": false,
-        "hasCi": false,
-        "hasTests": false,
-        "hasEnvExample": false,
-        "sourceFileCount": 0
-      },
-      "completion": {
-        "stage": "reference",
-        "signals": {
-          "scaffold": 2,
-          "implementation": 0,
-          "deployed": 0,
-          "maintained": 2
-        },
-        "reasons": [
-          "has README",
-          "has description",
-          "0 open issues",
-          "docs-only repository"
         ]
       }
     },
@@ -4600,143 +2656,6 @@
           "has package manifest",
           "has source files",
           "14 source files",
-          "0 open issues"
-        ]
-      }
-    },
-    {
-      "name": "GPTWrapper",
-      "description": "Basic wrapper for GPTs to make them Android or iOS capable apps.",
-      "githubUrl": "https://github.com/mindfu23/GPTWrapper",
-      "languages": [
-        "JavaScript"
-      ],
-      "lastCommitDate": "2025-12-25T01:08:47Z",
-      "status": "synced",
-      "visibility": "private",
-      "localPaths": [
-        "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/GPTWrapper"
-      ],
-      "localPath": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/GPTWrapper",
-      "markdownFiles": [
-        {
-          "relativePath": "MOBILE_SETUP.md",
-          "name": "MOBILE_SETUP.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "NETLIFY_DEPLOYMENT.md",
-          "name": "NETLIFY_DEPLOYMENT.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "plaintext-megafile.txt",
-          "name": "plaintext-megafile.txt",
-          "fileType": "txt"
-        },
-        {
-          "relativePath": "plaintext-megafile2.txt",
-          "name": "plaintext-megafile2.txt",
-          "fileType": "txt"
-        },
-        {
-          "relativePath": "README.md",
-          "name": "README.md",
-          "fileType": "md"
-        }
-      ],
-      "sentinels": {
-        "hasReadme": true,
-        "hasClaudeMd": false,
-        "hasPackageManifest": true,
-        "hasDeployConfig": true,
-        "hasCi": false,
-        "hasTests": false,
-        "hasEnvExample": true,
-        "sourceFileCount": 72
-      },
-      "completion": {
-        "stage": "in-progress",
-        "signals": {
-          "scaffold": 4,
-          "implementation": 2,
-          "deployed": 1,
-          "maintained": 2
-        },
-        "reasons": [
-          "has README",
-          "has description",
-          "has package manifest",
-          "has source files",
-          "72 source files",
-          "non-trivial size",
-          "has deploy config",
-          "0 open issues"
-        ]
-      }
-    },
-    {
-      "name": "ShamAIn",
-      "description": "Repo for GPT app",
-      "githubUrl": "https://github.com/mindfu23/ShamAIn",
-      "languages": [
-        "JavaScript"
-      ],
-      "lastCommitDate": "2025-12-25T01:00:50Z",
-      "status": "synced",
-      "visibility": "private",
-      "localPaths": [
-        "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/ShamAIn"
-      ],
-      "localPath": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/ShamAIn",
-      "markdownFiles": [
-        {
-          "relativePath": "MOBILE_SETUP.md",
-          "name": "MOBILE_SETUP.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "NETLIFY_DEPLOYMENT.md",
-          "name": "NETLIFY_DEPLOYMENT.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "README.md",
-          "name": "README.md",
-          "fileType": "md"
-        },
-        {
-          "relativePath": "SETUP_STEPS.md",
-          "name": "SETUP_STEPS.md",
-          "fileType": "md"
-        }
-      ],
-      "sentinels": {
-        "hasReadme": true,
-        "hasClaudeMd": false,
-        "hasPackageManifest": true,
-        "hasDeployConfig": true,
-        "hasCi": false,
-        "hasTests": false,
-        "hasEnvExample": true,
-        "sourceFileCount": 71
-      },
-      "completion": {
-        "stage": "in-progress",
-        "signals": {
-          "scaffold": 4,
-          "implementation": 2,
-          "deployed": 1,
-          "maintained": 2
-        },
-        "reasons": [
-          "has README",
-          "has description",
-          "has package manifest",
-          "has source files",
-          "71 source files",
-          "non-trivial size",
-          "has deploy config",
           "0 open issues"
         ]
       }
@@ -5027,83 +2946,6 @@
       }
     },
     {
-      "name": "hello",
-      "description": "A simple hello script to test what I'm actually doing.",
-      "githubUrl": "https://github.com/mindfu23/hello",
-      "languages": [
-        "Python"
-      ],
-      "lastCommitDate": "2023-03-18T03:45:14Z",
-      "status": "github-only",
-      "visibility": "private",
-      "markdownFiles": [],
-      "sentinels": {
-        "hasReadme": false,
-        "hasClaudeMd": false,
-        "hasPackageManifest": false,
-        "hasDeployConfig": false,
-        "hasCi": false,
-        "hasTests": false,
-        "hasEnvExample": false,
-        "sourceFileCount": 1
-      },
-      "completion": {
-        "stage": "abandoned",
-        "signals": {
-          "scaffold": 2,
-          "implementation": 0,
-          "deployed": 0,
-          "maintained": 2
-        },
-        "reasons": [
-          "has description",
-          "has source files",
-          "0 open issues"
-        ]
-      }
-    },
-    {
-      "name": "DataScience",
-      "githubUrl": "https://github.com/mindfu23/DataScience",
-      "languages": [
-        "Python"
-      ],
-      "lastCommitDate": "2021-06-07T18:54:50Z",
-      "status": "github-only",
-      "visibility": "private",
-      "markdownFiles": [
-        {
-          "relativePath": "README.md",
-          "name": "README.md",
-          "fileType": "md"
-        }
-      ],
-      "sentinels": {
-        "hasReadme": true,
-        "hasClaudeMd": false,
-        "hasPackageManifest": false,
-        "hasDeployConfig": false,
-        "hasCi": false,
-        "hasTests": false,
-        "hasEnvExample": false,
-        "sourceFileCount": 2
-      },
-      "completion": {
-        "stage": "abandoned",
-        "signals": {
-          "scaffold": 2,
-          "implementation": 0,
-          "deployed": 0,
-          "maintained": 2
-        },
-        "reasons": [
-          "has README",
-          "has source files",
-          "0 open issues"
-        ]
-      }
-    },
-    {
       "name": "KorassViewer",
       "description": "A viewer of images for the people in this korass. (See also: Cat's Cradle)",
       "githubUrl": "https://github.com/mindfu23/KorassViewer",
@@ -5115,16 +2957,10 @@
         "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/KorassViewer"
       ],
       "localPath": "/Users/jamesbeach/Documents/visual-studio-code/github-copilot/KorassViewer",
-      "markdownFiles": [
-        {
-          "relativePath": "CLAUDE.md",
-          "name": "CLAUDE.md",
-          "fileType": "md"
-        }
-      ],
+      "markdownFiles": [],
       "sentinels": {
         "hasReadme": false,
-        "hasClaudeMd": true,
+        "hasClaudeMd": false,
         "hasPackageManifest": false,
         "hasDeployConfig": false,
         "hasCi": false,
@@ -5231,6 +3067,6 @@
     "templates",
     "utilities"
   ],
-  "buildTime": "2026-04-05T02:25:30.651Z",
+  "buildTime": "2026-04-06T00:24:09.943Z",
   "version": "1.0.0"
 }
