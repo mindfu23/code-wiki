@@ -48,6 +48,10 @@ jobs:
           GITHUB_USERNAME: ${{ github.repository_owner }}
         run: npm run build:signals
 
+      - name: Build taxonomy
+        working-directory: web
+        run: npm run build:taxonomy
+
       - name: Clone private content repo
         run: |
           git clone --depth 1 \
@@ -61,6 +65,9 @@ jobs:
           cp web/public/data/index-full.json /tmp/private-content/web/public/data/
           cp web/public/data/category-*.json /tmp/private-content/web/public/data/
           cp web/public/data/diagram-signals.json /tmp/private-content/web/public/data/
+          # Taxonomy outputs
+          cp web/public/data/taxonomy.json /tmp/private-content/web/public/data/ 2>/dev/null || true
+          cp web/public/data/taxonomy-full.json /tmp/private-content/web/public/data/ 2>/dev/null || true
 
       - name: Commit and push to private content repo
         working-directory: /tmp/private-content
