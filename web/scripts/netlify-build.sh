@@ -15,6 +15,7 @@ if [ -n "$PRIVATE_CONTENT_TOKEN" ] && [ -n "$PRIVATE_CONTENT_REPO" ]; then
 
   # Overlay generated data files (index, categories, metrics, diagram-signals)
   if [ -d /tmp/private-content/web/public/data ]; then
+    mkdir -p public/data/metrics
     cp -r /tmp/private-content/web/public/data/* public/data/
     echo "  - Overlaid web/public/data/"
   fi
