@@ -152,7 +152,7 @@ async function findMarkdownFiles(dir: string, baseDir: string = dir, skipDirs: s
     for (const entry of entries) {
       const fullPath = path.join(dir, entry.name);
 
-      if (entry.isDirectory() && !entry.name.startsWith('.') && !skipDirs.includes(entry.name)) {
+      if (entry.isDirectory() && !entry.name.startsWith('.') && !entry.name.startsWith('_') && !skipDirs.includes(entry.name)) {
         const subFiles = await findMarkdownFiles(fullPath, baseDir, []);
         files.push(...subFiles);
       } else if (entry.isFile() && entry.name.endsWith('.md') && !shouldSkipFile(entry.name)) {
