@@ -111,25 +111,40 @@ function isOwnerSession(event: HandlerEvent): boolean {
 // --- GitHub API helpers ---
 
 async function fetchGitHubRepos(username: string, token: string) {
-  const response = await fetch(
-    `https://api.github.com/users/${username}/repos?sort=pushed&per_page=100&type=owner`,
-    {
-      headers: {
-        Authorization: `Bearer ${token}`,
-        Accept: 'application/vnd.github.v3+json',
-        'User-Agent': 'code-wiki-observatory',
-      },
-    }
-  );
-  if (!response.ok) throw new Error(`GitHub API: ${response.status}`);
-  return response.json() as Promise<Array<{
+  // Use the authenticated /user/repos endpoint to discover both public AND private repos.
+  // The /users/{username}/repos endpoint only returns public repos regardless of auth.
+  const repos: Array<{
     name: string;
     full_name: string;
     html_url: string;
     language: string | null;
     open_issues_count: number;
     pushed_at: string;
-  }>>;
+  }> = [];
+
+  let page = 1;
+  while (true) {
+    const response = await fetch(
+      `https://api.github.com/user/repos?sort=pushed&per_page=100&type=owner&page=${page}`,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          Accept: 'application/vnd.github.v3+json',
+          'User-Agent': 'code-wiki-observatory',
+        },
+      }
+    );
+    if (!response.ok) throw new Error(`GitHub API: ${response.status}`);
+    const pageRepos = await response.json() as typeof repos;
+    // Filter to only repos owned by the target username
+    const ownedRepos = pageRepos.filter(
+      r => r.full_name.split('/')[0].toLowerCase() === username.toLowerCase()
+    );
+    repos.push(...ownedRepos);
+    if (pageRepos.length < 100) break;
+    page++;
+  }
+  return repos;
 }
 
 async function fetchWorkflowRuns(fullName: string, token: string) {
