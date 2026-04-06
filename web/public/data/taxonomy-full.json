@@ -1,0 +1,1030 @@
+{
+  "schemaVersion": 1,
+  "terms": [
+    {
+      "term": "ai-tooling",
+      "facet": "domain",
+      "label": "AI Tooling",
+      "definition": "AI and ML tools and integrations including LLM wrappers, prompt utilities, and model orchestration.\n",
+      "scopeNote": "Covers projects whose primary purpose is interfacing with AI models. Apps that merely call an LLM as one feature belong under their primary domain instead.\n",
+      "curationState": "active",
+      "channels": [
+        "internal",
+        "userview"
+      ]
+    },
+    {
+      "term": "android",
+      "facet": "platform",
+      "label": "Android",
+      "definition": "Targets Google Android devices via the Play Store or direct APK distribution.\n",
+      "scopeNote": "Includes native Kotlin/Java apps and hybrid apps wrapped with Capacitor or similar. Child of mobile. Use alongside mobile when both platforms are supported.\n",
+      "curationState": "active",
+      "channels": [
+        "internal",
+        "userview"
+      ]
+    },
+    {
+      "term": "anthropic-api",
+      "facet": "service",
+      "label": "Anthropic API",
+      "definition": "Anthropic Messages API for Claude model access, including chat completions and tool use.\n",
+      "scopeNote": "Projects that call Anthropic API endpoints directly or via the Anthropic SDK. Excludes use of Claude Code as a development tool.\n",
+      "curationState": "active",
+      "channels": [
+        "internal"
+      ]
+    },
+    {
+      "term": "apple-app-store",
+      "facet": "deployTarget",
+      "label": "Apple App Store",
+      "definition": "Apple App Store for distributing iOS and macOS applications.\n",
+      "scopeNote": "Covers App Store Connect submissions for iPhone, iPad, and Mac. Includes Capacitor-wrapped and React Native builds targeting iOS.\n",
+      "curationState": "active",
+      "channels": [
+        "internal",
+        "userview"
+      ]
+    },
+    {
+      "term": "browser-extension",
+      "facet": "platform",
+      "label": "Browser Extension",
+      "definition": "Extends browser functionality via the Chrome, Firefox, or Edge extension APIs.\n",
+      "scopeNote": "Includes Manifest V3 extensions, content scripts, and popup/sidebar UIs. Excludes bookmarklets and userscripts that do not use extension APIs.\n",
+      "curationState": "active",
+      "channels": [
+        "internal",
+        "userview"
+      ]
+    },
+    {
+      "term": "chrome-web-store",
+      "facet": "deployTarget",
+      "label": "Chrome Web Store",
+      "definition": "Chrome Web Store for publishing and distributing Chrome browser extensions.\n",
+      "scopeNote": "Manifest V3 extensions only. Includes extensions also sideloaded during development. Excludes Chrome apps, which are deprecated.\n",
+      "curationState": "active",
+      "channels": [
+        "internal",
+        "userview"
+      ]
+    },
+    {
+      "term": "cli",
+      "facet": "platform",
+      "label": "CLI",
+      "definition": "A command-line interface tool invoked from a terminal or shell script.\n",
+      "scopeNote": "Includes standalone CLI binaries and Node/Python scripts meant to be run from the command line. Excludes interactive TUI applications with full-screen interfaces unless they are also usable as plain CLI commands.\n",
+      "curationState": "active",
+      "channels": [
+        "internal",
+        "userview"
+      ]
+    },
+    {
+      "term": "cloudflare-api",
+      "facet": "service",
+      "label": "Cloudflare API",
+      "definition": "Cloudflare REST API for managing Workers, D1 databases, KV stores, and other Cloudflare services.\n",
+      "scopeNote": "Projects that call Cloudflare API endpoints for resource management. Excludes projects that only deploy to Cloudflare Workers.\n",
+      "curationState": "active",
+      "channels": [
+        "internal"
+      ]
+    },
+    {
+      "term": "cloudflare-workers",
+      "facet": "deployTarget",
+      "label": "Cloudflare Workers",
+      "definition": "Cloudflare Workers serverless edge runtime for API proxies, KV, and D1 databases.\n",
+      "scopeNote": "Includes Workers, KV, D1, and R2 bindings deployed via Wrangler. Excludes Cloudflare Pages, which is a separate deploy target.\n",
+      "curationState": "active",
+      "channels": [
+        "internal",
+        "userview"
+      ]
+    },
+    {
+      "term": "content-tools",
+      "facet": "domain",
+      "label": "Content Tools",
+      "definition": "Writing, editing, and publishing tools for creating and managing written or multimedia content.\n",
+      "scopeNote": "Includes novel-writing apps, document editors, and CMS integrations. Overlaps with ai-tooling when AI assists content creation; assign based on primary purpose.\n",
+      "curationState": "active",
+      "channels": [
+        "internal",
+        "userview"
+      ]
+    },
+    {
+      "term": "dart-flutter",
+      "facet": "stack",
+      "label": "Dart / Flutter",
+      "definition": "Google's Dart language paired with the Flutter UI framework for cross-platform mobile, web, and desktop apps.\n",
+      "scopeNote": "Combined because Dart is rarely used outside Flutter in this workspace. Covers both the language and the framework as a single stack choice.\n",
+      "curationState": "active",
+      "channels": [
+        "internal",
+        "userview"
+      ]
+    },
+    {
+      "term": "desktop",
+      "facet": "platform",
+      "label": "Desktop",
+      "definition": "Runs as a standalone desktop application on macOS, Windows, or Linux.\n",
+      "scopeNote": "Includes Electron, Tauri, and native desktop apps. Excludes web apps that happen to be used on a desktop browser (use web) and CLI tools (use cli).\n",
+      "curationState": "active",
+      "channels": [
+        "internal",
+        "userview"
+      ]
+    },
+    {
+      "term": "developer-tools",
+      "facet": "domain",
+      "label": "Developer Tools",
+      "definition": "Tools built for software developers including CLIs, code generators, and development workflow utilities.\n",
+      "scopeNote": "Includes MCP servers, build tooling, and reusable modules. Excludes general productivity apps that developers happen to use.\n",
+      "curationState": "active",
+      "channels": [
+        "internal",
+        "userview"
+      ]
+    },
+    {
+      "term": "diagram",
+      "facet": "type",
+      "label": "Diagram",
+      "definition": "An architecture or flow diagram rendered from a Mermaid code block, visualizing how a system is structured.\n",
+      "scopeNote": "Includes project flow diagrams in wiki/diagrams/ and any Mermaid-based visual documentation. Excludes prose-only architecture descriptions (use pattern) and API endpoint docs (use integration).\n",
+      "curationState": "active",
+      "channels": [
+        "internal",
+        "userview"
+      ]
+    },
+    {
+      "term": "edge-addons",
+      "facet": "deployTarget",
+      "label": "Edge Add-ons",
+      "definition": "Microsoft Edge Add-ons store for publishing Edge browser extensions.\n",
+      "scopeNote": "Chromium-based Edge extensions using the WebExtensions/Manifest V3 API. Often shares the same codebase as a Chrome Web Store extension.\n",
+      "curationState": "active",
+      "channels": [
+        "internal",
+        "userview"
+      ]
+    },
+    {
+      "term": "expo",
+      "facet": "stack",
+      "label": "Expo",
+      "definition": "Framework and platform for React Native that simplifies builds, OTA updates, and access to native APIs via managed workflows.\n",
+      "scopeNote": "Covers Expo SDK, EAS Build, and Expo Router. Always used alongside react-native; apply both terms to Expo-based projects.\n",
+      "curationState": "active",
+      "channels": [
+        "internal",
+        "userview"
+      ]
+    },
+    {
+      "term": "firefox-addons",
+      "facet": "deployTarget",
+      "label": "Firefox Add-ons",
+      "definition": "Firefox Add-ons (addons.mozilla.org) for publishing Firefox browser extensions.\n",
+      "scopeNote": "WebExtensions API add-ons distributed via AMO. Excludes legacy XUL/XPCOM add-ons.\n",
+      "curationState": "active",
+      "channels": [
+        "internal",
+        "userview"
+      ]
+    },
+    {
+      "term": "games",
+      "facet": "domain",
+      "label": "Games",
+      "definition": "Games and interactive entertainment projects including browser, mobile, and desktop games.\n",
+      "scopeNote": "Includes casual web games, multiplayer experiences, and game-adjacent tools like score trackers. Does not cover gamification features embedded in non-game apps.\n",
+      "curationState": "active",
+      "channels": [
+        "internal",
+        "userview"
+      ]
+    },
+    {
+      "term": "gcp-cloud-run",
+      "facet": "deployTarget",
+      "label": "GCP Cloud Run",
+      "definition": "Google Cloud Run for containerized backend services with automatic scaling.\n",
+      "scopeNote": "Covers Cloud Run services deployed via Docker images or buildpacks. Excludes GCP Compute Engine VMs and Cloud Functions.\n",
+      "curationState": "active",
+      "channels": [
+        "internal",
+        "userview"
+      ]
+    },
+    {
+      "term": "github-api",
+      "facet": "service",
+      "label": "GitHub API",
+      "definition": "GitHub REST or GraphQL API for accessing repositories, issues, pull requests, and other GitHub platform data.\n",
+      "scopeNote": "Projects that call GitHub API endpoints directly or via Octokit. Excludes projects that only use GitHub for hosting.\n",
+      "curationState": "active",
+      "channels": [
+        "internal"
+      ]
+    },
+    {
+      "term": "google-gemini-api",
+      "facet": "service",
+      "label": "Google Gemini API",
+      "definition": "Google Gemini generative AI API for text generation, multimodal input, and embeddings.\n",
+      "scopeNote": "Projects that call Google Gemini (or legacy PaLM) API endpoints. Excludes other Google Cloud APIs like Sheets or BigQuery.\n",
+      "curationState": "active",
+      "channels": [
+        "internal"
+      ]
+    },
+    {
+      "term": "google-play",
+      "facet": "deployTarget",
+      "label": "Google Play",
+      "definition": "Google Play Store for distributing Android applications.\n",
+      "scopeNote": "Covers Play Console submissions for phone and tablet. Includes Capacitor-wrapped and React Native builds targeting Android.\n",
+      "curationState": "active",
+      "channels": [
+        "internal",
+        "userview"
+      ]
+    },
+    {
+      "term": "google-sheets-api",
+      "facet": "service",
+      "label": "Google Sheets API",
+      "definition": "Google Sheets API v4 for reading, writing, and managing spreadsheet data programmatically.\n",
+      "scopeNote": "Projects that call the Sheets API via service account or OAuth. Excludes manual spreadsheet use without API calls.\n",
+      "curationState": "active",
+      "channels": [
+        "internal"
+      ]
+    },
+    {
+      "term": "help",
+      "facet": "type",
+      "label": "Help",
+      "definition": "End-user help documentation explaining how to use a feature, tool, or workflow from the user's perspective.\n",
+      "scopeNote": "Includes how-to guides, FAQ pages, and onboarding docs aimed at end users. Excludes developer-facing coding patterns (use pattern) and API integration docs (use integration).\n",
+      "curationState": "active",
+      "channels": [
+        "userview"
+      ]
+    },
+    {
+      "term": "huggingface-api",
+      "facet": "service",
+      "label": "HuggingFace API",
+      "definition": "HuggingFace Inference API and Datasets API for model hosting, inference, and dataset access.\n",
+      "scopeNote": "Projects that call HuggingFace API endpoints for model inference or dataset retrieval. Excludes local model usage.\n",
+      "curationState": "active",
+      "channels": [
+        "internal"
+      ]
+    },
+    {
+      "term": "integration",
+      "facet": "type",
+      "label": "Integration",
+      "definition": "Documentation of how two or more systems, services, or tools connect and exchange data.\n",
+      "scopeNote": "Includes API wiring guides, webhook setups, and cross-service data flows. Excludes internal code architecture (use pattern or diagram) and standalone tool docs (use utility).\n",
+      "curationState": "active",
+      "channels": [
+        "internal",
+        "userview"
+      ]
+    },
+    {
+      "term": "internal",
+      "facet": "visibility",
+      "label": "Internal",
+      "definition": "Local-only projects that are never deployed to any server or external hosting.\n",
+      "scopeNote": "Includes local scripts, MCP servers running on localhost, and dev-only utilities. If a project is later deployed, update its visibility term accordingly.\n",
+      "curationState": "active",
+      "channels": [
+        "internal",
+        "userview"
+      ]
+    },
+    {
+      "term": "ios",
+      "facet": "platform",
+      "label": "iOS",
+      "definition": "Targets Apple iOS devices (iPhone, iPad) via the App Store or TestFlight.\n",
+      "scopeNote": "Includes native Swift/SwiftUI apps and hybrid apps wrapped with Capacitor or similar. Child of mobile. Use alongside mobile when both platforms are supported.\n",
+      "curationState": "active",
+      "channels": [
+        "internal",
+        "userview"
+      ]
+    },
+    {
+      "term": "javascript",
+      "facet": "stack",
+      "label": "JavaScript",
+      "definition": "Dynamic scripting language for web browsers and server-side runtimes, the baseline language of the web platform.\n",
+      "scopeNote": "Use for projects written in plain JS without TypeScript. Projects using TS should use the typescript term instead.\n",
+      "curationState": "active",
+      "channels": [
+        "internal",
+        "userview"
+      ]
+    },
+    {
+      "term": "knowledge-management",
+      "facet": "domain",
+      "label": "Knowledge Management",
+      "definition": "Wikis, note-taking systems, and knowledge bases for organizing and retrieving structured information.\n",
+      "scopeNote": "Includes lorebooks, taxonomy tools, and documentation systems. Overlaps with content-tools; assign here when the focus is retrieval and organization rather than authoring.\n",
+      "curationState": "active",
+      "channels": [
+        "internal",
+        "userview"
+      ]
+    },
+    {
+      "term": "local-only",
+      "facet": "deployTarget",
+      "label": "Local Only",
+      "definition": "Never deployed; runs exclusively on the developer's local machine.\n",
+      "scopeNote": "Covers CLI tools, scripts, and prototypes that are not hosted anywhere. If a project later gains a deploy target, remove this term.\n",
+      "curationState": "active",
+      "channels": [
+        "internal",
+        "userview"
+      ]
+    },
+    {
+      "term": "mcp-server",
+      "facet": "platform",
+      "label": "MCP Server",
+      "definition": "A Model Context Protocol server that exposes tools and resources to AI coding agents.\n",
+      "scopeNote": "Includes stdio and HTTP-based MCP servers. The server itself is the platform; projects that merely consume MCP tools should not use this term.\n",
+      "curationState": "active",
+      "channels": [
+        "internal",
+        "userview"
+      ]
+    },
+    {
+      "term": "mobile",
+      "facet": "platform",
+      "label": "Mobile",
+      "definition": "Targets mobile devices as a native or hybrid app distributed through app stores or sideloading.\n",
+      "scopeNote": "Parent term for ios and android. Use this term when a project targets both platforms via a cross-platform framework (Capacitor, Flutter, React Native). Exclude mobile-responsive web apps that only run in a browser.\n",
+      "curationState": "active",
+      "channels": [
+        "internal",
+        "userview"
+      ]
+    },
+    {
+      "term": "netlify-api",
+      "facet": "service",
+      "label": "Netlify API",
+      "definition": "Netlify REST API for managing sites, deploys, and build status programmatically.\n",
+      "scopeNote": "Projects that call Netlify API endpoints for deploy status, site metadata, or build triggers. Excludes projects that only deploy to Netlify.\n",
+      "curationState": "active",
+      "channels": [
+        "internal"
+      ]
+    },
+    {
+      "term": "netlify-functions",
+      "facet": "stack",
+      "label": "Netlify Functions",
+      "definition": "Serverless functions deployed as part of a Netlify site, used as API proxies and lightweight backends without a dedicated server.\n",
+      "scopeNote": "Covers Lambda-based Netlify Functions in the netlify/functions/ directory. Does not cover Netlify Edge Functions or general Netlify hosting config.\n",
+      "curationState": "active",
+      "channels": [
+        "internal",
+        "userview"
+      ]
+    },
+    {
+      "term": "netlify",
+      "facet": "deployTarget",
+      "label": "Netlify",
+      "definition": "Netlify hosting platform for static sites, SPAs, and serverless functions.\n",
+      "scopeNote": "Covers Netlify Sites and Netlify Functions (AWS Lambda-backed). Excludes Netlify Edge Functions, which run on Deno Deploy.\n",
+      "curationState": "active",
+      "channels": [
+        "internal",
+        "userview"
+      ]
+    },
+    {
+      "term": "node-express",
+      "facet": "stack",
+      "label": "Node / Express",
+      "definition": "Server-side JavaScript runtime paired with the Express web framework for building REST APIs and backend services.\n",
+      "scopeNote": "Combined because Express is the standard Node HTTP framework in this workspace. Covers standalone Node+Express servers, not serverless functions.\n",
+      "curationState": "active",
+      "channels": [
+        "internal",
+        "userview"
+      ]
+    },
+    {
+      "term": "observability",
+      "facet": "domain",
+      "label": "Observability",
+      "definition": "Monitoring, metrics collection, and dashboard tools for tracking system health and performance.\n",
+      "scopeNote": "Includes infrastructure dashboards, log aggregation, and alerting tools. Analytics dashboards focused on business data belong under their primary domain.\n",
+      "curationState": "active",
+      "channels": [
+        "internal",
+        "userview"
+      ]
+    },
+    {
+      "term": "openai-api",
+      "facet": "service",
+      "label": "OpenAI API",
+      "definition": "OpenAI chat completions and embeddings API, including GPT-4 and GPT-3.5 model access.\n",
+      "scopeNote": "Projects that call OpenAI endpoints directly or via the openai SDK. Includes projects using OpenAI-compatible endpoints.\n",
+      "curationState": "active",
+      "channels": [
+        "internal"
+      ]
+    },
+    {
+      "term": "pattern",
+      "facet": "type",
+      "label": "Pattern",
+      "definition": "A reusable coding pattern, architectural recipe, or documented approach that solves a recurring problem.\n",
+      "scopeNote": "Includes conventions, best practices, and multi-step recipes that span more than a single code block. Excludes small copy-paste fragments (use snippet) and full starter projects (use template).\n",
+      "curationState": "active",
+      "channels": [
+        "internal",
+        "userview"
+      ]
+    },
+    {
+      "term": "perplexity-api",
+      "facet": "service",
+      "label": "Perplexity API",
+      "definition": "Perplexity AI search-augmented generation API for grounded, citation-backed responses.\n",
+      "scopeNote": "Projects that call Perplexity API endpoints for search-augmented completions. Uses OpenAI-compatible request format.\n",
+      "curationState": "active",
+      "channels": [
+        "internal"
+      ]
+    },
+    {
+      "term": "preference",
+      "facet": "type",
+      "label": "Preference",
+      "definition": "A document capturing user or agent preferences such as tech stack choices, UI conventions, or deployment defaults.\n",
+      "scopeNote": "Includes files served by the MCP get_preferences tool and CLAUDE.md rule files. Excludes taxonomy terms (use term) and project-specific configuration (use project or pattern).\n",
+      "curationState": "active",
+      "channels": [
+        "internal"
+      ]
+    },
+    {
+      "term": "private",
+      "facet": "visibility",
+      "label": "Private",
+      "definition": "Auth-gated or owner-only projects visible only to authenticated users on a deployed site.\n",
+      "scopeNote": "Covers private GitHub repos and deployed apps behind login. Projects that are merely unlisted but have no auth gate should be tagged public, not private.\n",
+      "curationState": "active",
+      "channels": [
+        "internal",
+        "userview"
+      ]
+    },
+    {
+      "term": "project",
+      "facet": "type",
+      "label": "Project",
+      "definition": "A distinct software project in the workspace with its own repo, build process, and deployment target.\n",
+      "scopeNote": "Includes standalone apps, libraries, and services that live in their own directory or repo. Excludes reusable modules that exist only as subdirectories of another project (tag those as utility or pattern).\n",
+      "curationState": "active",
+      "channels": [
+        "internal",
+        "userview"
+      ]
+    },
+    {
+      "term": "public",
+      "facet": "visibility",
+      "label": "Public",
+      "definition": "Open-source or world-visible projects accessible to anyone without authentication.\n",
+      "scopeNote": "Includes public GitHub repos and unauthenticated deployed sites. A project with a public landing page but auth-gated features should be tagged both public and private.\n",
+      "curationState": "active",
+      "channels": [
+        "internal",
+        "userview"
+      ]
+    },
+    {
+      "term": "python",
+      "facet": "stack",
+      "label": "Python",
+      "definition": "General-purpose programming language used for backend services, data pipelines, scripting, and AI/ML workloads.\n",
+      "scopeNote": "Covers Python in any context. Specific frameworks like FastAPI or Flask are not broken out as separate terms.\n",
+      "curationState": "active",
+      "channels": [
+        "internal",
+        "userview"
+      ]
+    },
+    {
+      "term": "react-native",
+      "facet": "stack",
+      "label": "React Native",
+      "definition": "Framework for building native mobile apps using React components, rendering to platform-native UI on iOS and Android.\n",
+      "scopeNote": "Covers React Native core. Projects using Expo should also carry the expo term. Does not cover React web usage.\n",
+      "curationState": "active",
+      "channels": [
+        "internal",
+        "userview"
+      ]
+    },
+    {
+      "term": "react",
+      "facet": "stack",
+      "label": "React",
+      "definition": "Component-based UI library for building web interfaces, typically used with TypeScript or JavaScript and a bundler like Vite.\n",
+      "scopeNote": "Covers React for web only. For mobile apps using React Native, use the react-native term. Includes JSX/TSX component authoring and hooks.\n",
+      "curationState": "active",
+      "channels": [
+        "internal",
+        "userview"
+      ]
+    },
+    {
+      "term": "self-hosted",
+      "facet": "deployTarget",
+      "label": "Self-Hosted",
+      "definition": "User-managed infrastructure such as Docker Compose on a VM or bare-metal server.\n",
+      "scopeNote": "Includes GCP Compute Engine VMs, home servers, and VPS instances. Excludes managed PaaS like Cloud Run or Netlify.\n",
+      "curationState": "active",
+      "channels": [
+        "internal",
+        "userview"
+      ]
+    },
+    {
+      "term": "seo",
+      "facet": "domain",
+      "label": "SEO",
+      "definition": "Search engine optimization tools for analyzing, improving, and monitoring website search performance.\n",
+      "scopeNote": "Covers keyword research, ranking trackers, and on-page analysis tools. Marketing automation that merely includes SEO as a minor feature belongs elsewhere.\n",
+      "curationState": "active",
+      "channels": [
+        "internal",
+        "userview"
+      ]
+    },
+    {
+      "term": "snippet",
+      "facet": "type",
+      "label": "Snippet",
+      "definition": "A small, standalone code fragment that can be copied and used directly with minimal adaptation.\n",
+      "scopeNote": "Includes single-function examples, config blocks, and CLI one-liners. Excludes multi-file setups (use template) and higher-level explanations of approach (use pattern).\n",
+      "curationState": "active",
+      "channels": [
+        "internal"
+      ]
+    },
+    {
+      "term": "social-impact",
+      "facet": "domain",
+      "label": "Social Impact",
+      "definition": "Projects focused on social good, activism, charity, and community benefit.\n",
+      "scopeNote": "Includes advocacy tools, nonprofit platforms, and civic-tech projects. A project with a social mission but primarily developer-facing belongs under developer-tools.\n",
+      "curationState": "active",
+      "channels": [
+        "internal",
+        "userview"
+      ]
+    },
+    {
+      "term": "stockfish",
+      "facet": "service",
+      "label": "Stockfish",
+      "definition": "Stockfish open-source chess engine, used via WASM or UCI protocol for move analysis and evaluation.\n",
+      "scopeNote": "Projects that embed or call Stockfish for chess position analysis. Includes both WASM-compiled and native UCI integrations.\n",
+      "curationState": "active",
+      "channels": [
+        "internal"
+      ]
+    },
+    {
+      "term": "template",
+      "facet": "type",
+      "label": "Template",
+      "definition": "A starter or boilerplate structure intended to be cloned and customized when beginning new work.\n",
+      "scopeNote": "Includes scaffold repos, cookiecutter-style starters, and multi-file boilerplates. Excludes single code fragments (use snippet) and documentation of how to structure code (use pattern).\n",
+      "curationState": "active",
+      "channels": [
+        "internal"
+      ]
+    },
+    {
+      "term": "term",
+      "facet": "type",
+      "label": "Term",
+      "definition": "A taxonomy term definition file that defines a controlled-vocabulary entry within the wiki's classification system.\n",
+      "scopeNote": "Includes all files in wiki/_taxonomy/terms/. Self-referential: this file is itself a term. Excludes the schema file (schema.yml) and relationships file (relationships.yml), which are structural.\n",
+      "curationState": "active",
+      "channels": [
+        "internal",
+        "userview"
+      ]
+    },
+    {
+      "term": "typescript",
+      "facet": "stack",
+      "label": "TypeScript",
+      "definition": "Typed superset of JavaScript that compiles to plain JS, providing static type checking and IDE tooling.\n",
+      "scopeNote": "Covers TypeScript language usage in any context (frontend, backend, tooling). Does not include runtime frameworks built on TS.\n",
+      "curationState": "active",
+      "channels": [
+        "internal",
+        "userview"
+      ]
+    },
+    {
+      "term": "utility",
+      "facet": "type",
+      "label": "Utility",
+      "definition": "A standalone helper tool or script that performs a focused task and is not a full project.\n",
+      "scopeNote": "Includes build scripts, one-off migration tools, and reusable modules in generic_modules/. Excludes full applications with their own deployment (use project) and tiny fragments (use snippet).\n",
+      "curationState": "active",
+      "channels": [
+        "internal"
+      ]
+    },
+    {
+      "term": "vite",
+      "facet": "stack",
+      "label": "Vite",
+      "definition": "Fast frontend build tool providing dev server with hot module replacement and optimized production bundling via Rollup.\n",
+      "scopeNote": "Covers Vite as the build/dev toolchain. Does not imply a specific UI framework; typically paired with the react term in this workspace.\n",
+      "curationState": "active",
+      "channels": [
+        "internal",
+        "userview"
+      ]
+    },
+    {
+      "term": "web",
+      "facet": "platform",
+      "label": "Web",
+      "definition": "Runs in a web browser as a client-side application served over HTTP/HTTPS.\n",
+      "scopeNote": "Includes SPAs, static sites, and server-rendered pages viewed in a browser. Excludes browser extensions (use browser-extension) and PWAs installed to a device home screen without a native wrapper.\n",
+      "curationState": "active",
+      "channels": [
+        "internal",
+        "userview"
+      ]
+    }
+  ],
+  "edges": [
+    {
+      "source": "ios",
+      "target": "mobile",
+      "type": "broader"
+    },
+    {
+      "source": "android",
+      "target": "mobile",
+      "type": "broader"
+    },
+    {
+      "source": "chrome-web-store",
+      "target": "browser-extension",
+      "type": "broader"
+    },
+    {
+      "source": "firefox-addons",
+      "target": "browser-extension",
+      "type": "broader"
+    },
+    {
+      "source": "edge-addons",
+      "target": "browser-extension",
+      "type": "broader"
+    },
+    {
+      "source": "apple-app-store",
+      "target": "mobile",
+      "type": "broader"
+    },
+    {
+      "source": "google-play",
+      "target": "mobile",
+      "type": "broader"
+    },
+    {
+      "source": "expo",
+      "target": "react-native",
+      "type": "broader"
+    },
+    {
+      "source": "netlify-functions",
+      "target": "netlify",
+      "type": "broader"
+    },
+    {
+      "source": "ai-tooling",
+      "target": "content-tools",
+      "type": "related"
+    },
+    {
+      "source": "developer-tools",
+      "target": "knowledge-management",
+      "type": "related"
+    },
+    {
+      "source": "developer-tools",
+      "target": "observability",
+      "type": "related"
+    },
+    {
+      "source": "projects/code-wiki-project.md",
+      "target": "github-api",
+      "type": "dependsOn"
+    },
+    {
+      "source": "projects/code-wiki-project.md",
+      "target": "netlify-api",
+      "type": "dependsOn"
+    },
+    {
+      "source": "projects/quantumretriever.md",
+      "target": "anthropic-api",
+      "type": "dependsOn"
+    },
+    {
+      "source": "projects/quantumretriever.md",
+      "target": "google-gemini-api",
+      "type": "dependsOn"
+    },
+    {
+      "source": "projects/quantumretriever.md",
+      "target": "huggingface-api",
+      "type": "dependsOn"
+    },
+    {
+      "source": "projects/quantumretriever.md",
+      "target": "openai-api",
+      "type": "dependsOn"
+    },
+    {
+      "source": "projects/quantumretriever.md",
+      "target": "perplexity-api",
+      "type": "dependsOn"
+    },
+    {
+      "source": "projects/weirdchess.md",
+      "target": "stockfish",
+      "type": "dependsOn"
+    },
+    {
+      "source": "content-tools",
+      "target": "ai-tooling",
+      "type": "related"
+    },
+    {
+      "source": "knowledge-management",
+      "target": "developer-tools",
+      "type": "related"
+    },
+    {
+      "source": "observability",
+      "target": "developer-tools",
+      "type": "related"
+    }
+  ],
+  "facets": {
+    "type": [
+      "diagram",
+      "help",
+      "integration",
+      "pattern",
+      "preference",
+      "project",
+      "snippet",
+      "template",
+      "term",
+      "utility"
+    ],
+    "stack": [
+      "dart-flutter",
+      "expo",
+      "javascript",
+      "netlify-functions",
+      "node-express",
+      "python",
+      "react-native",
+      "react",
+      "typescript",
+      "vite"
+    ],
+    "platform": [
+      "android",
+      "browser-extension",
+      "cli",
+      "desktop",
+      "ios",
+      "mcp-server",
+      "mobile",
+      "web"
+    ],
+    "deployTarget": [
+      "apple-app-store",
+      "chrome-web-store",
+      "cloudflare-workers",
+      "edge-addons",
+      "firefox-addons",
+      "gcp-cloud-run",
+      "google-play",
+      "local-only",
+      "netlify",
+      "self-hosted"
+    ],
+    "domain": [
+      "ai-tooling",
+      "content-tools",
+      "developer-tools",
+      "games",
+      "knowledge-management",
+      "observability",
+      "seo",
+      "social-impact"
+    ],
+    "visibility": [
+      "internal",
+      "private",
+      "public"
+    ],
+    "service": [
+      "anthropic-api",
+      "cloudflare-api",
+      "github-api",
+      "google-gemini-api",
+      "google-sheets-api",
+      "huggingface-api",
+      "netlify-api",
+      "openai-api",
+      "perplexity-api",
+      "stockfish"
+    ]
+  },
+  "contentTags": [
+    {
+      "path": "projects/code-wiki-project.md",
+      "title": "code-wiki",
+      "taxonomy": {
+        "type": "project",
+        "stack": [
+          "typescript",
+          "netlify-functions"
+        ],
+        "platform": [
+          "web",
+          "mcp-server"
+        ],
+        "deployTarget": [
+          "netlify"
+        ],
+        "domain": [
+          "developer-tools",
+          "knowledge-management",
+          "observability"
+        ],
+        "visibility": "public",
+        "lifecycle": "shipped",
+        "dependsOn": [
+          "github-api",
+          "netlify-api"
+        ]
+      }
+    },
+    {
+      "path": "projects/neogeoseo.md",
+      "title": "NeoGeoSeo",
+      "taxonomy": {
+        "type": "project",
+        "stack": [
+          "react",
+          "typescript",
+          "vite"
+        ],
+        "platform": [
+          "browser-extension"
+        ],
+        "deployTarget": [
+          "chrome-web-store",
+          "firefox-addons"
+        ],
+        "domain": [
+          "seo"
+        ],
+        "visibility": "public",
+        "lifecycle": "pre-release"
+      }
+    },
+    {
+      "path": "projects/quantumretriever.md",
+      "title": "QuantumRetriever",
+      "taxonomy": {
+        "type": "project",
+        "stack": [
+          "react",
+          "typescript",
+          "vite",
+          "netlify-functions"
+        ],
+        "platform": [
+          "web"
+        ],
+        "deployTarget": [
+          "netlify"
+        ],
+        "domain": [
+          "ai-tooling"
+        ],
+        "visibility": "public",
+        "lifecycle": "shipped",
+        "dependsOn": [
+          "anthropic-api",
+          "google-gemini-api",
+          "huggingface-api",
+          "openai-api",
+          "perplexity-api"
+        ]
+      }
+    },
+    {
+      "path": "projects/trolljar.md",
+      "title": "TrollJar",
+      "taxonomy": {
+        "type": "project",
+        "stack": [
+          "javascript",
+          "vite"
+        ],
+        "platform": [
+          "browser-extension"
+        ],
+        "deployTarget": [
+          "chrome-web-store",
+          "firefox-addons",
+          "netlify"
+        ],
+        "domain": [
+          "social-impact"
+        ],
+        "visibility": "public",
+        "lifecycle": "pre-release"
+      }
+    },
+    {
+      "path": "projects/weirdchess.md",
+      "title": "WeirdChess",
+      "taxonomy": {
+        "type": "project",
+        "stack": [
+          "dart-flutter"
+        ],
+        "platform": [
+          "android",
+          "ios",
+          "web"
+        ],
+        "deployTarget": [
+          "apple-app-store",
+          "google-play",
+          "netlify"
+        ],
+        "domain": [
+          "ai-tooling",
+          "games"
+        ],
+        "visibility": "public",
+        "lifecycle": "shipped",
+        "dependsOn": [
+          "stockfish"
+        ]
+      }
+    }
+  ],
+  "buildTime": "2026-04-06T03:56:48.261Z"
+}

@@ -29,6 +29,7 @@ import { projectHealthTool, handleProjectHealth } from './tools/projectHealth.js
 import { deployStatusTool, handleDeployStatus } from './tools/deployStatus.js';
 import { infraOverviewTool, handleInfraOverview } from './tools/infraOverview.js';
 import { getProjectFlowTool, handleGetProjectFlow } from './tools/getProjectFlow.js';
+import { searchTaxonomyTool, handleSearchTaxonomy } from './tools/searchTaxonomy.js';
 
 import { logger } from './utils/logger.js';
 
@@ -88,6 +89,7 @@ export class CodeWikiServer {
         deployStatusTool,
         infraOverviewTool,
         getProjectFlowTool,
+        searchTaxonomyTool,
       ],
     }));
 
@@ -181,6 +183,13 @@ export class CodeWikiServer {
             result = await handleGetProjectFlow(
               args as { project: string },
               this.wikiService
+            );
+            break;
+
+          case 'search_taxonomy':
+            result = await handleSearchTaxonomy(
+              args as { query: string; action: string; facet?: string },
+              this.config
             );
             break;
 

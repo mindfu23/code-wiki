@@ -1,0 +1,302 @@
+# =============================================================================
+# Code Wiki Taxonomy Schema — v1
+# =============================================================================
+# Controlled vocabulary for classifying wiki content and projects.
+# All decisions locked per HANDOFF-taxonomy-v1.md (2026-04-05).
+#
+# Conventions:
+#   - Term IDs: kebab-case (e.g., browser-extension)
+#   - Labels:   Title Case (e.g., Browser Extension)
+#   - Facets are stable classifiers (what a thing IS)
+#   - State fields are changeable attributes (where a thing is in its cycle)
+# =============================================================================
+
+schemaVersion: 1
+
+conventions:
+  termIdFormat: kebab-case
+  labelFormat: Title Case
+
+# =============================================================================
+# FACETS — stable, intrinsic classifiers
+# =============================================================================
+# Each facet partitions the domain along one dimension.
+# Single-valued unless noted; multi-valued facets use arrays in frontmatter.
+
+facets:
+  type:
+    # What kind of wiki content this is
+    cardinality: single
+    values:
+      - project       # A distinct software project
+      - pattern       # Reusable coding pattern or recipe
+      - snippet       # Small standalone code fragment
+      - template      # Starter/boilerplate for new work
+      - integration   # How two systems connect
+      - utility       # Standalone helper tool or script
+      - diagram       # Architecture flow diagram (Mermaid)
+      - preference    # User/agent preferences doc
+      - term          # Taxonomy term definition itself
+      - help          # End-user help documentation
+
+  stack:
+    # Languages, frameworks, and runtimes used
+    cardinality: multi
+    values:
+      - typescript
+      - javascript
+      - dart-flutter   # Dart language + Flutter framework
+      - python
+      - react          # React library (often paired with typescript/javascript)
+      - react-native   # React Native mobile framework
+      - vite           # Vite build tool
+      - expo           # Expo framework for React Native
+      - node-express   # Node.js + Express backend
+      - netlify-functions  # Netlify serverless functions
+
+  platform:
+    # Where the software runs
+    cardinality: multi
+    values:
+      - web
+      - mobile         # Generic mobile (use ios/android for specific)
+      - ios
+      - android
+      - desktop
+      - browser-extension  # Chrome/Firefox/Edge extension
+      - mcp-server     # Model Context Protocol server
+      - cli            # Command-line interface tool
+
+  deployTarget:
+    # Where the software is deployed/distributed
+    cardinality: multi
+    values:
+      - netlify
+      - cloudflare-workers
+      - gcp-cloud-run
+      - chrome-web-store
+      - firefox-addons
+      - edge-addons
+      - apple-app-store
+      - google-play
+      - self-hosted     # User runs their own infrastructure
+      - local-only      # Never deployed; runs only on dev machine
+
+  domain:
+    # Problem domain / subject area
+    cardinality: multi
+    values:
+      - games
+      - ai-tooling       # AI/ML tools and integrations
+      - developer-tools  # Tools for developers
+      - content-tools    # Writing, editing, publishing tools
+      - seo              # Search engine optimization
+      - social-impact    # Social good, activism, charity
+      - knowledge-management  # Wikis, notes, knowledge bases
+      - observability    # Monitoring, metrics, dashboards
+
+  visibility:
+    # Access control tier
+    cardinality: single
+    values:
+      - public    # Open-source, world-visible
+      - private   # Authored by owner, auth-gated on deployed site
+      - internal  # Local-only, never deployed
+
+  service:
+    # External services that projects depend on (edge endpoints for dependsOn)
+    # Not used to classify content — exists so service terms have a home facet
+    cardinality: single
+    values: []    # Open-ended; any term with facet: service is valid
+
+# =============================================================================
+# STATE FIELDS — changeable, extrinsic attributes (NOT classifiers)
+# =============================================================================
+
+stateFields:
+  lifecycle:
+    # Ship cycle of the real-world thing
+    appliesTo: content  # Content files (projects, patterns, etc.)
+    values:
+      - experimental  # Proof of concept, may be abandoned
+      - pre-release   # Being built, not yet shipped
+      - shipped        # Live and available to users
+      - mature         # Stable, low churn, well-tested
+      - deprecated     # Still works but no longer recommended
+      - archived       # No longer maintained or available
+
+  curationState:
+    # Lifecycle of the vocabulary entry itself (SKOS-aligned)
+    appliesTo: terms  # Term definition files only
+    values:
+      - proposed    # Under review, not yet canonical
+      - active      # Accepted and in use
+      - deprecated  # Superseded or no longer relevant
+
+# =============================================================================
+# CHANNELS — single-source, multi-channel publishing
+# =============================================================================
+# One authoritative source file; multiple rendered views.
+# Block-level conditional content via HTML-comment fences:
+#   <!-- channel:internal-only --> ... <!-- /channel -->
+
+channels:
+  internal:
+    description: MCP server and structured lookup — terse, machine-optimized
+  userview:
+    description: Human-readable render for browsing — narrative, contextual
+
+  # Per-type default channel assignments (files inherit unless overridden)
+  defaults:
+    project:     [internal, userview]
+    pattern:     [internal, userview]
+    snippet:     [internal]
+    template:    [internal]
+    integration: [internal, userview]
+    utility:     [internal]
+    diagram:     [internal, userview]
+    preference:  [internal]
+    term:        [internal, userview]
+    help:        [userview]
+
+# =============================================================================
+# RELATIONSHIPS — edges in the knowledge graph
+# =============================================================================
+# Hybrid storage: attribute edges inline on entity files,
+# structural edges in relationships.yml.
+# One-sided storage; build computes inverses.
+
+relationships:
+  usesModule:
+    storage: inline            # On the entity file's frontmatter
+    direction: "content -> pattern | utility | snippet | template"
+    acyclic: false
+    description: Content file reuses a pattern, utility, snippet, or template
+
+  dependsOn:
+    storage: inline
+    direction: "project | pattern -> term"
+    acyclic: false
+    description: Project or pattern depends on an external service or technology
+
+  appliesTo:
+    storage: inline
+    direction: "pattern | snippet | template | integration | help -> project"
+    acyclic: false
+    description: Content file is relevant to a specific project
+
+  supersedes:
+    storage: relationships-file  # In relationships.yml
+    direction: "term -> term"
+    acyclic: true
+    description: One term replaces another in the vocabulary
+
+  broader:
+    storage: relationships-file
+    direction: "term -> term"
+    acyclic: true
+    description: Hierarchical parent (e.g., ios broader mobile)
+
+  related:
+    storage: relationships-file
+    direction: "term <-> term"    # Symmetric — store under alphabetically-first term
+    acyclic: false
+    description: Non-hierarchical association between terms
+
+# =============================================================================
+# NOTES — SKOS-aligned note types on term files
+# =============================================================================
+
+notes:
+  definition:
+    required: true
+    hardMaxLength: 500    # Fail build if exceeded
+    softWarnLength: 250   # Warn if exceeded — push detail to scopeNote
+    description: Atomic canonical meaning of the term
+
+  scopeNote:
+    required: true
+    description: What the term covers and excludes — edge cases, disambiguation
+
+  editorialNote:
+    required: false
+    channel: internal     # Never shown in userview
+    description: Maintenance notes — open questions, things to revisit
+
+  historyNote:
+    required: false
+    description: The TERM's own history inside the vocabulary (not the subject's history)
+
+  changeNote:
+    required: false
+    description: Per-edit annotation; prefer historyNote for summaries
+
+# =============================================================================
+# VALIDATOR RULES
+# =============================================================================
+
+validator:
+  rules:
+    # --- Fail-build rules (exit non-zero) ---
+    - id: unknown-facet-value
+      severity: error
+      description: Term file references a facet value not in schema
+
+    - id: required-frontmatter-missing
+      severity: error
+      description: Term file missing required fields (term, facet, label, definition, scopeNote, curationState)
+
+    - id: facet-term-mismatch
+      severity: error
+      description: Term file's facet field doesn't match any schema facet
+
+    - id: unknown-edge-endpoint
+      severity: error
+      description: Edge references a term ID that has no corresponding term file
+
+    - id: acyclic-violation
+      severity: error
+      description: Cycle detected in supersedes or broader edges (DFS check)
+
+    - id: definition-length-hard
+      severity: error
+      description: Definition exceeds 500-character hard cap
+
+    - id: private-userview-collision
+      severity: error
+      description: Content with visibility private has userview channel (would leak private content)
+
+    # --- Warn rules (non-zero exit optional) ---
+    - id: symmetric-edge-ordering
+      severity: warning
+      description: Related edge stored under non-alphabetically-first term
+
+    - id: definition-length-soft
+      severity: warning
+      description: Definition exceeds 250-character soft target
+
+    - id: orphan-synonyms
+      severity: warning
+      description: Term has synonyms field but synonym strings don't appear elsewhere
+
+  # --- Report-only (summary line at build end, no per-file noise) ---
+  report:
+    - id: untagged-content
+      description: Count of wiki content files without taxonomy frontmatter
+
+  # --- Deliberately deferred ---
+  deferred:
+    - id: unknown-term-in-prose
+      description: Canonical term used in Markdown body but not linked — too noisy in practice
+
+# =============================================================================
+# BUILD CONFIGURATION
+# =============================================================================
+
+build:
+  sources:
+    taxonomyDir: wiki/_taxonomy/           # Schema, terms, relationships
+    wikiDir: wiki/                          # Content files with inline edges
+  outputs:
+    public: web/public/data/taxonomy.json       # Visibility-filtered
+    full: web/public/data/taxonomy-full.json    # All content including private
