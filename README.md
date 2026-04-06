@@ -30,7 +30,7 @@ When you set `GITHUB_USERNAME` (or `GITHUB_REPO_OWNER`) and `GITHUB_TOKEN`, the 
 - **Correct visibility on first build**: Public/private status comes directly from GitHub
 - **Stays in sync**: Changes to repo visibility on GitHub are picked up on next build
 
-The `wiki/projects/repo-locations.md` file is optional - use it only if you need to add local paths or notes to specific repos.
+The `wiki/projects/repo-locations.md` file is optional - use it only if you need to add local paths or notes to specific repos. Note: this file now lives in the private content repo (see [Private Content Repo](#private-content-repo) below).
 
 ### How Syncing Works
 
@@ -98,6 +98,14 @@ Note that when using this app as an index for local agents and MCPs, you should 
    | `GITHUB_CLIENT_SECRET` | GitHub OAuth App secret |
    | `SESSION_SECRET` | Random 32+ character string for session encryption |
 
+   **Private content repo (recommended):**
+   | Variable | Description |
+   |----------|-------------|
+   | `PRIVATE_CONTENT_TOKEN` | Fine-grained PAT with Contents: Read-only, scoped to your private content repo |
+   | `PRIVATE_CONTENT_REPO` | Owner/repo for private content (e.g. `yourname/code-wiki-content`) |
+
+   See [Private Content Repo](#private-content-repo) below for full setup.
+
    **Optional:**
    | Variable | Description |
    |----------|-------------|
@@ -142,6 +150,13 @@ Note that when using this app as an index for local agents and MCPs, you should 
    **Why this is needed:** The default `GITHUB_TOKEN` in Actions only has access to the current repository. `REPO_ACCESS_TOKEN` allows the workflow to list ALL your repositories for auto-discovery.
 
    Without this secret, GitHub Actions will fall back to using repos listed in `repo-locations.md`.
+
+   **Additional Actions secret for private content repo:**
+   | Secret | Description |
+   |--------|-------------|
+   | `PRIVATE_CONTENT_WRITE_TOKEN` | Fine-grained PAT with Contents: Read and write, scoped to your private content repo |
+
+   This token allows the GitHub Actions workflows (`update-index.yml`, `collect-metrics.yml`) to commit generated content to the private content repo instead of the public repo. See [Private Content Repo](#private-content-repo) for details.
 
 ### Private Repository Visibility
 
@@ -208,16 +223,10 @@ The MCP server provides local code search for AI agents like Claude Code.
    npm run build
    ```
 
-4. **Configure Claude Code** - Add to `.mcp.json`:
-   ```json
-   {
-     "mcpServers": {
-       "code-wiki": {
-         "command": "node",
-         "args": ["/path/to/code-wiki/mcp-server/dist/index.js"]
-       }
-     }
-   }
+4. **Configure Claude Code** - Copy `.mcp.json.example` to `.mcp.json` and update the path:
+   ```bash
+   cp .mcp.json.example .mcp.json
+   # Edit .mcp.json to set the correct absolute path to mcp-server/dist/index.js
    ```
 
 5. **Install ripgrep** (recommended for fast local search):
@@ -385,85 +394,117 @@ wiki/
 ├── integrations/      # API connectors (public scaffolding)
 ├── templates/         # Project starters (public scaffolding)
 ├── snippets/          # Code snippets (public scaffolding)
-└── projects/          # Project docs (public scaffolding + repo-locations.md)
+├── diagrams/          # Per-project Mermaid architecture diagrams
+└── projects/          # Project docs (public scaffolding)
 ```
+
+## Private Content Repo
+
+All generated content derived from your GitHub account (indexes, metrics, repo inventory) lives in a **separate private repository**, not in this public repo. This ensures that private repo names, local filesystem paths, and other sensitive data never appear in the public repo's git history.
+
+### Architecture
+
+```
+code-wiki (public)              code-wiki-content (private)
+├── web/src/                    ├── web/public/data/
+│   └── indexBuilder.ts         │   ├── index.json
+├── web/netlify/functions/      │   ├── index-full.json
+├── web/scripts/                │   ├── category-*.json
+│   └── netlify-build.sh        │   ├── diagram-signals.json
+├── wiki/                       │   └── metrics/
+│   ├── patterns/               │       ├── latest.json
+│   ├── snippets/               │       └── metrics-YYYY-MM-DD.json
+│   └── ...                     ├── wiki/projects/
+├── .github/workflows/          │   └── repo-locations.md
+│   ├── update-index.yml        └── README.md
+│   └── collect-metrics.yml
+└── mcp-server/
+```
+
+**How it works:**
+- **GitHub Actions** runs the index builder and metrics collector on schedule, then commits the generated output to the private content repo via `PRIVATE_CONTENT_WRITE_TOKEN`.
+- **Netlify** clones the private content repo at build time (via `PRIVATE_CONTENT_TOKEN`) and overlays it onto the public tree before compiling functions. The overlay script is at `web/scripts/netlify-build.sh`.
+- **The public repo never runs with private-repo write credentials.** Netlify clones private content read-only at build time; forkers can skip the private content repo entirely and run with only the public half.
+- **No generated files are tracked in the public repo.** They are gitignored and only exist in the private content repo.
+
+### Setting Up the Private Content Repo
+
+1. **Create a private GitHub repo** (e.g. `code-wiki-content`) with this structure:
+   ```
+   code-wiki-content/
+   ├── web/public/data/
+   │   └── metrics/
+   ├── wiki/projects/
+   └── README.md
+   ```
+
+2. **Create two fine-grained PATs:**
+   - **Read token** (for Netlify builds): Contents: Read-only, scoped to `code-wiki-content`
+   - **Write token** (for Actions workflows): Contents: Read and write, scoped to `code-wiki-content`
+
+3. **Add environment variables to Netlify:**
+   | Variable | Value |
+   |----------|-------|
+   | `PRIVATE_CONTENT_TOKEN` | The read PAT (secret) |
+   | `PRIVATE_CONTENT_REPO` | `yourname/code-wiki-content` |
+
+4. **Add secret to GitHub Actions** (code-wiki repo → Settings → Secrets → Actions):
+   | Secret | Value |
+   |--------|-------|
+   | `PRIVATE_CONTENT_WRITE_TOKEN` | The write PAT |
+
+5. **Deploy** — the next Netlify build will clone the private content repo and overlay it.
+
+### Local Development
+
+For local development, clone the private content repo into a gitignored path inside the public repo:
+
+```bash
+cd /path/to/code-wiki
+git clone git@github.com:yourname/code-wiki-content.git private-content
+```
+
+The `private-content/` directory is gitignored. To run the index builder locally with private content:
+
+```bash
+cd web
+WIKI_DIR=../wiki GITHUB_USERNAME=yourname GITHUB_TOKEN=$(gh auth token) npm run build:index
+```
+
+The MCP server reads metrics from `web/public/data/metrics/` — after a local build, the files will be in place.
+
+### Is This Safe?
+
+- The public repo **never** contains private repo names, local paths, or generated metrics in its git history (going forward from the Phase 1 rearchitecture).
+- Netlify clones private content **read-only** at build time. The token has no write access.
+- GitHub Actions writes to the private content repo via a **separate write-scoped token** that only has access to `code-wiki-content`.
+- **Forkers** can skip the private content repo entirely. The overlay script gracefully handles missing `PRIVATE_CONTENT_TOKEN` — it prints a message and continues with the public-only build.
 
 ## Personal Wiki Documents
 
-The `wiki/personal/` directory holds all your personal documents — things like tech stack preferences, project to-do lists, and code snippets that you don't want in the public open-source repo. It is:
+The `wiki/personal/` directory holds personal documents (tech stack preferences, project notes, code snippets). It is:
 
-- **Gitignored** by the parent repo — your personal docs won't be pushed to your fork's public remote
-- **Its own local git repo** — your docs have full version control (history, diffs, branching)
-- **Automatically indexed** — the index builder scans `wiki/personal/` and assigns categories based on subdirectory names (e.g., `personal/projects/` → category "projects")
-- **Private by default** — all docs in `wiki/personal/` are automatically marked `visibility: private`, so they only appear behind authentication
-- **Preserved across CI rebuilds** — GitHub Actions carries forward personal docs from the previous build
+- **Gitignored** by the parent repo
+- **Its own local git repo** — full version control independent of the parent
+- **Automatically indexed** — the index builder scans it and assigns categories by subdirectory name
+- **Private by default** — all docs are marked `visibility: private`
 
 ### Setting Up Personal Docs (after forking)
 
-1. **Create the directory and initialize a local git repo:**
-   ```bash
-   mkdir -p wiki/personal
-   cd wiki/personal
-   git init
-   ```
+```bash
+mkdir -p wiki/personal/{preferences,projects,snippets}
+cd wiki/personal
+git init
+```
 
-2. **Create subdirectories matching wiki categories:**
-   ```bash
-   mkdir -p preferences projects snippets
-   ```
-   Subdirectory names map to wiki categories. Use any existing category name (preferences, projects, snippets, patterns, utilities, etc.) or create new ones.
-
-3. **Add your personal docs** — frontmatter is optional since `wiki/personal/` docs default to private:
-   ```markdown
-   ---
-   title: "My Tech Stack"
-   ---
-
-   # My Tech Stack Preferences
-   Your content here...
-   ```
-
-4. **Commit in the personal repo:**
-   ```bash
-   cd wiki/personal
-   git add -A
-   git commit -m "Add personal docs"
-   ```
-
-5. **Rebuild the index** to include your personal docs:
-   ```bash
-   cd web
-   npm run build:index
-   ```
-   Then commit the updated index files in the parent repo — this deploys your personal docs to your Netlify site (behind authentication).
-
-### How It Works
-
-- `wiki/personal/` is listed in the root `.gitignore`, so the parent repo ignores it entirely
-- The index builder scans `wiki/personal/` as a separate wiki root — subdirectory names become categories
-- All docs found in `wiki/personal/` are automatically set to `visibility: private` (overridable via frontmatter)
-- Private docs are excluded from `index.json` (public) and only appear in `index-full.json` (served behind authentication)
-- When GitHub Actions rebuilds the index (where `wiki/personal/` doesn't exist), it preserves private docs from the previous `index-full.json`
-- The public `_index.md` scaffolding files in `wiki/projects/`, `wiki/snippets/`, etc. define category metadata for the web UI — personal docs merge into these categories seamlessly
+Add markdown files, commit in the personal repo, then rebuild the index.
 
 ### Claude Code / MCP Integration
 
-To make your preference docs available to Claude Code via the MCP server's `get_preferences` tool:
+To make preference docs available to Claude Code via the MCP server's `get_preferences` tool:
 
 ```bash
-# Symlink preferences to Claude's standard location
-rm -rf ~/.claude/preferences
 ln -s /path/to/code-wiki/wiki/personal/preferences ~/.claude/preferences
-```
-
-### Optional: Private Remote Backup
-
-If you want to back up your personal docs to a private GitHub repo:
-
-```bash
-cd wiki/personal
-git remote add origin git@github.com:your-username/my-wiki-preferences.git
-git push -u origin main
 ```
 
 ## Adding Wiki Content
