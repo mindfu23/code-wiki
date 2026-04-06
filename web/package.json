@@ -4,10 +4,12 @@
   "description": "Web interface for Code Wiki",
   "type": "module",
   "scripts": {
-    "build": "npm run build:index && npm run build:functions",
+    "build": "npm run build:index && npm run build:taxonomy && npm run build:functions",
     "build:index": "tsx src/indexBuilder.ts",
+    "build:taxonomy": "tsx src/taxonomyBuilder.ts",
     "build:signals": "tsx src/diagramSignals.ts",
     "build:functions": "tsc -p tsconfig.functions.json",
+    "lint:taxonomy": "tsx src/taxonomyValidator.ts",
     "dev": "netlify dev",
     "typecheck": "tsc --noEmit",
     "lint": "tsc --noEmit && echo 'TypeScript check passed'"
@@ -15,9 +17,11 @@
   "dependencies": {
     "@netlify/functions": "^2.4.0",
     "@octokit/rest": "^20.0.0",
-    "gray-matter": "^4.0.3"
+    "gray-matter": "^4.0.3",
+    "js-yaml": "^4.1.0"
   },
   "devDependencies": {
+    "@types/js-yaml": "^4.0.9",
     "@types/node": "^20.10.0",
     "netlify-cli": "^17.0.0",
     "tsx": "^4.7.0",

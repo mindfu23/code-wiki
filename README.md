@@ -395,8 +395,77 @@ wiki/
 ├── templates/         # Project starters (public scaffolding)
 ├── snippets/          # Code snippets (public scaffolding)
 ├── diagrams/          # Per-project Mermaid architecture diagrams
-└── projects/          # Project docs (public scaffolding)
+├── projects/          # Project docs with taxonomy frontmatter
+└── _taxonomy/         # Taxonomy schema, terms, and relationships
+    ├── schema.yml     #   Facets, state fields, channels, validator rules
+    ├── relationships.yml  # Structural edges (broader, supersedes, related)
+    └── terms/         #   One .md file per term (~60 terms)
 ```
+
+## Taxonomy
+
+A controlled vocabulary and lightweight knowledge graph over wiki content. Classifies projects and content along multiple dimensions and tracks cross-project dependencies.
+
+### Schema Overview
+
+- **7 facets** (stable classifiers): `type`, `stack`, `platform`, `deployTarget`, `domain`, `visibility`, `service`
+- **2 state fields** (changeable): `lifecycle` (on content), `curationState` (on terms)
+- **6 relationship types**: `usesModule`, `dependsOn`, `appliesTo` (inline on content files) + `supersedes`, `broader`, `related` (in `relationships.yml`)
+- **2 channels**: `internal` (for MCP/structured lookup), `userview` (for human browsing)
+
+### Adding a New Project Entry
+
+Add taxonomy frontmatter to a wiki project file:
+
+```yaml
+---
+title: "My Project"
+taxonomy:
+  type: project
+  stack: [typescript, react, vite]
+  platform: [web]
+  deployTarget: [netlify]
+  domain: [developer-tools]
+  visibility: public
+  lifecycle: shipped
+  dependsOn: [github-api]
+---
+```
+
+### Adding a New Term
+
+Create a Markdown file in `wiki/_taxonomy/terms/`:
+
+```yaml
+---
+term: my-term
+facet: domain
+label: "My Term"
+definition: >
+  A concise definition under 250 characters (hard max 500).
+scopeNote: >
+  What this term includes and excludes.
+curationState: active
+channels: [internal, userview]
+---
+```
+
+### Validator and Builder
+
+```bash
+cd web
+npm run lint:taxonomy    # Validate schema rules (9 rules, exits non-zero on errors)
+npm run build:taxonomy   # Compile to taxonomy.json and taxonomy-full.json
+npm run build            # Full build (includes taxonomy)
+```
+
+### MCP Tool
+
+The `search_taxonomy` MCP tool provides four query actions:
+- `get_record` — full taxonomy for a project or term
+- `filter_facet` — list projects matching a facet value (e.g., `platform: browser-extension`)
+- `list_edges` — all edges of a given type
+- `find_dependents` — projects depending on a specific service
 
 ## Private Content Repo
 
