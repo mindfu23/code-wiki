@@ -1,10 +1,10 @@
 # Netlify configuration for Code Wiki Web Interface
 
 [build]
-  # Build command - only compile functions
-  # NOTE: Index building is handled by GitHub Actions (.github/workflows/update-index.yml)
-  # which commits index.json with full repo access. Netlify just uses the committed index.
-  command = "npm install && npm run build:functions"
+  # Build command — overlay private content (if configured), then compile functions.
+  # Index building is handled by GitHub Actions (.github/workflows/update-index.yml)
+  # which commits to the private content repo. The overlay script clones it at build time.
+  command = "bash scripts/netlify-build.sh"
   # Directory containing the static files
   publish = "public"
   # Directory containing Netlify Functions
