@@ -1,0 +1,19 @@
+---
+title: "NeoGeoSeo"
+description: "Browser extension for geographic SEO assessment and analysis"
+tags: [browser-extension, seo, react, chrome, firefox]
+updated: "2026-04-06"
+source_repo: "NeoGeoSeo"
+taxonomy:
+  type: project
+  stack: [react, typescript, vite]
+  platform: [browser-extension]
+  deployTarget: [chrome-web-store, firefox-addons]
+  domain: [seo]
+  visibility: public
+  lifecycle: pre-release
+---
+
+Browser extension for assessing geographic SEO factors on web pages. Analyzes local search signals, geo-targeting, and location-based content optimization opportunities.
+
+React + Vite extension built for Chrome and Firefox using the WebExtension polyfill for cross-browser compatibility. Packaged as zip artifacts for store submission.

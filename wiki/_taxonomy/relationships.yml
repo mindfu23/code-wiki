@@ -1,0 +1,62 @@
+# =============================================================================
+# Taxonomy Structural Relationships
+# =============================================================================
+# Stores vocabulary-structural edges: broader, supersedes, related.
+# Attribute edges (usesModule, dependsOn, appliesTo) live inline on entity files.
+#
+# One-sided storage: each edge written once. Build computes inverses.
+# For 'related' (symmetric): store under alphabetically-first term ID.
+# =============================================================================
+
+edges:
+  # --- Platform hierarchy ---
+  - source: ios
+    target: mobile
+    type: broader
+
+  - source: android
+    target: mobile
+    type: broader
+
+  # --- Deploy target hierarchy ---
+  - source: chrome-web-store
+    target: browser-extension
+    type: broader
+
+  - source: firefox-addons
+    target: browser-extension
+    type: broader
+
+  - source: edge-addons
+    target: browser-extension
+    type: broader
+
+  - source: apple-app-store
+    target: mobile
+    type: broader
+
+  - source: google-play
+    target: mobile
+    type: broader
+
+  # --- Stack relationships ---
+  - source: expo
+    target: react-native
+    type: broader
+
+  - source: netlify-functions
+    target: netlify
+    type: broader
+
+  # --- Cross-facet related edges ---
+  - source: ai-tooling
+    target: content-tools
+    type: related
+
+  - source: developer-tools
+    target: knowledge-management
+    type: related
+
+  - source: developer-tools
+    target: observability
+    type: related
