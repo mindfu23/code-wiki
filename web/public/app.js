@@ -182,7 +182,7 @@ function setupEventListeners() {
 
 // Navigate to a page
 function navigateTo(page, params = {}) {
-  const slugMap = { search: '', browse: 'contents', dashboard: 'observatory', diagrams: 'diagrams', taxonomy: 'taxonomy' };
+  const slugMap = { search: '', browse: 'contents', dashboard: 'observatory', structures: 'structures' };
   let url = '/' + (slugMap[page] !== undefined ? slugMap[page] : page);
   if (params.doc) url += '?doc=' + encodeURIComponent(params.doc);
   if (params.category) url += '?category=' + encodeURIComponent(params.category);
@@ -205,8 +205,7 @@ function handleNavigation() {
   else if (path === '/document' || params.get('doc')) page = 'document';
   else if (path === '/observatory') page = 'dashboard';
   else if (path === '/dashboard') page = 'dashboard';
-  else if (path === '/diagrams' || path === '/flows') page = 'diagrams';
-  else if (path === '/taxonomy') page = 'taxonomy';
+  else if (path === '/structures' || path === '/diagrams' || path === '/flows' || path === '/taxonomy') page = 'structures';
 
   const pageParams = {};
   if (params.get('doc')) pageParams.doc = params.get('doc');
@@ -265,11 +264,8 @@ function showPage(page, params = {}) {
     case 'dashboard':
       loadDashboard();
       break;
-    case 'diagrams':
-      loadDiagrams();
-      break;
-    case 'taxonomy':
-      loadTaxonomy();
+    case 'structures':
+      loadStructures();
       break;
   }
 }
@@ -2904,303 +2900,307 @@ function initMermaid() {
   mermaidInitialized = true;
 }
 
-async function loadDiagrams() {
-  initMermaid();
-  const container = document.getElementById('diagrams-list');
-  if (!container) return;
-
-  const searchInput = document.getElementById('diagram-search');
-  const stackFilter = document.getElementById('diagram-stack-filter');
-
-  // Fetch staleness signals
-  let signals = {};
-  try {
-    const resp = await fetch('/data/diagram-signals.json');
-    if (resp.ok) signals = await resp.json();
-  } catch {}
-
-  // Build set of repo names visible in the current index (public for anon, all for owner)
-  const indexRepoNames = new Set(
-    (wikiIndex?.repos || []).map(r => r.name.toLowerCase())
-  );
-
-  // Tag each diagram with visibility and staleness based on the loaded index
-  const taggedDiagrams = PROJECT_DIAGRAMS.map(d => ({
-    ...d,
-    _isPrivate: !indexRepoNames.has((d.repoName || d.id).toLowerCase()),
-    _stale: signals[d.id]?.stale || false,
-  }));
-
-  // Filter: hide private diagrams unless user is logged in
-  const getVisibleDiagrams = (query, stack) => {
-    return taggedDiagrams.filter(d => {
-      if (d._isPrivate && !currentUser) return false;
-      const matchesQuery = !query || d.name.toLowerCase().includes(query) || d.description.toLowerCase().includes(query);
-      const matchesStack = !stack || d.stack.includes(stack);
-      return matchesQuery && matchesStack;
-    });
-  };
-
-  renderDiagramCards(container, getVisibleDiagrams('', ''));
-
-  // Wire up filters
-  const applyFilter = () => {
-    const query = (searchInput?.value || '').toLowerCase();
-    const stack = stackFilter?.value || '';
-    renderDiagramCards(container, getVisibleDiagrams(query, stack));
-  };
-
-  searchInput?.addEventListener('input', applyFilter);
-  stackFilter?.addEventListener('change', applyFilter);
-}
-
-async function renderDiagramCards(container, diagrams) {
-  if (diagrams.length === 0) {
-    container.innerHTML = '<p class="placeholder-text">No matching project diagrams found.</p>';
-    return;
-  }
-
-  container.innerHTML = diagrams.map(d => `
-    <div class="diagram-card" id="diagram-card-${d.id}">
-      <div class="diagram-card-header" data-diagram-id="${d.id}">
-        <div class="diagram-card-title">
-          <h4>${d.name}</h4>
-          ${d._isPrivate ? '<span class="visibility-badge private">Private</span>' : ''}
-          ${d._stale ? '<span class="diagram-stale-badge" title="Project structure has changed since this diagram was last updated">May need update</span>' : ''}
-          <div class="diagram-stack-tags">${d.stack.map(s => `<span class="stack-tag">${s}</span>`).join('')}</div>
-        </div>
-        <p class="diagram-card-desc">${d.description}</p>
-        <button class="diagram-toggle-btn" data-diagram-id="${d.id}" aria-expanded="false">Show Flow</button>
-      </div>
-      <div class="diagram-card-body" id="diagram-body-${d.id}" style="display: none;">
-        <div class="diagram-render" id="diagram-render-${d.id}"></div>
-      </div>
-    </div>
-  `).join('');
-
-  // Attach toggle handlers
-  container.querySelectorAll('.diagram-toggle-btn').forEach(btn => {
-    btn.addEventListener('click', async (e) => {
-      const id = e.target.dataset.diagramId;
-      const body = document.getElementById(`diagram-body-${id}`);
-      const renderEl = document.getElementById(`diagram-render-${id}`);
-      const isOpen = body.style.display !== 'none';
-
-      if (isOpen) {
-        body.style.display = 'none';
-        e.target.textContent = 'Show Flow';
-        e.target.setAttribute('aria-expanded', 'false');
-      } else {
-        body.style.display = 'block';
-        e.target.textContent = 'Hide Flow';
-        e.target.setAttribute('aria-expanded', 'true');
-
-        // Render mermaid if not yet rendered
-        if (!renderEl.dataset.rendered) {
-          const diagramDef = PROJECT_DIAGRAMS.find(d => d.id === id);
-          if (diagramDef) {
-            try {
-              const { svg } = await mermaid.render(`mermaid-${id}`, diagramDef.diagram);
-              renderEl.innerHTML = svg;
-              renderEl.dataset.rendered = 'true';
-            } catch (err) {
-              renderEl.innerHTML = `<p class="diagram-error">Failed to render diagram: ${err.message}</p>`;
-            }
-          }
-        }
-      }
-    });
-  });
-}
-
-// Diagram page filter listeners (delegated)
-document.addEventListener('click', (e) => {
-  if (e.target.classList.contains('diagram-expand-all')) {
-    document.querySelectorAll('.diagram-toggle-btn[aria-expanded="false"]').forEach(btn => btn.click());
-  }
-});
-
 // =========================================================================
-// Taxonomy Page
+// Structures Page (merged Flows + Taxonomy)
 // =========================================================================
 
 let taxonomyData = null;
 
-async function loadTaxonomy() {
-  initMermaid();
-  const container = document.getElementById('taxonomy-list');
-  if (!container) return;
+/**
+ * Merge PROJECT_DIAGRAMS (hardcoded flows) with taxonomy contentTags
+ * into a single list of structure cards. Match by name/repoName.
+ */
+function mergeStructures(diagrams, contentTags) {
+  const merged = [];
+  const usedTaxonomy = new Set();
 
-  // Load taxonomy data if not cached
-  if (!taxonomyData) {
-    try {
-      // Try full index first (authenticated), fall back to public
-      let resp = await fetch('/data/taxonomy-full.json');
-      if (!resp.ok) resp = await fetch('/data/taxonomy.json');
-      if (!resp.ok) {
-        container.innerHTML = '<p class="placeholder-text">Taxonomy data not available yet. Run <code>npm run build:taxonomy</code> to generate.</p>';
-        return;
-      }
-      taxonomyData = await resp.json();
-    } catch {
-      container.innerHTML = '<p class="placeholder-text">Failed to load taxonomy data.</p>';
-      return;
-    }
+  for (const d of diagrams) {
+    // Try to find a matching taxonomy entry
+    const nameLower = d.name.toLowerCase();
+    const repoLower = (d.repoName || d.id).toLowerCase();
+    const taxMatch = contentTags.find(ct => {
+      const titleLower = ct.title.toLowerCase();
+      return titleLower === nameLower || titleLower === repoLower ||
+        (ct.taxonomy?.sourceRepo || '').toLowerCase() === repoLower;
+    });
+
+    if (taxMatch) usedTaxonomy.add(taxMatch.title);
+
+    merged.push({
+      id: d.id,
+      name: d.name,
+      repoName: d.repoName,
+      description: d.description,
+      stack: d.stack,
+      flow: d.diagram,
+      taxonomy: taxMatch?.taxonomy || null,
+      _stale: false,
+      _isPrivate: false,
+    });
   }
 
-  const searchInput = document.getElementById('taxonomy-search');
-  const facetFilter = document.getElementById('taxonomy-facet-filter');
-
-  const getFiltered = (query, facet) => {
-    return taxonomyData.contentTags.filter(ct => {
-      if (ct.taxonomy.visibility === 'private' && !currentUser) return false;
-      const matchesQuery = !query ||
-        ct.title.toLowerCase().includes(query) ||
-        (ct.taxonomy.stack || []).some(s => s.includes(query)) ||
-        (ct.taxonomy.domain || []).some(d => d.includes(query));
-      const matchesFacet = !facet ||
-        (ct.taxonomy[facet] && ct.taxonomy[facet].length > 0);
-      return matchesQuery && matchesFacet;
+  // Add taxonomy-only entries (no matching flow diagram)
+  for (const ct of contentTags) {
+    if (usedTaxonomy.has(ct.title)) continue;
+    const id = ct.title.toLowerCase().replace(/[^a-z0-9]+/g, '-');
+    merged.push({
+      id,
+      name: ct.title,
+      repoName: ct.taxonomy?.sourceRepo || ct.title,
+      description: '',
+      stack: ct.taxonomy?.stack || [],
+      flow: null,
+      taxonomy: ct.taxonomy,
+      _stale: false,
+      _isPrivate: ct.taxonomy?.visibility === 'private',
     });
-  };
+  }
 
-  renderTaxonomyCards(container, getFiltered('', ''), taxonomyData);
-
-  const applyFilter = () => {
-    const query = (searchInput?.value || '').toLowerCase();
-    const facet = facetFilter?.value || '';
-    renderTaxonomyCards(container, getFiltered(query, facet), taxonomyData);
-  };
-
-  searchInput?.addEventListener('input', applyFilter);
-  facetFilter?.addEventListener('change', applyFilter);
+  return merged;
 }
 
-function buildTaxonomyMermaid(ct) {
-  const tax = ct.taxonomy;
-  const title = ct.title.replace(/"/g, "'");
-  let lines = ['flowchart LR'];
-
-  // Central project node
+function buildTaxonomyMermaid(name, tax) {
+  const title = name.replace(/"/g, "'");
+  const lines = ['flowchart LR'];
   lines.push(`  P["${title}"]`);
 
-  // Stack
   if (tax.stack?.length) {
     lines.push(`  subgraph Stack`);
     tax.stack.forEach((s, i) => lines.push(`    S${i}["${s}"]`));
     lines.push(`  end`);
     tax.stack.forEach((_, i) => lines.push(`  S${i} --> P`));
   }
-
-  // Platform
   if (tax.platform?.length) {
     lines.push(`  subgraph Platform`);
     tax.platform.forEach((p, i) => lines.push(`    PL${i}["${p}"]`));
     lines.push(`  end`);
     tax.platform.forEach((_, i) => lines.push(`  P --> PL${i}`));
   }
-
-  // Deploy targets
   if (tax.deployTarget?.length) {
     lines.push(`  subgraph Deploy`);
     tax.deployTarget.forEach((d, i) => lines.push(`    D${i}["${d}"]`));
     lines.push(`  end`);
     tax.deployTarget.forEach((_, i) => lines.push(`  P --> D${i}`));
   }
-
-  // Dependencies
   if (tax.dependsOn?.length) {
     lines.push(`  subgraph Dependencies`);
     tax.dependsOn.forEach((d, i) => lines.push(`    DEP${i}(["${d}"])`));
     lines.push(`  end`);
     tax.dependsOn.forEach((_, i) => lines.push(`  P -.-> DEP${i}`));
   }
-
   return lines.join('\n');
 }
 
-function renderTaxonomyCards(container, contentTags, data) {
-  if (contentTags.length === 0) {
-    container.innerHTML = '<p class="placeholder-text">No tagged projects found. Tag projects with taxonomy frontmatter in wiki/projects/.</p>';
+async function loadStructures() {
+  initMermaid();
+  const container = document.getElementById('structures-list');
+  if (!container) return;
+
+  // Load taxonomy data
+  if (!taxonomyData) {
+    try {
+      let resp = await fetch('/data/taxonomy-full.json');
+      if (!resp.ok) resp = await fetch('/data/taxonomy.json');
+      if (resp.ok) taxonomyData = await resp.json();
+    } catch {}
+  }
+
+  // Load staleness signals
+  let signals = {};
+  try {
+    const resp = await fetch('/data/diagram-signals.json');
+    if (resp.ok) signals = await resp.json();
+  } catch {}
+
+  // Build repo visibility set
+  const indexRepoNames = new Set(
+    (wikiIndex?.repos || []).map(r => r.name.toLowerCase())
+  );
+
+  // Tag flow diagrams with visibility/staleness
+  const taggedDiagrams = PROJECT_DIAGRAMS.map(d => ({
+    ...d,
+    _isPrivate: !indexRepoNames.has((d.repoName || d.id).toLowerCase()),
+    _stale: signals[d.id]?.stale || false,
+  }));
+
+  // Merge flows + taxonomy
+  const contentTags = taxonomyData?.contentTags || [];
+  const allStructures = mergeStructures(taggedDiagrams, contentTags);
+
+  // Apply staleness from tagged diagrams
+  for (const s of allStructures) {
+    const tagged = taggedDiagrams.find(d => d.id === s.id);
+    if (tagged) {
+      s._stale = tagged._stale;
+      s._isPrivate = tagged._isPrivate;
+    }
+  }
+
+  const searchInput = document.getElementById('structures-search');
+  const filterSelect = document.getElementById('structures-filter');
+
+  const getFiltered = (query, filter) => {
+    return allStructures.filter(s => {
+      if (s._isPrivate && !currentUser) return false;
+      const matchesQuery = !query ||
+        s.name.toLowerCase().includes(query) ||
+        (s.description || '').toLowerCase().includes(query) ||
+        (s.taxonomy?.stack || []).some(v => v.includes(query)) ||
+        (s.taxonomy?.domain || []).some(v => v.includes(query)) ||
+        (s.stack || []).some(v => v.includes(query));
+      const hasFlow = !!s.flow;
+      const hasTax = !!s.taxonomy;
+      const matchesFilter = !filter ||
+        (filter === 'has-flow' && hasFlow) ||
+        (filter === 'has-taxonomy' && hasTax) ||
+        (filter === 'has-both' && hasFlow && hasTax);
+      return matchesQuery && matchesFilter;
+    });
+  };
+
+  renderStructureCards(container, getFiltered('', ''), allStructures);
+
+  const applyFilter = () => {
+    const query = (searchInput?.value || '').toLowerCase();
+    const filter = filterSelect?.value || '';
+    renderStructureCards(container, getFiltered(query, filter), allStructures);
+  };
+
+  searchInput?.addEventListener('input', applyFilter);
+  filterSelect?.addEventListener('change', applyFilter);
+}
+
+function renderStructureCards(container, structures) {
+  if (structures.length === 0) {
+    container.innerHTML = '<p class="placeholder-text">No matching projects found.</p>';
     return;
   }
 
-  container.innerHTML = contentTags.map(ct => {
-    const tax = ct.taxonomy;
-    const id = ct.title.toLowerCase().replace(/[^a-z0-9]+/g, '-');
-    const lifecycleBadge = tax.lifecycle ? `<span class="taxonomy-lifecycle taxonomy-lifecycle-${tax.lifecycle}">${tax.lifecycle}</span>` : '';
-    const visibilityBadge = tax.visibility === 'private' ? '<span class="visibility-badge private">Private</span>' : '';
+  container.innerHTML = structures.map(s => {
+    const hasFlow = !!s.flow;
+    const hasTax = !!s.taxonomy;
+    const tax = s.taxonomy || {};
 
-    const facetRows = [
-      ['Stack', tax.stack],
-      ['Platform', tax.platform],
-      ['Deploy Target', tax.deployTarget],
-      ['Domain', tax.domain],
-    ].filter(([, vals]) => vals?.length)
-     .map(([label, vals]) => `
-       <tr>
-         <td class="taxonomy-facet-label">${label}</td>
-         <td>${vals.map(v => `<span class="taxonomy-tag">${v}</span>`).join(' ')}</td>
-       </tr>
-     `).join('');
+    // Badges
+    const lifecycleBadge = tax.lifecycle
+      ? `<span class="taxonomy-lifecycle taxonomy-lifecycle-${tax.lifecycle}">${tax.lifecycle}</span>`
+      : '';
+    const visibilityBadge = s._isPrivate
+      ? '<span class="visibility-badge private">Private</span>'
+      : '';
+    const staleBadge = s._stale
+      ? '<span class="diagram-stale-badge" title="Project structure has changed since this diagram was last updated">May need update</span>'
+      : '';
 
-    const depsRow = tax.dependsOn?.length ? `
-      <tr>
-        <td class="taxonomy-facet-label">Depends On</td>
-        <td>${tax.dependsOn.map(v => `<span class="taxonomy-tag taxonomy-tag-dep">${v}</span>`).join(' ')}</td>
-      </tr>
-    ` : '';
+    // Type indicators
+    const indicators = [];
+    if (hasFlow) indicators.push('<span class="structure-indicator structure-indicator-flow">Flow</span>');
+    if (hasTax) indicators.push('<span class="structure-indicator structure-indicator-taxonomy">Taxonomy</span>');
+
+    // Stack tags (prefer taxonomy, fall back to flow diagram tags)
+    const stackTags = (hasTax && tax.stack?.length)
+      ? tax.stack.map(v => `<span class="taxonomy-tag">${v}</span>`).join(' ')
+      : (s.stack || []).map(v => `<span class="stack-tag">${v}</span>`).join('');
+
+    // Taxonomy table (only if taxonomy exists)
+    let taxonomyTable = '';
+    if (hasTax) {
+      const facetRows = [
+        ['Platform', tax.platform],
+        ['Deploy Target', tax.deployTarget],
+        ['Domain', tax.domain],
+      ].filter(([, vals]) => vals?.length)
+       .map(([label, vals]) => `
+         <tr>
+           <td class="taxonomy-facet-label">${label}</td>
+           <td>${vals.map(v => `<span class="taxonomy-tag">${v}</span>`).join(' ')}</td>
+         </tr>
+       `).join('');
+
+      const depsRow = tax.dependsOn?.length ? `
+        <tr>
+          <td class="taxonomy-facet-label">Depends On</td>
+          <td>${tax.dependsOn.map(v => `<span class="taxonomy-tag taxonomy-tag-dep">${v}</span>`).join(' ')}</td>
+        </tr>
+      ` : '';
+
+      if (facetRows || depsRow) {
+        taxonomyTable = `<table class="taxonomy-table">${facetRows}${depsRow}</table>`;
+      }
+    }
+
+    // Description
+    const desc = s.description ? `<p class="diagram-card-desc">${s.description}</p>` : '';
+
+    // Buttons
+    const buttons = [];
+    if (hasFlow) buttons.push(`<button class="diagram-toggle-btn" data-structure-id="${s.id}" data-render-type="flow" aria-expanded="false">Show Flow</button>`);
+    if (hasTax) buttons.push(`<button class="diagram-toggle-btn taxonomy-graph-btn" data-structure-id="${s.id}" data-render-type="taxonomy" aria-expanded="false">Show Taxonomy Graph</button>`);
 
     return `
-      <div class="diagram-card" id="taxonomy-card-${id}">
+      <div class="diagram-card" id="structure-card-${s.id}">
         <div class="diagram-card-header">
           <div class="diagram-card-title">
-            <h4>${ct.title}</h4>
+            <h4>${s.name}</h4>
+            ${indicators.join('')}
             ${lifecycleBadge}
             ${visibilityBadge}
+            ${staleBadge}
           </div>
-          <table class="taxonomy-table">
-            ${facetRows}
-            ${depsRow}
-          </table>
-          <button class="diagram-toggle-btn taxonomy-graph-btn" data-taxonomy-id="${id}" aria-expanded="false">Show Graph</button>
+          <div class="structure-stack-row">${stackTags}</div>
+          ${desc}
+          ${taxonomyTable}
+          <div class="structure-buttons">${buttons.join('')}</div>
         </div>
-        <div class="diagram-card-body" id="taxonomy-body-${id}" style="display: none;">
-          <div class="diagram-render" id="taxonomy-render-${id}"></div>
-        </div>
+        ${hasFlow ? `
+          <div class="diagram-card-body" id="structure-flow-${s.id}" style="display: none;">
+            <div class="diagram-render" id="structure-flow-render-${s.id}"></div>
+          </div>
+        ` : ''}
+        ${hasTax ? `
+          <div class="diagram-card-body" id="structure-tax-${s.id}" style="display: none;">
+            <div class="diagram-render" id="structure-tax-render-${s.id}"></div>
+          </div>
+        ` : ''}
       </div>
     `;
   }).join('');
 
-  // Attach toggle handlers for Mermaid graphs
-  container.querySelectorAll('.taxonomy-graph-btn').forEach(btn => {
+  // Attach toggle handlers
+  container.querySelectorAll('.diagram-toggle-btn').forEach(btn => {
     btn.addEventListener('click', async (e) => {
-      const id = e.target.dataset.taxonomyId;
-      const body = document.getElementById(`taxonomy-body-${id}`);
-      const renderEl = document.getElementById(`taxonomy-render-${id}`);
+      const id = e.target.dataset.structureId;
+      const type = e.target.dataset.renderType;
+      const prefix = type === 'flow' ? 'structure-flow' : 'structure-tax';
+      const body = document.getElementById(`${prefix}-${id}`);
+      const renderEl = document.getElementById(`${prefix}-render-${id}`);
       const isOpen = body.style.display !== 'none';
 
       if (isOpen) {
         body.style.display = 'none';
-        e.target.textContent = 'Show Graph';
+        e.target.textContent = type === 'flow' ? 'Show Flow' : 'Show Taxonomy Graph';
         e.target.setAttribute('aria-expanded', 'false');
       } else {
         body.style.display = 'block';
-        e.target.textContent = 'Hide Graph';
+        e.target.textContent = type === 'flow' ? 'Hide Flow' : 'Hide Taxonomy Graph';
         e.target.setAttribute('aria-expanded', 'true');
 
         if (!renderEl.dataset.rendered) {
-          const ct = contentTags.find(c =>
-            c.title.toLowerCase().replace(/[^a-z0-9]+/g, '-') === id
-          );
-          if (ct) {
+          const struct = structures.find(s => s.id === id);
+          if (struct) {
             try {
-              const diagramDef = buildTaxonomyMermaid(ct);
-              const { svg } = await mermaid.render(`tax-mermaid-${id}`, diagramDef);
+              let diagramDef;
+              if (type === 'flow') {
+                diagramDef = struct.flow;
+              } else {
+                diagramDef = buildTaxonomyMermaid(struct.name, struct.taxonomy);
+              }
+              const { svg } = await mermaid.render(`${prefix}-mermaid-${id}`, diagramDef);
               renderEl.innerHTML = svg;
               renderEl.dataset.rendered = 'true';
             } catch (err) {
-              renderEl.innerHTML = `<p class="diagram-error">Failed to render graph: ${err.message}</p>`;
+              renderEl.innerHTML = `<p class="diagram-error">Failed to render: ${err.message}</p>`;
             }
           }
         }
