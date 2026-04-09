@@ -2241,3 +2241,112 @@ footer a:hover {
     padding: 1rem;
   }
 }
+
+/* =========================================================================
+   Taxonomy Page
+   ========================================================================= */
+
+.taxonomy-subtitle {
+  color: #94a3b8;
+  margin-bottom: 1.5rem;
+}
+
+.taxonomy-filters {
+  display: flex;
+  gap: 0.75rem;
+  margin-bottom: 1.5rem;
+}
+
+.taxonomy-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 0.75rem 0;
+  font-size: 0.875rem;
+}
+
+.taxonomy-table tr {
+  border-bottom: 1px solid #334155;
+}
+
+.taxonomy-table tr:last-child {
+  border-bottom: none;
+}
+
+.taxonomy-table td {
+  padding: 0.4rem 0.5rem;
+  vertical-align: top;
+}
+
+.taxonomy-facet-label {
+  color: #94a3b8;
+  font-weight: 600;
+  white-space: nowrap;
+  width: 110px;
+}
+
+.taxonomy-tag {
+  display: inline-block;
+  background: #1e3a5f;
+  color: #7dd3fc;
+  padding: 0.15rem 0.5rem;
+  border-radius: 4px;
+  font-size: 0.8rem;
+  margin: 0.1rem 0.2rem;
+}
+
+.taxonomy-tag-dep {
+  background: #3b2f1e;
+  color: #fbbf24;
+}
+
+.taxonomy-lifecycle {
+  display: inline-block;
+  padding: 0.15rem 0.5rem;
+  border-radius: 4px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  margin-left: 0.5rem;
+}
+
+.taxonomy-lifecycle-shipped {
+  background: #064e3b;
+  color: #6ee7b7;
+}
+
+.taxonomy-lifecycle-pre-release {
+  background: #3b2f1e;
+  color: #fbbf24;
+}
+
+.taxonomy-lifecycle-experimental {
+  background: #312e81;
+  color: #a5b4fc;
+}
+
+.taxonomy-lifecycle-mature {
+  background: #064e3b;
+  color: #34d399;
+}
+
+.taxonomy-lifecycle-deprecated {
+  background: #451a03;
+  color: #fb923c;
+}
+
+.taxonomy-lifecycle-archived {
+  background: #1e293b;
+  color: #64748b;
+}
+
+.taxonomy-graph-btn {
+  margin-top: 0.5rem;
+}
+
+@media (max-width: 768px) {
+  .taxonomy-filters {
+    flex-direction: column;
+  }
+  .taxonomy-facet-label {
+    width: 80px;
+  }
+}
