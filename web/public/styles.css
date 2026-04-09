@@ -2415,7 +2415,7 @@ footer a:hover {
 
 .api-inv-name {
   font-weight: 600;
-  color: #e2e8f0;
+  color: #f1f5f9;
   white-space: nowrap;
 }
 
@@ -2434,9 +2434,46 @@ footer a:hover {
 }
 
 .api-inv-notes {
-  color: #64748b;
+  color: #94a3b8;
+  max-width: 250px;
+  min-width: 120px;
+}
+
+.api-inv-notes-cell {
+  cursor: text;
+  padding: 0.3rem 0.5rem;
+  border-radius: 4px;
+  min-height: 1.4em;
+  outline: none;
+  transition: background 0.15s;
+}
+
+.api-inv-notes-cell:hover {
+  background: #1e293b;
+}
+
+.api-inv-notes-cell:focus {
+  background: #1e293b;
+  box-shadow: 0 0 0 1px #0891b2;
+}
+
+.api-inv-notes-cell[data-placeholder]:empty::before {
+  content: attr(data-placeholder);
+  color: #475569;
   font-style: italic;
-  max-width: 200px;
+}
+
+.api-inv-notes-saving {
+  opacity: 0.5;
+}
+
+.api-inv-notes-saved {
+  animation: noteSaved 1s ease-out;
+}
+
+@keyframes noteSaved {
+  0% { box-shadow: 0 0 0 1px #22c55e; }
+  100% { box-shadow: none; }
 }
 
 .api-no-apps {
