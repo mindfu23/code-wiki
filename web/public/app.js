@@ -2991,6 +2991,74 @@ function buildTaxonomyMermaid(name, tax) {
   return lines.join('\n');
 }
 
+function renderApiInventory(taxonomyData) {
+  const section = document.getElementById('api-inventory-section');
+  const tableContainer = document.getElementById('api-inventory-table');
+  if (!section || !tableContainer || !taxonomyData) return;
+
+  // Find all service terms
+  const serviceTerms = taxonomyData.terms.filter(t => t.facet === 'service');
+  if (serviceTerms.length === 0) return;
+
+  // Build a map: service term ID -> list of project titles that depend on it
+  const serviceToApps = new Map();
+  for (const ct of taxonomyData.contentTags || []) {
+    for (const dep of ct.taxonomy?.dependsOn || []) {
+      if (!serviceToApps.has(dep)) serviceToApps.set(dep, []);
+      serviceToApps.get(dep).push(ct.title);
+    }
+  }
+
+  // Sort: services with the most apps first, then alphabetical
+  const sortedServices = [...serviceTerms].sort((a, b) => {
+    const aCount = (serviceToApps.get(a.term) || []).length;
+    const bCount = (serviceToApps.get(b.term) || []).length;
+    if (bCount !== aCount) return bCount - aCount;
+    return a.label.localeCompare(b.label);
+  });
+
+  const rows = sortedServices.map(svc => {
+    const apps = serviceToApps.get(svc.term) || [];
+    const appsHtml = apps.length > 0
+      ? apps.map(a => `<span class="taxonomy-tag">${a}</span>`).join(' ')
+      : '<span class="api-no-apps">No tagged apps</span>';
+    const cost = svc.cost || '—';
+    const linkHtml = svc.costLink
+      ? `<a href="${svc.costLink}" target="_blank" rel="noopener">Pricing</a>`
+      : '—';
+    const notes = svc.notes || '';
+
+    return `
+      <tr>
+        <td class="api-inv-name">${svc.label}</td>
+        <td>${appsHtml}</td>
+        <td class="api-inv-cost">${cost}</td>
+        <td class="api-inv-link">${linkHtml}</td>
+        <td class="api-inv-notes">${notes}</td>
+      </tr>
+    `;
+  }).join('');
+
+  tableContainer.innerHTML = `
+    <table class="api-inventory-table">
+      <thead>
+        <tr>
+          <th>API</th>
+          <th>Apps</th>
+          <th>Cost</th>
+          <th>Link</th>
+          <th>Notes</th>
+        </tr>
+      </thead>
+      <tbody>
+        ${rows}
+      </tbody>
+    </table>
+  `;
+
+  section.style.display = 'block';
+}
+
 async function loadStructures() {
   initMermaid();
   const container = document.getElementById('structures-list');
@@ -3004,6 +3072,9 @@ async function loadStructures() {
       if (resp.ok) taxonomyData = await resp.json();
     } catch {}
   }
+
+  // Render API inventory table
+  renderApiInventory(taxonomyData);
 
   // Load staleness signals
   let signals = {};

@@ -20,6 +20,9 @@ export interface TaxonomyTerm {
   channels?: string[];
   synonyms?: string[];
   editorialNote?: string;
+  cost?: string;
+  costLink?: string;
+  notes?: string;
 }
 
 export type EdgeType = 'usesModule' | 'dependsOn' | 'appliesTo' | 'supersedes' | 'broader' | 'related';

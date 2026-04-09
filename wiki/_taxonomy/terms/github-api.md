@@ -8,4 +8,7 @@ scopeNote: >
   Projects that call GitHub API endpoints directly or via Octokit. Excludes projects that only use GitHub for hosting.
 curationState: active
 channels: [internal]
+cost: "Free with GitHub account; rate limits apply"
+costLink: "https://docs.github.com/en/rest/overview/rate-limits-for-the-rest-api"
+notes: ""
 ---

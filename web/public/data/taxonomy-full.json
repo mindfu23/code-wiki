@@ -34,7 +34,10 @@
       "curationState": "active",
       "channels": [
         "internal"
-      ]
+      ],
+      "cost": "Pay per token (input/output)",
+      "costLink": "https://www.anthropic.com/pricing",
+      "notes": ""
     },
     {
       "term": "apple-app-store",
@@ -93,7 +96,10 @@
       "curationState": "active",
       "channels": [
         "internal"
-      ]
+      ],
+      "cost": "Free tier; Workers free plan includes 100K req/day",
+      "costLink": "https://www.cloudflare.com/plans/",
+      "notes": ""
     },
     {
       "term": "cloudflare-workers",
@@ -236,7 +242,10 @@
       "curationState": "active",
       "channels": [
         "internal"
-      ]
+      ],
+      "cost": "Free with GitHub account; rate limits apply",
+      "costLink": "https://docs.github.com/en/rest/overview/rate-limits-for-the-rest-api",
+      "notes": ""
     },
     {
       "term": "google-gemini-api",
@@ -247,7 +256,10 @@
       "curationState": "active",
       "channels": [
         "internal"
-      ]
+      ],
+      "cost": "Free tier available; $2/mo Google AI Studio plan",
+      "costLink": "https://ai.google.dev/pricing",
+      "notes": ""
     },
     {
       "term": "google-play",
@@ -270,7 +282,10 @@
       "curationState": "active",
       "channels": [
         "internal"
-      ]
+      ],
+      "cost": "Free with Google Cloud project",
+      "costLink": "https://developers.google.com/sheets/api/limits",
+      "notes": ""
     },
     {
       "term": "help",
@@ -292,7 +307,10 @@
       "curationState": "active",
       "channels": [
         "internal"
-      ]
+      ],
+      "cost": "$9/mo Pro membership covers most usage",
+      "costLink": "https://huggingface.co/pricing",
+      "notes": ""
     },
     {
       "term": "integration",
@@ -399,7 +417,10 @@
       "curationState": "active",
       "channels": [
         "internal"
-      ]
+      ],
+      "cost": "Free tier; included with Netlify hosting plan",
+      "costLink": "https://www.netlify.com/pricing/",
+      "notes": ""
     },
     {
       "term": "netlify-functions",
@@ -458,7 +479,10 @@
       "curationState": "active",
       "channels": [
         "internal"
-      ]
+      ],
+      "cost": "Pay per token (input/output)",
+      "costLink": "https://openai.com/api/pricing/",
+      "notes": ""
     },
     {
       "term": "pattern",
@@ -481,7 +505,10 @@
       "curationState": "active",
       "channels": [
         "internal"
-      ]
+      ],
+      "cost": "Pay per request",
+      "costLink": "https://docs.perplexity.ai/guides/pricing",
+      "notes": ""
     },
     {
       "term": "preference",
@@ -622,7 +649,10 @@
       "curationState": "active",
       "channels": [
         "internal"
-      ]
+      ],
+      "cost": "Free and open source (WASM build)",
+      "costLink": "https://stockfishchess.org/",
+      "notes": ""
     },
     {
       "term": "template",
@@ -1026,5 +1056,5 @@
       }
     }
   ],
-  "buildTime": "2026-04-06T03:56:48.261Z"
+  "buildTime": "2026-04-09T05:30:18.332Z"
 }

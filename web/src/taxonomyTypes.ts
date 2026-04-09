@@ -73,6 +73,9 @@ export interface TaxonomyTerm {
   editorialNote?: string;
   historyNote?: string;
   changeNote?: string;
+  cost?: string;          // Billing description (service terms only)
+  costLink?: string;      // URL to pricing page
+  notes?: string;         // Owner-editable notes
 }
 
 // --- Edge shape (from relationships.yml or inline frontmatter) ---
