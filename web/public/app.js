@@ -3020,11 +3020,14 @@ function renderApiInventory(taxonomyData) {
   const rows = sortedServices.map(svc => {
     const apps = serviceToApps.get(svc.term) || [];
     const appsHtml = apps.length > 0
-      ? apps.map(a => `<span class="taxonomy-tag">${a}</span>`).join(' ')
+      ? apps.join(', ')
       : '<span class="api-no-apps">No tagged apps</span>';
     const cost = svc.cost || '—';
+
+    // Build descriptive link text from the label
+    const linkLabel = svc.label.replace(/ API$/i, '').replace(/ Engine$/i, '');
     const linkHtml = svc.costLink
-      ? `<a href="${svc.costLink}" target="_blank" rel="noopener">Pricing</a>`
+      ? `<a href="${svc.costLink}" target="_blank" rel="noopener">${linkLabel} pricing</a>`
       : '—';
     const notes = svc.notes || '';
 
@@ -3034,7 +3037,14 @@ function renderApiInventory(taxonomyData) {
         <td>${appsHtml}</td>
         <td class="api-inv-cost">${cost}</td>
         <td class="api-inv-link">${linkHtml}</td>
-        <td class="api-inv-notes">${notes}</td>
+        <td class="api-inv-notes">
+          <div class="api-inv-notes-cell"
+               contenteditable="${currentUser ? 'true' : 'false'}"
+               data-term-id="${svc.term}"
+               data-placeholder="Add notes..."
+               ${!currentUser ? 'style="cursor:default"' : ''}
+          >${notes}</div>
+        </td>
       </tr>
     `;
   }).join('');
@@ -3057,6 +3067,89 @@ function renderApiInventory(taxonomyData) {
   `;
 
   section.style.display = 'block';
+
+  // Attach inline-edit handlers for notes cells
+  tableContainer.querySelectorAll('.api-inv-notes-cell[contenteditable="true"]').forEach(cell => {
+    let originalValue = cell.textContent.trim();
+
+    // Save on blur
+    cell.addEventListener('blur', () => saveNoteCell(cell, originalValue, (v) => { originalValue = v; }));
+
+    // Save on Enter (prevent newline)
+    cell.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') {
+        e.preventDefault();
+        cell.blur();
+      }
+      // Escape reverts
+      if (e.key === 'Escape') {
+        cell.textContent = originalValue;
+        cell.blur();
+      }
+    });
+  });
+}
+
+async function saveNoteCell(cell, originalValue, updateOriginal) {
+  const newValue = cell.textContent.trim();
+  if (newValue === originalValue) return;
+
+  const termId = cell.dataset.termId;
+  cell.classList.add('api-inv-notes-saving');
+
+  try {
+    // Reconstruct the term file content from taxonomy data
+    const term = taxonomyData.terms.find(t => t.term === termId);
+    if (!term) throw new Error('Term not found');
+
+    // Build frontmatter from the term data
+    const fm = [
+      '---',
+      `term: ${term.term}`,
+      `facet: ${term.facet}`,
+      `label: "${term.label}"`,
+      `definition: >`,
+      `  ${term.definition.trim()}`,
+      `scopeNote: >`,
+      `  ${term.scopeNote.trim()}`,
+      `curationState: ${term.curationState}`,
+      `channels: [${(term.channels || ['internal']).join(', ')}]`,
+    ];
+    if (term.cost) fm.push(`cost: "${term.cost}"`);
+    if (term.costLink) fm.push(`costLink: "${term.costLink}"`);
+    fm.push(`notes: "${newValue.replace(/"/g, '\\"')}"`);
+    fm.push('---', '');
+
+    const content = fm.join('\n');
+    const filePath = `_taxonomy/terms/${termId}.md`;
+
+    const saveResp = await fetch('/api/save-document', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      credentials: 'include',
+      body: JSON.stringify({
+        path: filePath,
+        content,
+        commitMessage: `Update notes for ${term.label}`,
+      }),
+    });
+
+    if (!saveResp.ok) {
+      const errData = await saveResp.json().catch(() => ({}));
+      throw new Error(errData.error || 'Save failed');
+    }
+
+    // Update local taxonomy data so re-renders show the new value
+    term.notes = newValue;
+    updateOriginal(newValue);
+    cell.classList.remove('api-inv-notes-saving');
+    cell.classList.add('api-inv-notes-saved');
+    setTimeout(() => cell.classList.remove('api-inv-notes-saved'), 1000);
+  } catch (err) {
+    console.error('Failed to save note:', err);
+    cell.textContent = originalValue;
+    cell.classList.remove('api-inv-notes-saving');
+  }
 }
 
 async function loadStructures() {
