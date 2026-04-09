@@ -25,6 +25,7 @@
         <a href="/contents" class="nav-link" data-page="browse">Contents</a>
         <a href="/observatory" class="nav-link" data-page="dashboard">Observatory</a>
         <a href="/diagrams" class="nav-link" data-page="diagrams">Flows</a>
+        <a href="/taxonomy" class="nav-link" data-page="taxonomy">Taxonomy</a>
         <a href="/login" class="nav-link" data-page="login" id="login-nav-link">Login</a>
         <div id="user-nav" class="user-nav" style="display: none;">
           <button id="new-doc-btn" class="btn btn-primary btn-sm">+ New</button>
@@ -347,6 +348,30 @@
         </div>
         <div id="diagrams-list" class="diagrams-list">
           <p class="loading">Loading project diagrams...</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Taxonomy Page -->
+    <section id="page-taxonomy" class="page">
+      <div class="taxonomy-container" style="max-width: 1200px; margin: 0 auto; padding: 1rem;">
+        <div class="section-header-accent">
+          <div class="cyan-accent-bar"></div>
+          <h3>Taxonomy</h3>
+        </div>
+        <p class="taxonomy-subtitle">Controlled vocabulary and dependency graph for tagged projects.</p>
+        <div class="taxonomy-filters">
+          <input type="text" id="taxonomy-search" placeholder="Filter projects..." class="diagram-search-input">
+          <select id="taxonomy-facet-filter" class="diagram-stack-select">
+            <option value="">All Facets</option>
+            <option value="stack">Stack</option>
+            <option value="platform">Platform</option>
+            <option value="deployTarget">Deploy Target</option>
+            <option value="domain">Domain</option>
+          </select>
+        </div>
+        <div id="taxonomy-list" class="diagrams-list">
+          <p class="loading">Loading taxonomy data...</p>
         </div>
       </div>
     </section>
