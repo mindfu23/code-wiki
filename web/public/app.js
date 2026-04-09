@@ -182,7 +182,7 @@ function setupEventListeners() {
 
 // Navigate to a page
 function navigateTo(page, params = {}) {
-  const slugMap = { search: '', browse: 'contents', dashboard: 'observatory', diagrams: 'diagrams' };
+  const slugMap = { search: '', browse: 'contents', dashboard: 'observatory', diagrams: 'diagrams', taxonomy: 'taxonomy' };
   let url = '/' + (slugMap[page] !== undefined ? slugMap[page] : page);
   if (params.doc) url += '?doc=' + encodeURIComponent(params.doc);
   if (params.category) url += '?category=' + encodeURIComponent(params.category);
@@ -206,6 +206,7 @@ function handleNavigation() {
   else if (path === '/observatory') page = 'dashboard';
   else if (path === '/dashboard') page = 'dashboard';
   else if (path === '/diagrams' || path === '/flows') page = 'diagrams';
+  else if (path === '/taxonomy') page = 'taxonomy';
 
   const pageParams = {};
   if (params.get('doc')) pageParams.doc = params.get('doc');
@@ -266,6 +267,9 @@ function showPage(page, params = {}) {
       break;
     case 'diagrams':
       loadDiagrams();
+      break;
+    case 'taxonomy':
+      loadTaxonomy();
       break;
   }
 }
@@ -3015,6 +3019,195 @@ document.addEventListener('click', (e) => {
     document.querySelectorAll('.diagram-toggle-btn[aria-expanded="false"]').forEach(btn => btn.click());
   }
 });
+
+// =========================================================================
+// Taxonomy Page
+// =========================================================================
+
+let taxonomyData = null;
+
+async function loadTaxonomy() {
+  initMermaid();
+  const container = document.getElementById('taxonomy-list');
+  if (!container) return;
+
+  // Load taxonomy data if not cached
+  if (!taxonomyData) {
+    try {
+      // Try full index first (authenticated), fall back to public
+      let resp = await fetch('/data/taxonomy-full.json');
+      if (!resp.ok) resp = await fetch('/data/taxonomy.json');
+      if (!resp.ok) {
+        container.innerHTML = '<p class="placeholder-text">Taxonomy data not available yet. Run <code>npm run build:taxonomy</code> to generate.</p>';
+        return;
+      }
+      taxonomyData = await resp.json();
+    } catch {
+      container.innerHTML = '<p class="placeholder-text">Failed to load taxonomy data.</p>';
+      return;
+    }
+  }
+
+  const searchInput = document.getElementById('taxonomy-search');
+  const facetFilter = document.getElementById('taxonomy-facet-filter');
+
+  const getFiltered = (query, facet) => {
+    return taxonomyData.contentTags.filter(ct => {
+      if (ct.taxonomy.visibility === 'private' && !currentUser) return false;
+      const matchesQuery = !query ||
+        ct.title.toLowerCase().includes(query) ||
+        (ct.taxonomy.stack || []).some(s => s.includes(query)) ||
+        (ct.taxonomy.domain || []).some(d => d.includes(query));
+      const matchesFacet = !facet ||
+        (ct.taxonomy[facet] && ct.taxonomy[facet].length > 0);
+      return matchesQuery && matchesFacet;
+    });
+  };
+
+  renderTaxonomyCards(container, getFiltered('', ''), taxonomyData);
+
+  const applyFilter = () => {
+    const query = (searchInput?.value || '').toLowerCase();
+    const facet = facetFilter?.value || '';
+    renderTaxonomyCards(container, getFiltered(query, facet), taxonomyData);
+  };
+
+  searchInput?.addEventListener('input', applyFilter);
+  facetFilter?.addEventListener('change', applyFilter);
+}
+
+function buildTaxonomyMermaid(ct) {
+  const tax = ct.taxonomy;
+  const title = ct.title.replace(/"/g, "'");
+  let lines = ['flowchart LR'];
+
+  // Central project node
+  lines.push(`  P["${title}"]`);
+
+  // Stack
+  if (tax.stack?.length) {
+    lines.push(`  subgraph Stack`);
+    tax.stack.forEach((s, i) => lines.push(`    S${i}["${s}"]`));
+    lines.push(`  end`);
+    tax.stack.forEach((_, i) => lines.push(`  S${i} --> P`));
+  }
+
+  // Platform
+  if (tax.platform?.length) {
+    lines.push(`  subgraph Platform`);
+    tax.platform.forEach((p, i) => lines.push(`    PL${i}["${p}"]`));
+    lines.push(`  end`);
+    tax.platform.forEach((_, i) => lines.push(`  P --> PL${i}`));
+  }
+
+  // Deploy targets
+  if (tax.deployTarget?.length) {
+    lines.push(`  subgraph Deploy`);
+    tax.deployTarget.forEach((d, i) => lines.push(`    D${i}["${d}"]`));
+    lines.push(`  end`);
+    tax.deployTarget.forEach((_, i) => lines.push(`  P --> D${i}`));
+  }
+
+  // Dependencies
+  if (tax.dependsOn?.length) {
+    lines.push(`  subgraph Dependencies`);
+    tax.dependsOn.forEach((d, i) => lines.push(`    DEP${i}(["${d}"])`));
+    lines.push(`  end`);
+    tax.dependsOn.forEach((_, i) => lines.push(`  P -.-> DEP${i}`));
+  }
+
+  return lines.join('\n');
+}
+
+function renderTaxonomyCards(container, contentTags, data) {
+  if (contentTags.length === 0) {
+    container.innerHTML = '<p class="placeholder-text">No tagged projects found. Tag projects with taxonomy frontmatter in wiki/projects/.</p>';
+    return;
+  }
+
+  container.innerHTML = contentTags.map(ct => {
+    const tax = ct.taxonomy;
+    const id = ct.title.toLowerCase().replace(/[^a-z0-9]+/g, '-');
+    const lifecycleBadge = tax.lifecycle ? `<span class="taxonomy-lifecycle taxonomy-lifecycle-${tax.lifecycle}">${tax.lifecycle}</span>` : '';
+    const visibilityBadge = tax.visibility === 'private' ? '<span class="visibility-badge private">Private</span>' : '';
+
+    const facetRows = [
+      ['Stack', tax.stack],
+      ['Platform', tax.platform],
+      ['Deploy Target', tax.deployTarget],
+      ['Domain', tax.domain],
+    ].filter(([, vals]) => vals?.length)
+     .map(([label, vals]) => `
+       <tr>
+         <td class="taxonomy-facet-label">${label}</td>
+         <td>${vals.map(v => `<span class="taxonomy-tag">${v}</span>`).join(' ')}</td>
+       </tr>
+     `).join('');
+
+    const depsRow = tax.dependsOn?.length ? `
+      <tr>
+        <td class="taxonomy-facet-label">Depends On</td>
+        <td>${tax.dependsOn.map(v => `<span class="taxonomy-tag taxonomy-tag-dep">${v}</span>`).join(' ')}</td>
+      </tr>
+    ` : '';
+
+    return `
+      <div class="diagram-card" id="taxonomy-card-${id}">
+        <div class="diagram-card-header">
+          <div class="diagram-card-title">
+            <h4>${ct.title}</h4>
+            ${lifecycleBadge}
+            ${visibilityBadge}
+          </div>
+          <table class="taxonomy-table">
+            ${facetRows}
+            ${depsRow}
+          </table>
+          <button class="diagram-toggle-btn taxonomy-graph-btn" data-taxonomy-id="${id}" aria-expanded="false">Show Graph</button>
+        </div>
+        <div class="diagram-card-body" id="taxonomy-body-${id}" style="display: none;">
+          <div class="diagram-render" id="taxonomy-render-${id}"></div>
+        </div>
+      </div>
+    `;
+  }).join('');
+
+  // Attach toggle handlers for Mermaid graphs
+  container.querySelectorAll('.taxonomy-graph-btn').forEach(btn => {
+    btn.addEventListener('click', async (e) => {
+      const id = e.target.dataset.taxonomyId;
+      const body = document.getElementById(`taxonomy-body-${id}`);
+      const renderEl = document.getElementById(`taxonomy-render-${id}`);
+      const isOpen = body.style.display !== 'none';
+
+      if (isOpen) {
+        body.style.display = 'none';
+        e.target.textContent = 'Show Graph';
+        e.target.setAttribute('aria-expanded', 'false');
+      } else {
+        body.style.display = 'block';
+        e.target.textContent = 'Hide Graph';
+        e.target.setAttribute('aria-expanded', 'true');
+
+        if (!renderEl.dataset.rendered) {
+          const ct = contentTags.find(c =>
+            c.title.toLowerCase().replace(/[^a-z0-9]+/g, '-') === id
+          );
+          if (ct) {
+            try {
+              const diagramDef = buildTaxonomyMermaid(ct);
+              const { svg } = await mermaid.render(`tax-mermaid-${id}`, diagramDef);
+              renderEl.innerHTML = svg;
+              renderEl.dataset.rendered = 'true';
+            } catch (err) {
+              renderEl.innerHTML = `<p class="diagram-error">Failed to render graph: ${err.message}</p>`;
+            }
+          }
+        }
+      }
+    });
+  });
+}
 
 // Initialize on load
 document.addEventListener('DOMContentLoaded', init);
