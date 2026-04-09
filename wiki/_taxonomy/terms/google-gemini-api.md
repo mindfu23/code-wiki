@@ -8,4 +8,7 @@ scopeNote: >
   Projects that call Google Gemini (or legacy PaLM) API endpoints. Excludes other Google Cloud APIs like Sheets or BigQuery.
 curationState: active
 channels: [internal]
+cost: "Free tier available; $2/mo Google AI Studio plan"
+costLink: "https://ai.google.dev/pricing"
+notes: ""
 ---

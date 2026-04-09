@@ -2376,6 +2376,74 @@ footer a:hover {
   margin-top: 0.5rem;
 }
 
+/* API Inventory Table */
+.api-inventory-wrapper {
+  overflow-x: auto;
+  margin-bottom: 1rem;
+}
+
+.api-inventory-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.875rem;
+}
+
+.api-inventory-table thead th {
+  text-align: left;
+  padding: 0.6rem 0.75rem;
+  border-bottom: 2px solid #334155;
+  color: #94a3b8;
+  font-weight: 600;
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  white-space: nowrap;
+}
+
+.api-inventory-table tbody tr {
+  border-bottom: 1px solid #1e293b;
+}
+
+.api-inventory-table tbody tr:hover {
+  background: #1e293b;
+}
+
+.api-inventory-table td {
+  padding: 0.55rem 0.75rem;
+  vertical-align: top;
+}
+
+.api-inv-name {
+  font-weight: 600;
+  color: #e2e8f0;
+  white-space: nowrap;
+}
+
+.api-inv-cost {
+  color: #94a3b8;
+  max-width: 220px;
+}
+
+.api-inv-link a {
+  color: #22d3ee;
+  text-decoration: none;
+}
+
+.api-inv-link a:hover {
+  text-decoration: underline;
+}
+
+.api-inv-notes {
+  color: #64748b;
+  font-style: italic;
+  max-width: 200px;
+}
+
+.api-no-apps {
+  color: #475569;
+  font-style: italic;
+}
+
 @media (max-width: 768px) {
   .taxonomy-filters {
     flex-direction: column;
