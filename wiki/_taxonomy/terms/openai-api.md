@@ -8,4 +8,7 @@ scopeNote: >
   Projects that call OpenAI endpoints directly or via the openai SDK. Includes projects using OpenAI-compatible endpoints.
 curationState: active
 channels: [internal]
+cost: "Pay per token (input/output)"
+costLink: "https://openai.com/api/pricing/"
+notes: ""
 ---

@@ -8,4 +8,7 @@ scopeNote: >
   Projects that call the Sheets API via service account or OAuth. Excludes manual spreadsheet use without API calls.
 curationState: active
 channels: [internal]
+cost: "Free with Google Cloud project"
+costLink: "https://developers.google.com/sheets/api/limits"
+notes: ""
 ---
