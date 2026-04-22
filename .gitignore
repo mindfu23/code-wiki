@@ -5,6 +5,10 @@ wiki/personal/
 # OS
 .DS_Store
 
+# Node
+node_modules/
+package-lock.json
+
 # Documents with sensitive content
 wiki/projects/specstory-markdown-for-review.md
 
