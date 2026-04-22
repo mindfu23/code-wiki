@@ -1,0 +1,18 @@
+{
+  "name": "code-wiki-scripts",
+  "private": true,
+  "description": "Repo-root deps for scripts/ — keeps scripts/seed-taxonomy.ts and friends runnable without leaning on web/ or mcp-server/ node_modules.",
+  "scripts": {
+    "seed-taxonomy": "tsx scripts/seed-taxonomy.ts",
+    "seed-taxonomy:apply": "tsx scripts/seed-taxonomy.ts --apply"
+  },
+  "dependencies": {
+    "gray-matter": "^4.0.3",
+    "js-yaml": "^4.1.0"
+  },
+  "devDependencies": {
+    "@types/js-yaml": "^4.0.9",
+    "@types/node": "^20.10.0",
+    "tsx": "^4.7.0"
+  }
+}
