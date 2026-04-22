@@ -26,18 +26,19 @@
 
 ## Design decisions to confirm before coding
 
-### 1. Project enumeration source
+### 1. Project enumeration source — DECIDED
 
-How does the script know which projects to process?
+**Decision (2026-04-22): Parse `code-wiki-content/wiki/projects/repo-locations.md`.** That file is auto-regenerated nightly at 00:00 UTC by `update-index.yml` and can be refreshed on demand from the web UI (see "Freshness" below). It has canonical repo names, local paths, and visibility — everything the inference tool needs.
 
-| Option | Source | Pros | Cons |
-|---|---|---|---|
-| A | `code-wiki-content/wiki/projects/repo-locations.md` | Already auto-generated nightly; has canonical names, local paths, visibility | Requires private content repo to be cloned locally |
-| B | `code-wiki-content/web/public/data/index-full.json` | Structured JSON; same upstream source | Same clone requirement |
-| C | Walk `WORKSPACE_DIR` for `.git` dirs | Zero dependencies | Doesn't know GitHub repo names or visibility |
-| D | GitHub API (`listForAuthenticatedUser`) | Authoritative for visibility | Requires PAT; doesn't know local paths |
+**Fallback for forkers without a private content repo set up**: walk `WORKSPACE_DIR` for `.git` directories and treat each as a project. Visibility defaults to `public` with a warning; users can override manually.
 
-**Recommendation: A with fallback to D.** Parse `repo-locations.md` for the canonical inventory. If not available (forker hasn't set up private content repo), fall back to GitHub API and prompt user for local path mapping.
+### Freshness behavior to respect
+
+- **~24h staleness window.** `repo-locations.md` is rebuilt daily. A repo created between rebuilds won't appear until the next run.
+- **Manual refresh is already wired up.** The web UI has a "Refresh" button (`#refresh-quickview-btn` at `web/public/app.js:162`) that POSTs to `/api/rebuild-index`, which calls `workflow_dispatch` on `update-index.yml`. Users who just created a repo should hit Refresh, wait ~2–3 min, then re-run the taxonomy script. Document this in the script's `--help` output.
+- **`--create-stubs` handles the "only new repos" case naturally.** If a repo is in `repo-locations.md` but has no wiki entry, `--create-stubs` processes it; if it already has one, the merge strategy (decision #4) leaves existing frontmatter intact. No separate `--only-new` flag needed.
+- **PAT scope drift silently omits repos** (see `HANDOFF-rearchitecture.md` decision #15). If a repo disappears from `repo-locations.md` between runs, the taxonomy script should NOT delete its wiki entry — drift in the inventory is a known-unknown. Deletion is a manual operation.
+- **Stale header bug** (decision #16): the `Last updated:` literal at the top of `repo-locations.md` isn't actually refreshed by the build. Ignore it; trust the file body.
 
 ### 2. Sub-project discovery
 
@@ -56,17 +57,9 @@ Current 13 mappings is ~10% of what's needed. Expand to at least:
 
 Unknown deps should be logged as `unmapped` with a hint to add them, not silently ignored.
 
-### 4. Frontmatter merge strategy
+### 4. Frontmatter merge strategy — DECIDED
 
-What happens when a wiki entry already has a `taxonomy:` block?
-
-| Strategy | Behavior |
-|---|---|
-| Overwrite | Replace block entirely (destroys human edits — bad) |
-| Stdout-only | Current behavior (safe but requires manual copy/paste) |
-| **Merge** | Preserve human-added terms, propose additions for missing ones, never silently remove existing terms |
-
-**Recommendation: Merge, with a reported diff.** Never remove a term a human added — only add or flag. If inference proposes removing something, report it but leave it in place.
+**Decision (2026-04-22): Merge-preserving.** Never remove a term a human added. When inference proposes additions, report them; when it proposes removals, log them but leave existing terms in place. Emit a human-readable diff so the user can see what would change before `--apply`.
 
 ### 5. Public vs private routing for new/updated entries
 
