@@ -605,3 +605,13 @@ npm run typecheck
 # Test with MCP Inspector
 npx @modelcontextprotocol/inspector node dist/index.js
 ```
+
+### Optional: pre-commit hygiene hook
+
+The repo ships a hygiene check that catches absolute user paths, `visibility: private` frontmatter, and likely tokens before they land in the public repo. It runs automatically in CI via `.github/workflows/public-hygiene.yml`, but you can also wire it up as a local pre-commit hook for faster feedback:
+
+```bash
+bash scripts/install-hooks.sh
+```
+
+The hook is a symlink to `scripts/check-public-hygiene.sh`, so future updates to the script apply without re-running the installer. To bypass the hook for a specific commit (discouraged), use `git commit --no-verify`.
