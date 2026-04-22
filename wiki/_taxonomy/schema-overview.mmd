@@ -1,0 +1,72 @@
+flowchart TD
+    Content["📄 Wiki Content File"]
+
+    Content --> Facets
+    Content --> State
+    Content --> Rels
+    Content --> Chan
+    Content --> Notes
+    Content --> Val
+
+    subgraph Facets["FACETS — stable classifiers"]
+        direction LR
+        F1[type]
+        F2[stack]
+        F3[platform]
+        F4[deployTarget]
+        F5[domain]
+        F6[visibility]
+        F7[service]
+    end
+
+    subgraph State["STATE FIELDS — changeable"]
+        direction LR
+        S1[lifecycle]
+        S2[curationState]
+    end
+
+    subgraph Rels["RELATIONSHIPS — graph edges"]
+        direction LR
+        R1[usesModule]
+        R2[dependsOn]
+        R3[appliesTo]
+        R4[supersedes]
+        R5[broader]
+        R6[related]
+    end
+
+    subgraph Chan["CHANNELS — render targets"]
+        direction LR
+        C1[internal]
+        C2[userview]
+    end
+
+    subgraph Notes["NOTES — SKOS-aligned"]
+        direction LR
+        N1[definition]
+        N2[scopeNote]
+        N3[editorialNote]
+        N4[historyNote]
+        N5[changeNote]
+    end
+
+    subgraph Val["VALIDATOR — build-time"]
+        direction LR
+        V1[errors]
+        V2[warnings]
+        V3[outputs]
+    end
+
+    classDef facet fill:#d9f0e4,stroke:#1f6d4a,color:#1a1a1a
+    classDef state fill:#f6e5d1,stroke:#8a4d1f,color:#1a1a1a
+    classDef rel   fill:#ecd9f0,stroke:#6d1f7c,color:#1a1a1a
+    classDef chan  fill:#d1e7f0,stroke:#1f5f7c,color:#1a1a1a
+    classDef note  fill:#f0e5d1,stroke:#7c5a1f,color:#1a1a1a
+    classDef val   fill:#f0d1d1,stroke:#7c1f1f,color:#1a1a1a
+
+    class F1,F2,F3,F4,F5,F6,F7 facet
+    class S1,S2 state
+    class R1,R2,R3,R4,R5,R6 rel
+    class C1,C2 chan
+    class N1,N2,N3,N4,N5 note
+    class V1,V2,V3 val
