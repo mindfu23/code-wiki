@@ -133,6 +133,16 @@ stateFields:
       - active      # Accepted and in use
       - deprecated  # Superseded or no longer relevant
 
+  completionState:
+    # Curation completeness of a content wiki entry — distinct from curationState
+    # which applies only to taxonomy term files. Useful for tracking backfill work
+    # on auto-generated stubs vs. hand-written entries.
+    appliesTo: content
+    values:
+      - stub      # Minimal auto-generated placeholder; needs human attention
+      - draft     # Human has started; not yet complete
+      - complete  # Fully curated
+
 # =============================================================================
 # CHANNELS — single-source, multi-channel publishing
 # =============================================================================
