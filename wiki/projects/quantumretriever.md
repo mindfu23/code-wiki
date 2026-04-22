@@ -6,9 +6,9 @@ updated: "2026-04-06"
 source_repo: "Metabot"
 taxonomy:
   type: project
-  stack: [react, typescript, vite, netlify-functions]
-  platform: [web]
-  deployTarget: [netlify]
+  stack: [react, typescript, vite, netlify-functions, expo, react-native]
+  platform: [web, ios, android]
+  deployTarget: [netlify, apple-app-store, google-play]
   domain: [ai-tooling]
   visibility: public
   lifecycle: shipped
