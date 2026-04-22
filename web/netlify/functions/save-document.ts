@@ -11,7 +11,30 @@ import * as crypto from 'crypto';
 const SESSION_SECRET = process.env.SESSION_SECRET;
 const GITHUB_REPO_OWNER = process.env.GITHUB_REPO_OWNER || '';
 const GITHUB_REPO_NAME = process.env.GITHUB_REPO_NAME || 'code-wiki';
+const PRIVATE_CONTENT_REPO = process.env.PRIVATE_CONTENT_REPO || '';
 const WIKI_PATH_PREFIX = 'wiki/';
+
+function parsePrivateContentRepo(): { owner: string; repo: string } | null {
+  if (!PRIVATE_CONTENT_REPO) return null;
+  const parts = PRIVATE_CONTENT_REPO.split('/');
+  if (parts.length !== 2) return null;
+  return { owner: parts[0], repo: parts[1] };
+}
+
+const PRIVATE_PATH_PREFIXES = ['wiki/personal/'];
+const PRIVATE_PATH_PATTERNS: RegExp[] = [/^wiki\/_taxonomy\/example-.*$/];
+
+function hasPrivateVisibility(content: string): boolean {
+  const match = content.match(/^---\r?\n([\s\S]*?)\r?\n---/);
+  if (!match) return false;
+  return /^\s*visibility\s*:\s*["']?private["']?\s*$/im.test(match[1]);
+}
+
+function shouldRouteToPrivate(fullPath: string, content: string): boolean {
+  if (PRIVATE_PATH_PREFIXES.some((p) => fullPath.startsWith(p))) return true;
+  if (PRIVATE_PATH_PATTERNS.some((r) => r.test(fullPath))) return true;
+  return hasPrivateVisibility(content);
+}
 
 // Validate required configuration
 function validateConfig(): string | null {
@@ -209,6 +232,32 @@ const handler: Handler = async (event: HandlerEvent, context: HandlerContext) =>
 
   const fullPath = WIKI_PATH_PREFIX + sanitizedPath;
 
+  // Route private content to the private content repo. A document is treated
+  // as private if its path is under a private prefix (e.g. wiki/personal/),
+  // matches a private pattern (e.g. wiki/_taxonomy/example-*), or its
+  // frontmatter declares `visibility: private`.
+  const routeToPrivate = shouldRouteToPrivate(fullPath, request.content);
+  let targetOwner = GITHUB_REPO_OWNER;
+  let targetRepo = GITHUB_REPO_NAME;
+
+  if (routeToPrivate) {
+    const privateRepo = parsePrivateContentRepo();
+    if (!privateRepo) {
+      return {
+        statusCode: 500,
+        headers,
+        body: JSON.stringify({
+          error:
+            'This document is private (visibility: private or under a private path) ' +
+            'but PRIVATE_CONTENT_REPO is not configured. Set it to owner/repo ' +
+            '(e.g. mindfu23/code-wiki-content) in Netlify env vars.',
+        }),
+      };
+    }
+    targetOwner = privateRepo.owner;
+    targetRepo = privateRepo.repo;
+  }
+
   try {
     // Initialize Octokit with user's token
     const octokit = new Octokit({ auth: session.access_token });
@@ -217,8 +266,8 @@ const handler: Handler = async (event: HandlerEvent, context: HandlerContext) =>
     let existingSha: string | undefined;
     try {
       const { data: existingFile } = await octokit.repos.getContent({
-        owner: GITHUB_REPO_OWNER,
-        repo: GITHUB_REPO_NAME,
+        owner: targetOwner,
+        repo: targetRepo,
         path: fullPath,
       });
 
@@ -238,8 +287,8 @@ const handler: Handler = async (event: HandlerEvent, context: HandlerContext) =>
 
     // Commit the file
     const commitResponse = await octokit.repos.createOrUpdateFileContents({
-      owner: GITHUB_REPO_OWNER,
-      repo: GITHUB_REPO_NAME,
+      owner: targetOwner,
+      repo: targetRepo,
       path: fullPath,
       message: request.commitMessage,
       content: Buffer.from(request.content).toString('base64'),
