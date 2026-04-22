@@ -56,19 +56,25 @@ Sequenced for safety — the destination write happens before the source delete,
 If step 3 fails: return error, no migration attempted.
 If step 3 succeeds but step 4 fails: return warning to the user that the new file was written but the old one needs manual cleanup. Include both SHAs in the response so the user (or a follow-up automation) can complete the migration.
 
-### UI affordance
+### UI affordance — DECIDED
 
-When a user toggles `visibility` in an edit session, the UI should surface an explicit confirmation before save:
+**Decision (2026-04-22): native `window.confirm()` dialog, only when visibility changes from the loaded document's value.**
 
-> *"This document's visibility is changing from public to private. Saving will commit to the private content repo and delete the copy from the public repo. Continue?"*
+The editor already populates `#edit-visibility` from the loaded document at `web/public/app.js:1286`. Store that original value in a module-scoped variable at load time. In `saveDocument()` (`web/public/app.js:1364`), compare the current form value against the original; only show the confirm dialog if they differ.
 
-This prevents accidental migrations and makes the behavior auditable.
+Confirmation copy:
+
+> *"This document's visibility is changing from {old} to {new}. Saving will commit to the {new-repo} repo and delete the copy from the {old-repo} repo. Continue?"*
+
+Rationale: the existing "unsaved changes" flow at `web/public/app.js:1129` already uses `window.confirm()`, so this pattern is consistent with the current UI. A custom banner is a future upgrade, not a v1 requirement.
+
+Visibility migration is a rarer edge case in practice, so simple is appropriate here.
 
 ### Implementation scope
 
-- `web/netlify/functions/save-document.ts` — extend with old-repo existence check + secondary delete call
-- `web/public/app.js` (or wherever the edit UI lives) — detect visibility frontmatter change vs. server copy; show confirmation
-- Decide: should the save function surface a `--force` equivalent to skip UI confirmation when driven programmatically? Leaning no — keep the save function dumb; UI owns the confirmation.
+- `web/netlify/functions/save-document.ts` — extend with old-repo existence check + secondary delete call. Return `migration: true` in the success response when a migration occurred.
+- `web/public/app.js` — capture the loaded document's visibility into a module-scoped variable when the editor opens (near line 1286); add the diff check and `confirm()` call at the top of `saveDocument()` (near line 1364).
+- Save function itself should stay "dumb" — no `--force` flag, no skip-confirmation path. UI owns confirmation; save function routes and writes. Programmatic callers that bypass the UI are responsible for their own auditability.
 
 ### Effort estimate
 
@@ -144,4 +150,4 @@ Path A composes naturally with Gap 1: once the user accepts the drift and update
 
 ## First-message prompt for implementing session
 
-> *"Implement Phase A of HANDOFF-visibility-migration.md (Gap 1 only). Read the full doc first. Before code changes, confirm with the user: (1) whether the UI should always show a confirmation or only on visibility flips, and (2) whether reverse direction (private → public) should be enabled in v1 or deferred. Extend web/netlify/functions/save-document.ts and the edit UI, nothing else. Phase B (Gap 2) is out of scope for this session."*
+> *"Implement Phase A of HANDOFF-visibility-migration.md (Gap 1 only). Read the full doc first — design decisions on confirmation and reverse-direction are already made (native `window.confirm()` only when visibility changes; both directions supported symmetrically). Extend `web/netlify/functions/save-document.ts` and `web/public/app.js` at the documented extension points, nothing else. Phase B (Gap 2 — GitHub repo visibility drift) is out of scope for this session."*
