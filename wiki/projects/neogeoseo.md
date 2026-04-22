@@ -2,14 +2,14 @@
 title: "NeoGeoSeo"
 description: "Browser extension for geographic SEO assessment and analysis"
 tags: [browser-extension, seo, react, chrome, firefox]
-updated: "2026-04-06"
+updated: "2026-04-22"
 source_repo: "NeoGeoSeo"
 taxonomy:
-  type: project
-  stack: [react, typescript, vite]
+  stack: [javascript, react, typescript, vite]
   platform: [browser-extension]
   deployTarget: [chrome-web-store, firefox-addons]
   domain: [seo]
+  type: project
   visibility: public
   lifecycle: pre-release
 ---

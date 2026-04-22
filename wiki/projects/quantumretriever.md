@@ -2,17 +2,17 @@
 title: "QuantumRetriever"
 description: "Multi-provider AI research assistant with response synthesis and caching"
 tags: [ai, react, multi-provider, research]
-updated: "2026-04-06"
+updated: "2026-04-22"
 source_repo: "Metabot"
 taxonomy:
-  type: project
-  stack: [react, typescript, vite, netlify-functions, expo, react-native]
-  platform: [web, ios, android]
-  deployTarget: [netlify, apple-app-store, google-play]
+  stack: [expo, netlify-functions, node-express, react, react-native, typescript, vite]
+  platform: [android, ios, web]
+  deployTarget: [apple-app-store, google-play, netlify]
   domain: [ai-tooling]
+  dependsOn: [anthropic-api, google-gemini-api, huggingface-api, openai-api, perplexity-api]
+  type: project
   visibility: public
   lifecycle: shipped
-  dependsOn: [anthropic-api, google-gemini-api, huggingface-api, openai-api, perplexity-api]
 ---
 
 Multi-provider AI research assistant. Sends queries to multiple AI providers simultaneously, synthesizes responses, and caches results for efficiency.
