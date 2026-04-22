@@ -138,13 +138,32 @@ Path A composes naturally with Gap 1: once the user accepts the drift and update
 
 ---
 
-## Success criteria — Phase A only
+## Default routing behavior — DECIDED
+
+**Save defaults to the repo the document currently lives in.** That is:
+
+- If an existing doc is loaded from the public `code-wiki` repo, saving goes to the public repo (unless visibility was explicitly changed in the UI).
+- If loaded from the private `code-wiki-content` repo, saving goes to the private repo (unless visibility was explicitly changed).
+
+Practically, this means the save function should **look up the current storage location** (not just read frontmatter) and route accordingly when frontmatter hasn't changed. Only an explicit visibility flip in the UI triggers migration (see UI affordance above).
+
+For new documents (no existing location), visibility in the frontmatter is the only signal — default to `public` unless the user picks otherwise, matching current editor behavior.
+
+Concretely this composes with the already-patched `shouldRouteToPrivate()` logic in save-document.ts like so:
+
+1. On save, check if the doc already exists in public OR private (both path-existence checks; already happening for public, extend for private)
+2. If found in one repo and the new frontmatter visibility matches that repo → normal write, no migration
+3. If found in one repo and the new frontmatter visibility points to the other → migration flow (confirmation + delete-old)
+4. If not found in either → new doc, route by frontmatter visibility (current behavior)
+
+## Success criteria — Phase A
 
 1. Editing a wiki entry in the UI and flipping `visibility: public → private` commits to the private repo AND deletes from the public repo in a single save action
-2. The UI confirmation explicitly describes what will happen before the save
-3. If any step of the migration fails, the user sees a specific error, not silent partial success
-4. Reverse direction (`private → public`) works symmetrically
-5. No path-traversal or authorization escalation introduced (test with mis-scoped paths)
+2. Reverse direction (`private → public`) works symmetrically
+3. Saving an existing doc WITHOUT changing visibility routes to the same repo it was loaded from, regardless of frontmatter (defends against incorrect/stale frontmatter triggering accidental migrations)
+4. The UI confirmation explicitly describes what will happen before the save, and only appears when visibility actually changed
+5. If any step of the migration fails, the user sees a specific error, not silent partial success
+6. No path-traversal or authorization escalation introduced (test with mis-scoped paths)
 
 ---
 
