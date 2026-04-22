@@ -140,12 +140,15 @@ Default is dry-run for safety; `--apply` is the explicit opt-in.
 
 ---
 
+## Resolved questions (2026-04-22)
+
+1. **Update `updated:` timestamps on touched files — YES.** When the script writes a file (via `--apply`), set `updated:` to the current date (`YYYY-MM-DD`). Applies both to merged frontmatter and newly-created stubs.
+2. **Add a `stub` state value to the taxonomy — YES.** Implementation note: `curationState` in the current schema (`wiki/_taxonomy/schema.yml`) has `appliesTo: terms` — it's intended for term definition files, not content files. The implementing session should either (a) add a NEW state field like `completionState: [stub, draft, complete]` with `appliesTo: content` or (b) broaden `curationState`'s applicability. Preferred: option (a), cleaner separation. Stubs created by `--create-stubs` are marked `completionState: stub`.
+
 ## Open questions
 
-1. **Should the script also update `updated:` timestamps on touched files?** Leaning yes (to `YYYY-MM-DD` of the run), but explicit is better.
-2. **Should stubs always be marked `curationState: stub` (a new term)?** Would make backfill-tracking easy. Requires adding the term.
-3. **Should the script ever delete terms the human added but the inference doesn't see?** Default no; maybe `--strict` flag later.
-4. **How to handle monorepo-ish repos (code-wiki itself is one) where stack terms differ per subdir?** Current proposal flattens; may want to tag specific terms with subdir scope later.
+1. **Should the script ever delete terms the human added but the inference doesn't see?** Default no; maybe `--strict` flag later.
+2. **How to handle monorepo-ish repos (code-wiki itself is one) where stack terms differ per subdir?** Current proposal flattens; may want to tag specific terms with subdir scope later.
 
 ---
 
