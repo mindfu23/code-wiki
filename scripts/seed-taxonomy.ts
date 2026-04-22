@@ -10,7 +10,8 @@ import * as fs from 'fs/promises';
 import * as path from 'path';
 import yaml from 'js-yaml';
 
-const WORKSPACE = '/Users/jamesbeach/Documents/visual-studio-code/github-copilot';
+const WORKSPACE = process.env.WORKSPACE_DIR
+  ?? (() => { throw new Error('Set WORKSPACE_DIR to the directory containing sibling project repos (e.g. the parent of code-wiki).'); })();
 
 interface ProjectConfig {
   name: string;

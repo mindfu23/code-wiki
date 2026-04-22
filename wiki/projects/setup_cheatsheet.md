@@ -144,7 +144,7 @@ Site settings → Domain management → Add custom domain
 ## 6. Local Dev
 
 ```bash
-cd /Users/jamesbeach/Documents/visual-studio-code/github-copilot/StoryLoft
+cd path/to/your-project
 
 npm install          # first time only
 npm run dev          # starts Vite dev server at http://localhost:5173
