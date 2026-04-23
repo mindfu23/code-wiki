@@ -1,5 +1,7 @@
 # Code Wiki — Taxonomy v1 Implementation Handoff
 
+> **Status:** Implemented. Schema, 59 terms, 12 relationship edges, validator, and compiled taxonomy outputs are all in place. Initial landing in commit `e001149` (*taxonomy feature update for public and private repos, and relationships between repos*), with `b2bf3fe` (*taxonomy build step added*) wiring it into the web build. See `HANDOFF-taxonomy-auto-inference.md` for the follow-up scanner work.
+
 **Created:** 2026-04-05
 **Purpose:** Implementation handoff for the taxonomy layer designed across a long design session (2026-04-04 → 2026-04-05). The schema is fully specified; the work is mechanical once Phase 1 rearchitecture is complete.
 

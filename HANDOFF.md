@@ -1,5 +1,7 @@
 # Code Wiki — Session Handoff
 
+> **Status:** Completed 2026-04-05. Retrospective summary of a closing session; all four changes described below shipped in the commits cited within each item.
+
 **Session date:** 2026-04-05
 **Branch:** `main` (clean, synced with origin)
 **Deploy target:** https://mindfu23code-wiki.netlify.app/
