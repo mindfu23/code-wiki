@@ -1,5 +1,7 @@
 # Code Wiki — Taxonomy / Ontology Design Handoff
 
+> **Status:** Superseded by `HANDOFF-taxonomy-v1.md`, which is authoritative for implementation. Retained for historical background on motivations and alternatives considered during the design session.
+
 **Created:** 2026-04-04
 **Purpose:** Design brief for a new session focused on creating the taxonomy/ontology layer for code-wiki. This is a forward-looking handoff, not a session close — no code has been written yet. The prior thread was exploratory; this doc captures the decisions made so the design session can start immediately without re-deriving them.
 
