@@ -1,5 +1,7 @@
 # Code Wiki — Phase 1 Rearchitecture Handoff
 
+> **Status:** Implemented. Original migration in commit `9877386` (*refactor: Phase 1 rearchitecture — move generated content to private repo*). Follow-up hardening in this session's commits `72d8f64` (remove remaining user-specific scratch notes), `a4eb644` (route private content correctly in save-document.ts + hygiene guardrails), and `417049b` (docs: update README for private-content architecture). Retained for historical context and as the canonical description of the architecture.
+
 **Created:** 2026-04-05
 **Purpose:** Sequenced plan to move all generated content derived from James's GitHub account out of the public `code-wiki` repo and into a new private content repo. Must ship **before** the taxonomy work in `HANDOFF-taxonomy-v1.md` can cleanly land.
 

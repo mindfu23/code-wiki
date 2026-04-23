@@ -1,5 +1,7 @@
 # Code Wiki — Taxonomy Auto-Inference (Generalized seed-taxonomy)
 
+> **Status:** Implemented 2026-04-22. Landed across `ef730ad` (workspace-wide scanner, lib modules, CLI, --create-stubs, completionState schema addition), `f42593f` (index-full.json fallback + combined sources + language-based inference for repos without local paths), and `50db5ee` (surgical frontmatter writes for minimal diffs + first two inferred updates applied). The two remaining "Open questions" (strict-delete flag, monorepo-per-subdir scoping) were not implemented — left as follow-ups. Retained as the canonical description of the feature.
+
 **Created:** 2026-04-22
 **Purpose:** Generalize `scripts/seed-taxonomy.ts` from a hand-curated 5-project bootstrap helper into a full auto-inference tool that proposes (and optionally writes) taxonomy frontmatter for every project in the workspace — public and private.
 

@@ -1,5 +1,7 @@
 # Code Wiki — Visibility-Change Migration
 
+> **Status:** Planned / not yet implemented. Design decisions locked in this HANDOFF; ready for an implementing session. Phase A (Gap 1 — wiki-level migration on save) is the actionable piece; Phase B (Gap 2 — GitHub repo visibility drift) is explicitly deferred until real-world signal shows it's needed.
+
 **Created:** 2026-04-22
 **Purpose:** Handle the case where a wiki entry's visibility changes between public and private, so the file ends up in the correct repo and no stale duplicate is left behind. Also: sync visibility facet to GitHub repo reality when a repo flips public↔private on GitHub itself.
 
