@@ -5,6 +5,7 @@
  */
 
 import { Handler, HandlerEvent, HandlerContext } from '@netlify/functions';
+import { CLEAR_SESSION_COOKIE } from './_shared/auth.js';
 
 const SITE_URL = process.env.URL || process.env.SITE_URL || 'http://localhost:8888';
 
@@ -50,7 +51,7 @@ const handler: Handler = async (event: HandlerEvent, context: HandlerContext) =>
       statusCode: 200,
       headers: {
         ...headers,
-        'Set-Cookie': 'wiki_session=; HttpOnly; Secure; SameSite=Lax; Max-Age=0; Path=/',
+        'Set-Cookie': CLEAR_SESSION_COOKIE,
       },
       body: JSON.stringify({ success: true, message: 'Logged out' }),
     };

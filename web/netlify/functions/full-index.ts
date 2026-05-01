@@ -2,27 +2,21 @@
  * Full Index API - Returns complete index including private repos
  *
  * Access modes (controlled by PRIVATE_REPO_ACCESS env var):
- * - owner-only (default): Only wiki owner sees private repos
- * - github-permissions: Check user's GitHub access to each private repo
+ * - owner-only (default): canReadPrivate gate from getAccessLevel decides
+ * - github-permissions: Check user's GitHub access to each private repo (OAuth required)
+ *
+ * The full index file is read from the filesystem at `private-data/index-full.json`
+ * (overlaid by netlify-build.sh from the private content repo) — never via HTTP,
+ * so the file is not exposed as a static CDN asset.
  */
 
-import { Handler, HandlerEvent, HandlerContext } from '@netlify/functions';
-import * as crypto from 'crypto';
+import { Handler, HandlerEvent } from '@netlify/functions';
+import * as fs from 'fs';
+import * as path from 'path';
 import { Octokit } from '@octokit/rest';
+import { getAccessLevel } from './_shared/auth.js';
 
-const SESSION_SECRET = process.env.SESSION_SECRET;
-const GITHUB_REPO_OWNER = process.env.GITHUB_REPO_OWNER || '';
 const PRIVATE_REPO_ACCESS = process.env.PRIVATE_REPO_ACCESS || 'owner-only';
-
-interface SessionData {
-  access_token: string;
-  user_id: number;
-  login: string;
-  name: string | null;
-  email: string | null;
-  avatar_url: string;
-  exp: number;
-}
 
 interface RepoInfo {
   name: string;
@@ -54,7 +48,6 @@ interface WikiIndex {
   version: string;
 }
 
-// CORS headers
 const headers = {
   'Access-Control-Allow-Origin': '*',
   'Access-Control-Allow-Methods': 'GET, OPTIONS',
@@ -63,104 +56,56 @@ const headers = {
   'Content-Type': 'application/json',
 };
 
-// Parse cookies from header
-function parseCookies(cookieHeader: string): Record<string, string> {
-  const cookies: Record<string, string> = {};
-  if (!cookieHeader) return cookies;
-
-  cookieHeader.split(';').forEach((cookie) => {
-    const [name, ...rest] = cookie.split('=');
-    if (name && rest.length > 0) {
-      cookies[name.trim()] = rest.join('=').trim();
-    }
-  });
-
-  return cookies;
-}
-
-// Decrypt session data
-function decryptSession(token: string): SessionData | null {
-  if (!SESSION_SECRET || SESSION_SECRET.length < 32) {
-    return null;
-  }
-
-  try {
-    const [ivB64, encryptedB64, authTagB64] = token.split('.');
-    if (!ivB64 || !encryptedB64 || !authTagB64) {
-      return null;
-    }
-
-    const key = Buffer.from(SESSION_SECRET.slice(0, 32), 'utf-8');
-    const iv = Buffer.from(ivB64, 'base64');
-    const encrypted = Buffer.from(encryptedB64, 'base64');
-    const authTag = Buffer.from(authTagB64, 'base64');
-
-    const decipher = crypto.createDecipheriv('aes-256-gcm', key, iv);
-    decipher.setAuthTag(authTag);
-
-    let decrypted = decipher.update(encrypted, undefined, 'utf8');
-    decrypted += decipher.final('utf8');
-
-    const data = JSON.parse(decrypted) as SessionData;
-
-    // Check expiration
-    if (data.exp < Date.now()) {
-      return null;
-    }
-
-    return data;
-  } catch (err) {
-    return null;
-  }
-}
-
 /**
- * Parse GitHub URL to extract owner and repo name
+ * Read index-full.json from the filesystem. Tries private-data first (post-fix layout)
+ * then falls back to public/data (legacy layout) so this works on deploys where
+ * netlify-build.sh has not yet been updated.
  */
-function parseGitHubUrl(url: string): { owner: string; repo: string } | null {
-  const match = url.match(/github\.com\/([^\/]+)\/([^\/\.]+)/);
-  if (match) {
-    return { owner: match[1], repo: match[2] };
+function loadFullIndex(): WikiIndex | null {
+  const candidates = [
+    path.join(process.cwd(), 'private-data/index-full.json'),
+    path.resolve('./private-data/index-full.json'),
+    path.join(process.cwd(), 'public/data/index-full.json'),
+    path.resolve('./public/data/index-full.json'),
+  ];
+  for (const p of candidates) {
+    try {
+      if (fs.existsSync(p)) {
+        return JSON.parse(fs.readFileSync(p, 'utf-8')) as WikiIndex;
+      }
+    } catch {
+      // Try next candidate.
+    }
   }
   return null;
 }
 
-/**
- * Check if user has access to a GitHub repo using their token
- */
+function parseGitHubUrl(url: string): { owner: string; repo: string } | null {
+  const match = url.match(/github\.com\/([^\/]+)\/([^\/\.]+)/);
+  if (match) return { owner: match[1], repo: match[2] };
+  return null;
+}
+
 async function checkRepoAccess(octokit: Octokit, owner: string, repo: string): Promise<boolean> {
   try {
     await octokit.repos.get({ owner, repo });
     return true;
   } catch (err: any) {
-    if (err.status === 404 || err.status === 403) {
-      return false;
-    }
+    if (err.status === 404 || err.status === 403) return false;
     throw err;
   }
 }
 
-const handler: Handler = async (event: HandlerEvent, context: HandlerContext) => {
-  // Handle OPTIONS preflight
+const handler: Handler = async (event: HandlerEvent) => {
   if (event.httpMethod === 'OPTIONS') {
     return { statusCode: 204, headers, body: '' };
   }
-
-  // Only allow GET
   if (event.httpMethod !== 'GET') {
-    return {
-      statusCode: 405,
-      headers,
-      body: JSON.stringify({ error: 'Method not allowed' }),
-    };
+    return { statusCode: 405, headers, body: JSON.stringify({ error: 'Method not allowed' }) };
   }
 
-  // Check authentication
-  const cookies = parseCookies(event.headers.cookie || '');
-  const sessionToken = cookies.wiki_session;
-
-  if (!sessionToken) {
-    // Not authenticated - return public index
+  const access = getAccessLevel(event);
+  if (!access.session) {
     return {
       statusCode: 401,
       headers,
@@ -168,123 +113,88 @@ const handler: Handler = async (event: HandlerEvent, context: HandlerContext) =>
     };
   }
 
-  const session = decryptSession(sessionToken);
-
-  if (!session) {
+  const fullIndex = loadFullIndex();
+  if (!fullIndex) {
     return {
-      statusCode: 401,
+      statusCode: 404,
       headers,
-      body: JSON.stringify({ error: 'Invalid or expired session' }),
+      body: JSON.stringify({ error: 'Full index not found. Run build:index first.' }),
     };
   }
 
   try {
-    // Fetch the full index from the CDN (functions can't access static files directly)
-    const host = event.headers.host || 'localhost';
-    const protocol = host.includes('localhost') ? 'http' : 'https';
-    const indexUrl = `${protocol}://${host}/data/index-full.json`;
-
-    const indexResponse = await fetch(indexUrl);
-    if (!indexResponse.ok) {
-      throw { code: 'ENOENT', message: `Failed to fetch index: ${indexResponse.status}` };
-    }
-    const fullIndex: WikiIndex = await indexResponse.json();
-
-    // Determine which repos to include based on access mode
     if (PRIVATE_REPO_ACCESS === 'github-permissions') {
-      // Dynamic mode: Check GitHub permissions for each private repo
-      const octokit = new Octokit({ auth: session.access_token });
-
+      // Dynamic mode requires a real GitHub OAuth token to query repo access.
+      // Passcode sessions (no access_token) fall through to public-only view.
+      if (!access.session.access_token) {
+        const publicRepos = fullIndex.repos.filter((r) => r.visibility !== 'private');
+        const publicDocuments = fullIndex.documents.filter((d) => d.visibility !== 'private');
+        return {
+          statusCode: 200,
+          headers,
+          body: JSON.stringify({
+            success: true,
+            data: { ...fullIndex, repos: publicRepos, documents: publicDocuments },
+            accessMode: 'github-permissions',
+            user: access.session.login,
+            note: 'github-permissions mode requires OAuth; passcode sessions get public view',
+          }),
+        };
+      }
+      const octokit = new Octokit({ auth: access.session.access_token });
       const accessibleRepos: RepoInfo[] = [];
-
       for (const repo of fullIndex.repos) {
         if (repo.visibility !== 'private') {
-          // Public repo - always include
           accessibleRepos.push(repo);
         } else if (repo.githubUrl) {
-          // Private repo - check GitHub access
           const parsed = parseGitHubUrl(repo.githubUrl);
-          if (parsed) {
-            const hasAccess = await checkRepoAccess(octokit, parsed.owner, parsed.repo);
-            if (hasAccess) {
-              accessibleRepos.push(repo);
-            }
+          if (parsed && (await checkRepoAccess(octokit, parsed.owner, parsed.repo))) {
+            accessibleRepos.push(repo);
           }
         }
       }
-
-      const publicDocuments = fullIndex.documents.filter(d => d.visibility !== 'private');
+      const publicDocuments = fullIndex.documents.filter((d) => d.visibility !== 'private');
       return {
         statusCode: 200,
         headers,
         body: JSON.stringify({
           success: true,
-          data: {
-            ...fullIndex,
-            repos: accessibleRepos,
-            documents: publicDocuments,
-          },
+          data: { ...fullIndex, repos: accessibleRepos, documents: publicDocuments },
           accessMode: 'github-permissions',
-          user: session.login,
+          user: access.session.login,
         }),
       };
-    } else {
-      // Static mode (default): Only owner sees private repos
-      if (!GITHUB_REPO_OWNER) {
-        return {
-          statusCode: 500,
-          headers,
-          body: JSON.stringify({ error: 'GITHUB_REPO_OWNER not configured' }),
-        };
-      }
-
-      const isOwner = session.login.toLowerCase() === GITHUB_REPO_OWNER.toLowerCase();
-
-      if (isOwner) {
-        // Owner gets full index
-        return {
-          statusCode: 200,
-          headers,
-          body: JSON.stringify({
-            success: true,
-            data: fullIndex,
-            accessMode: 'owner-only',
-            user: session.login,
-            isOwner: true,
-          }),
-        };
-      } else {
-        // Non-owner gets public repos and documents only
-        const publicRepos = fullIndex.repos.filter(r => r.visibility !== 'private');
-        const publicDocuments = fullIndex.documents.filter(d => d.visibility !== 'private');
-        return {
-          statusCode: 200,
-          headers,
-          body: JSON.stringify({
-            success: true,
-            data: {
-              ...fullIndex,
-              repos: publicRepos,
-              documents: publicDocuments,
-            },
-            accessMode: 'owner-only',
-            user: session.login,
-            isOwner: false,
-          }),
-        };
-      }
     }
-  } catch (err: any) {
-    console.error('Error reading index:', err);
 
-    if (err.code === 'ENOENT') {
+    // owner-only (default): canReadPrivate gate covers owner + viewer/editor passcode tiers.
+    if (access.canReadPrivate) {
       return {
-        statusCode: 404,
+        statusCode: 200,
         headers,
-        body: JSON.stringify({ error: 'Full index not found. Run build:index first.' }),
+        body: JSON.stringify({
+          success: true,
+          data: fullIndex,
+          accessMode: 'owner-only',
+          user: access.session.login,
+          isOwner: access.canAdmin,
+        }),
       };
     }
-
+    const publicRepos = fullIndex.repos.filter((r) => r.visibility !== 'private');
+    const publicDocuments = fullIndex.documents.filter((d) => d.visibility !== 'private');
+    return {
+      statusCode: 200,
+      headers,
+      body: JSON.stringify({
+        success: true,
+        data: { ...fullIndex, repos: publicRepos, documents: publicDocuments },
+        accessMode: 'owner-only',
+        user: access.session.login,
+        isOwner: false,
+      }),
+    };
+  } catch (err: any) {
+    console.error('Error reading index:', err);
     return {
       statusCode: 500,
       headers,
