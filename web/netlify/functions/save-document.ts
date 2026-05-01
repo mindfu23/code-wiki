@@ -6,9 +6,8 @@
 
 import { Handler, HandlerEvent, HandlerContext } from '@netlify/functions';
 import { Octokit } from '@octokit/rest';
-import * as crypto from 'crypto';
+import { getAccessLevel } from './_shared/auth.js';
 
-const SESSION_SECRET = process.env.SESSION_SECRET;
 const GITHUB_REPO_OWNER = process.env.GITHUB_REPO_OWNER || '';
 const GITHUB_REPO_NAME = process.env.GITHUB_REPO_NAME || 'code-wiki';
 const PRIVATE_CONTENT_REPO = process.env.PRIVATE_CONTENT_REPO || '';
@@ -41,20 +40,10 @@ function validateConfig(): string | null {
   if (!GITHUB_REPO_OWNER) {
     return 'GITHUB_REPO_OWNER environment variable is not configured. Please set it in your Netlify dashboard.';
   }
-  if (!SESSION_SECRET || SESSION_SECRET.length < 32) {
+  if (!process.env.SESSION_SECRET || process.env.SESSION_SECRET.length < 32) {
     return 'SESSION_SECRET environment variable is not configured or too short (min 32 chars).';
   }
   return null;
-}
-
-interface SessionData {
-  access_token: string;
-  user_id: number;
-  login: string;
-  name: string | null;
-  email: string | null;
-  avatar_url: string;
-  exp: number;
 }
 
 interface SaveRequest {
@@ -72,59 +61,6 @@ const headers = {
   'Access-Control-Allow-Credentials': 'true',
   'Content-Type': 'application/json',
 };
-
-// Parse cookies from header
-function parseCookies(cookieHeader: string): Record<string, string> {
-  const cookies: Record<string, string> = {};
-  if (!cookieHeader) return cookies;
-
-  cookieHeader.split(';').forEach((cookie) => {
-    const [name, ...rest] = cookie.split('=');
-    if (name && rest.length > 0) {
-      cookies[name.trim()] = rest.join('=').trim();
-    }
-  });
-
-  return cookies;
-}
-
-// Decrypt session data
-function decryptSession(token: string): SessionData | null {
-  if (!SESSION_SECRET || SESSION_SECRET.length < 32) {
-    console.error('SESSION_SECRET not configured');
-    return null;
-  }
-
-  try {
-    const [ivB64, encryptedB64, authTagB64] = token.split('.');
-    if (!ivB64 || !encryptedB64 || !authTagB64) {
-      return null;
-    }
-
-    const key = Buffer.from(SESSION_SECRET.slice(0, 32), 'utf-8');
-    const iv = Buffer.from(ivB64, 'base64');
-    const encrypted = Buffer.from(encryptedB64, 'base64');
-    const authTag = Buffer.from(authTagB64, 'base64');
-
-    const decipher = crypto.createDecipheriv('aes-256-gcm', key, iv);
-    decipher.setAuthTag(authTag);
-
-    let decrypted = decipher.update(encrypted, undefined, 'utf8');
-    decrypted += decipher.final('utf8');
-
-    const data = JSON.parse(decrypted) as SessionData;
-
-    // Check expiration
-    if (data.exp < Date.now()) {
-      return null;
-    }
-
-    return data;
-  } catch (err) {
-    console.error('Session decryption failed:', err);
-    return null;
-  }
-}
 
 // Sanitize path to prevent directory traversal
 function sanitizePath(path: string): string | null {
@@ -177,27 +113,25 @@ const handler: Handler = async (event: HandlerEvent, context: HandlerContext) =>
     };
   }
 
-  // Verify authentication
-  const cookies = parseCookies(event.headers.cookie || '');
-  const sessionToken = cookies.wiki_session;
-
-  if (!sessionToken) {
+  // Verify authentication and write capability. Save endpoints require a real
+  // GitHub OAuth session — passcode-redeemed viewer/editor sessions cannot
+  // commit on behalf of a user (no access_token to attribute commits to).
+  const access = getAccessLevel(event);
+  if (!access.session) {
     return {
       statusCode: 401,
       headers,
       body: JSON.stringify({ error: 'Authentication required' }),
     };
   }
-
-  const session = decryptSession(sessionToken);
-
-  if (!session) {
+  if (!access.canWrite || !access.session.access_token) {
     return {
-      statusCode: 401,
+      statusCode: 403,
       headers,
-      body: JSON.stringify({ error: 'Invalid or expired session. Please log in again.' }),
+      body: JSON.stringify({ error: 'This session does not have write permission' }),
     };
   }
+  const session = access.session;
 
   // Parse request body
   let request: SaveRequest;

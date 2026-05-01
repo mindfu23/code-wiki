@@ -45,12 +45,27 @@
     X-Frame-Options = "SAMEORIGIN"
     Referrer-Policy = "strict-origin-when-cross-origin"
 
+# Bundle private-data/ with every function so server-side code can read
+# index-full.json and other sensitive overlay files via the filesystem.
+# This directory lives outside public/ and is never served as a CDN asset.
+[functions]
+  included_files = ["private-data/**", "public/data/**"]
+
 # Redirects for SPA routing and API
 # API routes go to Netlify functions
 [[redirects]]
   from = "/api/*"
   to = "/.netlify/functions/:splat"
   status = 200
+  force = true
+
+# Defense-in-depth: explicitly block any *-full.json under /data/ from being
+# served as a static asset, in case the build script ever fails to scrub them.
+# These files contain private repo metadata and must only be read server-side.
+[[redirects]]
+  from = "/data/*-full.json"
+  to = "/404.html"
+  status = 404
   force = true
 
 # SPA fallback - serve index.html for all routes (except static files)

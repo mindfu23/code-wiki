@@ -9,7 +9,6 @@
  */
 
 import { Handler, HandlerEvent } from '@netlify/functions';
-import * as crypto from 'crypto';
 import * as fs from 'fs';
 import * as path from 'path';
 import {
@@ -18,9 +17,7 @@ import {
   type RepoSentinels,
   type CompletionAssessment,
 } from './_shared/completionAssessment.js';
-
-const SESSION_SECRET = process.env.SESSION_SECRET;
-const GITHUB_REPO_OWNER = process.env.GITHUB_REPO_OWNER || '';
+import { getAccessLevel } from './_shared/auth.js';
 
 const headers = {
   'Access-Control-Allow-Origin': '*',
@@ -29,16 +26,6 @@ const headers = {
   'Access-Control-Allow-Credentials': 'true',
   'Content-Type': 'application/json',
 };
-
-interface SessionData {
-  access_token: string;
-  user_id: number;
-  login: string;
-  name: string | null;
-  email: string | null;
-  avatar_url: string;
-  exp: number;
-}
 
 interface ProjectHealthRow {
   name: string;
@@ -62,50 +49,6 @@ interface ProjectHealthRow {
   /** Lifecycle-stage classification — static sentinels from the index,
    *  refined with live deploy/actions/issues data at request time. */
   completion?: CompletionAssessment;
-}
-
-// --- Auth helpers (same pattern as full-index.ts) ---
-
-function parseCookies(cookieHeader: string): Record<string, string> {
-  const cookies: Record<string, string> = {};
-  if (!cookieHeader) return cookies;
-  cookieHeader.split(';').forEach((cookie) => {
-    const [name, ...rest] = cookie.split('=');
-    if (name && rest.length > 0) {
-      cookies[name.trim()] = rest.join('=').trim();
-    }
-  });
-  return cookies;
-}
-
-function decryptSession(token: string): SessionData | null {
-  if (!SESSION_SECRET || SESSION_SECRET.length < 32) return null;
-  try {
-    const [ivB64, encryptedB64, authTagB64] = token.split('.');
-    if (!ivB64 || !encryptedB64 || !authTagB64) return null;
-    const key = Buffer.from(SESSION_SECRET.slice(0, 32), 'utf-8');
-    const iv = Buffer.from(ivB64, 'base64');
-    const encrypted = Buffer.from(encryptedB64, 'base64');
-    const authTag = Buffer.from(authTagB64, 'base64');
-    const decipher = crypto.createDecipheriv('aes-256-gcm', key, iv);
-    decipher.setAuthTag(authTag);
-    let decrypted = decipher.update(encrypted, undefined, 'utf8');
-    decrypted += decipher.final('utf8');
-    const data = JSON.parse(decrypted) as SessionData;
-    if (data.exp < Date.now()) return null;
-    return data;
-  } catch {
-    return null;
-  }
-}
-
-function isOwnerSession(event: HandlerEvent): boolean {
-  const cookies = parseCookies(event.headers.cookie || '');
-  const sessionToken = cookies.wiki_session;
-  if (!sessionToken) return false;
-  const session = decryptSession(sessionToken);
-  if (!session) return false;
-  return session.login.toLowerCase() === GITHUB_REPO_OWNER.toLowerCase();
 }
 
 // --- GitHub API helpers ---
@@ -225,14 +168,24 @@ interface IndexRepoInfo {
 }
 
 function loadWikiIndex(includePrivate: boolean): IndexRepoInfo[] {
-  // Owner gets index-full.json (all repos); public visitors get index.json (public only)
+  // Public visitors get index.json (public-safe). Owner / viewer / editor sessions
+  // get index-full.json which lives in private-data/ (not under public/data/) so the
+  // file is not exposed as a static CDN asset. Falls back to public/data/ for
+  // backward compatibility with deploys made before the static-leak fix.
   const indexFile = includePrivate ? 'index-full.json' : 'index.json';
-  const possiblePaths = [
-    path.join(process.cwd(), `public/data/${indexFile}`),
-    path.join(process.cwd(), `data/${indexFile}`),
-    path.resolve(`./public/data/${indexFile}`),
-    path.resolve(`./data/${indexFile}`),
-  ];
+  const possiblePaths = includePrivate
+    ? [
+        path.join(process.cwd(), `private-data/${indexFile}`),
+        path.resolve(`./private-data/${indexFile}`),
+        path.join(process.cwd(), `public/data/${indexFile}`),
+        path.resolve(`./public/data/${indexFile}`),
+      ]
+    : [
+        path.join(process.cwd(), `public/data/${indexFile}`),
+        path.join(process.cwd(), `data/${indexFile}`),
+        path.resolve(`./public/data/${indexFile}`),
+        path.resolve(`./data/${indexFile}`),
+      ];
   for (const indexPath of possiblePaths) {
     try {
       if (fs.existsSync(indexPath)) {
@@ -267,8 +220,9 @@ const handler: Handler = async (event: HandlerEvent) => {
   }
 
   try {
-    // Check if the requesting user is the wiki owner (authenticated via session cookie)
-    const includePrivate = isOwnerSession(event);
+    // Owner, viewer-passcode, and editor-passcode sessions all see the full index.
+    const access = getAccessLevel(event);
+    const includePrivate = access.canReadPrivate;
 
     // Fetch GitHub repos, Netlify sites, and wiki index in parallel
     const [githubRepos, netlifySites, wikiRepos] = await Promise.all([
