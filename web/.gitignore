@@ -5,6 +5,9 @@ node_modules/
 dist/
 netlify/functions-dist/
 
+# Private overlay output (sensitive index files; bundled with functions only)
+private-data/
+
 # Generated data is now tracked for GitHub Actions updates
 # public/data/
 

@@ -3,11 +3,13 @@ set -e
 
 # Netlify build script for code-wiki
 # Clones the private content repo and overlays:
-#   - public-safe data files (index.json, taxonomy.json, category-*.json,
-#     metrics/*.json) into public/data/ — served as static CDN assets.
-#   - sensitive data files (*-full.json) into private-data/ — bundled with
-#     functions but never served to the public CDN. Read by full-index.ts and
-#     dashboard-data.ts via filesystem.
+#   - public-safe data files (index.json, taxonomy.json, taxonomy-full.json,
+#     category-*.json, metrics/*.json) into public/data/ — served as static
+#     CDN assets. Taxonomy is intentionally public (controlled vocabulary).
+#   - sensitive data files (currently just index-full.json, which contains
+#     private repo metadata + content excerpts) into private-data/ — bundled
+#     with functions but never served to the public CDN. Read by full-index.ts
+#     and dashboard-data.ts via filesystem.
 # Wiki content (repo-locations.md, personal docs, taxonomy sources) is overlaid
 # into ../wiki/ as before.
 
@@ -19,30 +21,39 @@ if [ -n "$PRIVATE_CONTENT_TOKEN" ] && [ -n "$PRIVATE_CONTENT_REPO" ]; then
 
   echo ">>> Overlaying private content onto public tree..."
 
-  # Overlay generated data files. Split into public-safe and sensitive sets
-  # so *-full.json (full index, full taxonomy) does NOT land in public/data/.
+  # Overlay generated data files. Sensitive files (currently just
+  # index-full.json) go to private-data/ and are bundled with functions but
+  # never published. Everything else goes to public/data/ as before.
   if [ -d /tmp/private-content/web/public/data ]; then
     mkdir -p public/data/metrics
     mkdir -p private-data
 
-    # Sensitive files: anything matching *-full.json. Bundled with functions only.
-    shopt -s nullglob
-    for f in /tmp/private-content/web/public/data/*-full.json; do
-      cp "$f" private-data/
-      echo "  - Overlaid (private-data/): $(basename "$f")"
+    SENSITIVE_FILES=("index-full.json")
+
+    # Move sensitive files to private-data/ first.
+    for name in "${SENSITIVE_FILES[@]}"; do
+      src="/tmp/private-content/web/public/data/$name"
+      if [ -f "$src" ]; then
+        cp "$src" "private-data/$name"
+        echo "  - Overlaid (private-data/): $name"
+      fi
     done
 
-    # Public-safe files: everything else under web/public/data/.
-    # Use rsync to copy while excluding the *-full.json names we already moved.
+    # Copy everything else to public/data/. Build a find-based exclude list
+    # so the rsync/cp respects the SENSITIVE_FILES allowlist above.
     if command -v rsync >/dev/null 2>&1; then
-      rsync -a --exclude='*-full.json' /tmp/private-content/web/public/data/ public/data/
+      EXCLUDES=()
+      for name in "${SENSITIVE_FILES[@]}"; do
+        EXCLUDES+=(--exclude="$name")
+      done
+      rsync -a "${EXCLUDES[@]}" /tmp/private-content/web/public/data/ public/data/
     else
-      # Fallback: cp -r, then prune any *-full.json that snuck through.
       cp -r /tmp/private-content/web/public/data/* public/data/
-      find public/data -maxdepth 2 -name '*-full.json' -type f -delete
+      for name in "${SENSITIVE_FILES[@]}"; do
+        find public/data -maxdepth 2 -name "$name" -type f -delete
+      done
     fi
-    echo "  - Overlaid public/data/ (excluding *-full.json)"
-    shopt -u nullglob
+    echo "  - Overlaid public/data/ (sensitive files excluded)"
   fi
 
   # Overlay wiki content (repo-locations.md, personal docs, future taxonomy)
@@ -51,9 +62,11 @@ if [ -n "$PRIVATE_CONTENT_TOKEN" ] && [ -n "$PRIVATE_CONTENT_REPO" ]; then
     echo "  - Overlaid wiki/"
   fi
 
-  # Belt-and-suspenders: scrub any *-full.json that may have been in the local
-  # repo from a pre-fix deploy, so we never re-publish private data.
-  find public/data -maxdepth 2 -name '*-full.json' -type f -delete 2>/dev/null || true
+  # Belt-and-suspenders: scrub any sensitive file that may have been in the
+  # local repo from a pre-fix deploy, so we never re-publish private data.
+  for name in "${SENSITIVE_FILES[@]}"; do
+    find public/data -maxdepth 2 -name "$name" -type f -delete 2>/dev/null || true
+  done
 
   # Clean up — don't leave token-bearing clone around
   rm -rf /tmp/private-content
