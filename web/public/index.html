@@ -36,6 +36,13 @@
     </div>
   </header>
 
+  <!-- Demo session banner — visible only when wiki_session is a passcode-based viewer/editor session -->
+  <div id="demo-banner" class="demo-banner" style="display: none;" role="status">
+    <span class="demo-banner-dot" aria-hidden="true"></span>
+    <span id="demo-banner-label" class="demo-banner-label">Demo session</span>
+    <button id="demo-banner-exit" type="button" class="demo-banner-exit">Exit demo</button>
+  </div>
+
   <main id="app">
     <!-- Search Page (default) -->
     <section id="page-search" class="page active">
@@ -376,6 +383,20 @@
         <p class="auth-info">
           Your edits will be committed to the wiki repository under your GitHub identity.
         </p>
+
+        <!-- Demo passcode form — read-only access without a GitHub account.
+             Submitted as GET to /.netlify/functions/demo-login which sets a
+             short-lived viewer-tier session cookie and redirects home. -->
+        <hr class="auth-divider">
+        <form id="demo-passcode-form" action="/.netlify/functions/demo-login" method="get" class="demo-passcode-form">
+          <label for="demo-passcode-input" class="demo-passcode-label">Have a demo passcode?</label>
+          <div class="demo-passcode-row">
+            <input id="demo-passcode-input" name="passcode" type="password" autocomplete="off" placeholder="Enter passcode" required>
+            <button type="submit" class="btn btn-secondary btn-sm">Enter demo</button>
+          </div>
+          <input type="hidden" name="redirect" value="/">
+          <p class="auth-info auth-info-small">Demo sessions are read-only and expire after a few hours.</p>
+        </form>
       </div>
     </section>
   </main>
