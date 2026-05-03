@@ -115,6 +115,7 @@ title: "Repository Locations"
 tags: ["index", "repositories", "auto-generated"]
 description: "Mapping of repositories to local file system paths and GitHub URLs"
 updated: "${now.split('T')[0]}"
+visibility: "private"
 ---
 
 # Repository Locations
