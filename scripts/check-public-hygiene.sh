@@ -44,9 +44,12 @@ run_check "no absolute user paths" \
 
 # 2. visibility: private frontmatter — these docs belong in the private
 # content repo. The term definition file is exempt (it defines the concept).
+# repoLocationsGenerator.ts is exempt because it emits the marker as part
+# of a template literal that produces frontmatter for a generated file.
 run_check "no visibility: private frontmatter" \
   "^visibility:[[:space:]]*\"?private\"?[[:space:]]*$" \
-  ':!wiki/_taxonomy/terms/private.md'
+  ':!wiki/_taxonomy/terms/private.md' \
+  ':!mcp-server/src/utils/repoLocationsGenerator.ts'
 
 # 3. Likely GitHub / OpenAI / long-hex tokens. Example files are exempt if
 # they clearly use a placeholder (ghp_xxxxx). The hygiene script itself is
