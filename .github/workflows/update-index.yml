@@ -32,6 +32,27 @@ jobs:
         working-directory: web
         run: npm ci
 
+      - name: Clone private content repo and overlay wiki
+        # Cloning + overlay must run BEFORE build:index so the index reflects
+        # both public source content and private overlay content (e.g.
+        # wiki/projects/repo-locations.md, wiki/personal/*, taxonomy
+        # examples). Files marked `visibility: private` are filtered out of
+        # public/data/index.json by the builder; full content is preserved
+        # in private-data/index-full.json (auth-gated by full-index.ts).
+        env:
+          PRIVATE_CONTENT_TOKEN: ${{ secrets.PRIVATE_CONTENT_WRITE_TOKEN }}
+          PRIVATE_CONTENT_REPO: ${{ vars.PRIVATE_CONTENT_REPO || 'mindfu23/code-wiki-content' }}
+        run: |
+          git clone --depth 1 \
+            "https://x-access-token:${PRIVATE_CONTENT_TOKEN}@github.com/${PRIVATE_CONTENT_REPO}.git" \
+            /tmp/private-content
+          if [ -d /tmp/private-content/wiki ]; then
+            cp -rT /tmp/private-content/wiki wiki
+            echo "Overlaid private wiki content"
+          else
+            echo "No wiki/ in private content repo — skipping overlay"
+          fi
+
       - name: Build index with GitHub API
         working-directory: web
         env:
@@ -51,12 +72,6 @@ jobs:
       - name: Build taxonomy
         working-directory: web
         run: npm run build:taxonomy
-
-      - name: Clone private content repo
-        run: |
-          git clone --depth 1 \
-            "https://x-access-token:${{ secrets.PRIVATE_CONTENT_WRITE_TOKEN }}@github.com/${{ vars.PRIVATE_CONTENT_REPO || 'mindfu23/code-wiki-content' }}.git" \
-            /tmp/private-content
 
       - name: Copy generated files to private content repo
         run: |
