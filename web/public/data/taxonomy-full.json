@@ -198,6 +198,20 @@
       ]
     },
     {
+      "term": "firebase-api",
+      "facet": "service",
+      "label": "Firebase API",
+      "definition": "Google Firebase platform APIs for authentication, Firestore database, cloud functions, hosting, and realtime database.\n",
+      "scopeNote": "Projects that call Firebase APIs via the firebase, firebase-admin, or firebase-functions SDKs. Includes both client-side (web/mobile) and server-side (admin SDK) use.\n",
+      "curationState": "active",
+      "channels": [
+        "internal"
+      ],
+      "cost": "Free Spark plan covers most early-stage use; Blaze plan is pay-as-you-go on Google Cloud rates",
+      "costLink": "https://firebase.google.com/pricing",
+      "notes": ""
+    },
+    {
       "term": "firefox-addons",
       "facet": "deployTarget",
       "label": "Firefox Add-ons",
@@ -371,6 +385,20 @@
         "internal",
         "userview"
       ]
+    },
+    {
+      "term": "langchain-api",
+      "facet": "service",
+      "label": "LangChain",
+      "definition": "LangChain framework for building LLM-powered applications, including chains, agents, retrievers, and memory abstractions.\n",
+      "scopeNote": "Projects that use langchain, langchain-core, langchain-community, or provider-specific packages (langchain-anthropic, langchain-google-genai). Captures LangChain as an orchestration layer above raw LLM provider APIs.\n",
+      "curationState": "active",
+      "channels": [
+        "internal"
+      ],
+      "cost": "Open-source framework (free); underlying LLM provider calls billed at provider rates",
+      "costLink": "https://www.langchain.com/pricing",
+      "notes": ""
     },
     {
       "term": "local-only",
@@ -655,6 +683,34 @@
       "notes": ""
     },
     {
+      "term": "stripe-api",
+      "facet": "service",
+      "label": "Stripe API",
+      "definition": "Stripe payment processing APIs for charges, subscriptions, customers, invoices, and webhooks.\n",
+      "scopeNote": "Projects that integrate Stripe for collecting payments via the stripe npm or python package, or via direct REST calls.\n",
+      "curationState": "active",
+      "channels": [
+        "internal"
+      ],
+      "cost": "Pay-per-transaction: 2.9% + $0.30 per successful card charge (US); no monthly fee",
+      "costLink": "https://stripe.com/pricing",
+      "notes": ""
+    },
+    {
+      "term": "supabase-api",
+      "facet": "service",
+      "label": "Supabase API",
+      "definition": "Supabase platform APIs for Postgres database, authentication, storage, and realtime subscriptions.\n",
+      "scopeNote": "Projects that call Supabase API endpoints via @supabase/supabase-js or the Supabase REST/GraphQL APIs. Includes both auth and database use cases.\n",
+      "curationState": "active",
+      "channels": [
+        "internal"
+      ],
+      "cost": "Free tier covers 500MB DB + 1GB storage + 50K monthly auth users; paid plans start at $25/mo",
+      "costLink": "https://supabase.com/pricing",
+      "notes": ""
+    },
+    {
       "term": "template",
       "facet": "type",
       "label": "Template",
@@ -797,6 +853,31 @@
       "type": "dependsOn"
     },
     {
+      "source": "projects/ethical-aiditor.md",
+      "target": "cloudflare-api",
+      "type": "dependsOn"
+    },
+    {
+      "source": "projects/meme-renamer.md",
+      "target": "anthropic-api",
+      "type": "dependsOn"
+    },
+    {
+      "source": "projects/meme-renamer.md",
+      "target": "google-gemini-api",
+      "type": "dependsOn"
+    },
+    {
+      "source": "projects/meme-renamer.md",
+      "target": "openai-api",
+      "type": "dependsOn"
+    },
+    {
+      "source": "projects/postboi.md",
+      "target": "anthropic-api",
+      "type": "dependsOn"
+    },
+    {
       "source": "projects/quantumretriever.md",
       "target": "anthropic-api",
       "type": "dependsOn"
@@ -907,17 +988,52 @@
     "service": [
       "anthropic-api",
       "cloudflare-api",
+      "firebase-api",
       "github-api",
       "google-gemini-api",
       "google-sheets-api",
       "huggingface-api",
+      "langchain-api",
       "netlify-api",
       "openai-api",
       "perplexity-api",
-      "stockfish"
+      "stockfish",
+      "stripe-api",
+      "supabase-api"
     ]
   },
   "contentTags": [
+    {
+      "path": "projects/api-tracker.md",
+      "title": "apiTracker",
+      "taxonomy": {
+        "type": "project",
+        "stack": [
+          "javascript",
+          "react",
+          "vite"
+        ],
+        "platform": [
+          "web"
+        ],
+        "deployTarget": [
+          "netlify"
+        ],
+        "visibility": "public",
+        "lifecycle": "shipped",
+        "completionState": "stub"
+      }
+    },
+    {
+      "path": "projects/book-larner.md",
+      "title": "BookLarner",
+      "taxonomy": {
+        "type": "project",
+        "visibility": "public",
+        "lifecycle": "shipped",
+        "completionState": "stub"
+      }
+    },
     {
       "path": "projects/code-wiki-project.md",
       "title": "code-wiki",
@@ -948,11 +1064,273 @@
       }
     },
     {
-      "path": "projects/neogeoseo.md",
-      "title": "NeoGeoSeo",
+      "path": "projects/cover-judge.md",
+      "title": "CoverJudge",
       "taxonomy": {
         "type": "project",
         "stack": [
+          "javascript"
+        ],
+        "visibility": "public",
+        "lifecycle": "shipped",
+        "completionState": "stub"
+      }
+    },
+    {
+      "path": "projects/create.md",
+      "title": "Create",
+      "taxonomy": {
+        "type": "project",
+        "stack": [
+          "node-express",
+          "react",
+          "typescript",
+          "vite"
+        ],
+        "platform": [
+          "web"
+        ],
+        "deployTarget": [
+          "netlify"
+        ],
+        "visibility": "public",
+        "lifecycle": "shipped",
+        "completionState": "stub"
+      }
+    },
+    {
+      "path": "projects/edgi-data-visualization.md",
+      "title": "edgi-data-visualization",
+      "taxonomy": {
+        "type": "project",
+        "stack": [
+          "python"
+        ],
+        "visibility": "public",
+        "lifecycle": "shipped",
+        "completionState": "stub"
+      }
+    },
+    {
+      "path": "projects/ethical-aiditor.md",
+      "title": "EthicalAIditor",
+      "taxonomy": {
+        "type": "project",
+        "stack": [
+          "javascript",
+          "react",
+          "vite"
+        ],
+        "platform": [
+          "android",
+          "ios",
+          "web"
+        ],
+        "deployTarget": [
+          "cloudflare-workers",
+          "netlify"
+        ],
+        "dependsOn": [
+          "cloudflare-api"
+        ],
+        "visibility": "public",
+        "lifecycle": "shipped",
+        "completionState": "stub"
+      }
+    },
+    {
+      "path": "projects/free-will-estimator.md",
+      "title": "FreeWillEstimator",
+      "taxonomy": {
+        "type": "project",
+        "stack": [
+          "javascript"
+        ],
+        "deployTarget": [
+          "netlify"
+        ],
+        "visibility": "public",
+        "lifecycle": "shipped",
+        "completionState": "stub"
+      }
+    },
+    {
+      "path": "projects/future-sketch.md",
+      "title": "FutureSketch",
+      "taxonomy": {
+        "type": "project",
+        "stack": [
+          "python"
+        ],
+        "visibility": "public",
+        "lifecycle": "shipped",
+        "completionState": "stub"
+      }
+    },
+    {
+      "path": "projects/gastown-mission-district.md",
+      "title": "gastown-mission-district",
+      "taxonomy": {
+        "type": "project",
+        "visibility": "public",
+        "lifecycle": "shipped",
+        "completionState": "stub"
+      }
+    },
+    {
+      "path": "projects/gastown.md",
+      "title": "gastown",
+      "taxonomy": {
+        "type": "project",
+        "visibility": "public",
+        "lifecycle": "shipped",
+        "completionState": "stub"
+      }
+    },
+    {
+      "path": "projects/gnn.md",
+      "title": "GNN",
+      "taxonomy": {
+        "type": "project",
+        "stack": [
+          "expo",
+          "javascript",
+          "react",
+          "react-native"
+        ],
+        "platform": [
+          "android",
+          "ios",
+          "web"
+        ],
+        "visibility": "public",
+        "lifecycle": "shipped",
+        "completionState": "stub"
+      }
+    },
+    {
+      "path": "projects/is-he.md",
+      "title": "IsHe",
+      "taxonomy": {
+        "type": "project",
+        "stack": [
+          "javascript",
+          "react",
+          "react-native"
+        ],
+        "platform": [
+          "android",
+          "ios",
+          "web"
+        ],
+        "deployTarget": [
+          "netlify"
+        ],
+        "visibility": "public",
+        "lifecycle": "shipped",
+        "completionState": "stub"
+      }
+    },
+    {
+      "path": "projects/jbword-press-theme.md",
+      "title": "JBWordPressTheme",
+      "taxonomy": {
+        "type": "project",
+        "visibility": "public",
+        "lifecycle": "shipped",
+        "completionState": "stub"
+      }
+    },
+    {
+      "path": "projects/korass-viewer.md",
+      "title": "KorassViewer",
+      "taxonomy": {
+        "type": "project",
+        "visibility": "public",
+        "lifecycle": "shipped",
+        "completionState": "stub"
+      }
+    },
+    {
+      "path": "projects/manuscript-review.md",
+      "title": "ManuscriptReview",
+      "taxonomy": {
+        "type": "project",
+        "stack": [
+          "typescript"
+        ],
+        "visibility": "public",
+        "lifecycle": "shipped",
+        "completionState": "stub"
+      }
+    },
+    {
+      "path": "projects/meme-renamer.md",
+      "title": "meme-renamer",
+      "taxonomy": {
+        "type": "project",
+        "stack": [
+          "python"
+        ],
+        "dependsOn": [
+          "anthropic-api",
+          "google-gemini-api",
+          "openai-api"
+        ],
+        "visibility": "public",
+        "lifecycle": "shipped",
+        "completionState": "stub"
+      }
+    },
+    {
+      "path": "projects/musix.md",
+      "title": "Musix",
+      "taxonomy": {
+        "type": "project",
+        "stack": [
+          "javascript",
+          "vite"
+        ],
+        "platform": [
+          "web"
+        ],
+        "visibility": "public",
+        "lifecycle": "shipped",
+        "completionState": "stub"
+      }
+    },
+    {
+      "path": "projects/n8n-workflows.md",
+      "title": "n8n_workflows",
+      "taxonomy": {
+        "type": "project",
+        "stack": [
+          "javascript"
+        ],
+        "visibility": "public",
+        "lifecycle": "shipped",
+        "completionState": "stub"
+      }
+    },
+    {
+      "path": "projects/namerrific.md",
+      "title": "Namerrific",
+      "taxonomy": {
+        "type": "project",
+        "stack": [
+          "javascript"
+        ],
+        "visibility": "public",
+        "lifecycle": "shipped",
+        "completionState": "stub"
+      }
+    },
+    {
+      "path": "projects/neogeoseo.md",
+      "title": "NeoGeoSeo",
+      "taxonomy": {
+        "stack": [
+          "javascript",
           "react",
           "typescript",
           "vite"
@@ -967,39 +1345,156 @@
         "domain": [
           "seo"
         ],
+        "type": "project",
         "visibility": "public",
         "lifecycle": "pre-release"
+      }
+    },
+    {
+      "path": "projects/plottoxml.md",
+      "title": "plottoxml",
+      "taxonomy": {
+        "type": "project",
+        "visibility": "public",
+        "lifecycle": "shipped",
+        "completionState": "stub"
+      }
+    },
+    {
+      "path": "projects/postboi.md",
+      "title": "Postboi",
+      "taxonomy": {
+        "type": "project",
+        "stack": [
+          "python"
+        ],
+        "dependsOn": [
+          "anthropic-api"
+        ],
+        "visibility": "public",
+        "lifecycle": "shipped",
+        "completionState": "stub"
       }
     },
     {
       "path": "projects/quantumretriever.md",
       "title": "QuantumRetriever",
       "taxonomy": {
-        "type": "project",
         "stack": [
+          "expo",
+          "netlify-functions",
+          "node-express",
           "react",
+          "react-native",
           "typescript",
-          "vite",
-          "netlify-functions"
+          "vite"
         ],
         "platform": [
+          "android",
+          "ios",
           "web"
         ],
         "deployTarget": [
+          "apple-app-store",
+          "google-play",
           "netlify"
         ],
         "domain": [
           "ai-tooling"
         ],
-        "visibility": "public",
-        "lifecycle": "shipped",
         "dependsOn": [
           "anthropic-api",
           "google-gemini-api",
           "huggingface-api",
           "openai-api",
           "perplexity-api"
-        ]
+        ],
+        "type": "project",
+        "visibility": "public",
+        "lifecycle": "shipped"
+      }
+    },
+    {
+      "path": "projects/sacred-geometry-outliner.md",
+      "title": "SacredGeometryOutliner",
+      "taxonomy": {
+        "type": "project",
+        "stack": [
+          "javascript"
+        ],
+        "deployTarget": [
+          "netlify"
+        ],
+        "visibility": "public",
+        "lifecycle": "shipped",
+        "completionState": "stub"
+      }
+    },
+    {
+      "path": "projects/search-bard.md",
+      "title": "SearchBard",
+      "taxonomy": {
+        "type": "project",
+        "stack": [
+          "python",
+          "typescript"
+        ],
+        "deployTarget": [
+          "netlify"
+        ],
+        "visibility": "public",
+        "lifecycle": "shipped",
+        "completionState": "stub"
+      }
+    },
+    {
+      "path": "projects/sierra-trails.md",
+      "title": "SierraTrails",
+      "taxonomy": {
+        "type": "project",
+        "stack": [
+          "expo",
+          "javascript",
+          "react",
+          "react-native"
+        ],
+        "platform": [
+          "android",
+          "ios",
+          "web"
+        ],
+        "visibility": "public",
+        "lifecycle": "shipped",
+        "completionState": "stub"
+      }
+    },
+    {
+      "path": "projects/takehome-q.md",
+      "title": "takehome_q",
+      "taxonomy": {
+        "type": "project",
+        "stack": [
+          "python"
+        ],
+        "visibility": "public",
+        "lifecycle": "shipped",
+        "completionState": "stub"
+      }
+    },
+    {
+      "path": "projects/theorazine.md",
+      "title": "Theorazine",
+      "taxonomy": {
+        "type": "project",
+        "stack": [
+          "javascript"
+        ],
+        "deployTarget": [
+          "netlify"
+        ],
+        "visibility": "public",
+        "lifecycle": "shipped",
+        "completionState": "stub"
       }
     },
     {
@@ -1056,5 +1551,5 @@
       }
     }
   ],
-  "buildTime": "2026-04-09T05:30:18.332Z"
+  "buildTime": "2026-05-13T18:11:59.704Z"
 }
