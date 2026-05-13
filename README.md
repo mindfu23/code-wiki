@@ -11,6 +11,8 @@ A personal code wiki with MCP server integration for AI agents. Provides searcha
 - **Automatic updates**: GitHub Actions rebuilds the index daily or on changes
 - **Observatory**: Cross-project infrastructure health dashboard aggregating GitHub and Netlify metrics, including per-repo lifecycle-stage classification (stub → scaffold → in-progress → deployed → mature, plus stale/abandoned/reference)
 - **Flows**: Per-project Mermaid architecture diagrams with automatic staleness detection
+- **Tiered access control**: Three session kinds — `owner` (GitHub OAuth, full read + write + admin), `viewer` (passcode, full read, no writes), `editor` (passcode, scoped writes — Phase 3, partially wired). All gated through a single `getAccessLevel()` helper in `_shared/auth.ts`.
+- **Demo passcode sessions**: Share a read-only view of the full owner-level UI with people who don't have a GitHub account, via a shared passcode link. Sessions expire after a few hours and can be revoked by rotating the env var.
 
 ## Web Interface
 
@@ -114,6 +116,13 @@ Note that when using this app as an index for local agents and MCPs, you should 
    | `NETLIFY_BUILD_HOOK` | Trigger rebuild after edits |
    | `PRIVATE_REPO_ACCESS` | Access mode for private repos (see below) |
 
+   **Demo passcode sessions (optional):**
+   | Variable | Description |
+   |----------|-------------|
+   | `DEMO_VIEWER_PASSCODE` | Comma-separated list of read-only demo passcodes. Anyone redeeming one of these gets the full owner-level read view (private repos visible) but cannot write. Mark **secret** in Netlify and scope to **Functions** only. |
+   | `DEMO_EDITOR_PASSCODE` | (Phase 3, partially wired) Comma-separated list of editor-tier passcodes. The redemption endpoint recognizes these, but `save-*` functions don't yet honor editor sessions, so writes still 403. |
+   | `DEMO_SESSION_TTL_HOURS` | Lifetime of demo session cookies in hours. Default `4`. Demo sessions expire faster than the 30-day OAuth session so leaked passcodes have a smaller blast radius. |
+
    **Generate a session secret:**
    ```bash
    openssl rand -hex 32
@@ -199,6 +208,52 @@ If `isOwner: false`, your GitHub username doesn't match `GITHUB_REPO_OWNER`:
 2. Ensure it matches your GitHub login exactly (case-insensitive)
 3. Redeploy after changing
 
+### Demo Access (Read-Only Passcode Sessions)
+
+Demo passcodes let you share a read-only view of the **full owner-level UI** — including private repos and the Observatory health matrix — with people who don't have a GitHub account. Useful for showing the wiki to stakeholders, doing live walkthroughs, or letting collaborators preview what's in scope before granting them GitHub access.
+
+**Setup:**
+
+1. Generate one or more passcodes (any string; treat as low-grade secrets).
+2. In Netlify Dashboard → Environment variables, add `DEMO_VIEWER_PASSCODE` as a comma-separated list, e.g. `summer-demo,boardroom-x9`. Mark it **secret**, scope to **Functions** only.
+3. (Optional) Set `DEMO_SESSION_TTL_HOURS` (default `4`).
+4. Redeploy so the function picks up the new env.
+
+**Sharing:**
+
+Use either of these:
+
+- **Direct link** (zero friction — passcode is in the URL): `https://your-site.netlify.app/.netlify/functions/demo-login?passcode=<code>&redirect=/observatory`
+- **Login page form**: send recipients to `/login` and they'll see a "Have a demo passcode?" form below the GitHub Sign-In button.
+
+On successful redemption, an encrypted `wiki_session` cookie is set with `kind: 'viewer'`, the page redirects to the requested path, and a yellow **"Demo session — read-only view"** banner appears at the top of every page with an "Exit demo" button.
+
+**What viewers can and cannot do:**
+
+|   | Owner (OAuth) | Viewer (passcode) | Anonymous |
+|---|---|---|---|
+| See public repos / wiki | ✓ | ✓ | ✓ |
+| See private repos | ✓ | ✓ | ✗ |
+| See Observatory health matrix (all projects) | ✓ | ✓ | public-only |
+| Edit / save documents | ✓ | ✗ | ✗ |
+| Add / edit notes | ✓ | ✗ | ✗ |
+| Trigger index rebuild | ✓ | ✗ | ✗ |
+
+Write affordances (Edit, New, Save, Rebuild, contenteditable cells) are hidden in the UI for viewer sessions, and the server-side `save-*` and `rebuild-index` functions also reject viewer sessions with `403` — so even a recipient who hand-crafts an API request can't write.
+
+**Revoking a passcode:**
+
+Edit `DEMO_VIEWER_PASSCODE` in Netlify (remove the entry, or rotate the whole list) and redeploy. Sessions minted from removed passcodes can no longer be re-redeemed; existing sessions still work until their TTL expires.
+
+**Phase 3 (editor passcode + writes):** the `demo-login` function already recognizes `DEMO_EDITOR_PASSCODE` and mints `kind: 'editor'` sessions. The save endpoints don't yet wire the scoped-write path, so editor sessions currently behave like viewer sessions for writes (still 403). Adding editor writes requires a server-side `DEMO_WRITE_PAT` plus a `DEMO_WRITE_REPOS` allowlist; see the `_shared/auth.ts` design notes.
+
+**Honest tradeoffs:**
+
+- Anyone with the link gets the same view — passcodes are shared secrets, not per-recipient identities.
+- Recipients show up in logs as `demo:viewer:<short-hash-of-passcode>` rather than a GitHub login. Knowing *which* passcode was redeemed is possible (correlate by hash); knowing *who* redeemed it is not.
+- A leaked passcode is read-only, so the blast radius is limited to private repo metadata that you've chosen to put in the index. Rotate by editing the env var list — no need to invalidate other sessions.
+- For trusted collaborators who actually need GitHub-attributed writes, the right pattern is GitHub OAuth + a per-login allowlist (a small refactor in `getAccessLevel()` to extend `canReadPrivate` to a list of permitted GitHub usernames) plus GitHub collaborator access on specific repos. The allowlist isn't wired today — passcode + GitHub allowlist are complementary, not in conflict, and can both ship later.
+
 ### MCP Server Setup (Optional)
 
 The MCP server provides local code search for AI agents like Claude Code.
@@ -243,7 +298,7 @@ The Observatory provides infrastructure observability across all your projects, 
 - **Project Health Matrix** — sortable table showing deploy status, GitHub Actions status, open issues (linked to GitHub), and deploy success rate for every project
 - **Language Distribution chart** — doughnut chart of languages across all projects
 - **Deploy Status chart** — bar chart of healthy/warning/error/not-deployed counts, with status message when all deploys are healthy
-- **Access-controlled** — unauthenticated visitors see only public repos; the wiki owner (authenticated via GitHub OAuth) sees all repos including private
+- **Access-controlled** — unauthenticated visitors see only public repos; the wiki owner (GitHub OAuth) and demo viewer sessions (passcode) see all repos including private
 - **Secret sanitization** — the index builder automatically strips known API key patterns (OpenAI, HuggingFace, GitHub PATs, Netlify tokens, etc.) and skips conversation log files (SpecStory, chat history) to prevent accidental credential exposure
 - **MCP tools** — `project_health`, `deploy_status`, and `infra_overview` tools for querying project metrics from Claude Code
 - **Bronze data export** — `export-bronze` endpoint serves raw metrics as JSON/NDJSON for Databricks ingestion
@@ -476,25 +531,29 @@ All generated content derived from your GitHub account (indexes, metrics, repo i
 ```
 code-wiki (public)              code-wiki-content (private)
 ├── web/src/                    ├── web/public/data/
-│   └── indexBuilder.ts         │   ├── index.json
-├── web/netlify/functions/      │   ├── index-full.json
-├── web/scripts/                │   ├── category-*.json
-│   └── netlify-build.sh        │   ├── diagram-signals.json
-├── wiki/                       │   └── metrics/
-│   ├── patterns/               │       ├── latest.json
-│   ├── snippets/               │       └── metrics-YYYY-MM-DD.json
-│   └── ...                     ├── wiki/projects/
-├── .github/workflows/          │   └── repo-locations.md
-│   ├── update-index.yml        └── README.md
-│   └── collect-metrics.yml
+│   └── indexBuilder.ts         │   ├── index.json          → public/data/ on Netlify
+├── web/netlify/functions/      │   ├── index-full.json     → private-data/ on Netlify (NOT public)
+│   └── _shared/auth.ts         │   ├── taxonomy.json
+├── web/scripts/                │   ├── taxonomy-full.json
+│   └── netlify-build.sh        │   ├── category-*.json
+├── wiki/                       │   ├── diagram-signals.json
+│   ├── patterns/               │   └── metrics/
+│   ├── snippets/               │       ├── latest.json
+│   └── ...                     │       └── metrics-YYYY-MM-DD.json
+├── .github/workflows/          ├── wiki/projects/
+│   ├── update-index.yml        │   └── repo-locations.md
+│   └── collect-metrics.yml     └── README.md
 └── mcp-server/
 ```
 
 **How it works:**
 - **GitHub Actions** runs the index builder and metrics collector on schedule, then commits the generated output to the private content repo via `PRIVATE_CONTENT_WRITE_TOKEN`.
 - **Netlify** clones the private content repo at build time (via `PRIVATE_CONTENT_TOKEN`) and overlays it onto the public tree before compiling functions. The overlay script is at `web/scripts/netlify-build.sh`.
+- **`netlify-build.sh` splits the overlay** into two destinations: public-safe files (`index.json`, `taxonomy.json`, `category-*.json`, `metrics/`, etc.) go to `public/data/` and are served as static CDN assets; sensitive files (currently just `index-full.json`, which contains private repo metadata + content excerpts) go to `private-data/` and are bundled with functions only — never published. To add a new sensitive file, append its name to the `SENSITIVE_FILES` array in `netlify-build.sh` and add an explicit redirect in `netlify.toml`.
+- **`netlify.toml` includes** `[functions] included_files = ["private-data/**", "public/data/**"]` so functions can read both directories via filesystem. It also has explicit `[[redirects]]` rules returning 404 for known sensitive paths (`/data/index-full.json`) as defense-in-depth — if a future build script bug ever lets a sensitive file land in `public/data/`, the CDN still won't serve it.
+- **`full-index.ts` and `dashboard-data.ts`** read `index-full.json` from the filesystem (`private-data/` first, falling back to `public/data/` for backward compatibility with deploys made before the separation), never via HTTP fetch — so the file is never accessible as a CDN asset.
 - **The public repo never runs with private-repo write credentials.** Netlify clones private content read-only at build time; forkers can skip the private content repo entirely and run with only the public half.
-- **No generated files are tracked in the public repo.** They are gitignored and only exist in the private content repo.
+- **No generated files are tracked in the public repo.** They are gitignored and only exist in the private content repo. `private-data/` is also gitignored.
 
 ### Setting Up the Private Content Repo
 
@@ -605,6 +664,33 @@ npm run typecheck
 # Test with MCP Inspector
 npx @modelcontextprotocol/inspector node dist/index.js
 ```
+
+### Function Authentication Model
+
+Every Netlify function that gates on session state goes through a single helper, [`web/netlify/functions/_shared/auth.ts`](web/netlify/functions/_shared/auth.ts). Don't reimplement session decryption or owner checks in individual functions — call `getAccessLevel(event)` and branch on the returned struct.
+
+```ts
+import { getAccessLevel } from './_shared/auth.js';
+
+const access = getAccessLevel(event);
+if (!access.session) return { statusCode: 401, ... };
+if (!access.canWrite) return { statusCode: 403, ... };  // for save endpoints
+if (!access.canAdmin) return { statusCode: 403, ... };  // for rebuild-index, etc.
+```
+
+The `AccessLevel` struct exposes:
+
+| Field | Set when |
+|---|---|
+| `canReadPrivate` | Owner OAuth session, or any demo passcode session (`viewer` / `editor`) |
+| `canWrite` | OAuth session with a GitHub `access_token` (so save-* commits are GitHub-attributed). Passcode sessions do not have an `access_token` and currently get `canWrite: false`. |
+| `canAdmin` | Owner OAuth session only (login matches `GITHUB_REPO_OWNER`). Used by `rebuild-index.ts`. |
+| `identity` | Display string for logging (`mindfu23`, `demo:viewer:abc12345`). Never trust for security decisions. |
+| `session` | Decoded session object, or `null` for anonymous requests. |
+
+The same module exports `encryptSession`, `decryptSession`, `parseCookies`, `buildSessionCookie`, and `CLEAR_SESSION_COOKIE` so demo-login, oauth-callback, and the logout endpoint share one cookie format.
+
+**Adding a new tier:** extend `SessionKind` and the `kind`-switch in `getAccessLevel()`, then update the issuance path (`oauth-callback.ts` or `demo-login.ts`) to set the kind. Save endpoints will need to opt into the new tier explicitly — `canWrite` is currently the only signal, so a tier with restricted write scope (e.g. write-only-to-sandbox-repo) needs a separate gate.
 
 ### Optional: pre-commit hygiene hook
 
