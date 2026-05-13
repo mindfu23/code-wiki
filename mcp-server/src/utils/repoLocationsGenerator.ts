@@ -17,10 +17,20 @@ interface RepoLocation {
   languages: string[];
   lastCommitDate?: string;
   status: 'local-only' | 'github-only' | 'synced';
+  visibility?: 'public' | 'private';
 }
 
 /**
- * Fetch GitHub repos for the configured user
+ * Fetch GitHub repos for the configured user.
+ *
+ * Uses /user/repos (authenticated endpoint) rather than /users/{username}/repos
+ * so private repos are included. The public endpoint silently omits private
+ * repos even with a token attached — a well-known gotcha that previously
+ * caused this generator to under-report the inventory by ~37% (~22 of 59
+ * repos were private and went missing).
+ *
+ * Pagination via Link headers: GitHub caps per_page at 100, so accounts with
+ * more than 100 repos need to follow the `rel="next"` Link header.
  */
 async function fetchGitHubRepos(config: Config): Promise<GitHubRepo[]> {
   if (!config.githubUsername || !config.githubToken) {
@@ -28,28 +38,40 @@ async function fetchGitHubRepos(config: Config): Promise<GitHubRepo[]> {
   }
 
   try {
-    const repos = await globalRateLimiter.withBackoff(async () => {
-      const response = await fetch(
-        `https://api.github.com/users/${config.githubUsername}/repos?sort=pushed&per_page=100&type=owner`,
-        {
+    const all: GitHubRepo[] = [];
+    let url: string | null =
+      'https://api.github.com/user/repos?sort=pushed&per_page=100&affiliation=owner';
+
+    while (url) {
+      const nextUrl: string | null = await globalRateLimiter.withBackoff(async () => {
+        const response = await fetch(url as string, {
           headers: {
             Authorization: `Bearer ${config.githubToken}`,
             Accept: 'application/vnd.github.v3+json',
             'User-Agent': 'code-wiki-mcp-server',
           },
+        });
+
+        if (!response.ok) {
+          throw new Error(`GitHub API error: ${response.status}`);
         }
-      );
 
-      if (!response.ok) {
-        throw new Error(`GitHub API error: ${response.status}`);
-      }
+        const page = (await response.json()) as GitHubRepo[];
+        all.push(...page);
 
-      return response.json() as Promise<GitHubRepo[]>;
-    }, 'GitHub API');
+        // Parse RFC 5988 Link header for next page, if any.
+        const link = response.headers.get('link');
+        if (!link) return null;
+        const match = link.match(/<([^>]+)>;\s*rel="next"/);
+        return match ? match[1] : null;
+      }, 'GitHub API');
 
-    return repos.filter(repo => {
+      url = nextUrl;
+    }
+
+    return all.filter(repo => {
       const [owner] = repo.full_name.split('/');
-      return owner === config.githubUsername;
+      return owner.toLowerCase() === config.githubUsername.toLowerCase();
     });
   } catch (error) {
     logger.warn('RepoLocationsGenerator', 'Failed to fetch GitHub repos', error);
@@ -83,6 +105,7 @@ export async function generateRepoLocationsPage(
       languages: repo.languages,
       lastCommitDate: repo.lastCommitDate,
       status: githubRepo ? 'synced' : 'local-only',
+      visibility: githubRepo ? (githubRepo.private ? 'private' : 'public') : undefined,
     });
   }
 
@@ -97,6 +120,7 @@ export async function generateRepoLocationsPage(
         languages: githubRepo.language ? [githubRepo.language.toLowerCase()] : [],
         lastCommitDate: githubRepo.pushed_at,
         status: 'github-only',
+        visibility: githubRepo.private ? 'private' : 'public',
       });
     }
   }
@@ -139,14 +163,15 @@ This page is **auto-generated** during indexing. Do not edit manually.
 
 These repositories exist both locally and on GitHub.
 
-| Repository | Local Path | GitHub | Languages |
-|------------|------------|--------|-----------|
+| Repository | Visibility | Local Path | GitHub | Languages |
+|------------|-----------|------------|--------|-----------|
 `;
 
   for (const repo of syncedRepos) {
     const githubLink = repo.githubUrl ? `[GitHub](${repo.githubUrl})` : '-';
     const langs = repo.languages.length > 0 ? repo.languages.join(', ') : '-';
-    content += `| **${repo.name}** | \`${repo.localPath}\` | ${githubLink} | ${langs} |\n`;
+    const vis = repo.visibility ?? '-';
+    content += `| **${repo.name}** | ${vis} | \`${repo.localPath}\` | ${githubLink} | ${langs} |\n`;
   }
 
   if (syncedRepos.length === 0) {
@@ -181,15 +206,16 @@ These repositories exist locally but are not linked to a GitHub remote.
 These repositories exist on GitHub but are not cloned locally.
 Use \`sync_repos\` to clone them, or clone manually.
 
-| Repository | GitHub URL | Language | Last Updated |
-|------------|------------|----------|--------------|
+| Repository | Visibility | GitHub URL | Language | Last Updated |
+|------------|-----------|------------|----------|--------------|
 `;
 
   for (const repo of githubOnlyRepos) {
     const githubLink = repo.githubUrl ? `[${repo.name}](${repo.githubUrl})` : repo.name;
     const lang = repo.languages.length > 0 ? repo.languages[0] : '-';
     const lastUpdate = repo.lastCommitDate ? repo.lastCommitDate.split('T')[0] : '-';
-    content += `| ${githubLink} | ${repo.githubUrl || '-'} | ${lang} | ${lastUpdate} |\n`;
+    const vis = repo.visibility ?? '-';
+    content += `| ${githubLink} | ${vis} | ${repo.githubUrl || '-'} | ${lang} | ${lastUpdate} |\n`;
   }
 
   if (githubOnlyRepos.length === 0) {
@@ -206,6 +232,9 @@ Use \`sync_repos\` to clone them, or clone manually.
   for (const repo of locations) {
     content += `### ${repo.name}\n\n`;
     content += `- **Status:** ${repo.status}\n`;
+    if (repo.visibility) {
+      content += `- **Visibility:** ${repo.visibility}\n`;
+    }
     if (repo.localPath) {
       content += `- **Local Path:** \`${repo.localPath}\`\n`;
     }

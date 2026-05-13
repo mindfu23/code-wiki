@@ -61,6 +61,7 @@ export async function parseIndexFull(filePath: string): Promise<IndexFullRepo[]>
     languages: r.languages,
     description: r.description,
     lastCommitDate: r.lastCommitDate,
+    visibility: r.visibility,
     ghVisibility: r.visibility,
     sentinels: r.sentinels,
   }));

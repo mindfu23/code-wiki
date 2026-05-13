@@ -935,9 +935,12 @@ async function buildIndex(): Promise<void> {
   await fs.writeFile(fullIndexPath, JSON.stringify(fullIndex, null, 2));
   console.log(`Full index written to ${fullIndexPath}`);
 
-  // Write individual category files for faster loading
+  // Write individual category files (public-filtered) for faster loading.
+  // These ship to public/data/ as static CDN assets, so they MUST exclude
+  // documents with visibility: private. Authenticated users get the full
+  // set via the index-full.json (private-data/, served via full-index.ts).
   for (const category of allCategories) {
-    const categoryDocs = allDocuments.filter(d => d.category === category);
+    const categoryDocs = publicDocuments.filter(d => d.category === category);
     const categoryPath = path.join(OUTPUT_DIR, `category-${category}.json`);
     await fs.writeFile(categoryPath, JSON.stringify(categoryDocs, null, 2));
   }
