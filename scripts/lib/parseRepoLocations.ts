@@ -17,6 +17,7 @@
 import * as fs from 'fs/promises';
 
 export type RepoStatus = 'synced' | 'local-only' | 'github-only';
+export type RepoVisibility = 'public' | 'private';
 
 export interface RepoEntry {
   name: string;
@@ -24,6 +25,7 @@ export interface RepoEntry {
   githubUrl?: string;
   status: RepoStatus;
   languages?: string[];
+  visibility?: RepoVisibility;
 }
 
 const SECTION_HEADINGS: Record<string, RepoStatus> = {
@@ -38,6 +40,8 @@ const NAME_RE = /^\|\s*\*\*(?<name>[^*]+)\*\*\s*\|/;
 const PATH_CELL_RE = /(?:`(?<path>[^`]+)`|-)/;
 // GitHub cell: either [GitHub](url) or '-'
 const GITHUB_CELL_RE = /(?:\[GitHub\]\((?<url>[^)]+)\)|-)/;
+// Visibility cell: a bare "public" or "private"
+const VISIBILITY_CELL_RE = /^(?<vis>public|private)$/i;
 
 function splitCells(line: string): string[] {
   // Split on '|' but ignore leading/trailing empties from the border pipes.
@@ -84,15 +88,19 @@ export async function parseRepoLocations(filePath: string): Promise<RepoEntry[]>
     let localPath: string | undefined;
     let githubUrl: string | undefined;
     let langs: string | undefined;
+    let visibility: RepoVisibility | undefined;
 
     for (let i = 1; i < cells.length; i++) {
       const cell = cells[i];
       const pathMatch = PATH_CELL_RE.exec(cell);
       const ghMatch = GITHUB_CELL_RE.exec(cell);
+      const visMatch = VISIBILITY_CELL_RE.exec(cell);
       if (pathMatch?.groups?.path) {
         localPath = pathMatch.groups.path.trim();
       } else if (ghMatch?.groups?.url) {
         githubUrl = ghMatch.groups.url.trim();
+      } else if (visMatch?.groups?.vis) {
+        visibility = visMatch.groups.vis.toLowerCase() as RepoVisibility;
       } else if (!langs && cell !== '-') {
         // Last non-placeholder cell is assumed to be the language list
         langs = cell;
@@ -109,6 +117,7 @@ export async function parseRepoLocations(filePath: string): Promise<RepoEntry[]>
       githubUrl,
       status: currentStatus,
       languages: languages.length > 0 ? languages : undefined,
+      visibility,
     });
   }
 

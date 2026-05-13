@@ -61,12 +61,18 @@
 
 # Defense-in-depth: explicitly block known sensitive overlay files from being
 # served as static assets, even if the build script scrub ever fails.
-# index-full.json contains private repo metadata + content excerpts and must
-# only be read server-side. Add new entries here when adding to SENSITIVE_FILES
-# in scripts/netlify-build.sh. (Netlify redirect wildcards only work at
+# These files contain private repo metadata + content and must only be read
+# server-side. Add new entries here when adding to SENSITIVE_FILES in
+# scripts/netlify-build.sh. (Netlify redirect wildcards only work at
 # end-of-path, so each file is listed explicitly.)
 [[redirects]]
   from = "/data/index-full.json"
+  to = "/404.html"
+  status = 404
+  force = true
+
+[[redirects]]
+  from = "/data/taxonomy-full.json"
   to = "/404.html"
   status = 404
   force = true

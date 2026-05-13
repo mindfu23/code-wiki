@@ -73,6 +73,19 @@ jobs:
         working-directory: web
         run: npm run build:taxonomy
 
+      - name: Build repo-locations.md
+        # Regenerates wiki/projects/repo-locations.md directly from GitHub
+        # so it stays fresh nightly without needing the MCP server locally.
+        # Local filesystem paths are absent in the CI output; `sync_repos`
+        # enriches them on a developer's machine after a clone.
+        working-directory: web
+        env:
+          GITHUB_TOKEN: ${{ secrets.REPO_ACCESS_TOKEN || secrets.GITHUB_TOKEN }}
+          GITHUB_USERNAME: ${{ github.repository_owner }}
+        run: |
+          mkdir -p /tmp/private-content/wiki/projects
+          npm run build:repo-locations -- --out /tmp/private-content/wiki/projects/repo-locations.md
+
       - name: Copy generated files to private content repo
         run: |
           # Copy index and category files
@@ -89,7 +102,8 @@ jobs:
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add web/public/data/
+          # Include wiki/projects/ so the regenerated repo-locations.md is committed
+          git add web/public/data/ wiki/projects/
           if git diff --cached --quiet; then
             echo "No changes to commit"
           else
