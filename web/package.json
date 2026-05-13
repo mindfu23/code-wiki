@@ -7,6 +7,7 @@
     "build": "npm run build:index && npm run build:taxonomy && npm run build:functions",
     "build:index": "tsx src/indexBuilder.ts",
     "build:taxonomy": "tsx src/taxonomyBuilder.ts",
+    "build:repo-locations": "tsx src/buildRepoLocations.ts",
     "build:signals": "tsx src/diagramSignals.ts",
     "build:functions": "tsc -p tsconfig.functions.json",
     "lint:taxonomy": "tsx src/taxonomyValidator.ts",

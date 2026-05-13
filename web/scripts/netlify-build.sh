@@ -3,13 +3,16 @@ set -e
 
 # Netlify build script for code-wiki
 # Clones the private content repo and overlays:
-#   - public-safe data files (index.json, taxonomy.json, taxonomy-full.json,
+#   - public-safe data files (index.json, taxonomy.json,
 #     category-*.json, metrics/*.json) into public/data/ — served as static
-#     CDN assets. Taxonomy is intentionally public (controlled vocabulary).
-#   - sensitive data files (currently just index-full.json, which contains
-#     private repo metadata + content excerpts) into private-data/ — bundled
-#     with functions but never served to the public CDN. Read by full-index.ts
-#     and dashboard-data.ts via filesystem.
+#     CDN assets. taxonomy.json is the public-filtered build output:
+#     contentTags with visibility != public are stripped by taxonomyBuilder.
+#   - sensitive data files (index-full.json, taxonomy-full.json) into
+#     private-data/ — bundled with functions but never served to the
+#     public CDN. Read by full-index.ts, full-taxonomy.ts, and
+#     dashboard-data.ts via filesystem. taxonomy-full.json contains every
+#     project entry including private repos and their dependsOn edges, so
+#     it MUST be auth-gated.
 # Wiki content (repo-locations.md, personal docs, taxonomy sources) is overlaid
 # into ../wiki/ as before.
 
@@ -28,7 +31,7 @@ if [ -n "$PRIVATE_CONTENT_TOKEN" ] && [ -n "$PRIVATE_CONTENT_REPO" ]; then
     mkdir -p public/data/metrics
     mkdir -p private-data
 
-    SENSITIVE_FILES=("index-full.json")
+    SENSITIVE_FILES=("index-full.json" "taxonomy-full.json")
 
     # Move sensitive files to private-data/ first.
     for name in "${SENSITIVE_FILES[@]}"; do

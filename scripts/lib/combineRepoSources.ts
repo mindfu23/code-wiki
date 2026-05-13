@@ -84,6 +84,8 @@ export async function combineRepoSources(
         githubUrl: fromLocations.githubUrl,
         status: fromLocations.status,
         languages: fromLocations.languages,
+        visibility: fromLocations.visibility,
+        ghVisibility: fromLocations.visibility,
         foundInIndexJson: false,
         foundInLocationsMd: true,
       });

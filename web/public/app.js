@@ -3215,12 +3215,28 @@ async function loadStructures() {
   const container = document.getElementById('structures-list');
   if (!container) return;
 
-  // Load taxonomy data
+  // Load taxonomy data. If logged in, try the auth-gated full-taxonomy
+  // endpoint first — it returns the complete graph including private
+  // project entries. Anonymous users get the public-filtered taxonomy.json
+  // via the static CDN. (The /data/taxonomy-full.json static path is
+  // hard-404'd by netlify.toml so it never returns private data.)
   if (!taxonomyData) {
     try {
-      let resp = await fetch('/data/taxonomy-full.json');
-      if (!resp.ok) resp = await fetch('/data/taxonomy.json');
-      if (resp.ok) taxonomyData = await resp.json();
+      if (currentUser) {
+        const fullResp = await fetch('/.netlify/functions/full-taxonomy', {
+          credentials: 'include',
+        });
+        if (fullResp.ok) {
+          const result = await fullResp.json();
+          if (result.success && result.data) {
+            taxonomyData = result.data;
+          }
+        }
+      }
+      if (!taxonomyData) {
+        const resp = await fetch('/data/taxonomy.json');
+        if (resp.ok) taxonomyData = await resp.json();
+      }
     } catch {}
   }
 

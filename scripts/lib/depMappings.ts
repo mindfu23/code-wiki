@@ -25,30 +25,57 @@ export interface DepMapping {
 }
 
 /**
- * Exact-match mappings: `package.json` dependency name → inference.
- * Only include terms that exist in wiki/_taxonomy/terms/.
+ * Exact-match mappings: dependency name → inference. Used for both
+ * package.json deps (npm) and requirements.txt deps (Python).
+ *
+ * Only include terms that exist in wiki/_taxonomy/terms/. Stack terms must
+ * also be listed under `facets.stack.values` in wiki/_taxonomy/schema.yml,
+ * or the validator will reject them. The `service` facet is open-ended in
+ * the schema, so new service terms only require their own term file.
  */
 export const EXACT_DEPS: Record<string, DepMapping> = {
-  // --- JS/TS stack ---
-  'react':            { stack: ['react'], platform: ['web'] },
-  'react-dom':        { stack: ['react'], platform: ['web'] },
-  'react-native':     { stack: ['react-native'], platform: ['ios', 'android'] },
-  'vite':             { stack: ['vite'], platform: ['web'] },
-  'typescript':       { stack: ['typescript'] },
-  'expo':             { stack: ['expo'], platform: ['ios', 'android'] },
-  'express':          { stack: ['node-express'] },
-  '@netlify/functions': { stack: ['netlify-functions'] },
+  // --- JS/TS stack (must match values in schema.yml: facets.stack.values) ---
+  'react':                  { stack: ['react'], platform: ['web'] },
+  'react-dom':              { stack: ['react'], platform: ['web'] },
+  'react-native':           { stack: ['react-native'], platform: ['ios', 'android'] },
+  'vite':                   { stack: ['vite'], platform: ['web'] },
+  'typescript':             { stack: ['typescript'] },
+  'expo':                   { stack: ['expo'], platform: ['ios', 'android'] },
+  'express':                { stack: ['node-express'] },
+  '@netlify/functions':     { stack: ['netlify-functions'] },
 
-  // --- Service SDKs ---
-  '@anthropic-ai/sdk':       { service: ['anthropic-api'] },
-  'openai':                   { service: ['openai-api'] },
-  '@google/generative-ai':    { service: ['google-gemini-api'] },
-  '@octokit/rest':            { service: ['github-api'] },
-  'googleapis':               { service: ['google-sheets-api'] },
-  '@huggingface/inference':   { service: ['huggingface-api'] },
+  // --- npm service SDKs ---
+  '@anthropic-ai/sdk':      { service: ['anthropic-api'] },
+  'openai':                 { service: ['openai-api'] },
+  '@google/generative-ai':  { service: ['google-gemini-api'] },
+  '@octokit/rest':          { service: ['github-api'] },
+  '@octokit/core':          { service: ['github-api'] },
+  'octokit':                { service: ['github-api'] },
+  'googleapis':             { service: ['google-sheets-api'] },
+  '@huggingface/inference': { service: ['huggingface-api'] },
+  '@supabase/supabase-js':  { service: ['supabase-api'] },
+  'firebase':               { service: ['firebase-api'] },
+  'firebase-admin':         { service: ['firebase-api'] },
+  'firebase-functions':     { service: ['firebase-api'] },
+  'stripe':                 { service: ['stripe-api'] },
 
-  // --- Python SDKs (seen in requirements.txt) ---
-  'anthropic':  { service: ['anthropic-api'] },
+  // --- Python service SDKs (seen in requirements.txt / pyproject.toml) ---
+  'anthropic':              { service: ['anthropic-api'] },
+  'google-generativeai':    { service: ['google-gemini-api'] },
+  'huggingface_hub':        { service: ['huggingface-api'] },
+  'transformers':           { service: ['huggingface-api'] },
+  'langchain-anthropic':    { service: ['anthropic-api', 'langchain-api'] },
+  'langchain-google-genai': { service: ['google-gemini-api', 'langchain-api'] },
+  'langchain-community':    { service: ['langchain-api'] },
+  'langchain-core':         { service: ['langchain-api'] },
+  'langchain':              { service: ['langchain-api'] },
+
+  // --- Python stack hints (use existing 'python' term; framework granularity
+  //     would require schema expansion, deferred) ---
+  'fastapi':                { stack: ['python'] },
+  'flask':                  { stack: ['python'] },
+  'django':                 { stack: ['python'] },
+  'streamlit':              { stack: ['python'] },
 };
 
 /**
@@ -56,7 +83,11 @@ export const EXACT_DEPS: Record<string, DepMapping> = {
  * Key is the prefix (no trailing `*`).
  */
 export const PREFIX_DEPS: Record<string, DepMapping> = {
-  '@capacitor/': { platform: ['ios', 'android'] },
+  '@capacitor/':   { platform: ['ios', 'android'] },
+  '@expo/':        { stack: ['expo'], platform: ['ios', 'android'] },
+  'firebase/':     { service: ['firebase-api'] },     // for sub-packages if ever in deps
+  'firebase-':     { service: ['firebase-api'] },     // firebase-functions-test, etc.
+  'langchain-':    { service: ['langchain-api'] },    // catches future langchain-* variants
 };
 
 /**
@@ -72,10 +103,15 @@ export const MANIFEST_SIGNALS: Record<string, DepMapping> = {
     // Flutter is inherently multi-platform; actual platform subset is
     // narrowed by looking at which platform dirs exist in the project.
   },
-  'netlify.toml':   { deployTarget: ['netlify'] },
-  'wrangler.toml':  { deployTarget: ['cloudflare-workers'], stack: ['cloudflare-workers'] },
-  'app.json':       { stack: ['expo'], platform: ['ios', 'android'] },
-  'app.config.js':  { stack: ['expo'], platform: ['ios', 'android'] },
+  'requirements.txt': { stack: ['python'] },
+  'pyproject.toml':   { stack: ['python'] },
+  'netlify.toml':     { deployTarget: ['netlify'] },
+  'wrangler.toml':    { deployTarget: ['cloudflare-workers'], service: ['cloudflare-api'] },
+  'app.json':         { stack: ['expo'], platform: ['ios', 'android'] },
+  'app.config.js':    { stack: ['expo'], platform: ['ios', 'android'] },
+  // Dockerfile is too generic to infer a deploy target safely (could be
+  // Cloud Run, Fly, Railway, local docker-compose, etc). Left unmapped on
+  // purpose. Tag manually per project if Cloud Run is the actual target.
 };
 
 /**
