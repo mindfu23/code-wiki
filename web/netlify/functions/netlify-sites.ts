@@ -5,6 +5,7 @@
  */
 
 import { Handler, HandlerEvent, HandlerContext } from '@netlify/functions';
+import { getAccessLevel } from './_shared/auth.js';
 
 interface NetlifySite {
   id: string;
@@ -27,12 +28,10 @@ interface SimplifiedSite {
   updatedAt: string;
 }
 
-// CORS headers
+// Same-origin only (no Access-Control-Allow-Origin); the response lists every site incl. private repos.
 const headers = {
-  'Access-Control-Allow-Origin': '*',
-  'Access-Control-Allow-Methods': 'GET, OPTIONS',
-  'Access-Control-Allow-Headers': 'Content-Type',
   'Content-Type': 'application/json',
+  'Cache-Control': 'private, no-store',
 };
 
 const handler: Handler = async (event: HandlerEvent, context: HandlerContext) => {
@@ -47,6 +46,16 @@ const handler: Handler = async (event: HandlerEvent, context: HandlerContext) =>
       statusCode: 405,
       headers,
       body: JSON.stringify({ error: 'Method not allowed' }),
+    };
+  }
+
+  // The full site list (incl. sites built from private repos, admin URLs) is for signed-in
+  // owner/viewer sessions only.
+  if (!getAccessLevel(event).canReadPrivate) {
+    return {
+      statusCode: 401,
+      headers,
+      body: JSON.stringify({ success: false, error: 'Sign in to view Netlify sites' }),
     };
   }
 

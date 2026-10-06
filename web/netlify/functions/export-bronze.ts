@@ -10,18 +10,37 @@
 import { Handler, HandlerEvent } from '@netlify/functions';
 import * as fs from 'fs';
 import * as path from 'path';
+import * as crypto from 'crypto';
+import { getAccessLevel } from './_shared/auth.js';
 
+// Same-origin only (no Access-Control-Allow-Origin): the export names private repos and their sites.
 const headers = {
-  'Access-Control-Allow-Origin': '*',
-  'Access-Control-Allow-Methods': 'GET, OPTIONS',
-  'Access-Control-Allow-Headers': 'Content-Type',
   'Content-Type': 'application/json',
+  'Cache-Control': 'private, no-store',
 };
+
+/**
+ * Allowed: a session that may read private data (owner / viewer), or a server-to-server caller
+ * (e.g. the Databricks notebook) sending `Authorization: Bearer <EXPORT_BRONZE_TOKEN>`.
+ * With EXPORT_BRONZE_TOKEN unset, only sessions are accepted.
+ */
+function isAuthorized(event: HandlerEvent): boolean {
+  if (getAccessLevel(event).canReadPrivate) return true;
+  const expected = process.env.EXPORT_BRONZE_TOKEN;
+  const auth = event.headers.authorization || event.headers.Authorization || '';
+  if (!expected || !auth.startsWith('Bearer ')) return false;
+  const a = crypto.createHash('sha256').update(auth.slice(7)).digest();
+  const b = crypto.createHash('sha256').update(expected).digest();
+  return crypto.timingSafeEqual(a, b);
+}
 
 const handler: Handler = async (event: HandlerEvent) => {
   if (event.httpMethod === 'OPTIONS') return { statusCode: 204, headers, body: '' };
   if (event.httpMethod !== 'GET') {
     return { statusCode: 405, headers, body: JSON.stringify({ error: 'Method not allowed' }) };
+  }
+  if (!isAuthorized(event)) {
+    return { statusCode: 401, headers, body: JSON.stringify({ error: 'Authentication required' }) };
   }
 
   const params = event.queryStringParameters || {};
