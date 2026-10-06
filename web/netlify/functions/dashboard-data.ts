@@ -19,12 +19,25 @@ import {
 } from './_shared/completionAssessment.js';
 import { getAccessLevel } from './_shared/auth.js';
 
-const headers = {
-  'Access-Control-Allow-Origin': '*',
-  'Access-Control-Allow-Methods': 'GET, OPTIONS',
-  'Access-Control-Allow-Headers': 'Content-Type',
-  'Access-Control-Allow-Credentials': 'true',
+// Same-origin only: no Access-Control-Allow-Origin (the Observatory UI is served from this site).
+const headers: Record<string, string> = {
   'Content-Type': 'application/json',
+};
+
+// Anonymous responses are identical for every visitor, so cache them: in memory on a warm instance, and
+// on Netlify's CDN keyed so that any request carrying a wiki_session cookie misses (it may be a signed-in
+// viewer who must get the private variant). This bounds the per-hit GitHub Actions + Netlify deploy fan-out
+// (~1 API call per repo) for public traffic.
+const ANON_CACHE_TTL_MS = 5 * 60 * 1000;
+let anonCache: { at: number; body: string } | null = null;
+const ANON_CACHE_HEADERS: Record<string, string> = {
+  'Cache-Control': 'public, max-age=0, must-revalidate',
+  'Netlify-CDN-Cache-Control': 'public, s-maxage=300, stale-while-revalidate=600',
+  'Netlify-Vary': 'cookie=wiki_session',
+};
+const PRIVATE_HEADERS: Record<string, string> = {
+  'Cache-Control': 'private, no-store',
+  'Netlify-Vary': 'cookie=wiki_session',
 };
 
 interface ProjectHealthRow {
@@ -63,6 +76,7 @@ async function fetchGitHubRepos(username: string, token: string) {
     language: string | null;
     open_issues_count: number;
     pushed_at: string;
+    private: boolean;
   }> = [];
 
   let page = 1;
@@ -224,12 +238,19 @@ const handler: Handler = async (event: HandlerEvent) => {
     const access = getAccessLevel(event);
     const includePrivate = access.canReadPrivate;
 
+    if (!includePrivate && anonCache && Date.now() - anonCache.at < ANON_CACHE_TTL_MS) {
+      return { statusCode: 200, headers: { ...headers, ...ANON_CACHE_HEADERS, 'X-Cache': 'HIT' }, body: anonCache.body };
+    }
+
     // Fetch GitHub repos, Netlify sites, and wiki index in parallel
-    const [githubRepos, netlifySites, wikiRepos] = await Promise.all([
+    const [allGithubRepos, netlifySites, wikiRepos] = await Promise.all([
       fetchGitHubRepos(githubUsername, githubToken),
       netlifyToken ? fetchNetlifySites(netlifyToken) : Promise.resolve([]),
       Promise.resolve(loadWikiIndex(includePrivate)),
     ]);
+
+    // The owner token lists private repos too; only sessions that may read private data get them.
+    const githubRepos = includePrivate ? allGithubRepos : allGithubRepos.filter(r => !r.private);
 
     console.log(`[dashboard-data] GitHub repos: ${githubRepos.length}, wiki repos: ${wikiRepos.length}, includePrivate: ${includePrivate}`);
 
@@ -368,10 +389,7 @@ const handler: Handler = async (event: HandlerEvent) => {
       return new Date(b.lastCommitDate).getTime() - new Date(a.lastCommitDate).getTime();
     });
 
-    return {
-      statusCode: 200,
-      headers,
-      body: JSON.stringify({
+    const body = JSON.stringify({
         success: true,
         data: {
           projects,
@@ -382,7 +400,13 @@ const handler: Handler = async (event: HandlerEvent) => {
             p => p.deployStatus === 'error' || p.actionsStatus === 'error'
           ).length,
         },
-      }),
+      });
+    if (!includePrivate) anonCache = { at: Date.now(), body };
+
+    return {
+      statusCode: 200,
+      headers: { ...headers, ...(includePrivate ? PRIVATE_HEADERS : ANON_CACHE_HEADERS), 'X-Cache': 'MISS' },
+      body,
     };
   } catch (error) {
     console.error('Dashboard data error:', error);
