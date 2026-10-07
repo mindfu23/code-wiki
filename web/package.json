@@ -9,7 +9,7 @@
     "build:taxonomy": "tsx src/taxonomyBuilder.ts",
     "build:repo-locations": "tsx src/buildRepoLocations.ts",
     "build:signals": "tsx src/diagramSignals.ts",
-    "build:functions": "tsc -p tsconfig.functions.json",
+    "build:functions": "tsc -p tsconfig.functions.json && node scripts/mark-functions-cjs.cjs",
     "lint:taxonomy": "tsx src/taxonomyValidator.ts",
     "dev": "netlify dev",
     "typecheck": "tsc --noEmit",
