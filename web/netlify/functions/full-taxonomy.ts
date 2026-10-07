@@ -50,6 +50,28 @@ function loadFullTaxonomy(): unknown | null {
   return null;
 }
 
+/**
+ * Private repos' flow diagrams (moved out of the public app.js). Lives only in private-data/
+ * (overlaid from the private content repo at build); missing file = no private diagrams.
+ */
+function loadPrivateDiagrams(): unknown[] {
+  const candidates = [
+    path.join(process.cwd(), 'private-data/diagrams-private.json'),
+    path.resolve('./private-data/diagrams-private.json'),
+  ];
+  for (const p of candidates) {
+    try {
+      if (fs.existsSync(p)) {
+        const data = JSON.parse(fs.readFileSync(p, 'utf-8'));
+        return Array.isArray(data) ? data : [];
+      }
+    } catch {
+      // Try next candidate.
+    }
+  }
+  return [];
+}
+
 const handler: Handler = async (event: HandlerEvent) => {
   if (event.httpMethod === 'OPTIONS') {
     return { statusCode: 204, headers, body: '' };
@@ -82,6 +104,7 @@ const handler: Handler = async (event: HandlerEvent) => {
     body: JSON.stringify({
       success: true,
       data: fullTaxonomy,
+      privateDiagrams: loadPrivateDiagrams(),
       identity: access.identity,
     }),
   };

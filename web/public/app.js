@@ -2655,82 +2655,11 @@ document.addEventListener('change', (e) => {
 // DIAGRAMS PAGE (Project Flows)
 // ============================================
 
-// Diagram definitions — each entry describes one project's data flow
+// Diagram definitions — each entry describes one project's data flow.
+// Only PUBLIC repos' diagrams live here. Private repos' diagrams are in the private content repo
+// (web/public/data/diagrams-private.json -> private-data/ at build) and reach signed-in viewers via the
+// full-taxonomy function (`privateDiagrams`); anonymous visitors never receive them.
 const PROJECT_DIAGRAMS = [
-  {
-    id: 'metabot',
-    repoName: 'Metabot',
-    name: 'Metabot',
-    description: 'Multi-AI aggregation — queries multiple LLM providers and merges responses.',
-    stack: ['react', 'node'],
-    diagram: `flowchart LR
-    User([User]) --> React["React SPA<br/>Vite + Tailwind"]
-    React -->|fetch| Express["Express Backend"]
-    Express -->|API key| Claude["Claude API"]
-    Express -->|API key| GPT["OpenAI API"]
-    Express -->|API key| Gemini["Gemini API"]
-    Claude --> Express
-    GPT --> Express
-    Gemini --> Express
-    Express -->|merged response| React
-    React -->|save as .md| Files["Local Files"]
-    React --> User`
-  },
-  {
-    id: 'valueape',
-    repoName: 'ValueApe',
-    name: 'ValueApe',
-    description: 'Stock analysis with multi-provider data, AI recommendations, sentiment analysis, and cloud sync.',
-    stack: ['react', 'node', 'cloudflare'],
-    diagram: `flowchart LR
-    User([User]) --> React["React SPA<br/>Vite + Tailwind"]
-
-    subgraph NF["Netlify Functions"]
-      AP["api-proxy"]
-      YP["yahoo-proxy"]
-      GP["gemini-proxy"]
-      PP["perplexity-query"]
-      FP["fingpt-proxy"]
-      Auth["auth-*<br/>Supabase"]
-      Sync["sync-data"]
-    end
-
-    React --> AP & YP & GP & PP & FP & Auth & Sync
-
-    subgraph Stock["Stock Data Providers"]
-      Yahoo["Yahoo Finance<br/>(primary)"]
-      AV["Alpha Vantage"]
-      FH["Finnhub"]
-      TG["Tiingo"]
-      FMP["FMP"]
-    end
-
-    YP --> Yahoo
-    AP --> AV & FH & TG & FMP
-
-    subgraph AI["AI / LLM"]
-      Gemini["Gemini<br/>(query parsing)"]
-      Perplexity["Perplexity<br/>(recommendations)"]
-      HF["HuggingFace<br/>FinBERT / FinGPT"]
-    end
-
-    GP --> Gemini
-    PP --> Perplexity
-    FP --> HF
-
-    React -->|direct| SEC["SEC EDGAR<br/>Filings"]
-
-    subgraph Storage["Storage"]
-      LS["localStorage"]
-      IDB["IndexedDB"]
-      D1["Cloudflare D1<br/>(cloud sync)"]
-    end
-
-    React --> LS & IDB
-    Sync --> D1
-    Auth --> Supa["Supabase"]
-    React --> User`
-  },
   {
     id: 'ethicalaiditor',
     repoName: 'EthicalAIditor',
@@ -2747,39 +2676,6 @@ const PROJECT_DIAGRAMS = [
     Pleias --> NF
     NF --> React
     React -->|export .docx| User`
-  },
-  {
-    id: 'datastic',
-    repoName: 'Datastic',
-    name: 'Datastic',
-    description: 'Data analytics dashboard — GH Archive + HuggingFace via BigQuery and dbt.',
-    stack: ['react', 'python'],
-    diagram: `flowchart LR
-    User([User]) --> React["React SPA<br/>Netlify"]
-    React -->|fetch| NF["Netlify Functions"]
-    NF -->|query| BQ["BigQuery"]
-    GHA["GH Archive"] -->|daily| dbt["dbt Models"]
-    HF["HuggingFace Hub"] -->|daily| dbt
-    dbt --> BQ
-    BQ --> NF
-    NF --> React
-    React --> User
-    GA["GitHub Actions"] -->|schedule| dbt`
-  },
-  {
-    id: 'novelizer',
-    repoName: 'Novelizer',
-    name: 'Novelizer',
-    description: 'Novel writing assistant with document import/export.',
-    stack: ['react'],
-    diagram: `flowchart LR
-    User([User]) --> React["React SPA<br/>Vite + Tailwind"]
-    User -->|upload manuscript| React
-    React -->|fetch| NF["Netlify Functions"]
-    NF -->|API key| Claude["Claude API"]
-    Claude --> NF
-    NF --> React
-    React -->|export| User`
   },
   {
     id: 'code-wiki',
@@ -2813,27 +2709,6 @@ const PROJECT_DIAGRAMS = [
     n8n -->|write chapter| Docs["Google Docs"]
     n8n -->|log| Sheets
     Caddy["Caddy Proxy"] --> n8n`
-  },
-  {
-    id: 'lensquery',
-    repoName: 'LensQuery',
-    name: 'LensQuery',
-    description: 'Cross-platform photo library query tool — Tauri desktop + web.',
-    stack: ['react', 'tauri'],
-    diagram: `flowchart LR
-    User([User]) --> Tauri["Tauri Shell<br/>Rust + React"]
-    User --> Web["Web SPA<br/>Vite + React"]
-    Tauri -->|read catalog| LR["Lightroom DB<br/>SQLite"]
-    Tauri -->|read catalog| C1["Capture One<br/>Sessions"]
-    Tauri -->|thumbnails| FS["Local Filesystem"]
-    Tauri -->|analyze| API["API Server"]
-    Web -->|analyze| API
-    API -->|API key| Claude["Claude API"]
-    API -->|API key| Gemini["Gemini API"]
-    Claude --> API
-    Gemini --> API
-    API --> Tauri
-    API --> Web`
   },
   {
     id: 'searchbard',
@@ -2884,21 +2759,6 @@ const PROJECT_DIAGRAMS = [
     CLI --> User`
   },
   {
-    id: 'storyplot',
-    repoName: 'StoryPlot',
-    name: 'StoryPlot',
-    description: 'Interactive story plot generator based on Plotto system.',
-    stack: ['react'],
-    diagram: `flowchart LR
-    User([User]) --> React["React SPA<br/>Vite + Tailwind"]
-    React -->|fetch| NF["Netlify Functions"]
-    NF -->|API key| Claude["Claude API"]
-    Claude --> NF
-    NF --> React
-    React -->|parse| XML["Plotto XML<br/>Data"]
-    React --> User`
-  },
-  {
     id: 'jbwordpresstheme',
     repoName: 'JBWordPressTheme',
     name: 'Technicalistic WP Theme',
@@ -2912,24 +2772,6 @@ const PROJECT_DIAGRAMS = [
     WP -->|query| DB["MySQL Database"]
     DB --> WP
     WP --> Visitor`
-  },
-  {
-    id: 'photophreaker',
-    repoName: 'PhotoPhreaker',
-    name: 'PhotoPhreaker',
-    description: 'AI image decomposition with Topaz and Photoshop integration.',
-    stack: ['python'],
-    diagram: `flowchart LR
-    User([User]) --> UI["Desktop UI<br/>Python"]
-    User -->|input images| UI
-    UI -->|process| Topaz["Topaz AI"]
-    UI -->|process| PS["Photoshop<br/>Scripting"]
-    UI -->|analyze| Claude["Claude API"]
-    Topaz --> UI
-    PS --> UI
-    Claude --> UI
-    UI -->|output images| FS["Local Filesystem"]
-    UI --> User`
   },
 ];
 
@@ -3230,6 +3072,10 @@ async function loadStructures() {
           const result = await fullResp.json();
           if (result.success && result.data) {
             taxonomyData = result.data;
+          }
+          // Private repos' flow diagrams are only ever sent to signed-in viewers
+          for (const d of result.privateDiagrams || []) {
+            if (!PROJECT_DIAGRAMS.some(x => x.id === d.id)) PROJECT_DIAGRAMS.push(d);
           }
         }
       }

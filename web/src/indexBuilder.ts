@@ -23,6 +23,10 @@ import {
   type RepoSentinels,
 } from '../netlify/functions/_shared/completionAssessment.js';
 
+// CI logs for this public repo are public: never print repo names there (some repos are private).
+const CI_LOG = !!process.env.CI;
+const nm = (name: string): string => (CI_LOG ? '<repo>' : name);
+
 /**
  * Load environment variables from a .env file if they're not already set.
  * Falls back to ../mcp-server/.env so local builds pick up GitHub credentials
@@ -382,12 +386,12 @@ async function fetchRepoDocFilesFromGitHub(
   } catch (error) {
     const err = error as { status?: number };
     if (err.status === 404) {
-      console.log(`  Repository ${owner}/${repo} not found or not accessible`);
+      console.log(`  Repository ${nm(`${owner}/${repo}`)} not found or not accessible`);
     } else if (err.status === 409) {
       // Empty repository - no files to index
-      console.log(`  Repository ${owner}/${repo} is empty (no commits yet)`);
+      console.log(`  Repository ${nm(`${owner}/${repo}`)} is empty (no commits yet)`);
     } else {
-      console.error(`  Error fetching tree for ${owner}/${repo}:`, error);
+      console.error(`  Error fetching tree for ${nm(`${owner}/${repo}`)}:`, CI_LOG ? (error as Error)?.message : error);
     }
   }
 
@@ -602,7 +606,7 @@ async function mergeRepoData(
     for (const localRepo of matches) {
       attachLocalToMergedEntry(entry, localRepo);
       if (localRepo.name.toLowerCase() !== ghRepo.name.toLowerCase()) {
-        console.log(`  Associated local "${localRepo.name}" with GitHub repo "${ghRepo.name}" via shared URL`);
+        console.log(`  Associated local "${nm(localRepo.name)}" with GitHub repo "${nm(ghRepo.name)}" via shared URL`);
       }
     }
     mergedEntries.push(entry);
@@ -646,7 +650,7 @@ async function mergeRepoData(
               // Rename or duplicate remote: the canonical repo is already in the merged list.
               // Attach this local entry as an alias and move on.
               attachLocalToMergedEntry(existing, localRepo);
-              console.log(`  Merged stale alias "${localRepo.name}" into "${existing.name}" (renamed or duplicate remote)`);
+              console.log(`  Merged stale alias "${nm(localRepo.name)}" into "${nm(existing.name)}" (renamed or duplicate remote)`);
               processedLocal.add(localRepo.name.toLowerCase());
               continue;
             }
@@ -663,11 +667,11 @@ async function mergeRepoData(
             mergedEntries.push(newEntry);
             mergedByUrl.set(canonicalKey, newEntry);
             processedLocal.add(localRepo.name.toLowerCase());
-            console.log(`  Resolved orphan local "${localRepo.name}" → canonical "${resolved.canonicalRepo}" (${resolved.visibility})`);
+            console.log(`  Resolved orphan local "${nm(localRepo.name)}" → canonical "${nm(resolved.canonicalRepo)}" (${resolved.visibility})`);
             continue;
           }
           // 404: repo no longer exists. Drop silently with a note — stale markdown entry.
-          console.log(`  Dropping stale local entry "${localRepo.name}" (GitHub URL returns 404)`);
+          console.log(`  Dropping stale local entry "${nm(localRepo.name)}" (GitHub URL returns 404)`);
           processedLocal.add(localRepo.name.toLowerCase());
           continue;
         } catch (err: unknown) {
@@ -895,6 +899,21 @@ async function buildIndex(): Promise<void> {
   // Merge preserved docs into the full document set
   const allDocuments = [...documents, ...preservedDocs];
   const allCategories = new Set([...categories, ...preservedCategories]);
+
+  // A wiki page about a repo is only public if that repo is public on GitHub. The page's own
+  // `visibility` label can make it more private, never public (labels go stale when a repo's
+  // GitHub visibility changes). A source_repo not found among the repos counts as private.
+  const repoVisibility = new Map(repos.map(r => [r.name.toLowerCase(), r.visibility]));
+  let privatizedDocs = 0;
+  for (const doc of documents) {
+    if (doc.visibility === 'private' || !doc.sourceRepo) continue;
+    if (repoVisibility.get(String(doc.sourceRepo).toLowerCase()) !== 'public') {
+      doc.visibility = 'private';
+      privatizedDocs++;
+    }
+  }
+  // Counts only: CI logs for this public repo are public.
+  console.log(`Docs kept private because their source repo is private or unknown: ${privatizedDocs}`);
 
   // Separate public and private repos
   const publicRepos = repos.filter(r => r.visibility !== 'private');

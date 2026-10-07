@@ -1,3 +1,5 @@
+import * as fs from 'fs';
+import * as path from 'path';
 /**
  * Configuration types for the Code Wiki MCP Server
  */
@@ -7,6 +9,9 @@ export interface Config {
   sourceDirectories: string[];
   /** Path to curated wiki content */
   wikiDirectory: string;
+  /** Private wiki content (local clone of the private content repo's wiki/). PRIVATE_WIKI_DIR, else
+   *  <wikiDirectory>/../private-content/wiki when that exists. Empty = none. */
+  privateWikiDirectory: string;
   /** Path to preferences/recommendations directory (optional) */
   preferencesDirectory?: string;
   /** Where to store index.json and sync-state.json */
@@ -61,10 +66,16 @@ export function loadMetricsConfig(): MetricsConfig {
   };
 }
 
+function defaultPrivateWikiDir(wikiDir: string): string {
+  const candidate = path.join(path.dirname(path.resolve(wikiDir)), 'private-content', 'wiki');
+  return fs.existsSync(candidate) ? candidate : '';
+}
+
 export function loadConfig(): Config {
   return {
     sourceDirectories: (process.env.SOURCE_DIRS || '').split(',').map(s => s.trim()).filter(Boolean),
     wikiDirectory: process.env.WIKI_DIR || './wiki',
+    privateWikiDirectory: process.env.PRIVATE_WIKI_DIR || defaultPrivateWikiDir(process.env.WIKI_DIR || './wiki'),
     preferencesDirectory: process.env.PREFERENCES_DIR || undefined,
     cacheDirectory: process.env.CACHE_DIR || './data',
     githubUsername: process.env.GITHUB_USERNAME || '',

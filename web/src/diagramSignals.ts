@@ -10,7 +10,7 @@
  */
 
 import * as fs from 'fs/promises';
-import { readFileSync } from 'fs';
+import { readdirSync, readFileSync } from 'fs';
 import * as path from 'path';
 import { createHash } from 'crypto';
 import { fileURLToPath } from 'url';
@@ -48,22 +48,31 @@ function loadEnvFallback(): void {
 loadEnvFallback();
 
 // Projects to track — maps diagram id to GitHub repo name
-const DIAGRAM_REPOS: Record<string, string> = {
-  'metabot': 'Metabot',
-  'valueape': 'ValueApe',
-  'ethicalaiditor': 'EthicalAIditor',
-  'datastic': 'Datastic',
-  'novelizer': 'Novelizer',
-  'code-wiki': 'code-wiki',
-  'n8n-workflows': 'n8n_workflows',
-  'lensquery': 'LensQuery',
-  'searchbard': 'SearchBard',
-  'theorazine': 'Theorazine',
-  'gastown': 'gastown',
-  'storyplot': 'StoryPlot',
-  'jbwordpresstheme': 'JBWordPressTheme',
-  'photophreaker': 'PhotoPhreaker',
-};
+/**
+ * Diagram id -> GitHub repo name, read from wiki/diagrams/<id>-flow.md frontmatter (`source_repo`).
+ * Not hardcoded: private repos' diagrams live only in the private content repo (overlaid into wiki/
+ * before this runs in CI), and their names must not appear in this public repo or its CI logs.
+ */
+function loadDiagramRepos(): Record<string, string> {
+  const wikiDir = process.env.WIKI_DIR || path.resolve(process.cwd(), '..', 'wiki');
+  const diagramsDir = path.join(wikiDir, 'diagrams');
+  const repos: Record<string, string> = {};
+  let files: string[] = [];
+  try {
+    files = readdirSync(diagramsDir).filter(f => f.endsWith('-flow.md'));
+  } catch {
+    return repos;
+  }
+  for (const file of files) {
+    const text = readFileSync(path.join(diagramsDir, file), 'utf-8');
+    const fm = text.startsWith('---') ? text.split('---')[1] : '';
+    const m = fm.match(/^source_repo:\s*"?([^"\n]+)"?\s*$/m);
+    if (m) repos[file.replace(/-flow\.md$/, '')] = m[1].trim();
+  }
+  return repos;
+}
+
+const DIAGRAM_REPOS = loadDiagramRepos();
 
 interface SignalEntry {
   depsHash: string;
@@ -145,7 +154,11 @@ async function main() {
 
   console.log('Computing diagram staleness signals...');
 
+  // Logs use a counter, not repo names: CI logs for this public repo are public.
+  let n = 0;
+  const total = Object.keys(DIAGRAM_REPOS).length;
   for (const [id, repoName] of Object.entries(DIAGRAM_REPOS)) {
+    n++;
     try {
       const depsHash = await fetchPackageJsonDeps(octokit, GITHUB_USERNAME, repoName);
       const functionsHash = await fetchDirListing(octokit, GITHUB_USERNAME, repoName, 'netlify/functions');
@@ -167,9 +180,9 @@ async function main() {
       };
 
       const status = changed ? ' [STALE]' : '';
-      console.log(`  ${repoName}${status}`);
+      console.log(`  diagram ${n}/${total}${status}`);
     } catch (err) {
-      console.warn(`  ${repoName}: error fetching signals`, (err as Error).message);
+      console.warn(`  diagram ${n}/${total}: error fetching signals`);
       // Preserve previous entry if fetch fails
       if (existing[id]) {
         signals[id] = { ...existing[id], lastChecked: now };
