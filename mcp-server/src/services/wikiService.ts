@@ -13,9 +13,13 @@ export type WikiCategory = typeof WIKI_CATEGORIES[number];
 
 export class WikiService {
   private wikiDir: string;
+  /** Extra wiki roots read after wikiDir, e.g. the local clone of the private content repo's wiki/,
+   *  which holds diagrams and pages for private repos (they are not in this public repo). */
+  private extraWikiDirs: string[];
 
-  constructor(wikiDir: string) {
+  constructor(wikiDir: string, extraWikiDirs: string[] = []) {
     this.wikiDir = wikiDir;
+    this.extraWikiDirs = extraWikiDirs;
   }
 
   /**
@@ -36,7 +40,14 @@ export class WikiService {
    * Get documents in a specific category
    */
   async getDocumentsByCategory(category: WikiCategory): Promise<WikiDocument[]> {
-    const categoryPath = path.join(this.wikiDir, category);
+    const documents: WikiDocument[] = [];
+    for (const root of [this.wikiDir, ...this.extraWikiDirs]) {
+      documents.push(...(await this.readCategoryDir(path.join(root, category), category)));
+    }
+    return documents;
+  }
+
+  private async readCategoryDir(categoryPath: string, category: WikiCategory): Promise<WikiDocument[]> {
     const documents: WikiDocument[] = [];
 
     try {

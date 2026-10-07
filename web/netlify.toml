@@ -75,6 +75,12 @@
   status = 404
   force = true
 
+[[redirects]]
+  from = "/data/diagrams-private.json"
+  to = "/404.html"
+  status = 404
+  force = true
+
 # Observatory metrics snapshots list Netlify sites built from private repos. They are read only by
 # export-bronze (auth-gated) via included_files, never by the browser, so don't serve them statically.
 [[redirects]]
