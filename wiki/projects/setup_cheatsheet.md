@@ -7,7 +7,7 @@ updated: "2026-03-12"
 
 # New Project Setup Cheatsheet
 
-End-to-end steps to take a scaffolded project (React + Vite + Supabase + Netlify) from local code to live testable prototype. Written for StoryLoft but applies to any project on this stack.
+End-to-end steps to take a scaffolded project (React + Vite + Supabase + Netlify) from local code to live testable prototype. Applies to any project on this stack; replace `my-app` with your project's name.
 
 ---
 
@@ -75,7 +75,7 @@ In project root, copy `.env.example` → `.env` and fill in:
 cp .env.example .env
 ```
 
-Minimum for StoryLoft:
+Minimum for `my-app`:
 ```
 VITE_SUPABASE_URL=https://xxxxxxxxxxxx.supabase.co
 VITE_SUPABASE_ANON_KEY=eyJhbGc...
@@ -116,7 +116,7 @@ Also note that my initial email address is probably fine for prototyping, but fo
 **URL:** https://app.netlify.com
 
 1. **Add new site** → Import an existing project → GitHub
-2. Select repository: `mindfu23/StoryLoft`
+2. Select repository: `<your-github-user>/my-app`
 3. Build settings (auto-detected from `netlify.toml`):
    - Build command: `npm run build`
    - Publish directory: `dist`
@@ -176,18 +176,18 @@ Sentry.init({ dsn: import.meta.env.VITE_SENTRY_DSN });
 
 ## 8. n8n — Supabase Keep-Alive Ping
 
-The n8n VM is already running at `35.188.141.23:5678`.
+Assumes an n8n instance you already run (e.g. a small VM), at `https://<your-n8n-host>`. Put it behind HTTPS and n8n's own login; don't expose it on a bare IP and port.
 
-### Import the StoryLoft workflow
+### Import the Supabase keep-alive workflow
 1. Open n8n at your instance URL
 2. Workflows → **Import from file**
-3. Select `n8n_workflows/workflows/storyloft-supabase-keepalive.json`
+3. Select your `supabase-keepalive.json` workflow export
 
 ### Add environment variables in n8n
 Settings → Variables (or edit `.env` on the VM):
 ```
-STORYLOFT_SUPABASE_URL=https://xxxxxxxxxxxx.supabase.co
-STORYLOFT_SUPABASE_ANON_KEY=eyJhbGc...
+MY_APP_SUPABASE_URL=https://xxxxxxxxxxxx.supabase.co
+MY_APP_SUPABASE_ANON_KEY=eyJhbGc...
 ```
 
 ### Activate
@@ -248,7 +248,7 @@ gcloud run deploy SERVICE_NAME \
 
 ## 10. PWA — iOS/Android Home Screen
 
-Already configured in StoryLoft. For any new project:
+For any new project:
 
 **`public/manifest.json`** (minimum):
 ```json
@@ -326,7 +326,6 @@ Verify in Netlify dashboard:
 | Brevo dashboard | https://app.brevo.com |
 | Resend dashboard | https://resend.com/overview |
 | Sentry dashboard | https://sentry.io |
-| n8n instance | http://35.188.141.23:5678 |
-| StoryLoft GitHub | https://github.com/mindfu23/StoryLoft |
-| n8n workflows GitHub | https://github.com/mindfu23/n8n_workflows |
+| n8n instance | `https://<your-n8n-host>` |
+| n8n workflows | your workflows repo |
 | Novel data spreadsheet | https://docs.google.com/spreadsheets/d/1vSGcfSPmDKBUAvk7vJK7Y76PX5rJNr3L82ipCP5xsjI |
