@@ -268,6 +268,9 @@ The MCP server provides local code search for AI agents like Claude Code.
    ```bash
    SOURCE_DIRS=/path/to/your/repos,/another/path
    WIKI_DIR=/path/to/code-wiki/wiki
+   # Optional: private wiki content (pages/diagrams for private repos). Defaults to
+   # <WIKI_DIR>/../private-content/wiki when that local clone exists.
+   PRIVATE_WIKI_DIR=/path/to/code-wiki/private-content/wiki
    GITHUB_USERNAME=your-username
    GITHUB_TOKEN=ghp_xxx  # Optional, for private repos
    ```
@@ -406,15 +409,20 @@ The Flows page provides per-project Mermaid architecture diagrams, accessible fr
 - **Per-project diagrams** — each repo with a registered diagram gets its own Flows entry at `wiki/diagrams/{id}-flow.md`. The page renders the Mermaid client-side so diagrams remain version-controlled as plain text.
 - **Stack filtering** — diagrams are tagged with stack metadata (React, Python, Go, Tauri, WordPress, etc.) and the Flows page offers one-click filters to narrow the list by stack.
 - **Automatic staleness detection** — `npm run build:signals` runs `src/diagramSignals.ts`, which hashes structural signals for each diagrammed project (dependency names from `package.json` / `requirements.txt`, function files under `netlify/functions/`, top-level `src/` directories) and compares them against the last stored snapshot. When signals change, the diagram is flagged as stale so the owner knows to regenerate it.
-- **Visibility auto-detection** — diagrams inherit their project's visibility from the index merge described above, so private-repo diagrams only appear when the owner is authenticated.
+- **Private diagrams never reach anonymous visitors** — only diagrams for repos that are public on GitHub live in this repo (`PROJECT_DIAGRAMS` in `web/public/app.js` and `wiki/diagrams/`). Diagrams for private repos live in the private content repo: the Mermaid page under its `wiki/diagrams/` and the Flows entry in `web/public/data/diagrams-private.json`. The build moves that JSON to `private-data/`, and the auth-gated `full-taxonomy` function returns it as `privateDiagrams` to signed-in viewers only. (Hiding entries in the browser isn't enough: anything in `app.js` is downloaded by every visitor.)
 - **GitHub Actions integration** — staleness checks can run on a schedule (e.g. nightly alongside the index rebuild) and write `public/data/diagram-signals.json`, which the Flows UI consumes to show per-diagram stale/fresh state.
 
 ### Adding a New Project Diagram
 
+**For a public repo** (this repo):
 1. Add an entry to `PROJECT_DIAGRAMS` in `web/public/app.js` with `repoName` matching the GitHub repo name, plus its stack tag.
-2. Create `wiki/diagrams/{id}-flow.md` containing a fenced ```` ```mermaid ```` block with the diagram source.
-3. Add the repo to `DIAGRAM_REPOS` in `web/src/diagramSignals.ts` so staleness detection starts tracking it.
-4. Run `npm run build` in `web/` to refresh both the index and the staleness signals, then commit the generated JSON output.
+2. Create `wiki/diagrams/{id}-flow.md` with `source_repo: "<RepoName>"` frontmatter and a fenced ```` ```mermaid ```` block.
+
+**For a private repo** (the private content repo; nothing goes in this public repo):
+1. Add the entry (same shape as `PROJECT_DIAGRAMS`) to `web/public/data/diagrams-private.json`.
+2. Create `wiki/diagrams/{id}-flow.md` there with `source_repo` and `visibility: private` frontmatter.
+
+Staleness detection picks up every `wiki/diagrams/*-flow.md` from its `source_repo` frontmatter, so there's no separate list to maintain. Run `npm run build` in `web/` to refresh the index and staleness signals. If a public repo is later made private, move its diagram to the private content repo.
 
 ### Flows Environment Variables
 
@@ -505,6 +513,18 @@ channels: [internal, userview]
 ---
 ```
 
+### Visibility: what anonymous visitors see
+
+The build writes two outputs: `taxonomy-full.json` (everything; only served to signed-in viewers by the auth-gated `full-taxonomy` function) and `taxonomy.json` (the public subset, served to everyone).
+
+A content file is in the **public** taxonomy only if both:
+1. its `taxonomy.visibility` label is `public` (or absent), **and**
+2. its repo (`source_repo` frontmatter) is **public on GitHub**, according to `index-full.json`, which `build:index` writes from the GitHub API just before `build:taxonomy`.
+
+The label can only make content more private, never public. Labels are written once (for example by `scripts/seed-taxonomy.ts`) and go stale when a repo's GitHub visibility changes later. GitHub is the source of truth, as it already is for the repo index. A `source_repo` that isn't found in the index counts as private, and if `index-full.json` is missing, every repo-linked entry is kept out of the public taxonomy. The index builder applies the same rule to wiki pages: a page about a private or unknown repo is never public.
+
+Pages and diagrams about private repos belong in the private content repo (see below), not here, since everything in this repo is public. The builders print only counts, never repo names, when running in CI, because Actions logs for a public repo are public too.
+
 ### Validator and Builder
 
 ```bash
@@ -537,11 +557,12 @@ code-wiki (public)              code-wiki-content (private)
 ├── web/scripts/                │   ├── taxonomy-full.json
 │   └── netlify-build.sh        │   ├── category-*.json
 ├── wiki/                       │   ├── diagram-signals.json
+│   (public repos only)         │   ├── diagrams-private.json → private-data/ (NOT public)
 │   ├── patterns/               │   └── metrics/
 │   ├── snippets/               │       ├── latest.json
 │   └── ...                     │       └── metrics-YYYY-MM-DD.json
-├── .github/workflows/          ├── wiki/projects/
-│   ├── update-index.yml        │   └── repo-locations.md
+├── .github/workflows/          ├── wiki/projects/, wiki/diagrams/
+│   ├── update-index.yml        │   └── (private repos' pages + repo-locations.md)
 │   └── collect-metrics.yml     └── README.md
 └── mcp-server/
 ```
@@ -549,7 +570,7 @@ code-wiki (public)              code-wiki-content (private)
 **How it works:**
 - **GitHub Actions** runs the index builder and metrics collector on schedule, then commits the generated output to the private content repo via `PRIVATE_CONTENT_WRITE_TOKEN`.
 - **Netlify** clones the private content repo at build time (via `PRIVATE_CONTENT_TOKEN`) and overlays it onto the public tree before compiling functions. The overlay script is at `web/scripts/netlify-build.sh`.
-- **`netlify-build.sh` splits the overlay** into two destinations: public-safe files (`index.json`, `taxonomy.json`, `category-*.json`, `metrics/`, etc.) go to `public/data/` and are served as static CDN assets; sensitive files (currently just `index-full.json`, which contains private repo metadata + content excerpts) go to `private-data/` and are bundled with functions only — never published. To add a new sensitive file, append its name to the `SENSITIVE_FILES` array in `netlify-build.sh` and add an explicit redirect in `netlify.toml`.
+- **`netlify-build.sh` splits the overlay** into two destinations: public-safe files (`index.json`, `taxonomy.json`, `category-*.json`, `metrics/`, etc.) go to `public/data/` and are served as static CDN assets; sensitive files (`index-full.json`, `taxonomy-full.json` and `diagrams-private.json`) go to `private-data/` and are bundled with functions only — never published. To add a new sensitive file, append its name to the `SENSITIVE_FILES` array in `netlify-build.sh` and add an explicit redirect in `netlify.toml`.
 - **`netlify.toml` includes** `[functions] included_files = ["private-data/**", "public/data/**"]` so functions can read both directories via filesystem. It also has explicit `[[redirects]]` rules returning 404 for known sensitive paths (`/data/index-full.json`) as defense-in-depth — if a future build script bug ever lets a sensitive file land in `public/data/`, the CDN still won't serve it.
 - **`full-index.ts` and `dashboard-data.ts`** read `index-full.json` from the filesystem (`private-data/` first, falling back to `public/data/` for backward compatibility with deploys made before the separation), never via HTTP fetch — so the file is never accessible as a CDN asset.
 - **The public repo never runs with private-repo write credentials.** Netlify clones private content read-only at build time; forkers can skip the private content repo entirely and run with only the public half.

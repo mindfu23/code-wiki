@@ -31,7 +31,7 @@ if [ -n "$PRIVATE_CONTENT_TOKEN" ] && [ -n "$PRIVATE_CONTENT_REPO" ]; then
     mkdir -p public/data/metrics
     mkdir -p private-data
 
-    SENSITIVE_FILES=("index-full.json" "taxonomy-full.json")
+    SENSITIVE_FILES=("index-full.json" "taxonomy-full.json" "diagrams-private.json")
 
     # Move sensitive files to private-data/ first.
     for name in "${SENSITIVE_FILES[@]}"; do

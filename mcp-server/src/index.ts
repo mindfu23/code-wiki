@@ -54,7 +54,10 @@ async function main(): Promise<void> {
       : path.join(__dirname, '..', config.cacheDirectory)
   );
 
-  const wikiService = new WikiService(config.wikiDirectory);
+  const wikiService = new WikiService(
+    config.wikiDirectory,
+    config.privateWikiDirectory ? [config.privateWikiDirectory] : [],
+  );
   const indexService = new IndexService(config, cacheService, wikiService);
   const ripgrepService = new RipgrepService();
   const searchService = new SearchService(config, indexService, ripgrepService);

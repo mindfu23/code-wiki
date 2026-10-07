@@ -69,8 +69,10 @@ async function loadRelationships(filePath: string): Promise<TaxonomyEdge[]> {
 async function scanContentFiles(wikiDir: string): Promise<{
   contentTags: ContentTagRecord[];
   inlineEdges: TaxonomyEdge[];
+  sourceRepos: Map<string, string>;
 }> {
   const contentTags: ContentTagRecord[] = [];
+  const sourceRepos = new Map<string, string>(); // content path -> source_repo frontmatter
   const inlineEdges: TaxonomyEdge[] = [];
 
   const categories = await fs.readdir(wikiDir, { withFileTypes: true });
@@ -96,6 +98,9 @@ async function scanContentFiles(wikiDir: string): Promise<{
       if (!data.taxonomy) continue;
 
       const tax = data.taxonomy as ContentTaxonomy;
+      if (typeof data.source_repo === 'string' && data.source_repo.trim()) {
+        sourceRepos.set(relPath, data.source_repo.trim());
+      }
       contentTags.push({
         path: relPath,
         title: (data.title as string) || file.name.replace('.md', ''),
@@ -121,7 +126,7 @@ async function scanContentFiles(wikiDir: string): Promise<{
     }
   }
 
-  return { contentTags, inlineEdges };
+  return { contentTags, inlineEdges, sourceRepos };
 }
 
 // ---------------------------------------------------------------------------
@@ -147,10 +152,51 @@ function computeInverseEdges(edges: TaxonomyEdge[]): TaxonomyEdge[] {
 // Visibility filtering
 // ---------------------------------------------------------------------------
 
-function filterPublic(index: TaxonomyIndex): TaxonomyIndex {
-  const publicTags = index.contentTags.filter(
-    ct => !ct.taxonomy.visibility || ct.taxonomy.visibility === 'public'
-  );
+/**
+ * GitHub visibility per repo (lower-cased name -> 'public' | 'private'), taken from index-full.json, which
+ * build:index writes just before build:taxonomy using the GitHub API. Returns null if it isn't available.
+ */
+async function loadRepoVisibility(outputDir: string): Promise<Map<string, string> | null> {
+  for (const p of [path.join(outputDir, 'index-full.json'), path.resolve(outputDir, '../../private-data/index-full.json')]) {
+    try {
+      const index = JSON.parse(await fs.readFile(p, 'utf-8'));
+      const map = new Map<string, string>();
+      for (const r of index.repos || []) {
+        if (r?.name) map.set(String(r.name).toLowerCase(), r.visibility === 'public' ? 'public' : 'private');
+      }
+      return map;
+    } catch {
+      // try next
+    }
+  }
+  return null;
+}
+
+/**
+ * Public taxonomy = content that is labelled public (or unlabelled) AND whose source repo is public on GitHub.
+ * The page label can only make content more private, never public: a repo that is private on GitHub, or
+ * not found in the index, keeps its pages out of the public taxonomy even if they say `visibility: public`.
+ * (Labels were seeded once and go stale when a repo's GitHub visibility changes.)
+ */
+function filterPublic(
+  index: TaxonomyIndex,
+  sourceRepos: Map<string, string>,
+  repoVisibility: Map<string, string> | null,
+): TaxonomyIndex {
+  let hiddenByRepo = 0;
+  const publicTags = index.contentTags.filter(ct => {
+    if (ct.taxonomy.visibility && ct.taxonomy.visibility !== 'public') return false;
+    const repo = sourceRepos.get(ct.path);
+    if (!repo) return true;
+    const isPublic = repoVisibility?.get(repo.toLowerCase()) === 'public';
+    if (!isPublic) hiddenByRepo++;
+    return isPublic;
+  });
+  if (!repoVisibility) {
+    console.warn('  WARNING: index-full.json not found; content linked to any repo is kept out of the public taxonomy.');
+  }
+  // Counts only: CI logs for this public repo are public.
+  console.log(`  ${hiddenByRepo} content file(s) kept private because their repo is private or unknown on GitHub`);
   const publicPaths = new Set(publicTags.map(ct => ct.path));
 
   // Keep edges that don't reference private content paths
@@ -186,7 +232,7 @@ async function buildTaxonomy(): Promise<void> {
   const schema = await loadSchema(taxonomyDir);
   const terms = await loadTerms(termsDir);
   const structuralEdges = await loadRelationships(path.join(taxonomyDir, 'relationships.yml'));
-  const { contentTags, inlineEdges } = await scanContentFiles(wikiDir);
+  const { contentTags, inlineEdges, sourceRepos } = await scanContentFiles(wikiDir);
 
   // Combine edges + compute inverses
   const allEdges = [
@@ -212,7 +258,7 @@ async function buildTaxonomy(): Promise<void> {
     buildTime: new Date().toISOString(),
   };
 
-  const publicIndex = filterPublic(fullIndex);
+  const publicIndex = filterPublic(fullIndex, sourceRepos, await loadRepoVisibility(outputDir));
 
   // Ensure output directory exists
   await fs.mkdir(outputDir, { recursive: true });
