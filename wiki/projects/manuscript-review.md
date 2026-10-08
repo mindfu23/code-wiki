@@ -2,12 +2,13 @@
 title: ManuscriptReview
 description: '(TODO: describe this project)'
 tags: []
-updated: '2026-05-13'
+updated: '2026-10-08'
 source_repo: ManuscriptReview
 taxonomy:
+  stack: [react, typescript, vite]
+  platform: [android, ios, web]
+  deployTarget: [netlify]
   type: project
-  stack:
-    - typescript
   visibility: public
   lifecycle: shipped
   completionState: stub

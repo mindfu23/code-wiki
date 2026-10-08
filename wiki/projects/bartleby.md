@@ -1,13 +1,21 @@
 ---
-title: edgi-data-visualization
+title: bartleby
 description: '(TODO: describe this project)'
 tags: []
 updated: '2026-10-08'
-source_repo: edgi-data-visualization
+source_repo: bartleby
 taxonomy:
-  stack: [python]
-  deployTarget: [netlify]
   type: project
+  stack:
+    - react
+    - typescript
+    - vite
+  platform:
+    - android
+    - ios
+    - web
+  deployTarget:
+    - netlify
   visibility: public
   lifecycle: shipped
   completionState: stub

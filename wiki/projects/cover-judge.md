@@ -2,12 +2,13 @@
 title: CoverJudge
 description: '(TODO: describe this project)'
 tags: []
-updated: '2026-05-13'
+updated: '2026-10-08'
 source_repo: CoverJudge
 taxonomy:
+  stack: [javascript, react, vite]
+  platform: [web]
+  deployTarget: [netlify]
   type: project
-  stack:
-    - javascript
   visibility: public
   lifecycle: shipped
   completionState: stub

@@ -1,12 +1,10 @@
 ---
-title: edgi-data-visualization
+title: anideasmith-keyboard
 description: '(TODO: describe this project)'
 tags: []
 updated: '2026-10-08'
-source_repo: edgi-data-visualization
+source_repo: anideasmith-keyboard
 taxonomy:
-  stack: [python]
-  deployTarget: [netlify]
   type: project
   visibility: public
   lifecycle: shipped

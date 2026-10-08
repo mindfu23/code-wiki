@@ -1,7 +1,9 @@
 /**
- * Combines the two complementary repo inventory sources:
+ * Combines the complementary repo inventory sources:
  *   - index-full.json (authoritative, always fresh, no localPath)
- *   - repo-locations.md (stale, but contributes localPath for synced repos)
+ *   - the MCP server's local index (mcp-server/data/index.json, gitignored): localPath
+ *     for every checkout on this machine. Takes precedence for localPath.
+ *   - repo-locations.md (cloud-generated; may carry localPath on older copies)
  *
  * Strategy: index-full.json provides the canonical list; repo-locations.md
  * enriches each entry with localPath when a matching name exists.
@@ -11,6 +13,7 @@
 
 import { parseRepoLocations, findRepoLocations, RepoEntry } from './parseRepoLocations.js';
 import { parseIndexFull, findIndexFull, IndexFullRepo } from './parseIndexFull.js';
+import { parseLocalIndex, findLocalIndex } from './parseLocalIndex.js';
 
 export interface CombinedRepo extends IndexFullRepo {
   /** Set when the repo was matched in repo-locations.md */
@@ -26,6 +29,8 @@ export interface CombineResult {
     repoLocationsPath: string | null;
     indexFullCount: number;
     repoLocationsCount: number;
+    localIndexPath: string | null;
+    localPathCount: number;
   };
   /** True if index-full.json has strictly more repos than repo-locations.md */
   repoLocationsStale: boolean;
@@ -36,7 +41,7 @@ export interface CombineResult {
  * null-sources case (both missing).
  */
 export async function combineRepoSources(
-  opts: { indexFullPath?: string; repoLocationsPath?: string } = {},
+  opts: { indexFullPath?: string; repoLocationsPath?: string; localIndexPath?: string } = {},
 ): Promise<CombineResult> {
   const indexFullPath = await findIndexFull(opts.indexFullPath);
   const repoLocationsPath = await findRepoLocations(opts.repoLocationsPath);
@@ -45,6 +50,12 @@ export async function combineRepoSources(
   const repoLocationsEntries: RepoEntry[] = repoLocationsPath
     ? await parseRepoLocations(repoLocationsPath)
     : [];
+
+  const localIndexPath = await findLocalIndex(opts.localIndexPath);
+  const localByName = new Map<string, string>();
+  for (const e of localIndexPath ? await parseLocalIndex(localIndexPath) : []) {
+    if (!localByName.has(e.name.toLowerCase())) localByName.set(e.name.toLowerCase(), e.localPath);
+  }
 
   const locationsByName = new Map<string, RepoEntry>();
   for (const e of repoLocationsEntries) {
@@ -72,7 +83,7 @@ export async function combineRepoSources(
     if (fromIndex) {
       combined.push({
         ...fromIndex,
-        localPath: fromLocations?.localPath ?? fromIndex.localPath,
+        localPath: localByName.get(lowerName) ?? fromLocations?.localPath ?? fromIndex.localPath,
         foundInIndexJson: true,
         foundInLocationsMd: !!fromLocations,
       });
@@ -80,7 +91,7 @@ export async function combineRepoSources(
       // Only in repo-locations.md (e.g. truly local-only repo not in index)
       combined.push({
         name: fromLocations.name,
-        localPath: fromLocations.localPath,
+        localPath: localByName.get(lowerName) ?? fromLocations.localPath,
         githubUrl: fromLocations.githubUrl,
         status: fromLocations.status,
         languages: fromLocations.languages,
@@ -102,6 +113,8 @@ export async function combineRepoSources(
       repoLocationsPath,
       indexFullCount: indexFullEntries.length,
       repoLocationsCount: repoLocationsEntries.length,
+      localIndexPath,
+      localPathCount: combined.filter(c => c.localPath).length,
     },
     repoLocationsStale:
       indexFullEntries.length > 0 &&

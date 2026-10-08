@@ -1,13 +1,13 @@
 ---
-title: edgi-data-visualization
+title: 2026_docs-gen-test_v2
 description: '(TODO: describe this project)'
 tags: []
 updated: '2026-10-08'
-source_repo: edgi-data-visualization
+source_repo: 2026_docs-gen-test_v2
 taxonomy:
-  stack: [python]
-  deployTarget: [netlify]
   type: project
+  stack:
+    - python
   visibility: public
   lifecycle: shipped
   completionState: stub
