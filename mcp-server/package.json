@@ -12,7 +12,8 @@
     "start": "node dist/index.js",
     "dev": "tsc --watch",
     "typecheck": "tsc --noEmit",
-    "clean": "rm -rf dist"
+    "clean": "rm -rf dist",
+    "test": "tsc && node --test test/"
   },
   "keywords": [
     "mcp",
