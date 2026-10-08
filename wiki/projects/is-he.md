@@ -2,20 +2,14 @@
 title: IsHe
 description: '(TODO: describe this project)'
 tags: []
-updated: '2026-05-13'
+updated: '2026-10-08'
 source_repo: IsHe
 taxonomy:
+  stack: [javascript, react, react-native]
+  platform: [android, ios, web]
+  deployTarget: [netlify]
+  dependsOn: [anthropic-api]
   type: project
-  stack:
-    - javascript
-    - react
-    - react-native
-  platform:
-    - android
-    - ios
-    - web
-  deployTarget:
-    - netlify
   visibility: public
   lifecycle: shipped
   completionState: stub

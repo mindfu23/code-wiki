@@ -9,7 +9,7 @@ taxonomy:
   platform: [android, ios, web]
   deployTarget: [apple-app-store, google-play, netlify]
   domain: [ai-tooling, games]
-  dependsOn: [stockfish]
+  dependsOn: [anthropic-api, google-gemini-api, huggingface-api, openai-api, stockfish]
   type: project
   visibility: public
   lifecycle: shipped
