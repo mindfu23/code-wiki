@@ -7,6 +7,7 @@ markdown notes with frontmatter, e.g. an agent-memory folder or wiki notes) in f
 | Hook | Event | What it does |
 |---|---|---|
 | `hooks/recall_hint.py` | `UserPromptSubmit` | Scores notes against the prompt; injects up to 3 one-line **pointers** (path + description) above a threshold. ~60 tokens per hit, nothing when nothing matches. |
+| `hooks/project_context.py` | `SessionStart` | A briefing of up to ~10 lines on the repo you're in: stack, platforms, deploy targets and services **detected live from its manifests**, facets from its taxonomy record (if any), warnings from `session_checks` (e.g. retired model ids found by `git grep` in tracked, non-markdown files), and up to 3 notes that name the project. Writes nothing into the repo. |
 | `hooks/action_guard.py` | `PreToolUse` | Matches the tool call (Bash command, file path, written content) against your rules; adds a one-line gotcha plus a pointer. Inform-only: never blocks or edits the call. Each rule fires once per session. |
 
 Both are fail-safe: missing config, bad input or any error results in no output and exit status 0.
@@ -50,10 +51,23 @@ effective lever: put the exact error text you would paste into a prompt.
 }
 ```
 
+   Add `project_context.py` as a `SessionStart` hook the same way (no matcher; set
+   `CODE_WIKI_TAXONOMY_DIRS` as well if you have project records).
 3. Calibrate against your own notes:
 
 ```bash
 CODE_WIKI_KNOWLEDGE_DIRS=~/path/to/notes python3 hooks/recall_hint.py --query "paste a real error or question"
+```
+
+For agents that can't run hooks, `project_context.py --cwd DIR --write FILE` writes the same briefing to
+FILE, but only if git confirms FILE is ignored. Otherwise it refuses and exits 1.
+
+`session_checks` live in the same rules file as the action guard:
+
+```json
+{ "session_checks": [
+  { "id": "retired-model", "pattern": "old-model-(1\\.0|1\\.5)", "message": "retired model ids in use", "note_file": "optional_note.md" }
+] }
 ```
 
 ## Configuration
@@ -63,7 +77,8 @@ CODE_WIKI_KNOWLEDGE_DIRS=~/path/to/notes python3 hooks/recall_hint.py --query "p
 | `CODE_WIKI_KNOWLEDGE_DIRS` | both | unset → hooks do nothing. `:` or `,` separated, `~` expanded |
 | `CODE_WIKI_RECALL_MIN_SCORE` | recall | scales with note count (≈9 at 300 notes) |
 | `CODE_WIKI_RECALL_LOG` | recall | `~/.cache/code-wiki/recall-hits-<host>.jsonl`; `off` disables |
-| `CODE_WIKI_ACTION_RULES` | guard | `~/.config/code-wiki/action-rules.json` |
+| `CODE_WIKI_ACTION_RULES` | guard, context | `~/.config/code-wiki/action-rules.json` |
+| `CODE_WIKI_TAXONOMY_DIRS` | context | unset → no taxonomy record lookup. Directories of project records (`taxonomy:` frontmatter) |
 
 Logs, caches and per-session state live under `~/.cache/code-wiki/`, named per host, so a folder synced
 between machines never shares them.
