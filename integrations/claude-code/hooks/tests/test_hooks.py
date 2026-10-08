@@ -98,5 +98,61 @@ class ActionGuardTests(unittest.TestCase):
         self.assertEqual(run("action_guard.py", "garbage", **self.env), (0, ""))
 
 
+class ProjectContextTests(unittest.TestCase):
+    def setUp(self):
+        self.tmp = tempfile.TemporaryDirectory()
+        root = Path(self.tmp.name) / "widget-app"
+        (root / "src").mkdir(parents=True)
+        (root / "package.json").write_text(json.dumps({"dependencies": {"react": "19", "@google/genai": "1"},
+                                                       "devDependencies": {"vite": "6"}}))
+        (root / "netlify.toml").write_text("[build]\n")
+        (root / "src" / "ai.ts").write_text("const model = 'gemini-2.0-flash'\n")
+        (root / "NOTES.md").write_text("old docs mention gemini-1.5-pro\n")
+        (root / ".gitignore").write_text("context.local.md\n")
+        for cmd in (["init", "-q"], ["add", "-A"]):
+            subprocess.run(["git", "-C", str(root), *cmd], check=True)
+        rules = Path(self.tmp.name) / "rules.json"
+        rules.write_text(json.dumps({"session_checks": [{"id": "old-model", "pattern": "gemini-(1\\.5|2\\.0)",
+                                                          "message": "retired model ids in use",
+                                                          "note_file": "example_widget_api_403.md"}]}))
+        self.root = root
+        self.env = {"HOME": self.tmp.name, "CODE_WIKI_KNOWLEDGE_DIRS": str(NOTES),
+                    "CODE_WIKI_TAXONOMY_DIRS": str(HERE / "fixtures" / "projects"),
+                    "CODE_WIKI_ACTION_RULES": str(rules)}
+
+    def tearDown(self):
+        self.tmp.cleanup()
+
+    def ctx(self, cwd):
+        rc, out = run("project_context.py", {"cwd": str(cwd)}, **self.env)
+        self.assertEqual(rc, 0)
+        return json.loads(out)["hookSpecificOutput"]["additionalContext"] if out else ""
+
+    def test_detects_stack_record_checks_and_notes(self):
+        c = self.ctx(self.root / "src")  # subdirectory resolves to the repo root
+        self.assertIn("for WidgetApp", c)
+        for s in ("react", "vite", "netlify", "gemini-api", "widget-api", "lifecycle: shipped"):
+            self.assertIn(s, c)
+        self.assertIn("retired model ids in use [src/ai.ts]", c)
+        self.assertNotIn("NOTES.md", c)  # markdown is not runtime code
+        self.assertIn("example_widget_app_release.md", c)
+
+    def test_outside_a_repo_is_silent(self):
+        outside = Path(self.tmp.name) / "plain"
+        outside.mkdir()
+        self.assertEqual(self.ctx(outside), "")
+
+    def test_write_only_to_ignored_path(self):
+        e = {k: v for k, v in os.environ.items() if not k.startswith("CODE_WIKI_")}
+        e.update(self.env)
+        cmd = [sys.executable, str(HOOKS / "project_context.py"), "--cwd", str(self.root), "--write"]
+        bad = subprocess.run(cmd + [str(self.root / "CONTEXT.md")], capture_output=True, text=True, env=e)
+        self.assertEqual(bad.returncode, 1)
+        self.assertFalse((self.root / "CONTEXT.md").exists())
+        good = subprocess.run(cmd + [str(self.root / "context.local.md")], capture_output=True, text=True, env=e)
+        self.assertEqual(good.returncode, 0)
+        self.assertIn("WidgetApp", (self.root / "context.local.md").read_text())
+
+
 if __name__ == "__main__":
     unittest.main()
