@@ -2,7 +2,10 @@
   "mcpServers": {
     "code-wiki": {
       "command": "node",
-      "args": ["/path/to/code-wiki/mcp-server/dist/index.js"]
+      "args": ["/path/to/code-wiki/mcp-server/dist/index.js"],
+      "env": {
+        "CODE_WIKI_KNOWLEDGE_DIRS": "/path/to/your/notes"
+      }
     }
   }
 }
