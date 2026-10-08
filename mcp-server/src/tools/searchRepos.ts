@@ -6,7 +6,7 @@ import { SearchService } from '../services/searchService.js';
 
 export const searchReposTool = {
   name: 'search_repos',
-  description: 'Full-text search across all local repositories. Searches code by function names, class names, API calls, etc. Uses ripgrep for fast searching.',
+  description: 'Full-text search across ALL local repositories in one call (ripgrep). Use this, not shell grep or a subagent, for any question spanning projects: "which repos reference model X / call API Y / use function Z". Searches code by literal strings, model ids, function names, API hosts.',
   inputSchema: {
     type: 'object' as const,
     properties: {

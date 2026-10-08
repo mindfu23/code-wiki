@@ -50,6 +50,13 @@ class RecallHintTests(unittest.TestCase):
             rc, out = run("recall_hint.py", {"prompt": prompt}, **self.env)
             self.assertEqual((rc, out), (0, ""))
 
+    def test_prompt_hint_injected_on_match(self):
+        env = dict(self.env); env["CODE_WIKI_ACTION_RULES"] = str(HOOKS / "action-rules.example.json")
+        rc, out = run("recall_hint.py", {"prompt": "Which of my repos still call the widget service?"}, **env)
+        self.assertIn("Routing hint: for questions across projects", json.loads(out)["hookSpecificOutput"]["additionalContext"])
+        rc, out = run("recall_hint.py", {"prompt": "Please refactor this function for clarity and speed."}, **env)
+        self.assertNotIn("Routing hint", out)
+
     def test_unconfigured_or_bad_input_is_silent(self):
         env = dict(self.env); env.pop("CODE_WIKI_KNOWLEDGE_DIRS")
         self.assertEqual(run("recall_hint.py", {"prompt": "netlify deploy dist vite"}, **env), (0, ""))

@@ -2,18 +2,14 @@
 title: apiTracker
 description: '(TODO: describe this project)'
 tags: []
-updated: '2026-05-13'
+updated: '2026-10-08'
 source_repo: apiTracker
 taxonomy:
+  stack: [javascript, react, vite]
+  platform: [web]
+  deployTarget: [netlify]
+  dependsOn: [anthropic-api, github-api, google-gemini-api, openai-api, perplexity-api]
   type: project
-  stack:
-    - javascript
-    - react
-    - vite
-  platform:
-    - web
-  deployTarget:
-    - netlify
   visibility: public
   lifecycle: shipped
   completionState: stub
