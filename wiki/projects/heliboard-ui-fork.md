@@ -1,12 +1,10 @@
 ---
-title: edgi-data-visualization
+title: Heliboard-ui-fork
 description: '(TODO: describe this project)'
 tags: []
 updated: '2026-10-08'
-source_repo: edgi-data-visualization
+source_repo: Heliboard-ui-fork
 taxonomy:
-  stack: [python]
-  deployTarget: [netlify]
   type: project
   visibility: public
   lifecycle: shipped

@@ -1,13 +1,13 @@
 ---
-title: edgi-data-visualization
+title: vsc-copilot-extension
 description: '(TODO: describe this project)'
 tags: []
 updated: '2026-10-08'
-source_repo: edgi-data-visualization
+source_repo: vsc-copilot-extension
 taxonomy:
-  stack: [python]
-  deployTarget: [netlify]
   type: project
+  stack:
+    - javascript
   visibility: public
   lifecycle: shipped
   completionState: stub
