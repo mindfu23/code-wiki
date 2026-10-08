@@ -2,12 +2,12 @@
 title: edgi-data-visualization
 description: '(TODO: describe this project)'
 tags: []
-updated: '2026-05-13'
+updated: '2026-10-08'
 source_repo: edgi-data-visualization
 taxonomy:
+  stack: [python]
+  deployTarget: [netlify]
   type: project
-  stack:
-    - python
   visibility: public
   lifecycle: shipped
   completionState: stub
