@@ -157,7 +157,19 @@ export async function handleSearchTaxonomy(
   const edges = await loadRelationships(
     path.join(taxonomyDir, 'relationships.yml')
   );
+  // Project records live in both wikis: public repos' records in this repo's wiki, private
+  // repos' records in the private content repo. Read both, so private projects aren't invisible.
   const contentTags = await scanContentFiles(wikiDir);
+  if (config.privateWikiDirectory) {
+    try {
+      const seen = new Set(contentTags.map(r => r.path));
+      for (const r of await scanContentFiles(config.privateWikiDirectory)) {
+        if (!seen.has(r.path)) contentTags.push(r);
+      }
+    } catch {
+      /* private content repo not cloned here: public records only */
+    }
+  }
 
   switch (args.action) {
     case 'get_record': {

@@ -11,6 +11,10 @@ Configuration (environment, e.g. the `env` block of your Claude Code settings):
   CODE_WIKI_RECALL_MIN_SCORE optional score threshold. Default scales with the number of
                              notes (about 9 at 300 notes); calibrate with --query.
   CODE_WIKI_RECALL_LOG       optional JSONL hit log path, or "off".
+  CODE_WIKI_ACTION_RULES     rules file (default ~/.config/code-wiki/action-rules.json); its optional
+                             "prompt_hints" list [{"pattern": regex, "message": text}] adds a one-line
+                             routing hint when the prompt matches (e.g. send cross-project questions
+                             to a specific tool). Works even when no knowledge dirs are configured.
                              Default: ~/.cache/code-wiki/recall-hits-<host>.jsonl
 
 A note is any `*.md` file with YAML-style frontmatter. Fields used: `name`,
@@ -208,6 +212,22 @@ def recall(prompt: str) -> list:
     return hits[:MAX_HITS]
 
 
+def prompt_hints(prompt: str) -> list[str]:
+    path = Path(os.path.expanduser(os.environ.get("CODE_WIKI_ACTION_RULES", "~/.config/code-wiki/action-rules.json")))
+    try:
+        hints = json.loads(path.read_text()).get("prompt_hints", [])
+    except (OSError, ValueError):
+        return []
+    out = []
+    for h in hints:
+        try:
+            if h.get("pattern") and h.get("message") and re.search(h["pattern"], prompt, re.IGNORECASE):
+                out.append(h["message"])
+        except re.error:
+            continue
+    return out
+
+
 def format_context(hits) -> str:
     lines = ["Possibly relevant notes from the local knowledge store (read before acting if they apply):"]
     for _, note, _ in hits:
@@ -229,13 +249,15 @@ def main() -> int:
         payload = json.load(sys.stdin)
         prompt = str(payload.get("prompt") or "")
         hits = recall(prompt)
+        hints = prompt_hints(prompt)
         elapsed = (time.monotonic() - start) * 1000
         if os.environ.get("CODE_WIKI_KNOWLEDGE_DIRS"):
             log_hits(prompt, hits, elapsed)
-        if hits:
+        parts = ([f"Routing hint: {h}" for h in hints]) + ([format_context(hits)] if hits else [])
+        if parts:
             print(json.dumps({"hookSpecificOutput": {
                 "hookEventName": "UserPromptSubmit",
-                "additionalContext": format_context(hits)}}))
+                "additionalContext": "\n".join(parts)}}))
     except Exception:  # never block the prompt
         pass
     return 0

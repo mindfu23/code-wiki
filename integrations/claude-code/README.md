@@ -62,6 +62,10 @@ CODE_WIKI_KNOWLEDGE_DIRS=~/path/to/notes python3 hooks/recall_hint.py --query "p
 For agents that can't run hooks, `project_context.py --cwd DIR --write FILE` writes the same briefing to
 FILE, but only if git confirms FILE is ignored. Otherwise it refuses and exits 1.
 
+`prompt_hints` (also in the rules file) add a one-line routing hint when a prompt matches. MCP tools are often
+deferred in Claude Code (only their names are visible), so a hint at prompt time is what gets a question like
+"which of my repos use X?" sent to the right tool in one call instead of a shell grep.
+
 `session_checks` live in the same rules file as the action guard:
 
 ```json
