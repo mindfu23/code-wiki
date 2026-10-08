@@ -46,11 +46,11 @@ James is adding a taxonomy layer to code-wiki that will eventually support an on
 ### v1 scope — which projects get tagged first
 Five projects, chosen for variety + maturity:
 
-1. **WeirdChess** — `/Users/jamesbeach/Documents/visual-studio-code/github-copilot/WeirdChess`
-2. **QuantumRetriever** (lives in **Metabot** folder/repo) — `/Users/jamesbeach/Documents/visual-studio-code/github-copilot/Metabot`
+1. **WeirdChess** — `<workspace>/WeirdChess`
+2. **QuantumRetriever** (lives in **Metabot** folder/repo) — `<workspace>/Metabot`
 3. **code-wiki itself** (dogfooding keystone) — this repo
-4. **TrollJar** (pre-release) — `/Users/jamesbeach/Documents/visual-studio-code/github-copilot/TrollJar`
-5. **NeoGeoSeo** (pre-release) — `/Users/jamesbeach/Documents/visual-studio-code/github-copilot/NeoGeoSeo`
+4. **TrollJar** (pre-release) — `<workspace>/TrollJar`
+5. **NeoGeoSeo** (pre-release) — `<workspace>/NeoGeoSeo`
 
 Rationale: completed apps have stable surface area; the two pre-release ones test the highest-value agent workflow ("does the taxonomy help me ship this cleanly?"). Also forces `projectName` vs `repoName` to be distinct fields from day one (Metabot/QuantumRetriever is the asymmetric case).
 
@@ -106,16 +106,16 @@ That framing gets the new session to ground its proposal in real project data in
 - [web/src/indexBuilder.ts](web/src/indexBuilder.ts) — existing index build; model the taxonomy build script on this
 - [web/src/diagramSignals.ts](web/src/diagramSignals.ts) — staleness-detection pattern to reuse for term `lastVerified` fields
 - [mcp-server/](mcp-server/) — where the new `search_wiki(facets, ...)` tool will eventually live
-- `/Users/jamesbeach/Documents/visual-studio-code/github-copilot/apiTracker/` — future join target for the service cost page (not in v1)
-- `/Users/jamesbeach/.claude/projects/-Users-jamesbeach-Documents-visual-studio-code/memory/MEMORY.md` — the workspace memory system. Taxonomy must complement this, not duplicate it.
+- `<workspace>/apiTracker/` — future join target for the service cost page (not in v1)
+- The maintainer's local agent-memory index (not in this repo) — the workspace memory system. Taxonomy must complement this, not duplicate it.
 
 ### v1 project repos to ground the schema in
 
-- `/Users/jamesbeach/Documents/visual-studio-code/github-copilot/WeirdChess`
-- `/Users/jamesbeach/Documents/visual-studio-code/github-copilot/Metabot` (product: QuantumRetriever)
-- `/Users/jamesbeach/Documents/visual-studio-code/github-copilot/code-wiki` (this repo)
-- `/Users/jamesbeach/Documents/visual-studio-code/github-copilot/TrollJar`
-- `/Users/jamesbeach/Documents/visual-studio-code/github-copilot/NeoGeoSeo`
+- `<workspace>/WeirdChess`
+- `<workspace>/Metabot` (product: QuantumRetriever)
+- `<workspace>/code-wiki` (this repo)
+- `<workspace>/TrollJar`
+- `<workspace>/NeoGeoSeo`
 
 ---
 
