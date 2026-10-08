@@ -2,12 +2,12 @@
 title: n8n_workflows
 description: '(TODO: describe this project)'
 tags: []
-updated: '2026-05-13'
+updated: '2026-10-08'
 source_repo: n8n_workflows
 taxonomy:
+  stack: [javascript]
+  dependsOn: [anthropic-api, google-gemini-api, openai-api, perplexity-api, supabase-api, xai-api]
   type: project
-  stack:
-    - javascript
   visibility: public
   lifecycle: shipped
   completionState: stub

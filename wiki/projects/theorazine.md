@@ -2,14 +2,13 @@
 title: Theorazine
 description: '(TODO: describe this project)'
 tags: []
-updated: '2026-05-13'
+updated: '2026-10-08'
 source_repo: Theorazine
 taxonomy:
+  stack: [javascript]
+  deployTarget: [netlify]
+  dependsOn: [perplexity-api]
   type: project
-  stack:
-    - javascript
-  deployTarget:
-    - netlify
   visibility: public
   lifecycle: shipped
   completionState: stub

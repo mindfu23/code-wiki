@@ -2,9 +2,10 @@
 title: gastown-mission-district
 description: '(TODO: describe this project)'
 tags: []
-updated: '2026-05-13'
+updated: '2026-10-08'
 source_repo: gastown-mission-district
 taxonomy:
+  dependsOn: [anthropic-api, github-api, google-gemini-api, openai-api, perplexity-api]
   type: project
   visibility: public
   lifecycle: shipped
