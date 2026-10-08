@@ -138,6 +138,7 @@ def load_notes(dirs: list[Path]) -> list[dict]:
             stem_words = f.stem.replace("_", " ").replace("-", " ")
             name = str(meta.get("name") or "")
             notes.append({
+                "verified": str(meta.get("verified") or ""),
                 "path": str(f),
                 "file": f.name,
                 "desc": desc,
@@ -234,7 +235,15 @@ def format_context(hits) -> str:
         desc = note["desc"]
         if len(desc) > DESC_CHARS:
             desc = desc[: DESC_CHARS - 1].rstrip() + "…"
-        lines.append(f"- {note['path']} — {desc}")
+        age = ""
+        if note.get("verified"):
+            try:
+                days = (time.time() - time.mktime(time.strptime(note["verified"][:10], "%Y-%m-%d"))) / 86400
+                if days > 90:
+                    age = f" [verified {int(days)} days ago; re-check before relying on it]"
+            except ValueError:
+                pass
+        lines.append(f"- {note['path']} — {desc}{age}")
     return "\n".join(lines)
 
 

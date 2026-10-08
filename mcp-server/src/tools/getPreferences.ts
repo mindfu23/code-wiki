@@ -9,7 +9,7 @@ import { Config } from '../types/index.js';
 
 export const getPreferencesTool = {
   name: 'get_preferences',
-  description: 'Get user coding preferences, setup recommendations, and development standards. Agents should check this before making technology or architecture recommendations.',
+  description: 'Read user-maintained preference files (setup procedures, deployment playbooks, standards). If your always-loaded instructions already inline the basics, call this only for the detailed procedures they point to. Without arguments it lists the files.',
   inputSchema: {
     type: 'object' as const,
     properties: {
