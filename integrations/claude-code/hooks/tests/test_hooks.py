@@ -108,12 +108,15 @@ class ProjectContextTests(unittest.TestCase):
         (root / "netlify.toml").write_text("[build]\n")
         (root / "src" / "ai.ts").write_text("const model = 'gemini-2.0-flash'\n")
         (root / "NOTES.md").write_text("old docs mention gemini-1.5-pro\n")
+        (root / "src" / "remap.ts").write_text("const RETIRED = { 'gemini-2.0-flash': 'gemini-2.5-flash' }\n")
+        (root / "src" / "ai.test.ts").write_text("expect(map('gemini-2.0-flash'))\n")
         (root / ".gitignore").write_text("context.local.md\n")
         for cmd in (["init", "-q"], ["add", "-A"]):
             subprocess.run(["git", "-C", str(root), *cmd], check=True)
         rules = Path(self.tmp.name) / "rules.json"
         rules.write_text(json.dumps({"session_checks": [{"id": "old-model", "pattern": "gemini-(1\\.5|2\\.0)",
                                                           "message": "retired model ids in use",
+                                                          "unless_line": "gemini-2\\.5", "exclude": ["*.test.*"],
                                                           "note_file": "example_widget_api_403.md"}]}))
         self.root = root
         self.env = {"HOME": self.tmp.name, "CODE_WIKI_KNOWLEDGE_DIRS": str(NOTES),
@@ -135,6 +138,8 @@ class ProjectContextTests(unittest.TestCase):
             self.assertIn(s, c)
         self.assertIn("retired model ids in use [src/ai.ts]", c)
         self.assertNotIn("NOTES.md", c)  # markdown is not runtime code
+        self.assertNotIn("remap.ts", c)  # unless_line: the line already maps to the replacement
+        self.assertNotIn("ai.test.ts", c)  # exclude glob
         self.assertIn("example_widget_app_release.md", c)
 
     def test_outside_a_repo_is_silent(self):

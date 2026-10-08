@@ -289,7 +289,7 @@ async function scanRepoForDocFiles(
   const SKIP_DIRS = new Set([
     '.git', 'node_modules', '.next', 'dist', 'build',
     '.cache', 'coverage', '__pycache__', 'venv', '.venv',
-    'vendor', '.turbo', '.parcel-cache',
+    'vendor', '.turbo', '.parcel-cache', 'fixtures',
   ]);
 
   async function scanDir(dir: string, baseDir: string): Promise<void> {
@@ -345,7 +345,7 @@ async function fetchRepoDocFilesFromGitHub(
   const SKIP_DIRS = new Set([
     'node_modules', '.next', 'dist', 'build', '.cache',
     'coverage', '__pycache__', 'venv', '.venv',
-    'vendor', '.turbo', '.parcel-cache',
+    'vendor', '.turbo', '.parcel-cache', 'fixtures',
   ]);
 
   try {
