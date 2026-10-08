@@ -13,7 +13,7 @@
 
 These decisions were confirmed by the user at the start of the implementing session and resolve most of the "Open questions" section at the bottom of this document. They OVERRIDE the defaults in the original plan where they conflict.
 
-1. **Private content repo name**: `code-wiki-content`. Lives at `github.com/mindfu23/code-wiki-content` (private). Already cloned locally at `/Users/jamesbeach/Documents/visual-studio-code/github-copilot/code-wiki-content/`.
+1. **Private content repo name**: `code-wiki-content`. Lives at `github.com/mindfu23/code-wiki-content` (private). Already cloned locally at `<workspace>/code-wiki-content/`.
 2. **Git history treatment**: Option 1 (fix forward, no rewrite).
 3. **`update-index.yml` workflow**: Pattern B — keep daily cadence in Actions, commit outputs to `code-wiki-content` via a write-scoped PAT. User may revisit cadence later.
 4. **`collect-metrics.yml` workflow**: Pattern B — same treatment as update-index.
@@ -21,7 +21,7 @@ These decisions were confirmed by the user at the start of the implementing sess
 6. **Local dev overlay**: Nested clone at a gitignored path inside the public repo (not sibling, not symlink).
 7. **`save-document.ts` immediate-index-update**: DROP the 80-line block at [save-document.ts:326-431](web/netlify/functions/save-document.ts#L326-L431). Rely on `NETLIFY_BUILD_HOOK` trigger at [save-document.ts:434-443](web/netlify/functions/save-document.ts#L434-L443). Saves take ~30s–1min to appear on the live site instead of being instant. Acceptable trade-off.
 8. **Private-aware save routing**: Anything that mentions or includes information from a private repo is treated as private and saved to the private content repo. This applies both to documents (via frontmatter `visibility: private`) and to derived files like `repo-locations.md`.
-9. **`.mcp.json`**: Template as `.mcp.json.example` with a placeholder path (currently hardcodes `/Users/jamesbeach/.../mcp-server/dist/index.js`). Add `.mcp.json` to `.gitignore`. Document in README.
+9. **`.mcp.json`**: Template as `.mcp.json.example` with a placeholder path (currently hardcodes `<home>/.../mcp-server/dist/index.js`). Add `.mcp.json` to `.gitignore`. Document in README.
 10. **`wiki/projects/repo-locations.md`**: MOVES to the private content repo. Contains ValueApe (`**Visibility:** private`), absolute local filesystem paths, and inventory-style disclosure of all repos. `save-note.ts` must be updated to target the private content repo accordingly.
 11. **`web/public/manifest.json`**: Generic PWA manifest for "Docsy McDocsface" — STAYS in the public repo.
 12. **`save-repo-doc.ts`**: Unaffected by migration — commits to external (non-code-wiki) repos.
@@ -121,7 +121,7 @@ These steps are ordered for safety — earlier steps are reversible; later steps
 1. Read this entire document before touching any code.
 2. Read the `code-wiki` README fully (it's ~500 lines). Pay special attention to the "Personal Wiki Documents" section (lines ~391–467) which describes the existing `wiki/personal/` pattern that Phase 1 extends.
 3. Read `HANDOFF-taxonomy-design.md` for the broader context on why this matters.
-4. Read the existing memory note at `~/.claude/projects/-Users-jamesbeach-Documents-visual-studio-code/memory/project_code_wiki_rearchitecture.md`.
+4. Read the maintainer's local agent-memory notes on this rearchitecture (not in this repo).
 5. Verify the current state of the public repo matches what's documented here — specifically, re-run `git ls-files web/public/data/ mcp-server/data/metrics/` to confirm the file list hasn't drifted.
 6. Confirm with the user: (a) the name they want for the private content repo, (b) that they want to proceed with the default "leave git history alone, fix forward" approach.
 
