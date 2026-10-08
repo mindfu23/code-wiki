@@ -68,7 +68,7 @@ Four related pieces of work, all committed and deployed:
 Run these to orient a new session:
 
 ```bash
-cd /Users/jamesbeach/Documents/visual-studio-code/github-copilot/code-wiki
+cd <workspace>/code-wiki
 git log --oneline -6              # should show c91f0e6 at the top, clean tree
 cat HANDOFF.md                    # this file
 cat README.md | head -100         # project intro + Features + Observatory/Flows/Completion
