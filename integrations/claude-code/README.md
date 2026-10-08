@@ -87,6 +87,21 @@ deferred in Claude Code (only their names are visible), so a hint at prompt time
 Logs, caches and per-session state live under `~/.cache/code-wiki/`, named per host, so a folder synced
 between machines never shares them.
 
+## Keeping notes fresh
+
+Facts like prices, model ids, quotas and "as of" statements go stale. Give such notes
+`verified: YYYY-MM-DD` frontmatter. `recall_hint.py` then adds "re-check before relying on it" to a
+pointer whose `verified` date is over 90 days old. `knowledge_freshness.py` (read-only) lists volatile notes
+that are overdue or were never verified. A note counts as volatile when it hits two or more categories:
+pricing, model ids, quotas or tiers, retirements, as-of facts. Run it monthly:
+
+```bash
+CODE_WIKI_KNOWLEDGE_DIRS=~/path/to/notes python3 knowledge_freshness.py --days 90 --out ~/.cache/code-wiki/knowledge-freshness.txt
+```
+
+If you schedule it with launchd on macOS, call the interpreter by absolute path. A LaunchAgent running the
+Xcode command-line `python3` can be denied access to `~/Documents`.
+
 ## Privacy
 
 Everything the hooks read or write is local. Keep your notes folder, rules file and settings out of
