@@ -359,7 +359,7 @@ async function main(): Promise<void> {
     repoLocationsPath: opts.source,
   });
 
-  const { indexFullPath, repoLocationsPath, indexFullCount, repoLocationsCount } = combined.sources;
+  const { indexFullPath, repoLocationsPath, indexFullCount, repoLocationsCount, localIndexPath, localPathCount } = combined.sources;
 
   if (!indexFullPath && !repoLocationsPath) {
     console.error(
@@ -373,10 +373,11 @@ async function main(): Promise<void> {
   console.log('Inventory sources:');
   if (indexFullPath)     console.log(`  index-full.json:   ${indexFullPath} (${indexFullCount} repos)`);
   if (repoLocationsPath) console.log(`  repo-locations.md: ${repoLocationsPath} (${repoLocationsCount} repos)`);
-  if (combined.repoLocationsStale) {
+  console.log(`  local index:       ${localIndexPath ? 'mcp-server local cache' : 'not found'} (${localPathCount} repos with a local checkout)`);
+  if (combined.repoLocationsStale && localPathCount === 0) {
     console.log(
       `  NOTE: repo-locations.md is stale (${repoLocationsCount} < ${indexFullCount}). ` +
-      `Run the MCP server's sync_repos to refresh, or rely on index-full.json for now.`,
+      `No local index either: start the MCP server once (it writes mcp-server/data/index.json) or set CODE_WIKI_LOCAL_INDEX.`,
     );
   }
   if (!indexFullPath) {
