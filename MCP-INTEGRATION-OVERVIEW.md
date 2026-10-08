@@ -10,10 +10,18 @@ The tools fall into four capability groups:
 
 | Group | Tools | What agents get |
 |---|---|---|
-| **Knowledge retrieval** | `search_wiki`, `get_document`, `list_category`, `get_file` | Curated patterns, snippets, integrations, and templates — human-written knowledge, not raw code |
+| **Knowledge retrieval** | `recall`, `search_wiki`, `get_document`, `list_category`, `get_file` | Curated patterns, snippets, integrations, and templates — human-written knowledge, not raw code |
 | **Codebase intelligence** | `search_repos`, `list_repos`, `sync_repos` | Ripgrep-powered full-text search across all indexed repositories, with canonical names and local paths |
 | **Operational state** | `project_health`, `deploy_status`, `infra_overview` | Live deployment state (Netlify/Cloudflare/GCP), last-commit dates, convention-compliance checks |
 | **Graph + standards** | `search_taxonomy`, `get_project_flow`, `get_preferences` | A faceted knowledge graph, Mermaid architecture diagrams, and user-defined coding standards |
+
+### `recall`: one search across your notes, the wiki and the taxonomy
+
+`recall(query)` ranks local knowledge notes (any folder of markdown notes with frontmatter, set via
+`CODE_WIKI_KNOWLEDGE_DIRS`), wiki pages and taxonomy terms together, and returns pointers (path, one-line
+description, source, age), not document bodies. Paste error text verbatim: notes can list exact `symptoms:`.
+The knowledge folder is read by the MCP server only and never by the web build. Scoring is shared with the
+Claude Code hooks in `integrations/claude-code/`, which surface the same notes automatically at prompt time.
 
 ## Why this is useful for agentic workflows
 
