@@ -19,7 +19,9 @@ block to PATH, but only if git confirms PATH is ignored (fails closed otherwise)
 Configuration (environment):
   CODE_WIKI_KNOWLEDGE_DIRS  notes directories (':' or ',' separated)        [optional]
   CODE_WIKI_TAXONOMY_DIRS   directories holding project records              [optional]
-  CODE_WIKI_ACTION_RULES    rules file; its "session_checks" list is used
+  CODE_WIKI_ACTION_RULES    rules file; its "session_checks" list is used. Each check:
+                            pattern, message, optional note_file, exclude (pathspec
+                            globs), unless_line (regex: skip lines that also match)
                             (default ~/.config/code-wiki/action-rules.json)  [optional]
 
 CLI:  project_context.py --cwd DIR            print the block
@@ -191,13 +193,23 @@ def session_checks(root: Path) -> list[str]:
         pat, msg = c.get("pattern"), c.get("message")
         if not pat or not msg:
             continue
+        excludes = [f":!{g}" for g in c.get("exclude", [])]
         try:
-            out = subprocess.run(["git", "-C", str(root), "grep", "-I", "-l", "-i", "-E", pat, "--",
-                                  ":!*.lock", ":!*lock.json", ":!*.min.js", ":!*.md", ":!dist", ":!build"],
+            out = subprocess.run(["git", "-C", str(root), "grep", "-I", "-n", "-i", "-E", pat, "--",
+                                  ":!*.lock", ":!*lock.json", ":!*.min.js", ":!*.md", ":!dist", ":!build",
+                                  *excludes],
                                  capture_output=True, text=True, timeout=GREP_TIMEOUT_S)
         except (OSError, subprocess.SubprocessError):
             continue
-        files = [f for f in out.stdout.splitlines() if f]
+        unless = c.get("unless_line")
+        files = []
+        for row in out.stdout.splitlines():
+            path, _, rest = row.partition(":")
+            text = rest.partition(":")[2]
+            if unless and re.search(unless, text, re.IGNORECASE):
+                continue  # e.g. a remap entry that already points at the replacement
+            if path and path not in files:
+                files.append(path)
         if files:
             shown = ", ".join(files[:3]) + (f" (+{len(files) - 3} more)" if len(files) > 3 else "")
             line = f"⚠ {msg} [{shown}]"

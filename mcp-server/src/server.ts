@@ -30,6 +30,7 @@ import { deployStatusTool, handleDeployStatus } from './tools/deployStatus.js';
 import { infraOverviewTool, handleInfraOverview } from './tools/infraOverview.js';
 import { getProjectFlowTool, handleGetProjectFlow } from './tools/getProjectFlow.js';
 import { searchTaxonomyTool, handleSearchTaxonomy } from './tools/searchTaxonomy.js';
+import { recallTool, handleRecall } from './tools/recall.js';
 
 import { logger } from './utils/logger.js';
 
@@ -77,6 +78,7 @@ export class CodeWikiServer {
     // List available tools
     this.server.setRequestHandler(ListToolsRequestSchema, async () => ({
       tools: [
+        recallTool,
         searchWikiTool,
         searchReposTool,
         getDocumentTool,
@@ -189,6 +191,13 @@ export class CodeWikiServer {
           case 'search_taxonomy':
             result = await handleSearchTaxonomy(
               args as { query: string; action: string; facet?: string },
+              this.config
+            );
+            break;
+
+          case 'recall':
+            result = await handleRecall(
+              args as { query: string; sources?: Array<'knowledge' | 'wiki' | 'taxonomy'>; limit?: number },
               this.config
             );
             break;
