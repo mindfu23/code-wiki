@@ -49,8 +49,22 @@ export async function handleListRepos(
       break;
   }
 
+  // The index is a cache: lastCommit / fileCount lag until it is refreshed. Report its age
+  // so callers can tell fresh metadata from stale.
+  const indexedTimes = repos
+    .map(r => Date.parse(r.lastIndexed))
+    .filter(Number.isFinite);
+  const oldestIndexed = indexedTimes.length ? Math.min(...indexedTimes) : NaN;
+  const indexAgeHours = Number.isFinite(oldestIndexed)
+    ? Math.round((Date.now() - oldestIndexed) / 3_600_000)
+    : null;
+
   return JSON.stringify({
     totalRepos: repos.length,
+    indexAgeHours,
+    ...(indexAgeHours !== null && indexAgeHours > 24
+      ? { stale: true, staleHint: 'Metadata may lag. Restart the MCP server to re-index, or run sync_repos (which also git-pulls every repo).' }
+      : {}),
     repos: repos.map(r => ({
       name: r.name,
       description: r.description,
