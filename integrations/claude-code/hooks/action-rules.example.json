@@ -1,0 +1,20 @@
+{
+  "rules": [
+    {
+      "id": "netlify-cli-rebuilds",
+      "tools": "^Bash$",
+      "command": "\\bnetlify\\s+deploy\\b",
+      "unless": "--no-build",
+      "message": "`netlify deploy --dir=dist` re-runs the netlify.toml build without your local .env; add --no-build to ship the dist/ you tested.",
+      "note_file": "example_netlify_deploy_note.md"
+    },
+    {
+      "id": "python-stdlib-https",
+      "tools": "^(Write|Edit|MultiEdit)$",
+      "path": "\\.py$",
+      "content": "urllib\\.request|urlopen\\(",
+      "unless": "certifi|cert_store_stats",
+      "message": "Some Python builds ship an empty CA store; build the SSL context from certifi when the default store has no CAs."
+    }
+  ]
+}
