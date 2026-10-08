@@ -96,7 +96,7 @@ If all three are no, the taxonomy failed its self-test. **Don't expand to more p
 1. **Verify Phase 1 is complete.** Read `HANDOFF-rearchitecture.md` success criteria and confirm all six are met. Do not proceed until they are.
 2. Read this entire handoff.
 3. Read the `code-wiki` README, especially the (updated by Phase 1) section on the private content repo.
-4. Read the memory file `~/.claude/projects/-Users-jamesbeach-Documents-visual-studio-code/memory/taxonomy-design-patterns.md` for the general design patterns.
+4. Read the maintainer's local agent-memory notes (not in this repo) for the general design patterns.
 5. Read `HANDOFF-taxonomy-design.md` for background context (but know this current handoff supersedes it on specific decisions).
 6. Re-verify the 5 v1 project repos exist where expected.
 
