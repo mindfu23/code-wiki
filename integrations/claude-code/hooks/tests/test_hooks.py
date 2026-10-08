@@ -166,5 +166,24 @@ class ProjectContextTests(unittest.TestCase):
         self.assertIn("WidgetApp", (self.root / "context.local.md").read_text())
 
 
+class FreshnessTests(unittest.TestCase):
+    def test_report_and_age_warning(self):
+        with tempfile.TemporaryDirectory() as d:
+            notes = Path(d)
+            (notes / "old_pricing_note.md").write_text("---\nname: old\ndescription: \"Widget API pricing and gpt-9 model\"\nverified: 2020-01-01\n---\n$1 per 1M tokens\n")
+            (notes / "unverified_pricing.md").write_text("---\nname: u\ndescription: \"Gadget pricing\"\n---\nGadget pricing: $2 per 1M on the free tier.\n")
+            (notes / "durable_lesson.md").write_text("---\nname: l\ndescription: \"Retry with backoff\"\n---\nWe hit a rate limit once.\n")
+            env = {k: v for k, v in os.environ.items() if not k.startswith("CODE_WIKI_")}
+            env["CODE_WIKI_KNOWLEDGE_DIRS"] = d
+            out = subprocess.run([sys.executable, str(HOOKS.parent / "knowledge_freshness.py")],
+                                 capture_output=True, text=True, env=env).stdout
+            self.assertIn("old_pricing_note.md — verified", out)
+            self.assertIn("unverified_pricing.md", out)
+            self.assertNotIn("durable_lesson.md", out)  # one category only: not flagged
+            env["CODE_WIKI_RECALL_LOG"] = "off"; env["HOME"] = d
+            rc, ctx = run("recall_hint.py", {"prompt": "what is the widget api pricing for gpt-9 per 1M"}, **{k: v for k, v in env.items() if k.startswith(("CODE_WIKI_", "HOME"))})
+            self.assertIn("re-check before relying on it", ctx)
+
+
 if __name__ == "__main__":
     unittest.main()
