@@ -28,6 +28,7 @@ import * as path from 'path';
 import matter from 'gray-matter';
 
 import { combineRepoSources, CombinedRepo } from './lib/combineRepoSources.js';
+import { inferServicesFromCode } from './lib/codeSignals.js';
 import { discoverManifests, ManifestHit } from './lib/discoverManifests.js';
 import { lookupDep, MANIFEST_SIGNALS, DepMapping, mergeMappings } from './lib/depMappings.js';
 import {
@@ -232,6 +233,12 @@ async function inferProjectTaxonomy(
   // Always fold in language-based inference — it adds coarse hints even
   // when manifests are available (and is the only signal when they aren't).
   agg = mergeMappings(agg, inferFromLanguages(entry.languages));
+
+  // Services called from code (API hosts, SDK imports) that manifests miss.
+  if (entry.localPath) {
+    const services = inferServicesFromCode(entry.localPath);
+    if (services.length) agg = mergeMappings(agg, { service: services });
+  }
 
   // Flutter → narrow platforms to actual presence of ios/android/web dirs.
   // Only possible when we have a localPath.

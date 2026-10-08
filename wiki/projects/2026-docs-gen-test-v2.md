@@ -5,9 +5,9 @@ tags: []
 updated: '2026-10-08'
 source_repo: 2026_docs-gen-test_v2
 taxonomy:
+  stack: [python]
+  dependsOn: [github-api, huggingface-api, openai-api]
   type: project
-  stack:
-    - python
   visibility: public
   lifecycle: shipped
   completionState: stub

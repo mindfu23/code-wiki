@@ -16,5 +16,11 @@
       "unless": "certifi|cert_store_stats",
       "message": "Some Python builds ship an empty CA store; build the SSL context from certifi when the default store has no CAs."
     }
+  ],
+  "prompt_hints": [
+    {
+      "pattern": "\\bwhich (of )?(my )?(apps|repos|projects)\\b",
+      "message": "for questions across projects, call the code-wiki MCP tools first (search_taxonomy find_dependents for services; search_repos for literal strings such as model ids)."
+    }
   ]
 }
