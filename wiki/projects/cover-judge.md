@@ -8,6 +8,7 @@ taxonomy:
   stack: [javascript, react, vite]
   platform: [web]
   deployTarget: [netlify]
+  dependsOn: [anthropic-api, google-gemini-api, openai-api, perplexity-api]
   type: project
   visibility: public
   lifecycle: shipped

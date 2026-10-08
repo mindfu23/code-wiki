@@ -2,23 +2,14 @@
 title: EthicalAIditor
 description: '(TODO: describe this project)'
 tags: []
-updated: '2026-05-13'
+updated: '2026-10-08'
 source_repo: EthicalAIditor
 taxonomy:
+  stack: [javascript, react, vite]
+  platform: [android, ios, web]
+  deployTarget: [cloudflare-workers, netlify]
+  dependsOn: [cloudflare-api, huggingface-api]
   type: project
-  stack:
-    - javascript
-    - react
-    - vite
-  platform:
-    - android
-    - ios
-    - web
-  deployTarget:
-    - cloudflare-workers
-    - netlify
-  dependsOn:
-    - cloudflare-api
   visibility: public
   lifecycle: shipped
   completionState: stub
