@@ -86,6 +86,18 @@ jobs:
           mkdir -p /tmp/private-content/wiki/projects
           npm run build:repo-locations -- --out /tmp/private-content/wiki/projects/repo-locations.md
 
+      - name: Build per-app status digest
+        # Copies each active repo's TODO / HANDOFF / NEXT / ROADMAP / STATUS
+        # notes, last 5 commit messages and open issue count into
+        # wiki/status/<repo>.md, plus wiki/status/overview.md. Pages are
+        # marked visibility: private so they stay out of the public index.
+        # The next night's overlay pulls them into the searchable index.
+        working-directory: web
+        env:
+          GITHUB_TOKEN: ${{ secrets.REPO_ACCESS_TOKEN || secrets.GITHUB_TOKEN }}
+          GITHUB_USERNAME: ${{ github.repository_owner }}
+        run: npm run build:status-digest -- --out /tmp/private-content/wiki/status
+
       - name: Copy generated files to private content repo
         run: |
           # Copy index and category files
@@ -102,8 +114,10 @@ jobs:
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          # Include wiki/projects/ so the regenerated repo-locations.md is committed
+          # Include wiki/projects/ so the regenerated repo-locations.md is committed,
+          # and wiki/status/ for the per-app status digest (-A picks up removals)
           git add web/public/data/ wiki/projects/
+          git add -A wiki/status/
           if git diff --cached --quiet; then
             echo "No changes to commit"
           else
