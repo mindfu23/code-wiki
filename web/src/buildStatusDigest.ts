@@ -17,6 +17,13 @@
  * overlay copies these pages into `wiki/` before `build:index`, and the
  * builder keeps them out of the public index.
  *
+ * Failure behaviour: if more than MAX_FAILURE_RATE of repos can't be read
+ * (usually a token that can't see private repos) or no repo is active, the
+ * script exits non-zero without touching the output directory, so a bad run
+ * never commits gutted pages over good ones.
+ *
+ * Logs name no repos in CI (see ciLog.ts): this repo's Actions logs are public.
+ *
  * Usage:
  *   npm run build:status-digest -- --out /tmp/private-content/wiki/status
  *   Optional: --index <path to index-full.json> (default public/data/index-full.json)
@@ -33,6 +40,7 @@ import * as fs from 'fs/promises';
 import * as path from 'path';
 import { Octokit } from '@octokit/rest';
 import type { RepoInfo } from './types.js';
+import { nm, errMsg } from './ciLog.js';
 
 // Basenames that count as status notes. Matched case-insensitively against
 // the file name only, e.g. TODO.md, TODO_alt.md, HANDOFF-rearchitecture.md,
@@ -42,13 +50,14 @@ const STATUS_FILE = /^(.*[-_])?(todo|handoff|next|next[-_]steps|roadmap|status|b
 // When a repo has more matches than MAX_FILES_PER_REPO, keep the ones most
 // likely to say what's next: TODO / NEXT / STATUS before ROADMAP, and
 // HANDOFF / BRIEFING last, since those are often historical write-ups.
+// Within each kind the plain name (HANDOFF.md) beats prefixed or suffixed
+// variants (HANDOFF-rearchitecture.md), which tend to be older one-offs.
+const EXACT_STATUS_FILE = /^(todo|handoff|next|next[-_]steps|roadmap|status|briefing)\.(md|txt)$/i;
+
 function statusRank(fileName: string): number {
   const n = fileName.toLowerCase();
-  if (n.includes('todo')) return 0;
-  if (n.includes('next')) return 1;
-  if (n.includes('status')) return 2;
-  if (n.includes('roadmap')) return 3;
-  return 4;
+  const kind = n.includes('todo') ? 0 : n.includes('next') ? 1 : n.includes('status') ? 2 : n.includes('roadmap') ? 3 : 4;
+  return kind * 2 + (EXACT_STATUS_FILE.test(fileName) ? 0 : 1);
 }
 
 // Generated or vendored trees that happen to contain matching names.
@@ -60,6 +69,8 @@ const SKIP_STAGES = new Set(['abandoned', 'reference']);
 const MAX_FILES_PER_REPO = 4;
 const MAX_CHARS_PER_FILE = 3000;
 const COMMITS_PER_REPO = 5;
+// Above this share of repos with a failed GitHub call, the run aborts.
+const MAX_FAILURE_RATE = 0.2;
 
 // The content repo itself is docs only and would quote its own pages back.
 const SKIP_REPOS = new Set(['code-wiki-content']);
@@ -70,6 +81,8 @@ interface StatusPage {
   openIssues: number | null;
   commits: { date: string; message: string }[];
   files: { path: string; text: string; truncated: boolean }[];
+  /** True if any GitHub call for this repo failed (the page would be incomplete). */
+  failed: boolean;
 }
 
 function getArg(name: string, fallback?: string): string {
@@ -80,7 +93,7 @@ function getArg(name: string, fallback?: string): string {
   process.exit(1);
 }
 
-function pickStatusFiles(repo: RepoInfo): string[] {
+export function pickStatusFiles(repo: RepoInfo): string[] {
   const candidates = (repo.markdownFiles ?? [])
     .map(f => f.relativePath)
     .filter(p => !SKIP_DIRS.test(p))
@@ -112,7 +125,7 @@ async function fetchFileText(octokit: Octokit, owner: string, repo: string, file
     if (Array.isArray(data) || data.type !== 'file' || !('content' in data)) return null;
     return Buffer.from(data.content, 'base64').toString('utf-8');
   } catch (err) {
-    console.warn(`  Could not read ${repo}/${filePath}: ${(err as Error).message}`);
+    console.warn(`  Could not read ${nm(`${repo}/${filePath}`)}: ${errMsg(err)}`);
     return null;
   }
 }
@@ -120,13 +133,15 @@ async function fetchFileText(octokit: Octokit, owner: string, repo: string, file
 async function buildPage(octokit: Octokit, owner: string, repo: RepoInfo): Promise<StatusPage> {
   const stage = repo.completion?.stage ?? 'unknown';
 
+  let failed = false;
   let openIssues: number | null = null;
   try {
     const { data } = await octokit.repos.get({ owner, repo: repo.name });
     // GitHub counts open pull requests in this number too.
     openIssues = data.open_issues_count;
   } catch (err) {
-    console.warn(`  Could not read metadata for ${repo.name}: ${(err as Error).message}`);
+    console.warn(`  Could not read metadata for ${nm(repo.name)}: ${errMsg(err)}`);
+    failed = true;
   }
 
   const commits: StatusPage['commits'] = [];
@@ -139,52 +154,78 @@ async function buildPage(octokit: Octokit, owner: string, repo: RepoInfo): Promi
       });
     }
   } catch (err) {
-    console.warn(`  Could not list commits for ${repo.name}: ${(err as Error).message}`);
+    console.warn(`  Could not list commits for ${nm(repo.name)}: ${errMsg(err)}`);
+    failed = true;
   }
 
   const files: StatusPage['files'] = [];
   for (const filePath of pickStatusFiles(repo)) {
     const text = await fetchFileText(octokit, owner, repo.name, filePath);
-    if (text === null) continue;
+    if (text === null) {
+      failed = true;
+      continue;
+    }
     const truncated = text.length > MAX_CHARS_PER_FILE;
     files.push({ path: filePath, text: truncated ? text.slice(0, MAX_CHARS_PER_FILE) : text, truncated });
   }
 
-  return { repo, stage, openIssues, commits, files };
+  return { repo, stage, openIssues, commits, files, failed };
 }
 
 // Status files are markdown already; demote their headings two levels so
-// they nest under this page's "## <file>" sections, and keep fenced code
-// intact.
-function nestMarkdown(text: string): string {
-  let inFence = false;
-  return text
-    .split('\n')
-    .map(line => {
-      if (/^\s*(```|~~~)/.test(line)) inFence = !inFence;
-      if (!inFence && /^#{1,4}\s/.test(line)) return '##' + line;
+// they nest under this page's "## <file>" sections (capped at h6), and keep
+// fenced code intact. Truncation can cut a file inside a code fence; close it
+// so the rest of the page doesn't render as code.
+export function nestMarkdown(text: string): string {
+  let fence: string | null = null;
+  const out = text.split('\n').map(line => {
+    const marker = line.match(/^\s*(```|~~~)/)?.[1];
+    if (marker) {
+      if (fence === null) fence = marker;
+      else if (marker === fence) fence = null;
       return line;
-    })
-    .join('\n')
-    .trimEnd();
+    }
+    if (fence === null) {
+      const h = line.match(/^(\s{0,3})(#{1,6})(\s.*)?$/);
+      if (h) return h[1] + '#'.repeat(Math.min(6, h[2].length + 2)) + (h[3] ?? '');
+    }
+    return line;
+  });
+  if (fence !== null) out.push(fence);
+  return out.join('\n').trimEnd();
 }
 
-function renderPage(page: StatusPage, today: string): string {
+// YAML double-quoted scalar. JSON string escaping is valid YAML.
+const yamlStr = (v: string): string => JSON.stringify(v);
+
+// Date part of an ISO timestamp, or '-'.
+const day = (iso?: string): string => (iso ? iso.split('T')[0] : '-');
+
+// Per-repo so a recall query matches the repo it's about, not every status page.
+function pageDescription(page: StatusPage): string {
+  const about = page.repo.description ? ` ${page.repo.description.slice(0, 160)}` : '';
+  return `${page.repo.name} (${page.stage}):${about}`.trim();
+}
+
+// `updated` is the repo's last push rather than today's date, so a page only
+// changes (and the content repo only gets a commit) when the repo does.
+function renderPage(page: StatusPage): string {
   const { repo } = page;
-  const lastPush = repo.lastCommitDate ? repo.lastCommitDate.split('T')[0] : '-';
+  const lastPush = day(repo.lastCommitDate);
   const lines: string[] = [];
   lines.push('---');
-  lines.push(`title: "Status: ${repo.name}"`);
+  lines.push(`title: ${yamlStr(`Status: ${repo.name}`)}`);
   lines.push('tags: ["status", "auto-generated"]');
-  lines.push(`description: "Nightly status digest for ${repo.name}: stage, recent commits, and its TODO / handoff notes."`);
-  lines.push(`updated: "${today}"`);
-  lines.push(`source_repo: "${repo.name}"`);
+  lines.push(`description: ${yamlStr(pageDescription(page))}`);
+  lines.push(`updated: ${yamlStr(lastPush)}`);
+  lines.push(`source_repo: ${yamlStr(repo.name)}`);
   lines.push('visibility: "private"');
   lines.push('---');
   lines.push('');
   lines.push(`# ${repo.name}`);
   lines.push('');
-  lines.push('This page is **auto-generated** nightly from the repo. Edit the repo\'s own files, not this page.');
+  lines.push('This page is **auto-generated** nightly from the repo. Edit the repo\'s own files, not this page. ' +
+    'The web index picks it up on the following night\'s run; the MCP server reads it as soon as the local content clone is pulled.');
   lines.push('');
   if (repo.description) {
     lines.push(`> ${repo.description}`);
@@ -221,13 +262,14 @@ function renderPage(page: StatusPage, today: string): string {
   return lines.join('\n');
 }
 
-function renderOverview(pages: StatusPage[], today: string, days: number): string {
+function renderOverview(pages: StatusPage[], days: number): string {
+  const newest = pages.map(p => day(p.repo.lastCommitDate)).filter(d => d !== '-').sort().pop() ?? '-';
   const lines: string[] = [];
   lines.push('---');
   lines.push('title: "App Status Overview"');
   lines.push('tags: ["status", "index", "auto-generated"]');
-  lines.push(`description: "One row per active repo (pushed in the last ${days} days): stage, last push, open issues, and which status notes it has."`);
-  lines.push(`updated: "${today}"`);
+  lines.push(`description: ${yamlStr(`Status of every active repo (pushed in the last ${days} days): stage, last push, open issues, latest commit, and which status notes it has.`)}`);
+  lines.push(`updated: ${yamlStr(newest)}`);
   lines.push('visibility: "private"');
   lines.push('---');
   lines.push('');
@@ -238,7 +280,7 @@ function renderOverview(pages: StatusPage[], today: string, days: number): strin
   lines.push('| Repo | Stage | Last push | Open issues + PRs | Latest commit | Status notes |');
   lines.push('|------|-------|-----------|-------------------|---------------|--------------|');
   for (const p of pages) {
-    const lastPush = p.repo.lastCommitDate ? p.repo.lastCommitDate.split('T')[0] : '-';
+    const lastPush = day(p.repo.lastCommitDate);
     const latest = p.commits[0]?.message.replace(/\|/g, '\\|') ?? '-';
     const notes = p.files.length ? p.files.map(f => path.basename(f.path)).join(', ') : 'none';
     lines.push(`| [${p.repo.name}](${p.repo.name}.md) | ${p.stage} | ${lastPush} | ${p.openIssues ?? '-'} | ${latest} | ${notes} |`);
@@ -271,13 +313,25 @@ async function main(): Promise<void> {
     .filter(r => r.lastCommitDate && Date.parse(r.lastCommitDate) >= cutoff)
     .sort((a, b) => (b.lastCommitDate ?? '').localeCompare(a.lastCommitDate ?? ''));
   console.log(`Building status pages for ${active.length} of ${index.repos.length} repos (pushed in the last ${days} days)...`);
+  if (active.length === 0) {
+    // An empty list is far likelier to be a broken index than a quiet portfolio.
+    console.error('No active repos found; leaving existing status pages untouched.');
+    process.exit(1);
+  }
 
   const octokit = new Octokit({ auth: token });
   const pages: StatusPage[] = [];
-  for (const repo of active) {
+  for (const [i, repo] of active.entries()) {
     const page = await buildPage(octokit, username, repo);
-    console.log(`  ${repo.name}: ${page.commits.length} commits, ${page.files.length} status files`);
+    console.log(`  ${nm(repo.name)} (${i + 1}/${active.length}): ${page.commits.length} commits, ${page.files.length} status files${page.failed ? ', INCOMPLETE' : ''}`);
     pages.push(page);
+  }
+
+  const failedCount = pages.filter(p => p.failed).length;
+  if (failedCount / pages.length > MAX_FAILURE_RATE) {
+    console.error(`${failedCount} of ${pages.length} repos had failed GitHub calls (limit ${MAX_FAILURE_RATE * 100}%). ` +
+      'Check that GITHUB_TOKEN can read private repos. Leaving existing status pages untouched.');
+    process.exit(1);
   }
 
   // Start clean so repos that went quiet or were renamed don't leave stale
@@ -285,15 +339,18 @@ async function main(): Promise<void> {
   await fs.rm(outDir, { recursive: true, force: true });
   await fs.mkdir(outDir, { recursive: true });
 
-  const today = new Date().toISOString().split('T')[0];
   for (const page of pages) {
-    await fs.writeFile(path.join(outDir, `${page.repo.name}.md`), renderPage(page, today), 'utf-8');
+    await fs.writeFile(path.join(outDir, `${page.repo.name}.md`), renderPage(page), 'utf-8');
   }
-  await fs.writeFile(path.join(outDir, 'overview.md'), renderOverview(pages, today, days), 'utf-8');
+  await fs.writeFile(path.join(outDir, 'overview.md'), renderOverview(pages, days), 'utf-8');
+  if (failedCount) console.warn(`${failedCount} page(s) are incomplete because a GitHub call failed.`);
   console.log(`Wrote ${pages.length + 1} files to ${outDir}`);
 }
 
-main().catch((err) => {
-  console.error('Failed:', err);
-  process.exit(1);
-});
+// Run only as a script, so tests can import the helpers above.
+if (process.argv[1] && /buildStatusDigest\.(ts|js)$/.test(process.argv[1])) {
+  main().catch((err) => {
+    console.error('Failed:', errMsg(err));
+    process.exit(1);
+  });
+}

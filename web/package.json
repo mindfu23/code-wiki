@@ -12,6 +12,7 @@
     "build:status-digest": "tsx src/buildStatusDigest.ts",
     "build:functions": "tsc -p tsconfig.functions.json && node scripts/mark-functions-cjs.cjs",
     "lint:taxonomy": "tsx src/taxonomyValidator.ts",
+    "check:public-outputs": "tsx src/checkPublicOutputs.ts",
     "dev": "netlify dev",
     "typecheck": "tsc --noEmit",
     "lint": "tsc --noEmit && echo 'TypeScript check passed'"

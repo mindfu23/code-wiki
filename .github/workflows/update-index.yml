@@ -24,7 +24,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '20'
+          node-version: '22'
           cache: 'npm'
           cache-dependency-path: web/package-lock.json
 
@@ -60,6 +60,9 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.REPO_ACCESS_TOKEN || secrets.GITHUB_TOKEN }}
           GITHUB_USERNAME: ${{ github.repository_owner }}
           WIKI_DIR: ${{ github.workspace }}/wiki
+          # The overlay above merged private pages into wiki/. This tells the builder which
+          # ones came from the private repo, so they default to private (fail closed).
+          PRIVATE_WIKI_DIR: /tmp/private-content/wiki
         run: npm run build:index
 
       - name: Check diagram staleness
@@ -72,6 +75,14 @@ jobs:
       - name: Build taxonomy
         working-directory: web
         run: npm run build:taxonomy
+
+      - name: Leak gate — public outputs must not reference private content
+        # Fails the run (before anything is copied or committed) if index.json,
+        # category-*.json, taxonomy.json or diagram-signals.json names a private
+        # repo, a private doc path or body, or a home-directory path. Prints
+        # per-file counts only; run it locally without CI=1 to see the matches.
+        working-directory: web
+        run: npm run check:public-outputs
 
       - name: Build repo-locations.md
         # Regenerates wiki/projects/repo-locations.md directly from GitHub

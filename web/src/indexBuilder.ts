@@ -24,8 +24,7 @@ import {
 } from '../netlify/functions/_shared/completionAssessment.js';
 
 // CI logs for this public repo are public: never print repo names there (some repos are private).
-const CI_LOG = !!process.env.CI;
-const nm = (name: string): string => (CI_LOG ? '<repo>' : name);
+import { nm, errMsg } from './ciLog.js';
 
 /**
  * Load environment variables from a .env file if they're not already set.
@@ -131,6 +130,13 @@ const OUTPUT_DIR = path.resolve(process.cwd(), 'public/data');
 // Categories are derived from subdirectory names, same as the main wiki.
 const PERSONAL_WIKI_DIR = process.env.PERSONAL_WIKI_DIR || path.join(WIKI_DIR, 'personal');
 
+// Wiki pages from the private content repo. CI overlays them into WIKI_DIR (other build steps read
+// them from there), so this directory is how the builder tells which pages came from the private
+// side: those default to private unless their frontmatter says `visibility: public`. Without it, a
+// private page that's missing its frontmatter would be published. Defaults to a local clone at
+// <WIKI_DIR>/../private-content/wiki when one exists.
+const PRIVATE_WIKI_DIR = process.env.PRIVATE_WIKI_DIR || path.join(path.dirname(path.resolve(WIKI_DIR)), 'private-content', 'wiki');
+
 // GitHub API mode - used in CI when local repos aren't available
 const USE_GITHUB_API = process.env.USE_GITHUB_API === 'true';
 const GITHUB_TOKEN = process.env.GITHUB_TOKEN;
@@ -170,7 +176,11 @@ async function findMarkdownFiles(dir: string, baseDir: string = dir, skipDirs: s
   return files;
 }
 
-async function parseWikiDocument(filePath: string, wikiDir: string): Promise<WikiDocument | null> {
+async function parseWikiDocument(
+  filePath: string,
+  wikiDir: string,
+  defaultVisibility: 'public' | 'private' = 'public',
+): Promise<WikiDocument | null> {
   try {
     const content = await fs.readFile(filePath, 'utf-8');
     const { data, content: body } = matter(content);
@@ -198,10 +208,12 @@ async function parseWikiDocument(filePath: string, wikiDir: string): Promise<Wik
       content: sanitizedBody,
       contentPreview: sanitizedBody.slice(0, 300).replace(/\n/g, ' ').trim(),
       category,
-      visibility: frontmatter.visibility === 'private' ? 'private' : 'public',
+      visibility: frontmatter.visibility === 'private' ? 'private'
+        : frontmatter.visibility === 'public' ? 'public'
+        : defaultVisibility,
     };
   } catch (error) {
-    console.error(`Error parsing ${filePath}:`, error);
+    console.error(`Error parsing ${nm(filePath)}: ${errMsg(error)}`);
     return null;
   }
 }
@@ -229,7 +241,8 @@ async function parseRepoLocations(wikiDir: string): Promise<RepoInfo[]> {
         name,
         languages: [],
         status: 'local-only',
-        visibility: 'public',  // Default to public
+        // Unknown visibility is private: only an explicit "- **Visibility:** public" line publishes.
+        visibility: 'private',
       };
 
       for (const line of lines.slice(1)) {
@@ -391,7 +404,7 @@ async function fetchRepoDocFilesFromGitHub(
       // Empty repository - no files to index
       console.log(`  Repository ${nm(`${owner}/${repo}`)} is empty (no commits yet)`);
     } else {
-      console.error(`  Error fetching tree for ${nm(`${owner}/${repo}`)}:`, CI_LOG ? (error as Error)?.message : error);
+      console.error(`  Error fetching tree for ${nm(`${owner}/${repo}`)}: ${errMsg(error)}`);
     }
   }
 
@@ -675,8 +688,7 @@ async function mergeRepoData(
           processedLocal.add(localRepo.name.toLowerCase());
           continue;
         } catch (err: unknown) {
-          const msg = (err as { message?: string }).message ?? String(err);
-          console.log(`  Could not resolve ${parsed.owner}/${parsed.repo}: ${msg}`);
+          console.log(`  Could not resolve ${nm(`${parsed.owner}/${parsed.repo}`)}: ${errMsg(err)}`);
         }
       }
     }
@@ -749,8 +761,32 @@ async function buildIndex(): Promise<void> {
   const documents: WikiDocument[] = [];
   const categories = new Set<string>();
 
+  // Relative paths of pages that come from the private content repo (see PRIVATE_WIKI_DIR).
+  let privateWikiFiles: string[] = [];
+  try {
+    await fs.access(PRIVATE_WIKI_DIR);
+    privateWikiFiles = await findMarkdownFiles(PRIVATE_WIKI_DIR, PRIVATE_WIKI_DIR, ['personal']);
+    console.log(`Found ${privateWikiFiles.length} markdown files in the private wiki`);
+  } catch {
+    // No private content repo (e.g. a fork without one) — every page is from the public wiki
+  }
+  const privateRelPaths = new Set(privateWikiFiles.map(f => path.relative(PRIVATE_WIKI_DIR, f)));
+
   for (const file of files) {
-    const doc = await parseWikiDocument(file, WIKI_DIR);
+    const rel = path.relative(WIKI_DIR, file);
+    const doc = await parseWikiDocument(file, WIKI_DIR, privateRelPaths.has(rel) ? 'private' : 'public');
+    if (doc) {
+      documents.push(doc);
+      categories.add(doc.category);
+    }
+  }
+
+  // Locally the private wiki is a separate clone rather than an overlay, so scan the pages that
+  // aren't already in WIKI_DIR. They are private unless marked public.
+  const scannedRel = new Set(files.map(f => path.relative(WIKI_DIR, f)));
+  for (const file of privateWikiFiles) {
+    if (scannedRel.has(path.relative(PRIVATE_WIKI_DIR, file))) continue;
+    const doc = await parseWikiDocument(file, PRIVATE_WIKI_DIR, 'private');
     if (doc) {
       documents.push(doc);
       categories.add(doc.category);
@@ -833,7 +869,7 @@ async function buildIndex(): Promise<void> {
       if (repo.githubUrl) {
         const parsed = parseGitHubUrl(repo.githubUrl);
         if (parsed) {
-          console.log(`  Fetching ${parsed.owner}/${parsed.repo}...`);
+          console.log(`  Fetching ${nm(`${parsed.owner}/${parsed.repo}`)}...`);
           repo.visibility = await fetchRepoVisibility(octokit, parsed.owner, parsed.repo);
           totalDocFiles += await populateRepoSignals(repo, octokit);
         }
@@ -849,7 +885,7 @@ async function buildIndex(): Promise<void> {
     if (octokit) {
       console.log('GitHub token available - will fetch visibility from GitHub API');
     } else {
-      console.log('No GitHub token - using visibility from repo-locations.md (default: public)');
+      console.log('No GitHub token - using visibility from repo-locations.md (default: private)');
     }
 
     for (const repo of repos) {
@@ -935,11 +971,13 @@ async function buildIndex(): Promise<void> {
     version: '1.0.0',
   };
 
-  // Build public index (excludes private repos and docs - for public access)
+  // Build public index (excludes private repos and docs - for public access). Categories come
+  // from public docs only, so a category holding nothing but private pages isn't named publicly.
+  const publicCategories = new Set(publicDocuments.map(d => d.category));
   const publicIndex: WikiIndex = {
     documents: publicDocuments,
     repos: publicRepos,
-    categories: Array.from(allCategories).sort(),
+    categories: Array.from(publicCategories).sort(),
     buildTime: new Date().toISOString(),
     version: '1.0.0',
   };
@@ -958,7 +996,7 @@ async function buildIndex(): Promise<void> {
   // These ship to public/data/ as static CDN assets, so they MUST exclude
   // documents with visibility: private. Authenticated users get the full
   // set via the index-full.json (private-data/, served via full-index.ts).
-  for (const category of allCategories) {
+  for (const category of publicCategories) {
     const categoryDocs = publicDocuments.filter(d => d.category === category);
     const categoryPath = path.join(OUTPUT_DIR, `category-${category}.json`);
     await fs.writeFile(categoryPath, JSON.stringify(categoryDocs, null, 2));

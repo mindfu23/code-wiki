@@ -24,6 +24,8 @@ web/public/data/diagrams-private.json
 web/public/data/metrics/
 mcp-server/data/metrics/
 wiki/projects/repo-locations.md
+wiki/status/
+web/private-data/
 
 # Private content overlay (cloned locally for dev)
 private-content/
