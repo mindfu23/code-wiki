@@ -24,7 +24,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '20'
+          node-version: '22'
           cache: 'npm'
           cache-dependency-path: web/package-lock.json
 
@@ -60,6 +60,9 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.REPO_ACCESS_TOKEN || secrets.GITHUB_TOKEN }}
           GITHUB_USERNAME: ${{ github.repository_owner }}
           WIKI_DIR: ${{ github.workspace }}/wiki
+          # The overlay above merged private pages into wiki/. This tells the builder which
+          # ones came from the private repo, so they default to private (fail closed).
+          PRIVATE_WIKI_DIR: /tmp/private-content/wiki
         run: npm run build:index
 
       - name: Check diagram staleness
@@ -73,6 +76,14 @@ jobs:
         working-directory: web
         run: npm run build:taxonomy
 
+      - name: Leak gate — public outputs must not reference private content
+        # Fails the run (before anything is copied or committed) if index.json,
+        # category-*.json, taxonomy.json or diagram-signals.json names a private
+        # repo, a private doc path or body, or a home-directory path. Prints
+        # per-file counts only; run it locally without CI=1 to see the matches.
+        working-directory: web
+        run: npm run check:public-outputs
+
       - name: Build repo-locations.md
         # Regenerates wiki/projects/repo-locations.md directly from GitHub
         # so it stays fresh nightly without needing the MCP server locally.
@@ -85,6 +96,18 @@ jobs:
         run: |
           mkdir -p /tmp/private-content/wiki/projects
           npm run build:repo-locations -- --out /tmp/private-content/wiki/projects/repo-locations.md
+
+      - name: Build per-app status digest
+        # Copies each active repo's TODO / HANDOFF / NEXT / ROADMAP / STATUS
+        # notes, last 5 commit messages and open issue count into
+        # wiki/status/<repo>.md, plus wiki/status/overview.md. Pages are
+        # marked visibility: private so they stay out of the public index.
+        # The next night's overlay pulls them into the searchable index.
+        working-directory: web
+        env:
+          GITHUB_TOKEN: ${{ secrets.REPO_ACCESS_TOKEN || secrets.GITHUB_TOKEN }}
+          GITHUB_USERNAME: ${{ github.repository_owner }}
+        run: npm run build:status-digest -- --out /tmp/private-content/wiki/status
 
       - name: Copy generated files to private content repo
         run: |
@@ -102,8 +125,10 @@ jobs:
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          # Include wiki/projects/ so the regenerated repo-locations.md is committed
+          # Include wiki/projects/ so the regenerated repo-locations.md is committed,
+          # and wiki/status/ for the per-app status digest (-A picks up removals)
           git add web/public/data/ wiki/projects/
+          git add -A wiki/status/
           if git diff --cached --quiet; then
             echo "No changes to commit"
           else

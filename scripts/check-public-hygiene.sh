@@ -101,7 +101,24 @@ run_check "no likely tokens" \
   "(ghp_[A-Za-z0-9]{30,}|github_pat_[A-Za-z0-9_]{30,}|sk-[A-Za-z0-9_-]{30,}|[A-Za-z_]+(SECRET|TOKEN|API_KEY|PRIVATE_KEY)=[A-Fa-f0-9]{40,})" \
   "$SELF"
 
-# 5. Untracked, user-specific patterns.
+# 5. Generated outputs. Indexes, metrics, status pages and repo-locations.md
+# are built from every repo, private ones included, and belong only in the
+# private content repo. Committing one here publishes it (and git history
+# keeps it after deletion). Checks tracked paths, not file contents.
+if [[ "$PROFILE" == "public" ]]; then
+  GENERATED='^(web/public/data/(index|index-full|category-[^/]+|taxonomy|taxonomy-full|diagram-signals|diagrams-private)\.json|web/public/data/metrics/|web/private-data/|mcp-server/data/metrics/|wiki/status/|wiki/projects/repo-locations\.md$)'
+  tracked=$(git ls-files | grep -E "$GENERATED" || true)
+  if [[ -n "$tracked" ]]; then
+    echo "FAIL: no generated outputs tracked"
+    echo "$tracked" | sed 's/^/  /'
+    echo
+    FAIL=1
+  else
+    echo "OK:   no generated outputs tracked"
+  fi
+fi
+
+# 6. Untracked, user-specific patterns.
 GIT_DIR=$(git rev-parse --git-dir)
 EXTRA="${HYGIENE_EXTRA_PATTERNS_FILE:-$GIT_DIR/info/hygiene-patterns}"
 if [[ -f "$EXTRA" ]]; then

@@ -21,6 +21,7 @@ import { SyncService } from './services/syncService.js';
 import { MetricsService } from './services/metricsService.js';
 import { CodeWikiServer } from './server.js';
 import { logger } from './utils/logger.js';
+import { simpleGit } from 'simple-git';
 
 // Get the directory of this file for relative paths
 const __filename = fileURLToPath(import.meta.url);
@@ -53,6 +54,19 @@ async function main(): Promise<void> {
       ? config.cacheDirectory
       : path.join(__dirname, '..', config.cacheDirectory)
   );
+
+  // The private wiki is a local clone that the nightly workflow keeps updating (status pages,
+  // repo-locations.md). Opt in with PRIVATE_WIKI_AUTO_PULL=true to fast-forward it on startup;
+  // a failure (offline, local changes) only logs, it never blocks the server.
+  if (config.privateWikiDirectory && process.env.PRIVATE_WIKI_AUTO_PULL === 'true') {
+    const repoRoot = path.dirname(config.privateWikiDirectory);
+    try {
+      await simpleGit({ baseDir: repoRoot, timeout: { block: 20_000 } }).pull(['--ff-only']);
+      logger.info('Main', 'Pulled the private wiki clone');
+    } catch (err) {
+      logger.warn('Main', `Could not pull the private wiki clone at ${repoRoot}: ${(err as Error).message}`);
+    }
+  }
 
   const wikiService = new WikiService(
     config.wikiDirectory,

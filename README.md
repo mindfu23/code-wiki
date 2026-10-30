@@ -459,6 +459,7 @@ wiki/
 ├── snippets/          # Code snippets (public scaffolding)
 ├── diagrams/          # Per-project Mermaid architecture diagrams
 ├── projects/          # Project docs with taxonomy frontmatter
+├── status/            # Nightly per-app status pages (private content repo only; build:status-digest)
 └── _taxonomy/         # Taxonomy schema, terms, and relationships
     ├── schema.yml     #   Facets, state fields, channels, validator rules
     ├── relationships.yml  # Structural edges (broader, supersedes, related)
@@ -628,6 +629,23 @@ The MCP server reads metrics from `web/public/data/metrics/` — after a local b
 - Netlify clones private content **read-only** at build time. The token has no write access.
 - GitHub Actions writes to the private content repo via a **separate write-scoped token** that only has access to `code-wiki-content`.
 - **Forkers** can skip the private content repo entirely. The overlay script gracefully handles missing `PRIVATE_CONTENT_TOKEN` — it prints a message and continues with the public-only build.
+
+### Privacy guarantees enforced in code
+
+These hold for any deployment, not just the original one. Each fails closed: when in doubt, content is private.
+
+| Guarantee | Where |
+|-----------|-------|
+| A repo is public only if GitHub says so (or `repo-locations.md` says `- **Visibility:** public`). Unknown or unreadable visibility means private. | `web/src/indexBuilder.ts` |
+| A wiki page about a repo is public only if that repo is public. A `source_repo` that isn't found counts as private. | `web/src/indexBuilder.ts`, `web/src/taxonomyBuilder.ts` |
+| Pages from the private content repo default to private unless their frontmatter says `visibility: public`. The builder finds them through `PRIVATE_WIKI_DIR` (CI) or a local `private-content/wiki` clone. | `web/src/indexBuilder.ts` |
+| A category holding only private pages isn't listed in the public index and gets no public `category-*.json`. | `web/src/indexBuilder.ts` |
+| CI logs never name a repo or a file inside one (this repo's Actions logs are public). Build scripts log through `nm()` / `errMsg()`. | `web/src/ciLog.ts` |
+| **Leak gate:** the nightly workflow fails before copying anything if a public output contains a private repo name, a private doc path or body, or a home-directory path. | `web/src/checkPublicOutputs.ts` (`npm run check:public-outputs`) |
+| Generated outputs (indexes, metrics, status pages, `repo-locations.md`) can't be committed to the public repo. | `scripts/check-public-hygiene.sh` (pre-commit hook + CI) |
+| Sensitive files are bundled with functions only, and 404'd on the CDN as a second layer. | `web/scripts/netlify-build.sh`, `netlify.toml` |
+
+When you add a new generated output: write it to the private content repo, add it to the leak gate's `PUBLIC_FILES` if it's served publicly (or to `SENSITIVE_FILES` + a `netlify.toml` redirect if it isn't), and add its path to the hygiene check's `GENERATED` pattern.
 
 ## Personal Wiki Documents
 
