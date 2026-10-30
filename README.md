@@ -459,7 +459,7 @@ wiki/
 ├── snippets/          # Code snippets (public scaffolding)
 ├── diagrams/          # Per-project Mermaid architecture diagrams
 ├── projects/          # Project docs with taxonomy frontmatter
-├── status/            # Nightly per-app status pages (private content repo only; build:status-digest)
+├── status/            # Nightly per-app status pages, each with a Dependencies section, plus stack.md and dependencies.md roll-ups (private content repo only; build:status-digest, build:deps)
 └── _taxonomy/         # Taxonomy schema, terms, and relationships
     ├── schema.yml     #   Facets, state fields, channels, validator rules
     ├── relationships.yml  # Structural edges (broader, supersedes, related)
@@ -644,6 +644,9 @@ These hold for any deployment, not just the original one. Each fails closed: whe
 | **Leak gate:** the nightly workflow fails before copying anything if a public output contains a private repo name, a private doc path or body, or a home-directory path. | `web/src/checkPublicOutputs.ts` (`npm run check:public-outputs`) |
 | Generated outputs (indexes, metrics, status pages, `repo-locations.md`) can't be committed to the public repo. | `scripts/check-public-hygiene.sh` (pre-commit hook + CI) |
 | Sensitive files are bundled with functions only, and 404'd on the CDN as a second layer. | `web/scripts/netlify-build.sh`, `netlify.toml` |
+| The dependency report's scan cache (package names, versions, advisories) stays in the private content repo at `data/`, outside the folder Netlify publishes. Repo code is cloned only to a temp dir that's deleted after the scan, and clone errors are never printed, since git's error text can repeat the auth header. | `web/src/buildDependencyReport.ts`, `web/src/codeScan.ts` |
+
+**What does leave your control:** the weekly dependency scan sends package names and versions (never repo names or code) to the public registries (npm, pub.dev, PyPI, the Go proxy, crates.io) and to api.osv.dev. If a repo depends on an unpublished private package, its name reaches that registry as a lookup that returns 404. Run `build:deps` with `--scan never` to skip the scan.
 
 When you add a new generated output: write it to the private content repo, add it to the leak gate's `PUBLIC_FILES` if it's served publicly (or to `SENSITIVE_FILES` + a `netlify.toml` redirect if it isn't), and add its path to the hygiene check's `GENERATED` pattern.
 
