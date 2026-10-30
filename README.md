@@ -640,7 +640,7 @@ These hold for any deployment, not just the original one. Each fails closed: whe
 | A wiki page about a repo is public only if that repo is public. A `source_repo` that isn't found counts as private. | `web/src/indexBuilder.ts`, `web/src/taxonomyBuilder.ts` |
 | Pages from the private content repo default to private unless their frontmatter says `visibility: public`. The builder finds them through `PRIVATE_WIKI_DIR` (CI) or a local `private-content/wiki` clone. | `web/src/indexBuilder.ts` |
 | A category holding only private pages isn't listed in the public index and gets no public `category-*.json`. | `web/src/indexBuilder.ts` |
-| CI logs never name a repo or a file inside one (this repo's Actions logs are public). Build scripts log through `nm()` / `errMsg()`. | `web/src/ciLog.ts` |
+| CI logs never name a repo or a file inside one (this repo's Actions logs are public). Build scripts log through `nm()` / `errMsg()`; workflow steps that commit generated files use `git commit -q` / `git push -q`, since git otherwise lists each file name. | `web/src/ciLog.ts`, `.github/workflows/*.yml` |
 | **Leak gate:** the nightly workflow fails before copying anything if a public output contains a private repo name, a private doc path or body, or a home-directory path. | `web/src/checkPublicOutputs.ts` (`npm run check:public-outputs`) |
 | Generated outputs (indexes, metrics, status pages, `repo-locations.md`) can't be committed to the public repo. | `scripts/check-public-hygiene.sh` (pre-commit hook + CI) |
 | Sensitive files are bundled with functions only, and 404'd on the CDN as a second layer. | `web/scripts/netlify-build.sh`, `netlify.toml` |

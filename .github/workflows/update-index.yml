@@ -171,8 +171,12 @@ jobs:
           if git diff --cached --quiet; then
             echo "No changes to commit"
           else
-            git commit -m "chore: update wiki index $(date -u +%Y-%m-%d)"
-            git push
+            # -q: a plain commit prints "create mode ... wiki/status/<repo>.md" for each new
+            # page, i.e. private repo names, and this repo's Actions logs are public.
+            # Print a count instead.
+            echo "Committing $(git diff --cached --name-only | wc -l) changed file(s)"
+            git commit -q -m "chore: update wiki index $(date -u +%Y-%m-%d)"
+            git push -q
           fi
 
       - name: Trigger Netlify rebuild
