@@ -10,9 +10,11 @@
  * straight from GitHub nightly, so every app with a status page gets them.
  *
  * Two parts with different cadences:
- *   - Nightly (cheap, GitHub API only): find manifests and lockfiles in each
- *     repo, parse direct deps and installed versions, infer stack tags with
- *     the same mappings seed-taxonomy uses, count open Dependabot PRs.
+ *   - Nightly: find manifests and lockfiles in each repo through the GitHub
+ *     API, parse direct deps and installed versions, infer stack tags with
+ *     the same mappings seed-taxonomy uses, count open Dependabot PRs. Then a
+ *     shallow clone of each repo is scanned for external APIs (including ones
+ *     called over plain HTTP) and AI model IDs (codeScan.ts) and deleted.
  *   - Weekly scan (registries + OSV): latest version of every direct dep, and
  *     OSV advisories for every locked package. Results go into a lookup cache
  *     (`--cache`, committed to the private content repo at
@@ -32,7 +34,7 @@
  *
  * Usage:
  *   npm run build:deps -- --out /tmp/dependency-report.json --cache /tmp/private-content/data/dependency-scan.json
- *   Optional: --index <index-full.json> --days <N> --scan auto|always|never
+ *   Optional: --index <index-full.json> --days <N> --scan auto|always|never --code-scan on|off
  *
  * Env vars: GITHUB_TOKEN (reads every repo, as for the status digest), GITHUB_USERNAME.
  */
@@ -43,6 +45,7 @@ import { Octokit } from '@octokit/rest';
 import type { RepoInfo } from './types.js';
 import { nm, errMsg } from './ciLog.js';
 import { selectActiveRepos } from './buildStatusDigest.js';
+import { scanRepoCode } from './codeScan.js';
 import {
   pickManifests,
   parseManifest,
@@ -92,7 +95,12 @@ export interface RepoDependencies {
   repo: string;
   languages: string[];
   stack: string[];
+  /** External APIs, from SDK packages and from the code scan. */
   services: string[];
+  /** AI model IDs referenced in source (code scan only). */
+  models: string[];
+  /** False when the repo couldn't be cloned for the code scan (APIs then come from packages only). */
+  codeScanned: boolean;
   manifests: { path: string; ecosystem: Ecosystem; lockfile: string | null; deps: DepRow[] }[];
   unparsed: string[];
   dependabotOpenPrs: number | null;
@@ -178,9 +186,10 @@ export interface Collected {
   directKeys: Set<string>;
 }
 
-export async function collectRepo(octokit: Octokit, owner: string, repo: RepoInfo): Promise<Collected> {
+/** With `token`, also clones the repo to scan its code for APIs and AI models (see codeScan.ts). */
+export async function collectRepo(octokit: Octokit, owner: string, repo: RepoInfo, token?: string): Promise<Collected> {
   const base: RepoDependencies = {
-    repo: repo.name, languages: repo.languages ?? [], stack: [], services: [], manifests: [],
+    repo: repo.name, languages: repo.languages ?? [], stack: [], services: [], models: [], codeScanned: false, manifests: [],
     unparsed: [], dependabotOpenPrs: null, vulns: [], locked: 0, unscanned: 0, failed: false,
   };
   const out: Collected = { base, rawDeps: [], locked: [], directKeys: new Set() };
@@ -234,8 +243,19 @@ export async function collectRepo(octokit: Octokit, owner: string, repo: RepoInf
     const signal = MANIFEST_SIGNALS[path.posix.basename(p)];
     if (signal) mapping = mergeMappings(mapping, signal);
   }
+  const services = new Set(mapping.service ?? []);
+  if (token) {
+    const code = await scanRepoCode(owner, repo.name, token);
+    if (code) {
+      base.codeScanned = true;
+      code.services.forEach(x => services.add(x));
+      base.models = code.models;
+    } else {
+      console.warn(`  Could not clone ${nm(repo.name)} for the code scan; APIs come from packages only.`);
+    }
+  }
   base.stack = [...(mapping.stack ?? [])].sort();
-  base.services = [...(mapping.service ?? [])].sort();
+  base.services = [...services].sort();
 
   try {
     const prs = await octokit.paginate(octokit.pulls.list, { owner, repo: repo.name, state: 'open', per_page: 100 });
@@ -444,6 +464,8 @@ async function main(): Promise<void> {
   const indexPath = getArg('index', path.join('public', 'data', 'index-full.json'));
   const days = parseInt(getArg('days', '120'), 10);
   const scanMode = getArg('scan', 'auto');
+  // Pass --code-scan off to skip cloning repos (dependency files only).
+  const codeScan = getArg('code-scan', 'on') !== 'off';
 
   if (!token || !username) {
     console.error('GITHUB_TOKEN and GITHUB_USERNAME env vars are required');
@@ -461,9 +483,10 @@ async function main(): Promise<void> {
   const octokit = new Octokit({ auth: token });
   const collected: Collected[] = [];
   for (const [i, repo] of active.entries()) {
-    const c = await collectRepo(octokit, username, repo);
+    const c = await collectRepo(octokit, username, repo, codeScan ? token : undefined);
     const depCount = c.rawDeps.reduce((n, m) => n + m.deps.length, 0);
-    console.log(`  ${nm(repo.name)} (${i + 1}/${active.length}): ${c.rawDeps.length} manifests, ${depCount} direct deps${c.base.failed ? ', INCOMPLETE' : ''}`);
+    console.log(`  ${nm(repo.name)} (${i + 1}/${active.length}): ${c.rawDeps.length} manifests, ${depCount} direct deps, ` +
+      `${c.base.services.length} APIs, ${c.base.models.length} models${c.base.failed ? ', INCOMPLETE' : ''}`);
     collected.push(c);
   }
 

@@ -105,7 +105,10 @@ jobs:
       - name: Build dependency report
         # Reads each active repo's dependency manifests and lockfiles (npm,
         # Flutter/Dart, Python, Go, Rust) for stack tags, direct dependencies
-        # with declared and installed versions, and open Dependabot PRs.
+        # with declared and installed versions, and open Dependabot PRs. It
+        # also shallow-clones each repo into a temp dir (deleted after) to
+        # find external APIs, including ones called over plain HTTP, and the
+        # AI model IDs written in code.
         # Roughly weekly (or when dispatched with dependency_scan) it also
         # looks up every direct dependency's latest release and checks every
         # locked package against OSV advisories, caching the results in the
@@ -132,9 +135,11 @@ jobs:
         # wiki/status/<repo>.md, plus wiki/status/overview.md. Pages are
         # marked visibility: private so they stay out of the public index.
         # The next night's overlay pulls them into the searchable index.
-        # With --deps each page also gets a Dependencies section, and
-        # wiki/status/dependencies.md ranks apps by vulnerabilities and
-        # outdated dependencies (skipped if the report step failed).
+        # With --deps each page also gets a Dependencies section,
+        # wiki/status/stack.md lists every app's languages, frameworks, APIs
+        # and AI models, and wiki/status/dependencies.md ranks apps by
+        # vulnerabilities and outdated dependencies (skipped if the report
+        # step failed).
         working-directory: web
         env:
           GITHUB_TOKEN: ${{ secrets.REPO_ACCESS_TOKEN || secrets.GITHUB_TOKEN }}

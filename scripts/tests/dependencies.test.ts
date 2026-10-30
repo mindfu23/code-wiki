@@ -10,6 +10,11 @@ import {
 } from '../../web/src/dependencyParsers.js';
 import { applyCache, toAdvisory, pickFixed, shouldScan, type ScanCache } from '../../web/src/buildDependencyReport.js';
 import { renderDependencies, summarizeDeps } from '../../web/src/buildStatusDigest.js';
+import { findModels } from '../../web/src/codeScan.js';
+import { mkdtempSync, writeFileSync, mkdirSync } from 'fs';
+import { tmpdir } from 'os';
+import { join } from 'path';
+import { execFileSync } from 'child_process';
 
 test('pickManifests finds nested surfaces, pairs lockfiles and skips vendored trees', () => {
   const { manifests, unparsed } = pickManifests([
@@ -167,7 +172,7 @@ test('applyCache marks findings, direct vs transitive, and versions the scan has
     advisories: { 'GHSA-xxxx': { summary: 'Prototype pollution', severity: 'HIGH', aliases: ['CVE-2020-1'], fixed: { 'npm:lodash': ['4.17.21'] } } },
   };
   const r = applyCache({
-    base: { repo: 'App', languages: ['TypeScript'], stack: ['react'], services: [], manifests: [], unparsed: [], dependabotOpenPrs: 2, vulns: [], locked: 0, unscanned: 0, failed: false },
+    base: { repo: 'App', languages: ['TypeScript'], stack: ['react'], services: ['openai-api'], models: ['gpt-4o-mini'], codeScanned: true, manifests: [], unparsed: [], dependabotOpenPrs: 2, vulns: [], locked: 0, unscanned: 0, failed: false },
     rawDeps: [{ path: 'package.json', ecosystem: 'npm', lockfile: 'package-lock.json', deps: [
       { ecosystem: 'npm', name: 'react', declared: '^18.2.0', installed: '18.3.1', dev: false },
     ] }],
@@ -189,6 +194,7 @@ test('applyCache marks findings, direct vs transitive, and versions the scan has
   assert.match(md, /\| lodash \| 4\.17\.15 \| high \| GHSA-xxxx \(CVE-2020-1\): Prototype pollution \| 4\.17\.21 \| no \|/);
   assert.match(md, /\| react \| \^18\.2\.0 \| 18\.3\.1 \| 19\.0\.0 \| \*\*major behind\*\* \|/);
   assert.match(md, /2 open Dependabot PRs/);
+  assert.match(md, /- APIs and services: openai-api\n- AI models in code: gpt-4o-mini/);
 });
 
 test('shouldScan: weekly in auto mode, forced and disabled modes', () => {
@@ -199,4 +205,34 @@ test('shouldScan: weekly in auto mode, forced and disabled modes', () => {
   assert.equal(shouldScan('auto', { scannedAt: '2026-11-08T00:00:00Z' } as ScanCache, now), false);
   assert.equal(shouldScan('never', null, now), false);
   assert.equal(shouldScan('always', cache, now), true);
+});
+
+test('findModels picks model IDs out of source, skips docs, lockfiles and package paths', () => {
+  const dir = mkdtempSync(join(tmpdir(), 'models-'));
+  const files: Record<string, string> = {
+    'src/ai.ts': [
+      "const MODEL = 'gemini-2.0-flash';",
+      "await openai.chat.completions.create({ model: \"gpt-4o-mini\" });",
+      "import { GoogleGenAI } from '@google/genai';",
+      "import Anthropic from '@anthropic-ai/sdk'; const m = `claude-sonnet-4-5`;",
+      "const r = { model: 'o3-mini' }; // and the word sonar alone",
+      "hf('ProsusAI/finbert'); hf('meta-llama/Llama-3.1-8B-Instruct');",
+      "const pplx = 'sonar-pro'; const x = 'claude-code'; fetch('/.netlify/functions/gemini-proxy');",
+    ].join('\n'),
+    'functions/x.py': 'client.models.generate_content(model="gemini-1.5-pro-002")\n',
+    'README.md': 'We tried gpt-3.5-turbo once.\n',
+    'package-lock.json': '{"gpt-4-should-not-count": 1}\n',
+    'tests/ai.test.ts': "const fixture = 'gpt-4.1-nano';\n",
+  };
+  for (const [f, body] of Object.entries(files)) {
+    mkdirSync(join(dir, f, '..'), { recursive: true });
+    writeFileSync(join(dir, f), body);
+  }
+  execFileSync('git', ['init', '-q', dir]);
+  execFileSync('git', ['-C', dir, 'add', '.']);
+  assert.deepEqual(findModels(dir), [
+    'claude-sonnet-4-5', 'gemini-1.5-pro-002', 'gemini-2.0-flash', 'gpt-4o-mini',
+    'meta-llama/llama-3.1-8b-instruct', 'o3-mini', 'prosusai/finbert', 'sonar-pro',
+  ]);
+  assert.deepEqual(findModels(join(dir, 'missing')), []);
 });

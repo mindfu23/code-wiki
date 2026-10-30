@@ -29,7 +29,7 @@
  *   Optional: --index <path to index-full.json> (default public/data/index-full.json)
  *             --days <N>  only repos pushed in the last N days (default 120)
  *             --deps <path to the JSON from build:deps>  adds a Dependencies
- *               section to each page and a dependencies.md roll-up; skipped
+ *               section to each page plus dependencies.md and stack.md roll-ups; skipped
  *               quietly if the file is missing (that step failed or didn't run)
  *
  * Env vars required:
@@ -319,12 +319,12 @@ const advisoryLabel = (v: { id: string; aliases: string[] }) => {
 export function renderDependencies(d: RepoDependencies, scannedAt: string | null, githubUrl?: string): string[] {
   const s = summarizeDeps(d);
   const lines: string[] = ['## Dependencies', ''];
-  const facts = [
-    d.languages.length ? `Languages: ${d.languages.join(', ')}` : '',
-    d.stack.length ? `Stack: ${d.stack.join(', ')}` : '',
-    d.services.length ? `Services: ${d.services.join(', ')}` : '',
-  ].filter(Boolean);
-  if (facts.length) lines.push(facts.join(' · '), '');
+  lines.push(`- Languages: ${d.languages.join(', ') || '-'}`);
+  lines.push(`- Frameworks and platforms: ${d.stack.join(', ') || '-'}`);
+  lines.push(`- APIs and services: ${d.services.join(', ') || '-'}`);
+  lines.push(`- AI models in code: ${d.models.join(', ') || '-'}`);
+  if (!d.codeScanned) lines.push('- _Code not scanned on the last run, so APIs come from packages only and models aren\'t listed._');
+  lines.push('');
 
   if (d.failed) {
     lines.push('_Some dependency files couldn\'t be read on the last run, so this section may be incomplete._', '');
@@ -384,6 +384,36 @@ export function renderDependencies(d: RepoDependencies, scannedAt: string | null
     lines.push(`Dependabot PRs: ${githubUrl}/pulls?q=is%3Apr+is%3Aopen+author%3Aapp%2Fdependabot`, '');
   }
   return lines;
+}
+
+/** One row per app: languages, frameworks, APIs and AI models. */
+export function renderStackRollup(report: DependencyReport, pages: { repo: RepoInfo }[]): string {
+  const byRepo = new Map(report.repos.map(r => [r.repo, r]));
+  const lines: string[] = [];
+  lines.push('---');
+  lines.push('title: "App Stacks: Languages, Frameworks, APIs and Models"');
+  lines.push('tags: ["status", "stack", "dependencies", "auto-generated"]');
+  lines.push(`description: ${yamlStr('For every active app: languages, frameworks and platforms, external APIs and services, and AI models referenced in code.')}`);
+  lines.push(`updated: ${yamlStr(day(report.generatedAt))}`);
+  lines.push('visibility: "private"');
+  lines.push('---');
+  lines.push('');
+  lines.push('# App Stacks');
+  lines.push('');
+  lines.push('Auto-generated nightly from each repo\'s dependency files and a scan of its source. ' +
+    'APIs include ones called over plain HTTP; models are the IDs written in code (e.g. a model name passed to an API). ' +
+    'Each app links to its status page for versions and vulnerabilities.');
+  lines.push('');
+  lines.push('| App | Languages | Frameworks and platforms | APIs and services | AI models |');
+  lines.push('|-----|-----------|--------------------------|-------------------|-----------|');
+  for (const p of pages) {
+    const r = byRepo.get(p.repo.name);
+    if (!r) continue;
+    const models = r.codeScanned ? (r.models.join(', ') || '-') : 'not scanned';
+    lines.push(`| [${r.repo}](${r.repo}.md) | ${cell(r.languages.join(', '))} | ${cell(r.stack.join(', '))} | ${cell(r.services.join(', '))} | ${cell(models)} |`);
+  }
+  lines.push('');
+  return lines.join('\n');
 }
 
 export function renderDependencyRollup(report: DependencyReport, pages: { repo: RepoInfo }[]): string {
@@ -528,9 +558,10 @@ async function main(): Promise<void> {
   await fs.writeFile(path.join(outDir, 'overview.md'), renderOverview(pages, days), 'utf-8');
   if (depReport) {
     await fs.writeFile(path.join(outDir, 'dependencies.md'), renderDependencyRollup(depReport, pages), 'utf-8');
+    await fs.writeFile(path.join(outDir, 'stack.md'), renderStackRollup(depReport, pages), 'utf-8');
   }
   if (failedCount) console.warn(`${failedCount} page(s) are incomplete because a GitHub call failed.`);
-  console.log(`Wrote ${pages.length + (depReport ? 2 : 1)} files to ${outDir}`);
+  console.log(`Wrote ${pages.length + (depReport ? 3 : 1)} files to ${outDir}`);
 }
 
 // Run only as a script, so tests can import the helpers above.

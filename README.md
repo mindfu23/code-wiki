@@ -459,7 +459,7 @@ wiki/
 ├── snippets/          # Code snippets (public scaffolding)
 ├── diagrams/          # Per-project Mermaid architecture diagrams
 ├── projects/          # Project docs with taxonomy frontmatter
-├── status/            # Nightly per-app status pages, each with a Dependencies section, plus dependencies.md roll-up (private content repo only; build:status-digest, build:deps)
+├── status/            # Nightly per-app status pages, each with a Dependencies section, plus stack.md and dependencies.md roll-ups (private content repo only; build:status-digest, build:deps)
 └── _taxonomy/         # Taxonomy schema, terms, and relationships
     ├── schema.yml     #   Facets, state fields, channels, validator rules
     ├── relationships.yml  # Structural edges (broader, supersedes, related)
