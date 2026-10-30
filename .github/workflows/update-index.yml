@@ -7,6 +7,11 @@ on:
 
   # Allow manual trigger from Actions tab
   workflow_dispatch:
+    inputs:
+      dependency_scan:
+        description: 'Run the dependency update and vulnerability scan now instead of waiting for its weekly turn'
+        type: boolean
+        default: false
 
   # Run when wiki content changes
   push:
@@ -97,17 +102,44 @@ jobs:
           mkdir -p /tmp/private-content/wiki/projects
           npm run build:repo-locations -- --out /tmp/private-content/wiki/projects/repo-locations.md
 
+      - name: Build dependency report
+        # Reads each active repo's dependency manifests and lockfiles (npm,
+        # Flutter/Dart, Python, Go, Rust) for stack tags, direct dependencies
+        # with declared and installed versions, and open Dependabot PRs.
+        # Roughly weekly (or when dispatched with dependency_scan) it also
+        # looks up every direct dependency's latest release and checks every
+        # locked package against OSV advisories, caching the results in the
+        # private content repo at data/dependency-scan.json (outside
+        # web/public/data, so Netlify never serves it). The report itself goes
+        # to /tmp for the digest step and isn't committed.
+        # A failure here never blocks the status digest: pages are then
+        # written without a Dependencies section.
+        continue-on-error: true
+        working-directory: web
+        env:
+          GITHUB_TOKEN: ${{ secrets.REPO_ACCESS_TOKEN || secrets.GITHUB_TOKEN }}
+          GITHUB_USERNAME: ${{ github.repository_owner }}
+          SCAN_MODE: ${{ inputs.dependency_scan && 'always' || 'auto' }}
+        run: |
+          npm run build:deps -- \
+            --out /tmp/dependency-report.json \
+            --cache /tmp/private-content/data/dependency-scan.json \
+            --scan "$SCAN_MODE"
+
       - name: Build per-app status digest
         # Copies each active repo's TODO / HANDOFF / NEXT / ROADMAP / STATUS
         # notes, last 5 commit messages and open issue count into
         # wiki/status/<repo>.md, plus wiki/status/overview.md. Pages are
         # marked visibility: private so they stay out of the public index.
         # The next night's overlay pulls them into the searchable index.
+        # With --deps each page also gets a Dependencies section, and
+        # wiki/status/dependencies.md ranks apps by vulnerabilities and
+        # outdated dependencies (skipped if the report step failed).
         working-directory: web
         env:
           GITHUB_TOKEN: ${{ secrets.REPO_ACCESS_TOKEN || secrets.GITHUB_TOKEN }}
           GITHUB_USERNAME: ${{ github.repository_owner }}
-        run: npm run build:status-digest -- --out /tmp/private-content/wiki/status
+        run: npm run build:status-digest -- --out /tmp/private-content/wiki/status --deps /tmp/dependency-report.json
 
       - name: Copy generated files to private content repo
         run: |
@@ -129,6 +161,8 @@ jobs:
           # and wiki/status/ for the per-app status digest (-A picks up removals)
           git add web/public/data/ wiki/projects/
           git add -A wiki/status/
+          # Weekly dependency scan cache (only changes when a scan ran)
+          if [ -d data ]; then git add -A data/; fi
           if git diff --cached --quiet; then
             echo "No changes to commit"
           else

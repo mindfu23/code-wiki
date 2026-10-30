@@ -28,6 +28,9 @@
  *   npm run build:status-digest -- --out /tmp/private-content/wiki/status
  *   Optional: --index <path to index-full.json> (default public/data/index-full.json)
  *             --days <N>  only repos pushed in the last N days (default 120)
+ *             --deps <path to the JSON from build:deps>  adds a Dependencies
+ *               section to each page and a dependencies.md roll-up; skipped
+ *               quietly if the file is missing (that step failed or didn't run)
  *
  * Env vars required:
  *   GITHUB_TOKEN     A token that can read every repo (contents + metadata,
@@ -41,6 +44,7 @@ import * as path from 'path';
 import { Octokit } from '@octokit/rest';
 import type { RepoInfo } from './types.js';
 import { nm, errMsg } from './ciLog.js';
+import type { DependencyReport, RepoDependencies } from './buildDependencyReport.js';
 
 // Basenames that count as status notes. Matched case-insensitively against
 // the file name only, e.g. TODO.md, TODO_alt.md, HANDOFF-rearchitecture.md,
@@ -83,6 +87,20 @@ interface StatusPage {
   files: { path: string; text: string; truncated: boolean }[];
   /** True if any GitHub call for this repo failed (the page would be incomplete). */
   failed: boolean;
+}
+
+/**
+ * The repos that get a status page: pushed in the last `days` days and not
+ * abandoned, reference-only or the content repo itself. Newest push first.
+ * buildDependencyReport.ts uses the same list so both cover the same apps.
+ */
+export function selectActiveRepos(repos: RepoInfo[], days: number, now = Date.now()): RepoInfo[] {
+  const cutoff = now - days * 24 * 60 * 60 * 1000;
+  return repos
+    .filter(r => !SKIP_REPOS.has(r.name))
+    .filter(r => !SKIP_STAGES.has(r.completion?.stage ?? ''))
+    .filter(r => r.lastCommitDate && Date.parse(r.lastCommitDate) >= cutoff)
+    .sort((a, b) => (b.lastCommitDate ?? '').localeCompare(a.lastCommitDate ?? ''));
 }
 
 function getArg(name: string, fallback?: string): string {
@@ -209,7 +227,7 @@ function pageDescription(page: StatusPage): string {
 
 // `updated` is the repo's last push rather than today's date, so a page only
 // changes (and the content repo only gets a commit) when the repo does.
-function renderPage(page: StatusPage): string {
+function renderPage(page: StatusPage, deps?: RepoDependencies, scannedAt?: string | null): string {
   const { repo } = page;
   const lastPush = day(repo.lastCommitDate);
   const lines: string[] = [];
@@ -259,6 +277,164 @@ function renderPage(page: StatusPage): string {
     }
     lines.push('');
   }
+  if (deps) lines.push(...renderDependencies(deps, scannedAt ?? null, repo.githubUrl));
+  return lines.join('\n');
+}
+
+// ---------------------------------------------------------------------------
+// Dependencies (from build:deps)
+// ---------------------------------------------------------------------------
+
+const MAX_VULN_ROWS = 15;
+const STATUS_LABEL: Record<string, string> = {
+  major: '**major behind**', minor: 'minor behind', patch: 'patch behind', current: 'current', unknown: '-',
+};
+const cell = (v: string | null | undefined): string => (v ? v.replace(/\|/g, '\\|') : '-');
+const isSerious = (sev: string) => sev === 'CRITICAL' || sev === 'HIGH';
+
+export interface DepSummary {
+  direct: number;
+  majorsBehind: number;
+  vulns: number;
+  serious: number;
+  directVulns: number;
+}
+
+export function summarizeDeps(d: RepoDependencies): DepSummary {
+  const all = d.manifests.flatMap(m => m.deps);
+  return {
+    direct: all.length,
+    majorsBehind: all.filter(x => x.status === 'major').length,
+    vulns: d.vulns.length,
+    serious: d.vulns.filter(v => isSerious(v.severity)).length,
+    directVulns: d.vulns.filter(v => v.direct).length,
+  };
+}
+
+const advisoryLabel = (v: { id: string; aliases: string[] }) => {
+  const cve = v.aliases.find(a => a.startsWith('CVE-'));
+  return cve ? `${v.id} (${cve})` : v.id;
+};
+
+export function renderDependencies(d: RepoDependencies, scannedAt: string | null, githubUrl?: string): string[] {
+  const s = summarizeDeps(d);
+  const lines: string[] = ['## Dependencies', ''];
+  const facts = [
+    d.languages.length ? `Languages: ${d.languages.join(', ')}` : '',
+    d.stack.length ? `Stack: ${d.stack.join(', ')}` : '',
+    d.services.length ? `Services: ${d.services.join(', ')}` : '',
+  ].filter(Boolean);
+  if (facts.length) lines.push(facts.join(' · '), '');
+
+  if (d.failed) {
+    lines.push('_Some dependency files couldn\'t be read on the last run, so this section may be incomplete._', '');
+  }
+  if (d.manifests.length === 0) {
+    if (d.failed) return lines;
+    lines.push(d.unparsed.length
+      ? `_No dependency files this report can read yet. Build files found: ${d.unparsed.join(', ')}._`
+      : '_No dependency manifests found._');
+    lines.push('');
+    return lines;
+  }
+
+  const parts = [`${s.direct} direct dependencies`];
+  if (scannedAt) {
+    parts.push(`${s.majorsBehind} a major version behind`);
+    if (s.vulns) parts.push(`${s.vulns} known vulnerabilities (${s.serious} high or critical, ${s.directVulns} in direct dependencies)`);
+    else if (d.locked > d.unscanned) parts.push(`no known vulnerabilities in ${d.locked - d.unscanned} scanned packages`);
+  }
+  if (d.dependabotOpenPrs) parts.push(`${d.dependabotOpenPrs} open Dependabot PRs`);
+  lines.push(parts.join('; ') + '.');
+  lines.push(scannedAt
+    ? `Latest versions and advisories are from the weekly scan on ${scannedAt.split('T')[0]} (OSV).${d.unscanned ? ` ${d.unscanned} package versions changed since then and are checked next scan.` : ''}`
+    : '_Not scanned yet: latest versions and advisories appear after the first weekly scan._');
+  lines.push('');
+
+  if (d.vulns.length) {
+    lines.push('### Known vulnerabilities', '');
+    lines.push('| Package | Version | Severity | Advisory | Fixed in | Direct |');
+    lines.push('|---------|---------|----------|----------|----------|--------|');
+    for (const v of d.vulns.slice(0, MAX_VULN_ROWS)) {
+      lines.push(`| ${cell(v.package)} | ${cell(v.version)} | ${v.severity.toLowerCase()} | ${advisoryLabel(v)}${v.summary ? `: ${cell(v.summary)}` : ''} | ${cell(v.fixed)} | ${v.direct ? 'yes' : 'no'} |`);
+    }
+    if (d.vulns.length > MAX_VULN_ROWS) lines.push('', `_And ${d.vulns.length - MAX_VULN_ROWS} more, mostly lower severity._`);
+    lines.push('');
+  }
+
+  for (const m of d.manifests) {
+    const lock = m.lockfile ? `, installed versions from ${m.lockfile}` : ', no lockfile';
+    lines.push(`### ${m.path} (${m.ecosystem}${lock})`, '');
+    if (m.deps.length === 0) {
+      lines.push('_No dependencies listed._', '');
+      continue;
+    }
+    lines.push('| Package | Declared | Installed | Latest | Status |');
+    lines.push('|---------|----------|-----------|--------|--------|');
+    const rows = [...m.deps].sort((a, b) => Number(a.dev) - Number(b.dev) || a.name.localeCompare(b.name));
+    for (const dep of rows) {
+      lines.push(`| ${cell(dep.name)}${dep.dev ? ' (dev)' : ''} | ${cell(dep.declared ?? 'git/path')} | ${cell(dep.installed)} | ${cell(dep.latest)} | ${STATUS_LABEL[dep.status]} |`);
+    }
+    lines.push('');
+  }
+  if (d.unparsed.length) {
+    lines.push(`Also found, not read yet: ${d.unparsed.join(', ')}.`, '');
+  }
+  if (githubUrl && d.dependabotOpenPrs) {
+    lines.push(`Dependabot PRs: ${githubUrl}/pulls?q=is%3Apr+is%3Aopen+author%3Aapp%2Fdependabot`, '');
+  }
+  return lines;
+}
+
+export function renderDependencyRollup(report: DependencyReport, pages: { repo: RepoInfo }[]): string {
+  const byRepo = new Map(report.repos.map(r => [r.repo, r]));
+  const rows = pages
+    .map(p => byRepo.get(p.repo.name))
+    .filter((r): r is RepoDependencies => !!r)
+    .map(r => ({ r, s: summarizeDeps(r) }))
+    .sort((a, b) => b.s.serious - a.s.serious || b.s.vulns - a.s.vulns || b.s.majorsBehind - a.s.majorsBehind || a.r.repo.localeCompare(b.r.repo));
+  const scanned = report.scannedAt ? report.scannedAt.split('T')[0] : null;
+
+  const lines: string[] = [];
+  lines.push('---');
+  lines.push('title: "Dependency Updates and Vulnerabilities"');
+  lines.push('tags: ["status", "dependencies", "security", "auto-generated"]');
+  lines.push(`description: ${yamlStr('Which apps have known vulnerabilities, dependencies a major version behind, or open Dependabot PRs; worst first. Read this for a weekly update check.')}`);
+  lines.push(`updated: ${yamlStr(scanned ?? day(report.generatedAt))}`);
+  lines.push('visibility: "private"');
+  lines.push('---');
+  lines.push('');
+  lines.push('# Dependency Updates and Vulnerabilities');
+  lines.push('');
+  lines.push('Auto-generated. Dependency lists are refreshed nightly from each repo\'s manifests and lockfiles; ' +
+    (scanned ? `latest versions and OSV advisories are from the weekly scan on ${scanned}.` : 'latest versions and advisories appear after the first weekly scan.') +
+    ' Each app links to its status page for the full list.');
+  lines.push('');
+  lines.push('| App | Stack | Direct deps | Major behind | Vulnerabilities (high+) | Dependabot PRs |');
+  lines.push('|-----|-------|-------------|--------------|-------------------------|----------------|');
+  for (const { r, s } of rows) {
+    if (r.failed && r.manifests.length === 0) {
+      lines.push(`| [${r.repo}](${r.repo}.md) | ${r.languages.slice(0, 2).join(', ') || '-'} | couldn't read this run | - | - | ${r.dependabotOpenPrs ?? '-'} |`);
+      continue;
+    }
+    const vulns = scanned ? `${s.vulns} (${s.serious})` : '-';
+    lines.push(`| [${r.repo}](${r.repo}.md) | ${r.stack.join(', ') || r.languages.slice(0, 2).join(', ') || '-'} | ${s.direct} | ${scanned ? s.majorsBehind : '-'} | ${vulns} | ${r.dependabotOpenPrs ?? '-'} |`);
+  }
+  lines.push('');
+
+  const serious = rows.flatMap(({ r }) => r.vulns.filter(v => isSerious(v.severity)).map(v => ({ repo: r.repo, v })));
+  if (serious.length) {
+    lines.push('## High and critical advisories', '');
+    for (const { repo, v } of serious.slice(0, 30)) {
+      lines.push(`- ${repo}: ${v.package} ${v.version}, ${v.severity.toLowerCase()}, ${advisoryLabel(v)}${v.summary ? ` (${v.summary})` : ''}${v.fixed ? `. Fixed in ${v.fixed}` : ''}${v.direct ? '' : '. Transitive'}`);
+    }
+    if (serious.length > 30) lines.push(`- And ${serious.length - 30} more; see each app's page.`);
+    lines.push('');
+  }
+  const noManifest = rows.filter(({ r }) => r.manifests.length === 0 && !r.failed).map(({ r }) => r.repo);
+  if (noManifest.length) {
+    lines.push(`No readable dependency files: ${noManifest.join(', ')}.`, '');
+  }
   return lines.join('\n');
 }
 
@@ -295,6 +471,7 @@ async function main(): Promise<void> {
   const outDir = getArg('out');
   const indexPath = getArg('index', path.join('public', 'data', 'index-full.json'));
   const days = parseInt(getArg('days', '120'), 10);
+  const depsPath = getArg('deps', '');
 
   if (!token) {
     console.error('GITHUB_TOKEN env var is required');
@@ -306,12 +483,7 @@ async function main(): Promise<void> {
   }
 
   const index = JSON.parse(await fs.readFile(indexPath, 'utf-8')) as { repos: RepoInfo[] };
-  const cutoff = Date.now() - days * 24 * 60 * 60 * 1000;
-  const active = index.repos
-    .filter(r => !SKIP_REPOS.has(r.name))
-    .filter(r => !SKIP_STAGES.has(r.completion?.stage ?? ''))
-    .filter(r => r.lastCommitDate && Date.parse(r.lastCommitDate) >= cutoff)
-    .sort((a, b) => (b.lastCommitDate ?? '').localeCompare(a.lastCommitDate ?? ''));
+  const active = selectActiveRepos(index.repos, days);
   console.log(`Building status pages for ${active.length} of ${index.repos.length} repos (pushed in the last ${days} days)...`);
   if (active.length === 0) {
     // An empty list is far likelier to be a broken index than a quiet portfolio.
@@ -339,12 +511,26 @@ async function main(): Promise<void> {
   await fs.rm(outDir, { recursive: true, force: true });
   await fs.mkdir(outDir, { recursive: true });
 
+  let depReport: DependencyReport | null = null;
+  if (depsPath) {
+    try {
+      depReport = JSON.parse(await fs.readFile(depsPath, 'utf-8')) as DependencyReport;
+    } catch {
+      console.warn('No dependency report found; writing pages without a Dependencies section.');
+    }
+  }
+  const depsByRepo = new Map((depReport?.repos ?? []).map(r => [r.repo, r]));
+
   for (const page of pages) {
-    await fs.writeFile(path.join(outDir, `${page.repo.name}.md`), renderPage(page), 'utf-8');
+    const md = renderPage(page, depsByRepo.get(page.repo.name), depReport?.scannedAt);
+    await fs.writeFile(path.join(outDir, `${page.repo.name}.md`), md, 'utf-8');
   }
   await fs.writeFile(path.join(outDir, 'overview.md'), renderOverview(pages, days), 'utf-8');
+  if (depReport) {
+    await fs.writeFile(path.join(outDir, 'dependencies.md'), renderDependencyRollup(depReport, pages), 'utf-8');
+  }
   if (failedCount) console.warn(`${failedCount} page(s) are incomplete because a GitHub call failed.`);
-  console.log(`Wrote ${pages.length + 1} files to ${outDir}`);
+  console.log(`Wrote ${pages.length + (depReport ? 2 : 1)} files to ${outDir}`);
 }
 
 // Run only as a script, so tests can import the helpers above.
