@@ -35,6 +35,9 @@
  * Usage:
  *   npm run build:deps -- --out /tmp/dependency-report.json --cache /tmp/private-content/data/dependency-scan.json
  *   Optional: --index <index-full.json> --days <N> --scan auto|always|never --code-scan on|off
+ *             --models-out <path>  also write the model feed: every checkable
+ *               model id found in code, with an app count but no repo names,
+ *               for a liveness monitor such as Watchtower (MODEL_FEED_URL)
  *
  * Env vars: GITHUB_TOKEN (reads every repo, as for the status digest), GITHUB_USERNAME.
  */
@@ -45,7 +48,7 @@ import { Octokit } from '@octokit/rest';
 import type { RepoInfo } from './types.js';
 import { nm, errMsg } from './ciLog.js';
 import { selectActiveRepos } from './buildStatusDigest.js';
-import { scanRepoCode } from './codeScan.js';
+import { scanRepoCode, buildModelFeed } from './codeScan.js';
 import {
   pickManifests,
   parseManifest,
@@ -466,6 +469,7 @@ async function main(): Promise<void> {
   const token = process.env.GITHUB_TOKEN;
   const username = process.env.GITHUB_USERNAME;
   const outPath = getArg('out');
+  const modelsOut = getArg('models-out', '');
   const cachePath = getArg('cache');
   const indexPath = getArg('index', path.join('public', 'data', 'index-full.json'));
   const days = parseInt(getArg('days', '120'), 10);
@@ -532,6 +536,13 @@ async function main(): Promise<void> {
   };
   await fs.mkdir(path.dirname(outPath), { recursive: true });
   await fs.writeFile(outPath, JSON.stringify(report, null, 1), 'utf-8');
+  // Skipped when the code scan is off: an empty feed would read as "no models in use".
+  if (modelsOut && codeScan) {
+    const feed = buildModelFeed(report.repos.filter(r => r.codeScanned));
+    await fs.mkdir(path.dirname(modelsOut), { recursive: true });
+    await fs.writeFile(modelsOut, JSON.stringify(feed, null, 1) + '\n', 'utf-8');
+    console.log(`Wrote model feed: ${feed.models.length} model ids.`);
+  }
   const vulns = report.repos.reduce((n, r) => n + r.vulns.length, 0);
   console.log(`Wrote dependency report: ${report.repos.length} repos, ${vulns} vulnerability findings.`);
 }
