@@ -84,6 +84,73 @@ export function findModels(localPath: string, timeoutMs = 10_000): string[] {
   return [...models].sort().slice(0, MAX_MODELS);
 }
 
+// ---------------------------------------------------------------------------
+// Model feed: the model ids in use across all apps, for a liveness monitor
+// ---------------------------------------------------------------------------
+
+/** Providers whose model list a monitor can check (Watchtower supports these). */
+export type ModelProvider = 'anthropic' | 'openai' | 'google' | 'xai' | 'deepseek';
+
+/**
+ * Provider for a model id, or null when no single model list can confirm it
+ * (Perplexity has no list endpoint; Hugging Face, Mistral and Qwen models are
+ * served by many hosts).
+ */
+export function modelProvider(id: string): ModelProvider | null {
+  const m = id.toLowerCase();
+  if (m.includes('/')) return null;
+  if (m.startsWith('claude-')) return 'anthropic';
+  if (/^(gpt-|chatgpt-|o[1-9](-|$)|text-embedding-(3|ada)|dall-e-|whisper-|tts-)/.test(m)) return 'openai';
+  if (/^(gemini-|gemma-|imagen-|veo-|text-embedding-00)/.test(m)) return 'google';
+  if (m.startsWith('grok-')) return 'xai';
+  if (/^deepseek-(chat|reasoner)/.test(m)) return 'deepseek';
+  return null;
+}
+
+/**
+ * True when a matched string looks like an id an app would send, not a
+ * fragment of one. The code scan also picks up prefixes used for filtering
+ * ("gpt-3.5" in a prefix list), placeholders ("gpt-5.x") and display names
+ * ("claude-3.5-sonnet", "claude-opus"). Sent to a monitor, those read as
+ * retired models every hour, and a monitor that cries wolf gets ignored.
+ */
+export function isConcreteModelId(id: string, provider: ModelProvider): boolean {
+  const m = id.toLowerCase();
+  if (/\.x($|-)/.test(m)) return false;
+  if (provider === 'deepseek') return true;
+  if (!/[0-9]/.test(m)) return false;
+  // Anthropic ids use hyphens (claude-3-5-sonnet); a dot means a display name.
+  if (provider === 'anthropic' && m.includes('.')) return false;
+  if (provider === 'openai' && m === 'gpt-3.5') return false;
+  return true;
+}
+
+export interface ModelFeed {
+  /** One entry per checkable model id, with how many apps reference it. No repo names. */
+  models: { id: string; provider: ModelProvider; apps: number }[];
+}
+
+/**
+ * Builds the feed a liveness monitor reads (see Watchtower's MODEL_FEED_URL).
+ * Sorted and undated, so the committed file only changes when the set of
+ * models does.
+ */
+export function buildModelFeed(repos: { models: string[] }[]): ModelFeed {
+  const counts = new Map<string, { provider: ModelProvider; apps: number }>();
+  for (const r of repos) {
+    for (const id of new Set(r.models)) {
+      const provider = modelProvider(id);
+      if (!provider || !isConcreteModelId(id, provider)) continue;
+      const entry = counts.get(id) ?? { provider, apps: 0 };
+      entry.apps++;
+      counts.set(id, entry);
+    }
+  }
+  return {
+    models: [...counts.entries()].sort(([a], [b]) => a.localeCompare(b)).map(([id, e]) => ({ id, ...e })),
+  };
+}
+
 export interface CodeScan {
   services: string[];
   models: string[];

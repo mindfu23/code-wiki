@@ -113,8 +113,10 @@ jobs:
         # looks up every direct dependency's latest release and checks every
         # locked package against OSV advisories, caching the results in the
         # private content repo at data/dependency-scan.json (outside
-        # web/public/data, so Netlify never serves it). The report itself goes
-        # to /tmp for the digest step and isn't committed.
+        # web/public/data, so Netlify never serves it). It also writes
+        # data/models.json, the model ids found in code (no repo names), which
+        # Watchtower reads to check each one is still served. The report itself
+        # goes to /tmp for the digest step and isn't committed.
         # A failure here never blocks the status digest: pages are then
         # written without a Dependencies section.
         continue-on-error: true
@@ -127,6 +129,7 @@ jobs:
           npm run build:deps -- \
             --out /tmp/dependency-report.json \
             --cache /tmp/private-content/data/dependency-scan.json \
+            --models-out /tmp/private-content/data/models.json \
             --scan "$SCAN_MODE"
 
       - name: Build per-app status digest

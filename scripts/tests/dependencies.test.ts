@@ -10,7 +10,7 @@ import {
 } from '../../web/src/dependencyParsers.js';
 import { applyCache, toAdvisory, pickFixed, shouldScan, type ScanCache } from '../../web/src/buildDependencyReport.js';
 import { renderDependencies, summarizeDeps } from '../../web/src/buildStatusDigest.js';
-import { findModels } from '../../web/src/codeScan.js';
+import { findModels, buildModelFeed } from '../../web/src/codeScan.js';
 import { mkdtempSync, writeFileSync, mkdirSync } from 'fs';
 import { tmpdir } from 'os';
 import { join } from 'path';
@@ -238,4 +238,18 @@ test('findModels picks model IDs out of source, skips docs, lockfiles and packag
     'meta-llama/llama-3.1-8b-instruct', 'o3-mini', 'prosusai/finbert', 'sonar-pro',
   ]);
   assert.deepEqual(findModels(join(dir, 'missing')), []);
+});
+
+test('buildModelFeed keeps checkable ids, drops fragments and names no repos', () => {
+  const feed = buildModelFeed([
+    { models: ['gpt-4o-mini', 'gpt-3.5', 'gpt-5.x', 'claude-3.5-sonnet', 'claude-opus', 'claude-haiku-4-5', 'sonar-pro'] },
+    { models: ['gpt-4o-mini', 'meta-llama/llama-3.1-8b-instruct', 'deepseek-chat', 'gemini-2.0-flash'] },
+  ]);
+  assert.deepEqual(feed.models, [
+    { id: 'claude-haiku-4-5', provider: 'anthropic', apps: 1 },
+    { id: 'deepseek-chat', provider: 'deepseek', apps: 1 },
+    { id: 'gemini-2.0-flash', provider: 'google', apps: 1 },
+    { id: 'gpt-4o-mini', provider: 'openai', apps: 2 },
+  ]);
+  assert.deepEqual(Object.keys(feed), ['models'], 'no date, so the file only changes when the models do');
 });
