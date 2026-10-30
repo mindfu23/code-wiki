@@ -62,6 +62,7 @@ jobs:
           if git diff --cached --quiet; then
             echo "No changes to commit"
           else
-            git commit -m "chore: collect observatory metrics $(date -u +%Y-%m-%d)"
-            git push
+            # -q: Actions logs here are public; keep git from listing file names.
+            git commit -q -m "chore: collect observatory metrics $(date -u +%Y-%m-%d)"
+            git push -q
           fi
