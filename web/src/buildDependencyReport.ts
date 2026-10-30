@@ -136,6 +136,8 @@ export interface ScanCache {
   /** "eco:name@version" → advisory ids, only for vulnerable versions. */
   vulnerable: Record<string, string[]>;
   advisories: Record<string, Advisory>;
+  /** Set when some OSV batches failed, so the next night scans again instead of waiting a week. */
+  incomplete?: boolean;
 }
 
 const pkgKey = (eco: string, name: string) => `${eco}:${name}`;
@@ -389,7 +391,10 @@ async function runScan(collected: Collected[], previous: ScanCache | null): Prom
   }
   console.log(`  Vulnerable package versions: ${Object.keys(vulnerable).length}; distinct advisories: ${ids.length}`);
 
-  return { version: 1, scannedAt: new Date().toISOString(), latest, scanned: scanned.sort(), vulnerable, advisories };
+  return {
+    version: 1, scannedAt: new Date().toISOString(), latest, scanned: scanned.sort(), vulnerable, advisories,
+    ...(osvFailed ? { incomplete: true } : {}),
+  };
 }
 
 // ---------------------------------------------------------------------------
@@ -453,7 +458,8 @@ export function applyCache(c: Collected, cache: ScanCache | null): RepoDependenc
 export function shouldScan(mode: string, cache: ScanCache | null, now = Date.now()): boolean {
   if (mode === 'always') return true;
   if (mode === 'never') return false;
-  return !cache || now - Date.parse(cache.scannedAt) > SCAN_EVERY_DAYS * 24 * 60 * 60 * 1000;
+  if (!cache || cache.incomplete) return true;
+  return now - Date.parse(cache.scannedAt) > SCAN_EVERY_DAYS * 24 * 60 * 60 * 1000;
 }
 
 async function main(): Promise<void> {
@@ -504,14 +510,16 @@ async function main(): Promise<void> {
   }
   if (shouldScan(scanMode, cache)) {
     const fresh = await runScan(collected, cache);
-    // Keep the old cache if the scan reached nothing at all (e.g. OSV down).
-    if (fresh.scanned.length > 0 || !cache) {
+    // A scan that reached nothing (e.g. OSV down) is never saved: with no
+    // cache the pages say "not scanned yet" and the next night tries again,
+    // and an existing cache keeps serving its results.
+    if (fresh.scanned.length > 0) {
       cache = fresh;
       await fs.mkdir(path.dirname(cachePath), { recursive: true });
       await fs.writeFile(cachePath, JSON.stringify(cache, null, 1) + '\n', 'utf-8');
       console.log('Scan cache updated.');
     } else {
-      console.warn('Scan reached no advisories; keeping the previous scan cache.');
+      console.warn(cache ? 'Scan reached no advisories; keeping the previous scan cache.' : 'Scan reached no advisories; will try again next run.');
     }
   } else {
     console.log(`Using the scan from ${cache?.scannedAt.split('T')[0]}.`);

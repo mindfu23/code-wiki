@@ -53,7 +53,11 @@ const EXCLUDES = [
   ':!**/node_modules/**', ':!**/dist/**', ':!**/build/**', ':!**/fixtures/**',
   ':!**/test/**', ':!**/tests/**', ':!**/__tests__/**', ':!*.test.*', ':!*.spec.*', ':!*_test.*',
 ];
-const MAX_MODELS = 25;
+// High enough that a repo with many models (some list 40+) isn't cut off
+// alphabetically, which would hide exactly the retired ones a reader looks for.
+const MAX_MODELS = 80;
+// Matches that are URL path segments, not models (e.g. "openai/v1" in a base URL).
+const NOT_A_MODEL = /^[a-z-]+\/v[0-9]+$/;
 
 /** Distinct model IDs referenced in tracked source, lower-cased, sorted. Never throws. */
 export function findModels(localPath: string, timeoutMs = 10_000): string[] {
@@ -74,7 +78,7 @@ export function findModels(localPath: string, timeoutMs = 10_000): string[] {
   for (const raw of out.split('\n')) {
     const m = raw.trim().toLowerCase().replace(/[.:-]+$/, '');
     // Bare family words ("sonar", "o1") are too likely to be something else unless versioned.
-    if (!m || m === 'sonar' || /^o[1-4]$/.test(m) || m.length < 4) continue;
+    if (!m || m === 'sonar' || /^o[1-4]$/.test(m) || m.length < 4 || NOT_A_MODEL.test(m)) continue;
     models.add(m);
   }
   return [...models].sort().slice(0, MAX_MODELS);

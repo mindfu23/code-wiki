@@ -292,12 +292,20 @@ const STATUS_LABEL: Record<string, string> = {
 const cell = (v: string | null | undefined): string => (v ? v.replace(/\|/g, '\\|') : '-');
 const isSerious = (sev: string) => sev === 'CRITICAL' || sev === 'HIGH';
 
+// Advisories and vulnerable packages are counted separately: one package
+// version can carry dozens of advisories, so advisory totals look far worse
+// than npm audit or Dependabot, which count packages.
 export interface DepSummary {
   direct: number;
   majorsBehind: number;
+  /** Advisory findings (one per advisory per package version). */
   vulns: number;
   serious: number;
   directVulns: number;
+  /** Distinct package versions with at least one advisory. */
+  vulnPackages: number;
+  /** Of those, the ones with a high or critical advisory. */
+  seriousPackages: number;
 }
 
 export function summarizeDeps(d: RepoDependencies): DepSummary {
@@ -308,6 +316,8 @@ export function summarizeDeps(d: RepoDependencies): DepSummary {
     vulns: d.vulns.length,
     serious: d.vulns.filter(v => isSerious(v.severity)).length,
     directVulns: d.vulns.filter(v => v.direct).length,
+    vulnPackages: new Set(d.vulns.map(v => `${v.package}@${v.version}`)).size,
+    seriousPackages: new Set(d.vulns.filter(v => isSerious(v.severity)).map(v => `${v.package}@${v.version}`)).size,
   };
 }
 
@@ -341,7 +351,10 @@ export function renderDependencies(d: RepoDependencies, scannedAt: string | null
   const parts = [`${s.direct} direct dependencies`];
   if (scannedAt) {
     parts.push(`${s.majorsBehind} a major version behind`);
-    if (s.vulns) parts.push(`${s.vulns} known vulnerabilities (${s.serious} high or critical, ${s.directVulns} in direct dependencies)`);
+    if (s.vulns) {
+      parts.push(`${s.vulnPackages} vulnerable packages, ${s.seriousPackages} with a high or critical advisory ` +
+        `(${s.vulns} advisories in all, ${s.serious} high or critical, ${s.directVulns} in direct dependencies)`);
+    }
     else if (d.locked > d.unscanned) parts.push(`no known vulnerabilities in ${d.locked - d.unscanned} scanned packages`);
   }
   if (d.dependabotOpenPrs) parts.push(`${d.dependabotOpenPrs} open Dependabot PRs`);
@@ -352,7 +365,7 @@ export function renderDependencies(d: RepoDependencies, scannedAt: string | null
   lines.push('');
 
   if (d.vulns.length) {
-    lines.push('### Known vulnerabilities', '');
+    lines.push('### Known vulnerabilities (one row per advisory)', '');
     lines.push('| Package | Version | Severity | Advisory | Fixed in | Direct |');
     lines.push('|---------|---------|----------|----------|----------|--------|');
     for (const v of d.vulns.slice(0, MAX_VULN_ROWS)) {
@@ -422,7 +435,7 @@ export function renderDependencyRollup(report: DependencyReport, pages: { repo: 
     .map(p => byRepo.get(p.repo.name))
     .filter((r): r is RepoDependencies => !!r)
     .map(r => ({ r, s: summarizeDeps(r) }))
-    .sort((a, b) => b.s.serious - a.s.serious || b.s.vulns - a.s.vulns || b.s.majorsBehind - a.s.majorsBehind || a.r.repo.localeCompare(b.r.repo));
+    .sort((a, b) => b.s.seriousPackages - a.s.seriousPackages || b.s.vulnPackages - a.s.vulnPackages || b.s.serious - a.s.serious || b.s.majorsBehind - a.s.majorsBehind || a.r.repo.localeCompare(b.r.repo));
   const scanned = report.scannedAt ? report.scannedAt.split('T')[0] : null;
 
   const lines: string[] = [];
@@ -440,15 +453,16 @@ export function renderDependencyRollup(report: DependencyReport, pages: { repo: 
     (scanned ? `latest versions and OSV advisories are from the weekly scan on ${scanned}.` : 'latest versions and advisories appear after the first weekly scan.') +
     ' Each app links to its status page for the full list.');
   lines.push('');
-  lines.push('| App | Stack | Direct deps | Major behind | Vulnerabilities (high+) | Dependabot PRs |');
-  lines.push('|-----|-------|-------------|--------------|-------------------------|----------------|');
+  lines.push('| App | Stack | Direct deps | Major behind | Vulnerable packages (high+) | Advisories (high+) | Dependabot PRs |');
+  lines.push('|-----|-------|-------------|--------------|-----------------------------|--------------------|----------------|');
   for (const { r, s } of rows) {
     if (r.failed && r.manifests.length === 0) {
-      lines.push(`| [${r.repo}](${r.repo}.md) | ${r.languages.slice(0, 2).join(', ') || '-'} | couldn't read this run | - | - | ${r.dependabotOpenPrs ?? '-'} |`);
+      lines.push(`| [${r.repo}](${r.repo}.md) | ${r.languages.slice(0, 2).join(', ') || '-'} | couldn't read this run | - | - | - | ${r.dependabotOpenPrs ?? '-'} |`);
       continue;
     }
+    const pkgs = scanned ? `${s.vulnPackages} (${s.seriousPackages})` : '-';
     const vulns = scanned ? `${s.vulns} (${s.serious})` : '-';
-    lines.push(`| [${r.repo}](${r.repo}.md) | ${r.stack.join(', ') || r.languages.slice(0, 2).join(', ') || '-'} | ${s.direct} | ${scanned ? s.majorsBehind : '-'} | ${vulns} | ${r.dependabotOpenPrs ?? '-'} |`);
+    lines.push(`| [${r.repo}](${r.repo}.md) | ${r.stack.join(', ') || r.languages.slice(0, 2).join(', ') || '-'} | ${s.direct} | ${scanned ? s.majorsBehind : '-'} | ${pkgs} | ${vulns} | ${r.dependabotOpenPrs ?? '-'} |`);
   }
   lines.push('');
 

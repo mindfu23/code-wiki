@@ -187,10 +187,10 @@ test('applyCache marks findings, direct vs transitive, and versions the scan has
   assert.equal(r.vulns.length, 1);
   assert.deepEqual([r.vulns[0].fixed, r.vulns[0].direct], ['4.17.21', false]);
   assert.deepEqual([r.locked, r.unscanned], [3, 1]);
-  assert.deepEqual(summarizeDeps(r), { direct: 1, majorsBehind: 1, vulns: 1, serious: 1, directVulns: 0 });
+  assert.deepEqual(summarizeDeps(r), { direct: 1, majorsBehind: 1, vulns: 1, serious: 1, directVulns: 0, vulnPackages: 1, seriousPackages: 1 });
 
   const md = renderDependencies(r, cache.scannedAt, 'https://github.com/me/App').join('\n');
-  assert.match(md, /1 known vulnerabilities \(1 high or critical, 0 in direct dependencies\)/);
+  assert.match(md, /1 vulnerable packages, 1 with a high or critical advisory \(1 advisories in all, 1 high or critical, 0 in direct dependencies\)/);
   assert.match(md, /\| lodash \| 4\.17\.15 \| high \| GHSA-xxxx \(CVE-2020-1\): Prototype pollution \| 4\.17\.21 \| no \|/);
   assert.match(md, /\| react \| \^18\.2\.0 \| 18\.3\.1 \| 19\.0\.0 \| \*\*major behind\*\* \|/);
   assert.match(md, /2 open Dependabot PRs/);
@@ -205,6 +205,8 @@ test('shouldScan: weekly in auto mode, forced and disabled modes', () => {
   assert.equal(shouldScan('auto', { scannedAt: '2026-11-08T00:00:00Z' } as ScanCache, now), false);
   assert.equal(shouldScan('never', null, now), false);
   assert.equal(shouldScan('always', cache, now), true);
+  // A scan with failed OSV batches is retried the next night, not a week later.
+  assert.equal(shouldScan('auto', { scannedAt: '2026-11-08T00:00:00Z', incomplete: true } as ScanCache, now), true);
 });
 
 test('findModels picks model IDs out of source, skips docs, lockfiles and package paths', () => {
@@ -218,6 +220,7 @@ test('findModels picks model IDs out of source, skips docs, lockfiles and packag
       "const r = { model: 'o3-mini' }; // and the word sonar alone",
       "hf('ProsusAI/finbert'); hf('meta-llama/Llama-3.1-8B-Instruct');",
       "const pplx = 'sonar-pro'; const x = 'claude-code'; fetch('/.netlify/functions/gemini-proxy');",
+      "const base = 'https://api.groq.com/openai/v1';",
     ].join('\n'),
     'functions/x.py': 'client.models.generate_content(model="gemini-1.5-pro-002")\n',
     'README.md': 'We tried gpt-3.5-turbo once.\n',
