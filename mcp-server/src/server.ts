@@ -2,6 +2,8 @@
  * MCP Server implementation
  */
 
+import { existsSync, readFileSync } from 'fs';
+import { join } from 'path';
 import { Server } from '@modelcontextprotocol/sdk/server/index.js';
 import {
   CallToolRequestSchema,
@@ -68,6 +70,7 @@ export class CodeWikiServer {
           tools: {},
           resources: {},
         },
+        instructions: loadServerInstructions(config),
       }
     );
 
@@ -282,4 +285,17 @@ export class CodeWikiServer {
   getServer(): Server {
     return this.server;
   }
+}
+
+/**
+ * Optional server instructions, shown to every MCP client at connect time. The text is the owner's own
+ * (workspace layout, where knowledge lives) and lives in the private preferences directory as
+ * `_server-instructions.md`, so nothing personal ships in this public repo. Absent file = no instructions.
+ */
+function loadServerInstructions(config: Config): string | undefined {
+  if (!config.preferencesDirectory) return undefined;
+  const file = join(config.preferencesDirectory, '_server-instructions.md');
+  if (!existsSync(file)) return undefined;
+  const text = readFileSync(file, 'utf8').replace(/^---\n[\s\S]*?\n---\n/, '').trim();
+  return text || undefined;
 }
