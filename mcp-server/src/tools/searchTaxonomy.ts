@@ -6,6 +6,7 @@
 import * as fs from 'fs/promises';
 import * as path from 'path';
 import yaml from 'js-yaml';
+import { loadProjectStatus, statusFor } from '../utils/projectStatus.js';
 import matter from 'gray-matter';
 import { Config } from '../types/index.js';
 import {
@@ -378,6 +379,7 @@ export async function handleSearchTaxonomy(
       // Find all projects that depend on a given service/term
       const serviceTerm = args.query;
 
+      const status = loadProjectStatus(config);
       const dependents = contentTags.filter(
         (ct) => ct.taxonomy.dependsOn?.includes(serviceTerm)
       );
@@ -393,7 +395,7 @@ export async function handleSearchTaxonomy(
           dependent_projects: dependents.map((d) => ({
             path: d.path,
             title: d.title,
-            lifecycle: d.taxonomy.lifecycle,
+            lifecycle: statusFor(status, d.title)?.lifecycle ?? d.taxonomy.lifecycle,
           })),
           structural_edges: structuralDeps,
           total: dependents.length,

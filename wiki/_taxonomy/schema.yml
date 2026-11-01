@@ -117,11 +117,14 @@ stateFields:
   lifecycle:
     # Ship cycle of the real-world thing
     appliesTo: content  # Content files (projects, patterns, etc.)
+    # Projects without a wiki page can carry this in the private project-status registry
+    # (<private wiki>/projects/project-status.yml); the registry wins over page frontmatter.
     values:
       - experimental  # Proof of concept, may be abandoned
       - pre-release   # Being built, not yet shipped
       - shipped        # Live and available to users
       - mature         # Stable, low churn, well-tested
+      - dormant        # Paused, not maintained; kept and may be revived ("mothballed")
       - deprecated     # Still works but no longer recommended
       - archived       # No longer maintained or available
 

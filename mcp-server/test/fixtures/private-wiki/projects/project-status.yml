@@ -1,0 +1,6 @@
+PrivateWidgetApp:
+  lifecycle: dormant
+  since: 2026-10-31
+  note: Paused
+BadApp:
+  lifecycle: mothballed

@@ -3,10 +3,12 @@
  */
 
 import { MetricsService } from '../services/metricsService.js';
+import { Config } from '../types/config.js';
+import { loadProjectStatus, statusFor } from '../utils/projectStatus.js';
 
 export const projectHealthTool = {
   name: 'project_health',
-  description: 'Get health status for projects including last commit, deploy status, CI/CD status, traffic level, and convention compliance (CLAUDE.md, .env.example, .gitignore, netlify.toml). Returns all projects if no project name specified.',
+  description: 'Get health status for projects including last commit, deploy status, CI/CD status, traffic level, and convention compliance (CLAUDE.md, .env.example, .gitignore, netlify.toml), and lifecycle status from the project-status registry (dormant = paused, not maintained). Returns all projects if no project name specified.',
   inputSchema: {
     type: 'object' as const,
     properties: {
@@ -20,9 +22,14 @@ export const projectHealthTool = {
 
 export async function handleProjectHealth(
   args: { project?: string },
-  metricsService: MetricsService
+  metricsService: MetricsService,
+  config?: Pick<Config, 'wikiDirectory' | 'privateWikiDirectory'>
 ): Promise<string> {
-  const health = await metricsService.getProjectHealth(args.project);
+  const status = config ? loadProjectStatus(config) : new Map();
+  const health = (await metricsService.getProjectHealth(args.project)).map(p => {
+    const s = statusFor(status, p.name);
+    return s ? { ...p, status: s } : p;
+  });
 
   if (health.length === 0) {
     return JSON.stringify({

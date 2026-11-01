@@ -3,10 +3,12 @@
  */
 
 import { IndexService } from '../services/indexService.js';
+import { Config } from '../types/config.js';
+import { loadProjectStatus, statusFor } from '../utils/projectStatus.js';
 
 export const listReposTool = {
   name: 'list_repos',
-  description: 'List all indexed local repositories with metadata including languages, file count, and description',
+  description: 'List all indexed local repositories with metadata including languages, file count, description and lifecycle status (e.g. dormant = paused and not maintained; deprioritize unless asked). Status comes from the private project-status registry.',
   inputSchema: {
     type: 'object' as const,
     properties: {
@@ -19,15 +21,33 @@ export const listReposTool = {
         type: 'string',
         description: 'Filter to repos using a specific language',
       },
+      lifecycle: {
+        type: 'string',
+        description: 'Only repos with this lifecycle status (e.g. dormant, shipped)',
+      },
+      excludeLifecycle: {
+        type: 'array',
+        items: { type: 'string' },
+        description: 'Leave out repos with these statuses, e.g. ["dormant", "archived"]',
+      },
     },
   },
 };
 
 export async function handleListRepos(
-  args: { sortBy?: string; language?: string },
-  indexService: IndexService
+  args: { sortBy?: string; language?: string; lifecycle?: string; excludeLifecycle?: string[] },
+  indexService: IndexService,
+  config?: Pick<Config, 'wikiDirectory' | 'privateWikiDirectory'>
 ): Promise<string> {
   let repos = indexService.getAllRepos();
+  const status = config ? loadProjectStatus(config) : new Map();
+  const lifecycleOf = (name: string) => statusFor(status, name)?.lifecycle;
+
+  if (args.lifecycle) repos = repos.filter(r => lifecycleOf(r.name) === args.lifecycle);
+  if (args.excludeLifecycle?.length) {
+    const skip = new Set(args.excludeLifecycle);
+    repos = repos.filter(r => !skip.has(lifecycleOf(r.name) ?? ''));
+  }
 
   // Filter by language if specified
   if (args.language) {
@@ -73,6 +93,7 @@ export async function handleListRepos(
       lastCommit: r.lastCommitDate,
       hasReadme: r.hasReadme,
       remoteUrl: r.remoteUrl,
+      ...(statusFor(status, r.name) ? { status: statusFor(status, r.name) } : {}),
     })),
   }, null, 2);
 }

@@ -136,8 +136,9 @@ export class CodeWikiServer {
 
           case 'list_repos':
             result = await handleListRepos(
-              args as { sortBy?: string; language?: string },
-              this.indexService
+              args as { sortBy?: string; language?: string; lifecycle?: string; excludeLifecycle?: string[] },
+              this.indexService,
+              this.config
             );
             break;
 
@@ -166,7 +167,8 @@ export class CodeWikiServer {
           case 'project_health':
             result = await handleProjectHealth(
               args as { project?: string },
-              this.metricsService
+              this.metricsService,
+              this.config
             );
             break;
 

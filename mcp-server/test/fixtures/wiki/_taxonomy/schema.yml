@@ -122,6 +122,7 @@ stateFields:
       - pre-release   # Being built, not yet shipped
       - shipped        # Live and available to users
       - mature         # Stable, low churn, well-tested
+      - dormant        # Paused, not maintained; kept and may be revived
       - deprecated     # Still works but no longer recommended
       - archived       # No longer maintained or available
 
