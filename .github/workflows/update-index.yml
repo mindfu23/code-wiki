@@ -132,6 +132,17 @@ jobs:
             --models-out /tmp/private-content/data/models.json \
             --scan "$SCAN_MODE"
 
+      - name: Build advisory snapshot for the weekly package check
+        # Writes data/advisories.json in the private content repo: every high
+        # and critical advisory per app, sorted and without run timestamps, so
+        # it only changes when a finding does. The content repo's own weekly
+        # workflow (package-check.yml) diffs it against last week's copy and
+        # opens or updates one issue when something changed. No model involved.
+        # Leaves the old snapshot alone when the report step failed.
+        continue-on-error: true
+        working-directory: web
+        run: npm run build:advisories -- --deps /tmp/dependency-report.json --out /tmp/private-content/data/advisories.json
+
       - name: Build per-app status digest
         # Copies each active repo's TODO / HANDOFF / NEXT / ROADMAP / STATUS
         # notes, last 5 commit messages and open issue count into
@@ -179,7 +190,18 @@ jobs:
             # Print a count instead.
             echo "Committing $(git diff --cached --name-only | wc -l) changed file(s)"
             git commit -q -m "chore: update wiki index $(date -u +%Y-%m-%d)"
-            git push -q
+            # Watchtower and Collect Metrics also push to this repo, often during
+            # this run, which used to reject the push and fail most nights (and
+            # lose that night's weekly scan). Rebase onto theirs and retry; the
+            # files this job writes don't overlap theirs.
+            for attempt in 1 2 3 4; do
+              if git push -q; then exit 0; fi
+              echo "Push rejected (attempt $attempt); rebasing onto the latest main"
+              sleep $((attempt * 5))
+              git pull -q --rebase
+            done
+            echo "Could not push after 4 attempts"
+            exit 1
           fi
 
       - name: Trigger Netlify rebuild
