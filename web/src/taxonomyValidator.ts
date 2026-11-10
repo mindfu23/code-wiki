@@ -136,13 +136,13 @@ function checkUnknownFacetValue(terms: TaxonomyTerm[], schema: TaxonomySchema): 
 
 // RULE 2: Required frontmatter missing
 function checkRequiredFrontmatter(terms: TaxonomyTerm[]): Diagnostic[] {
-  const required = ['term', 'facet', 'label', 'definition', 'scopeNote', 'curationState'];
+  const required: (keyof TaxonomyTerm)[] = ['term', 'facet', 'label', 'definition', 'scopeNote', 'curationState'];
   const diags: Diagnostic[] = [];
 
   for (const t of terms) {
     const term = t as TaxonomyTerm & { _file: string };
     for (const field of required) {
-      if (!(term as Record<string, unknown>)[field]) {
+      if (!term[field]) {
         diags.push({
           rule: 'required-frontmatter-missing',
           severity: 'error',
