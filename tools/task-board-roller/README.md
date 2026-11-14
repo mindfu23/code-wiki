@@ -38,16 +38,20 @@ It never deletes an item, never ticks anything off itself, and never touches
 undated items or any section it doesn't recognise. Running it twice in a day
 does nothing the second time.
 
-### Checkboxes: one limit to know
+### Checkboxes: how the script sees a tick
 
-Google's APIs can't read whether a checklist box is ticked. Google Docs strikes
-a ticked item through by default, and that strikethrough is what the script
-sees. So an item counts as done when:
+Neither the Docs API nor Apps Script says whether a checklist box is ticked.
+The doc's Markdown export does (`- [x] Laundry`), so the script reads that
+export once at the start of each run. An item counts as done when any of
+these is true:
 
-- its box is ticked and its text is struck through (the default), or
+- the export shows its box ticked,
+- its whole text is struck through (Docs often does this when you tick, but
+  not always), or
 - it starts with `X ` (an X and a space), ticked or not.
 
-If you've turned off the strikethrough for ticked items, use the `X ` instead.
+If the export can't be read, the run carries on with the other two and logs
+a warning.
 
 ## How it reads the board
 
@@ -77,10 +81,11 @@ If you've turned off the strikethrough for ticked items, use the `X ` instead.
 
 1. Open the task board doc, then **Extensions > Apps Script**.
 2. Replace the contents of `Code.gs` with this folder's `Code.gs`.
-3. Turn on the Google Docs API service, which the checklist step needs:
-   click **+** next to **Services**, pick **Google Docs API**, and **Add**.
-   (Or, in **Project Settings**, tick *Show "appsscript.json"* and replace it
-   with this folder's `appsscript.json`, which already has it.)
+3. In **Project Settings** (gear), tick *Show "appsscript.json" manifest file
+   in editor*, then replace `appsscript.json` with this folder's copy. It
+   turns on the Google Docs API service (for checklists) and asks for
+   read-only Drive access (for reading ticks from the export). Without it,
+   checklists are skipped and only strikethrough and `X ` count as ticks.
 4. Check `CONFIG` at the top of `Code.gs` (week start day, time zone,
    recurring line), then **Save**.
 5. In the function menu pick **`setupTriggers`** and press **Run**. Google asks
@@ -100,6 +105,31 @@ Reload the doc and you'll also see a **Task Board** menu with
   `function tryIt() { previewOn('2026-11-16'); }`
 - **`DRY_RUN: true`** in `CONFIG` makes the daily run log its changes
   (View > Executions) without editing the doc.
+
+## Known gotchas
+
+Lessons from editing the real board through Google's APIs. The script
+handles each one; they matter most if you change it or port it.
+
+- **Ticks are invisible to the Docs API.** Only the doc's export shows them,
+  and strikethrough isn't reliable. The script reads the export, the
+  strikethrough and a leading `X `.
+- **Only item lines get checkboxes.** Blank spacer lines and group labels
+  (`Jobs`, `Love Burn and art`, `Carried over ...`) never do. Keep labels as
+  plain text, not bullets; a bulleted label is treated as an item, though one
+  starting with `Carried over` is still left alone.
+- **New lines can inherit a neighbour's tick.** Anything the script adds or
+  moves joins its list through an unticked item. After saving, it re-reads
+  the doc and stops with an error (which Google emails you) if one came out
+  ticked, so you can untick it. Neither API can untick a box.
+- **Blank lines never move to Done, and Today never moves.** Only items with
+  text in This week through This year are filed.
+- **Every write is checked.** A moved item is copied, the copy is re-read, and
+  only then is the original removed. At the end of the run the whole board is
+  re-read: if any item went missing or appeared twice, the run stops with an
+  error. Undated lines and Done's older entries are never rewritten.
+- **The export can lag a few seconds behind an edit,** so the after-save check
+  waits briefly before reading it.
 
 ## Settings
 
@@ -121,6 +151,7 @@ All in `CONFIG` at the top of `Code.gs`:
 | `DONE_FROM_SECTIONS` | Sections swept for done items. Today isn't in the list. |
 | `DONE_PREFIX_PATTERN` | What counts as an "X" prefix. Default: `X` or `x` and a space. |
 | `DONE_LABEL` | Day heading in Done, default `{m}/{d}/{yy}` (11/16/26). |
+| `TICK_SOURCE` | `export` (default) reads ticks from the doc's export as well; `strikethrough` skips it. |
 | `CHECKBOXES` | Keep the rolling sections as checklist items. |
 | `RECURRING_LINE` | A line to re-add on rollover, e.g. `Weekly review`. Blank turns it off. |
 | `RECURRING_SECTIONS` | Which sections get it: `week`, `month`, `quarter`, `year`. |
@@ -222,8 +253,8 @@ Trade-offs of option 2:
   it doesn't depend on an Apps Script project tied to the doc. The same script
   could also run from any computer or another scheduler.
 
-Same limit either way: neither API can read a checklist tick, so the
-strikethrough or `X ` rule still applies.
+Same limits either way: read ticks from the Drive export
+(`files.export` with `text/markdown`), and keep the checks in *Known gotchas*.
 
 ## Why Apps Script
 

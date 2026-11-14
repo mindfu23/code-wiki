@@ -365,4 +365,99 @@ test('done-prefix and done-label tokens', () => {
   assert.strictEqual(R.formatTitle(CFG.DONE_LABEL, D('2027-01-05'), CFG), '1/5/27');
 });
 
+// ---------------------------------------------------------------- lessons from live edits
+test('reads ticks from a Markdown export', () => {
+  const md = [
+    '## This week',
+    '- [x] Laundry, clean the apartment',
+    '- [ ] Nov 18: Java module 6',
+    '* [X] **Follow up** with [Hyperbolic](https://example.com)',
+    '- [x] Sun Nov 8: Old \\- homework',
+    '- [x] ',
+  ].join('\n');
+  const t = plain(R.tickedFromMarkdown(md));
+  assert.deepStrictEqual(Object.keys(t).sort(), [
+    'follow up with hyperbolic',
+    'laundry, clean the apartment',
+    'sun nov 8: old - homework',
+  ]);
+});
+
+test('ticked items (from the export) move to Done; blank lines never do', () => {
+  const mem = R.MemoryAdapter.fromBlocks([
+    H('Today (Sun Nov 15)'),
+    { type: 'item', text: 'Ticked in Today', checkbox: true, ticked: true },
+    H('This week (Mon Nov 9 to Sun Nov 15)'),
+    { type: 'item', text: 'Ticked item', checkbox: true, ticked: true },
+    { type: 'item', text: '', checkbox: true, ticked: true },
+    { type: 'item', text: 'Open item', checkbox: true },
+    { type: 'item', text: '   ', checkbox: false },
+    H('Done'),
+  ]);
+  const s0 = run(mem, '2026-11-15', null).state;
+  run(mem, '2026-11-16', s0);
+  assert.deepStrictEqual(section(mem, 'Done'), ['# Done', '### 11/16/26', '- Ticked item']);
+  assert.ok(section(mem, 'Today').includes('- Ticked in Today'));
+  // Blank lines stayed put and weren't made into checkboxes.
+  const blanks = mem.scan().filter((b) => b.type === 'item' && !b.text.trim());
+  assert.strictEqual(blanks.length, 2);
+  assert.strictEqual(blanks.find((b) => b.text === '   ').checkbox, false);
+});
+
+test('label-like bullets are not turned into checkboxes', () => {
+  const mem = R.MemoryAdapter.fromBlocks([
+    H('This week (Mon Nov 16 to Sun Nov 22)'),
+    I('Carried over Mon Nov 9 (dates passed; check off, move or drop)'),
+    I('Real item'),
+  ]);
+  const s0 = run(mem, '2026-11-16', null).state;
+  run(mem, '2026-11-17', s0);
+  const bs = mem.scan();
+  assert.strictEqual(bs[1].checkbox, undefined);
+  assert.strictEqual(bs[2].checkbox, true);
+});
+
+test('new and moved items join the list through an unticked item', () => {
+  const base = R.MemoryAdapter.fromBlocks([
+    H('This week (Mon Nov 9 to Sun Nov 15)'),
+    { type: 'item', text: 'X Ticked first', checkbox: true },
+    { type: 'item', text: 'Open second', checkbox: true },
+    H('This month (November)'),
+    { type: 'item', text: 'Nov 18: Pull me', checkbox: true },
+    H('Done'),
+  ]);
+  const refs = [];
+  const spy = Object.assign({}, base, {
+    moveItems(idx, after, listRef) { refs.push(listRef == null ? null : base.blocks[listRef].text); return base.moveItems(idx, after, listRef); },
+    insertItem(after, text, listRef) { refs.push(listRef == null ? null : base.blocks[listRef].text); return base.insertItem(after, text, listRef); },
+  });
+  const cfg = Object.assign({}, CFG, { DONE_SWEEP: 'off' });
+  const s0 = plain(R.rollover(spy, D('2026-11-15'), null, cfg).state);
+  R.rollover(spy, D('2026-11-16'), s0, cfg);
+  assert.ok(refs.length >= 2, 'a move and an insert happened');
+  for (const r of refs) assert.strictEqual(r, 'Open second');
+});
+
+test('the run stops if an item would be lost or doubled', () => {
+  const before = [I('A'), I('B'), I('X C')];
+  assert.deepStrictEqual(plain(R.checkIntegrity(before, [I('A'), I('B'), I('C')], CFG)), []);
+  assert.strictEqual(R.checkIntegrity(before, [I('A'), I('C')], CFG).length, 1);
+  assert.strictEqual(R.checkIntegrity(before, [I('A'), I('B'), I('C'), I('A')], CFG).length, 1);
+  assert.deepStrictEqual(plain(R.checkIntegrity(before, [I('A'), I('B'), I('C'), I('Weekly review')], CFG)), []);
+  const broken = R.MemoryAdapter.fromBlocks(sampleBoard());
+  broken.moveItems = (idx) => { broken.blocks.splice(idx[0], 1); }; // a move that drops the item
+  const s0 = run(broken, '2026-11-15', null).state;
+  assert.throws(() => R.rollover(broken, D('2026-11-16'), s0, CFG), /stopped: Missing/);
+});
+
+test('after saving, an added or moved item that came out ticked is reported', () => {
+  const blocks = [
+    H('This week (Mon Nov 16 to Sun Nov 22)'),
+    { type: 'item', text: 'Weekly review', ticked: true },
+    { type: 'item', text: 'Nov 22: Java module 7' },
+  ];
+  const problems = plain(R.verifyTicks(blocks, [{ text: 'Weekly review', section: 'week' }, { text: 'Nov 22: Java module 7', section: 'week' }], CFG));
+  assert.deepStrictEqual(problems, ['"Weekly review" in This week came out ticked; untick it by hand.']);
+});
+
 console.log('\n' + passed + ' passed' + (process.exitCode ? ', some failed' : ''));

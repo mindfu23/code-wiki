@@ -77,12 +77,16 @@ var CONFIG = {
   CARRY_OVER_PREFIX: 'Carried over',
 
   // Done items. An item counts as done when its whole text is struck through
-  // (Google Docs strikes ticked checklist items through by default) or it
-  // starts with "X ". Google's APIs can't read whether a box is ticked, so
-  // the strikethrough is how the script sees a tick.
+  // (Google Docs strikes ticked checklist items through by default, though
+  // not always), it starts with "X ", or the doc's export shows it ticked.
+  // The Docs API and Apps Script can't read a tick directly.
   // DONE_SWEEP: 'rollover' moves them at each new week/month/quarter/year,
   // 'daily' moves them every day, 'off' leaves them.
   DONE_SWEEP: 'rollover',
+  // Where ticks are read from. 'export' reads the doc's Markdown export,
+  // the one place Google shows a tick ("- [x] item"), and also accepts the
+  // strikethrough and "X ". 'strikethrough' skips the export.
+  TICK_SOURCE: 'export',
   DONE_FROM_SECTIONS: ['week', 'month', 'quarter', 'year'],
   DONE_PREFIX_PATTERN: '^\\s*[xX]\\s+',
   // Heading for the day's group in Done, newest at the top. Tokens:
@@ -146,8 +150,16 @@ function rollTaskBoard() {
     result.log.forEach(function (line) { console.log(line); });
     if (CONFIG.DRY_RUN) {
       console.log('Dry run: nothing was changed.');
-    } else {
-      saveState_(result.state);
+      return;
+    }
+    saveState_(result.state);
+    if (result.touched.length && adapter.save) {
+      // Re-read the saved doc and check what the run wrote.
+      adapter.save();
+      Utilities.sleep(5000); // give the export a moment to catch up
+      var problems = verifyTicks_(docAdapter_(adapter.id).scan(), result.touched, CONFIG);
+      problems.forEach(function (line) { console.warn(line); });
+      if (problems.length) throw new Error(problems.join('\n'));
     }
   } finally {
     lock.releaseLock();
@@ -210,12 +222,15 @@ function onOpen() {
 function rollover(adapter, today, state, cfg) {
   var log = [];
   var keys = periodKeys(today, cfg);
+  var before = adapter.scan();
+  var touched = [];
+  log.touched = touched; // filled by the steps below
 
   if (!state || !state.day) {
     retitle_(adapter, 'today', today, cfg, log);
     log.push('First run: recorded the current day, week, month, quarter and year. ' +
       'Sections roll from the next new period on.');
-    return { state: keys, log: log };
+    return { state: keys, log: log.slice(), touched: [] };
   }
 
   var changed = {
@@ -252,8 +267,12 @@ function rollover(adapter, today, state, cfg) {
 
   if (cfg.CHECKBOXES) ensureCheckboxes_(adapter, cfg, log);
 
+  // Re-read the board and make sure nothing was lost or doubled.
+  var problems = checkIntegrity(before, adapter.scan(), cfg);
+  if (problems.length) throw new Error('Task Board Roller stopped: ' + problems.join(' '));
+
   if (!log.length) log.push('Nothing to roll today.');
-  return { state: keys, log: log };
+  return { state: keys, log: log.slice(), touched: touched };
 }
 
 function retitle_(adapter, section, today, cfg, log) {
@@ -286,6 +305,7 @@ function carryOverPassed_(adapter, today, cfg, log) {
     if (!unit) return;
     var target = groupAnchor_(doc, 'week', label, null, false, cfg);
     moveUnit_(adapter, doc, unit, target);
+    log.touched.push({ text: unit.text, section: 'week' });
     log.push('Carried over "' + unit.text + '" from ' + sectionName_(unit.section, cfg) + '.');
   }
 }
@@ -308,6 +328,7 @@ function pullForward_(adapter, fromSections, toSection, range, cfg, log) {
     var target = pickTargetGroup_(doc, toSection, unit.group, cfg);
     var anchor = groupAnchor_(doc, toSection, target.label, dt, target.create, cfg);
     moveUnit_(adapter, doc, unit, anchor);
+    log.touched.push({ text: unit.text, section: toSection });
     log.push('Moved "' + unit.text + '" from ' + sectionName_(unit.section, cfg) +
       ' to ' + sectionName_(toSection, cfg) + (target.label ? ' (' + target.label + ')' : '') + '.');
   }
@@ -325,7 +346,7 @@ function sweepDone_(adapter, today, cfg, log) {
       log.push('No "' + cfg.SECTIONS.done + '" heading found; done items stay where they are.');
       return;
     }
-    var unit = findUnit_(doc, cfg.DONE_FROM_SECTIONS, function (u) { return doc.blocks[u.start].done; });
+    var unit = findUnit_(doc, cfg.DONE_FROM_SECTIONS, function (u) { return doc.blocks[u.start].done && u.text !== ''; });
     if (!unit) return;
 
     var labelIdx = null, doneRef = null;
@@ -369,6 +390,8 @@ function ensureCheckboxes_(adapter, cfg, log) {
   for (var i = 0; i < doc.blocks.length; i++) {
     var b = doc.blocks[i];
     if (b.kind !== 'item' || b.checkbox || (cfg.CHECKBOX_SECTIONS || []).indexOf(b.section) < 0) continue;
+    // Only real items: never blank spacer lines or group labels.
+    if (!b.text.trim() || startsWithCI(b.text.trim(), cfg.CARRY_OVER_PREFIX)) continue;
     var r = adapter.makeCheckbox(i);
     if (r !== true) {
       log.push(r || 'Skipped checklist formatting.');
@@ -392,11 +415,86 @@ function ensureRecurringLine_(adapter, section, cfg, log) {
   doc.blocks.forEach(function (b, i) {
     if (b.section !== section || b.kind === 'heading') return;
     if (b.group && startsWithCI(b.group, cfg.CARRY_OVER_PREFIX)) return;
-    if (b.kind === 'item') { last = i; listRef = i; }
+    if (b.kind === 'item') {
+      last = i;
+      if (!b.done && b.text.trim()) listRef = i; // never copy a ticked neighbour's list state
+    }
   });
   if (last == null) last = doc.headings[section];
   adapter.insertItem(last, cfg.RECURRING_LINE, listRef);
+  log.touched.push({ text: cfg.RECURRING_LINE, section: section });
   log.push('Added "' + cfg.RECURRING_LINE + '" to ' + sectionName_(section, cfg) + '.');
+}
+
+/**
+ * Compares the board before and after a run. Every item that had text before
+ * must still be there exactly once (a leading "X " may be gone), and the only
+ * new items allowed are the recurring line. Returns a list of problems.
+ */
+function checkIntegrity(before, after, cfg) {
+  var prefix = new RegExp(cfg.DONE_PREFIX_PATTERN || '^(?!)');
+  function counts(blocks) {
+    var c = {};
+    blocks.forEach(function (b) {
+      if (b.type !== 'item') return;
+      var t = normalizeText(String(b.text || '').replace(prefix, ''));
+      if (t) c[t] = (c[t] || 0) + 1;
+    });
+    return c;
+  }
+  var a = counts(before), z = counts(after), problems = [];
+  var extra = cfg.RECURRING_LINE ? normalizeText(cfg.RECURRING_LINE) : null;
+  Object.keys(a).forEach(function (t) {
+    if ((z[t] || 0) < a[t]) problems.push('Missing after the run: "' + t + '".');
+  });
+  Object.keys(z).forEach(function (t) {
+    if ((z[t] || 0) > (a[t] || 0) && t !== extra) problems.push('Doubled or unexpected after the run: "' + t + '".');
+  });
+  return problems;
+}
+
+/** After a save: items the run added or moved outside Done must not be ticked. */
+function verifyTicks_(blocks, touched, cfg) {
+  var doc = analyze(blocks, cfg);
+  var problems = [];
+  touched.forEach(function (t) {
+    var want = normalizeText(t.text);
+    var hit = doc.blocks.filter(function (b) {
+      return b.kind === 'item' && b.section === t.section && normalizeText(b.text) === want;
+    });
+    if (!hit.length) problems.push('Could not find "' + t.text + '" in ' + sectionName_(t.section, cfg) + ' after saving.');
+    hit.forEach(function (b) {
+      if (b.done) problems.push('"' + t.text + '" in ' + sectionName_(t.section, cfg) +
+        ' came out ticked; untick it by hand.');
+    });
+  });
+  return problems;
+}
+
+/** Lower-cased text with Markdown escapes, emphasis and link syntax removed. */
+function normalizeText(s) {
+  return String(s || '')
+    .replace(/\[([^\]]*)\]\([^)]*\)/g, '$1')
+    .replace(/\\(.)/g, '$1')
+    .replace(/[*_~`]/g, '')
+    .replace(/\s+/g, ' ')
+    .trim()
+    .toLowerCase();
+}
+
+/**
+ * Reads ticked checklist items out of a Markdown export of the doc:
+ * "- [x] Laundry" -> a count per normalized text.
+ */
+function tickedFromMarkdown(md) {
+  var out = {};
+  String(md || '').split(/\r?\n/).forEach(function (line) {
+    var m = /^\s*(?:[-*+]|\d+[.)])\s+\[[xX]\]\s+(.*)$/.exec(line);
+    if (!m) return;
+    var t = normalizeText(m[1]);
+    if (t) out[t] = (out[t] || 0) + 1;
+  });
+  return out;
 }
 
 // ---------------------------------------------------------------------------
@@ -436,7 +534,8 @@ function analyze(blocks, cfg) {
     }
     return {
       kind: kind, text: text, section: section, group: group, nesting: b.nesting || 0,
-      done: kind === 'item' && (b.struck === true || donePrefix.test(text)),
+      done: kind === 'item' && text.trim() !== '' &&
+        (b.ticked === true || b.struck === true || donePrefix.test(text)),
       checkbox: kind === 'item' && b.checkbox === true,
     };
   });
@@ -452,7 +551,9 @@ function findUnit_(doc, sections, test) {
     if (i > 0 && bs[i - 1].kind === 'item' && bs[i - 1].section === b.section && b.nesting > 0) continue;
     var unit = { start: i, end: i, text: b.text.trim(), section: b.section, group: b.group, nesting: b.nesting };
     var j = i + 1;
-    while (j < bs.length && bs[j].kind === 'item' && bs[j].nesting > b.nesting) { unit.end = j; j++; }
+    while (j < bs.length && bs[j].kind === 'item' && bs[j].nesting > b.nesting && bs[j].text.trim() !== '') {
+      unit.end = j; j++;
+    }
     if (test(unit)) return unit;
     i = unit.end;
   }
@@ -513,7 +614,10 @@ function groupAnchor_(doc, section, label, date, mustCreate, cfg) {
   if (label != null && bs[top + 1] && bs[top + 1].kind === 'blank') top = top + 1;
   if (!items.length) return { anchor: top, listRef: null, newLabel: null, spaced: false };
 
-  var listRef = items[0];
+  // Join the list through an unticked item, so nothing new starts out ticked.
+  var listRef = null;
+  items.forEach(function (i) { if (listRef == null && !bs[i].done && bs[i].text.trim()) listRef = i; });
+  if (listRef == null) listRef = items[0];
   if (date == null) return { anchor: lastOfUnit_(bs, items[items.length - 1]), listRef: listRef, newLabel: null, spaced: false };
 
   var anchor = top, t = serial(date);
@@ -668,8 +772,9 @@ function parseIso_(s) {
 //   makeCheckbox(i) -> true, or a message saying why it couldn't
 // ---------------------------------------------------------------------------
 
-function docAdapter_() {
-  var doc = CONFIG.DOC_ID ? DocumentApp.openById(CONFIG.DOC_ID) : DocumentApp.getActiveDocument();
+function docAdapter_(docId) {
+  var id = docId || CONFIG.DOC_ID;
+  var doc = id ? DocumentApp.openById(id) : DocumentApp.getActiveDocument();
   if (!doc) throw new Error('No doc: bind the script to the doc or set CONFIG.DOC_ID.');
   var body = doc.getBody();
   var H = DocumentApp.ParagraphHeading;
@@ -706,14 +811,35 @@ function docAdapter_() {
       }
     }
   }
+  // Ticks, from the doc's Markdown export (read once, before any edits).
+  var ticked = {};
+  if (CONFIG.TICK_SOURCE === 'export') {
+    try {
+      var res = UrlFetchApp.fetch('https://www.googleapis.com/drive/v3/files/' + doc.getId() +
+        '/export?mimeType=text%2Fmarkdown', {
+        headers: { Authorization: 'Bearer ' + ScriptApp.getOAuthToken() },
+        muteHttpExceptions: true,
+      });
+      if (res.getResponseCode() === 200) ticked = tickedFromMarkdown(res.getContentText());
+      else console.warn('Could not read ticks from the export (' + res.getResponseCode() + '); using strikethrough and "X " only.');
+    } catch (e) {
+      console.warn('Could not read ticks from the export: ' + e.message);
+    }
+  }
+  function isTicked(text) { return !!ticked[normalizeText(text)]; }
+
+  // A checklist item to join, preferring one that isn't ticked.
   function checklistRef() {
+    var fallback = null;
     for (var i = 0; i < body.getNumChildren(); i++) {
       var el = body.getChild(i);
-      if (el.getType() === DocumentApp.ElementType.LIST_ITEM && checklistIds[el.asListItem().getListId()]) {
-        return el.asListItem();
-      }
+      if (el.getType() !== DocumentApp.ElementType.LIST_ITEM) continue;
+      var li = el.asListItem();
+      if (!checklistIds[li.getListId()] || !li.getText().trim()) continue;
+      if (!isTicked(li.getText())) return li;
+      if (!fallback) fallback = li;
     }
-    return null;
+    return fallback;
   }
 
   return {
@@ -733,6 +859,7 @@ function docAdapter_() {
           out.push({
             type: 'item', text: txt, nesting: li.getNestingLevel(),
             struck: txt.trim() !== '' && li.editAsText().isStrikethrough() === true,
+            ticked: txt.trim() !== '' && isTicked(txt),
             checkbox: !!checklistIds[li.getListId()],
           });
         } else {
@@ -757,6 +884,8 @@ function docAdapter_() {
     stripPrefix: function (i, n) {
       if (n > 0) body.getChild(i).asListItem().editAsText().deleteText(0, n - 1);
     },
+    id: doc.getId(),
+    save: function () { doc.saveAndClose(); },
     makeCheckbox: function (i) {
       if (checklistNote) return checklistNote;
       var ref = checklistRef();
@@ -780,11 +909,18 @@ function docAdapter_() {
       var anchor = body.getChild(after);
       var ref = listRef != null ? body.getChild(listRef).asListItem() : null;
       var base = Math.min.apply(null, originals.map(function (li) { return li.getNestingLevel(); }));
-      originals.forEach(function (li, k) {
+      var copies = originals.map(function (li, k) {
         var copy = body.insertListItem(body.getChildIndex(anchor) + 1 + k, li.copy());
         if (ref) copy.setListId(ref);
         copy.setNestingLevel(li.getNestingLevel() - base);
+        return copy;
       });
+      // Re-read the copies before removing the originals.
+      var ok = copies.every(function (c, k) { return c.getText() === originals[k].getText(); });
+      if (!ok) {
+        copies.forEach(function (c) { c.removeFromParent(); });
+        throw new Error('Copy check failed while moving "' + originals[0].getText() + '"; nothing was removed.');
+      }
       originals.forEach(function (li) { ensureNotLast(li); li.removeFromParent(); });
     },
   };
@@ -850,5 +986,7 @@ if (typeof module !== 'undefined') {
     CONFIG: CONFIG, rollover: rollover, analyze: analyze, MemoryAdapter: MemoryAdapter,
     parseLeadingDate: parseLeadingDate, periodKeys: periodKeys, periodRanges: periodRanges,
     formatTitle: formatTitle, weekStart: weekStart, isoDay: isoDay,
+    checkIntegrity: checkIntegrity, tickedFromMarkdown: tickedFromMarkdown, normalizeText: normalizeText,
+    verifyTicks: verifyTicks_,
   };
 }
