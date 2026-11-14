@@ -176,7 +176,10 @@ test('a plain day only re-dates Today, and a rerun changes nothing', () => {
   const mem = R.MemoryAdapter.fromBlocks(sampleBoard());
   const s0 = run(mem, '2026-11-14', null).state;
   const r = run(mem, '2026-11-15', s0);
-  assert.deepStrictEqual(r.log, ['Re-dated "Today (Sat Nov 14)" to "Today (Sun Nov 15)".']);
+  assert.deepStrictEqual(r.log, [
+    'Re-dated "Today (Sat Nov 14)" to "Today (Sun Nov 15)".',
+    'Turned 24 bullets into checklist items.',
+  ]);
   const snap = texts(mem);
   const r2 = run(mem, '2026-11-15', r.state);
   assert.deepStrictEqual(r2.log, ['Nothing to roll today.']);
@@ -272,6 +275,94 @@ test('a board without some sections still runs', () => {
     'Carried over Mon Nov 16 (dates passed; check off, move or drop)',
     '- Nov 15: thing',
   ]);
+});
+
+// ---------------------------------------------------------------- done and checklists
+function doneBoard() {
+  const cb = (text, extra = {}) => Object.assign({ type: 'item', text, nesting: 0, checkbox: true }, extra);
+  return [
+    H('Today (Sun Nov 15)'),
+    cb('X Done today but stays in Today'),
+    H('This week (Mon Nov 9 to Sun Nov 15)'),
+    cb('X Laundry'),
+    cb('Nov 18: Java module 6'),
+    cb('Struck item', { struck: true }),
+    cb('Sub-step', { nesting: 1 }),
+    I('Plain bullet to convert'),
+    cb('Xylophone practice'),
+    H('This month (November)'),
+    P('Jobs'),
+    cb('X Nov 10: Old interview'),
+    cb('Follow up with an agency'),
+    H('Done'),
+    H('11/6/26', 3),
+    I('Older finished thing'),
+  ];
+}
+
+test('rollover moves done items to Done under a new dated heading, newest first', () => {
+  const mem = R.MemoryAdapter.fromBlocks(doneBoard());
+  const s0 = run(mem, '2026-11-15', null).state;
+  const r = run(mem, '2026-11-16', s0);
+  assert.deepStrictEqual(section(mem, 'Done'), [
+    '# Done',
+    '### 11/16/26',
+    '- Laundry',
+    '- Struck item',
+    '  - Sub-step',
+    '- Nov 10: Old interview',
+    '### 11/6/26',
+    '- Older finished thing',
+  ]);
+  // Today keeps its own done item; "Xylophone" isn't an X prefix.
+  assert.ok(section(mem, 'Today').includes('- X Done today but stays in Today'));
+  assert.ok(section(mem, 'This week').includes('- Xylophone practice'));
+  // A done item with a passed date went to Done, not to Carried over.
+  assert.ok(!section(mem, 'This week').some((t) => t.includes('Old interview')));
+  // Moved items joined Done's plain list.
+  const moved = mem.scan().find((b) => b.text === 'Laundry');
+  assert.strictEqual(moved.checkbox, false);
+  assert.ok(r.log.some((l) => l === 'Moved done item "Laundry" from This week to Done (11/16/26).'));
+});
+
+test('a second sweep the same day adds to that day\'s heading', () => {
+  const cfg = Object.assign({}, CFG, { DONE_SWEEP: 'daily' });
+  const mem = R.MemoryAdapter.fromBlocks(doneBoard());
+  let st = plain(R.rollover(mem, D('2026-11-15'), null, cfg).state);
+  st = plain(R.rollover(mem, D('2026-11-16'), st, cfg).state);
+  // New tick later the same day, then a run the next day files it under that day.
+  const bs = mem.blocks;
+  bs.find((b) => b.text === 'Follow up with an agency').text = 'X Follow up with an agency';
+  R.rollover(mem, D('2026-11-17'), st, cfg);
+  const done = section(mem, 'Done');
+  assert.deepStrictEqual(done.slice(0, 3), ['# Done', '### 11/17/26', '- Follow up with an agency']);
+  assert.strictEqual(done.filter((t) => t.startsWith('### ')).length, 3);
+});
+
+test('daily sweep is off by default between rollovers', () => {
+  const mem = R.MemoryAdapter.fromBlocks(doneBoard());
+  const s0 = run(mem, '2026-11-12', null).state; // Thu
+  run(mem, '2026-11-13', s0); // Fri, same week
+  assert.ok(section(mem, 'This week').includes('- X Laundry'));
+});
+
+test('plain bullets become checklist items; moved and new items stay checklist items', () => {
+  const mem = R.MemoryAdapter.fromBlocks(doneBoard());
+  const s0 = run(mem, '2026-11-15', null).state;
+  run(mem, '2026-11-16', s0);
+  const rolling = mem.scan().filter((b) => b.type === 'item' && !['Older finished thing', 'Laundry', 'Struck item', 'Sub-step', 'Nov 10: Old interview'].includes(b.text));
+  assert.ok(rolling.length > 0);
+  for (const b of rolling) assert.strictEqual(b.checkbox, true, b.text);
+  // Done's older items are left as they were.
+  assert.strictEqual(mem.scan().find((b) => b.text === 'Older finished thing').checkbox, undefined);
+  // A rerun has nothing left to convert.
+  const r2 = R.rollover(mem, D('2026-11-16'), plain(R.periodKeys(D('2026-11-16'), CFG)), CFG);
+  assert.deepStrictEqual(plain(r2.log), ['Nothing to roll today.']);
+});
+
+test('done-prefix and done-label tokens', () => {
+  assert.strictEqual(R.formatTitle(CFG.DONE_LABEL, D('2026-11-14'), CFG), '11/14/26');
+  assert.strictEqual(R.formatTitle(CFG.DONE_LABEL, D('2027-01-05'), CFG), '1/5/27');
 });
 
 console.log('\n' + passed + ' passed' + (process.exitCode ? ', some failed' : ''));

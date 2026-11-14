@@ -10,10 +10,14 @@
  *     now belong to (This year -> This quarter -> This month -> This week),
  *     and gathers items whose date has passed into a "Carried over" group at
  *     the end of This week, so nothing silently sits in the past.
+ *   - Items that are ticked (struck through) or start with "X " are moved
+ *     out of every section but Today into Done, under a heading for the day.
+ *   - New and moved items stay checklist items, and plain bullets in the
+ *     rolling sections are turned into checklist items.
  *   - Optionally it adds a fresh recurring line (for example
  *     "Weekly review") to a section when its period rolls over.
  *
- * It never deletes an item and never marks anything done. Undated items are
+ * It never deletes an item and never ticks anything off itself. Undated items are
  * left exactly where they are.
  *
  * Install, use and removal are in README.md next to this file.
@@ -48,6 +52,7 @@ var CONFIG = {
     month: 'This month',
     quarter: 'This quarter',
     year: 'This year',
+    done: 'Done',
   },
 
   // New heading text for each section. Tokens:
@@ -70,6 +75,25 @@ var CONFIG = {
   CARRY_OVER_LABEL: 'Carried over {dow} {mon} {d} (dates passed; check off, move or drop)',
   // Groups whose label starts with this are left alone (already carried over).
   CARRY_OVER_PREFIX: 'Carried over',
+
+  // Done items. An item counts as done when its whole text is struck through
+  // (Google Docs strikes ticked checklist items through by default) or it
+  // starts with "X ". Google's APIs can't read whether a box is ticked, so
+  // the strikethrough is how the script sees a tick.
+  // DONE_SWEEP: 'rollover' moves them at each new week/month/quarter/year,
+  // 'daily' moves them every day, 'off' leaves them.
+  DONE_SWEEP: 'rollover',
+  DONE_FROM_SECTIONS: ['week', 'month', 'quarter', 'year'],
+  DONE_PREFIX_PATTERN: '^\\s*[xX]\\s+',
+  // Heading for the day's group in Done, newest at the top. Tokens:
+  //   {m} {d} {yy} (11/14/26), {mm} {dd} {year}, {mon} {dow}
+  DONE_LABEL: '{m}/{d}/{yy}',
+  DONE_LABEL_LEVEL: 3,
+
+  // Keep items in the rolling sections as checklist items. Needs the Google
+  // Docs advanced service (see README); without it this step is skipped.
+  CHECKBOXES: true,
+  CHECKBOX_SECTIONS: ['today', 'week', 'month', 'quarter', 'year'],
 
   // Label for a new group when a pulled item has no matching group.
   FALLBACK_GROUP_LABEL: 'Other',
@@ -208,6 +232,9 @@ function rollover(adapter, today, state, cfg) {
     if (changed[s]) retitle_(adapter, s, today, cfg, log);
   });
 
+  var sweep = cfg.DONE_SWEEP === 'daily' ? changed.day : cfg.DONE_SWEEP === 'rollover' ? anyPeriod : false;
+  if (sweep) sweepDone_(adapter, today, cfg, log);
+
   if (anyPeriod && cfg.CARRY_OVER_PASSED) carryOverPassed_(adapter, today, cfg, log);
 
   if (cfg.PULL_FORWARD) {
@@ -222,6 +249,8 @@ function rollover(adapter, today, state, cfg) {
       if (changed[s]) ensureRecurringLine_(adapter, s, cfg, log);
     });
   }
+
+  if (cfg.CHECKBOXES) ensureCheckboxes_(adapter, cfg, log);
 
   if (!log.length) log.push('Nothing to roll today.');
   return { state: keys, log: log };
@@ -250,6 +279,7 @@ function carryOverPassed_(adapter, today, cfg, log) {
     if (doc.headings.week == null) return;
     var unit = findUnit_(doc, ['week', 'month', 'quarter', 'year'], function (u) {
       if (u.group && startsWithCI(u.group, cfg.CARRY_OVER_PREFIX)) return false;
+      if (doc.blocks[u.start].done) return false;
       var dt = parseLeadingDate(u.text, today);
       return dt && serial(dt) < t;
     });
@@ -267,6 +297,7 @@ function pullForward_(adapter, fromSections, toSection, range, cfg, log) {
     var doc = analyze(adapter.scan(), cfg);
     if (doc.headings[toSection] == null) return;
     var unit = findUnit_(doc, fromSections, function (u) {
+      if (doc.blocks[u.start].done) return false;
       var dt = parseLeadingDate(u.text, range.start);
       if (!dt) return false;
       var s = serial(dt);
@@ -280,6 +311,72 @@ function pullForward_(adapter, fromSections, toSection, range, cfg, log) {
     log.push('Moved "' + unit.text + '" from ' + sectionName_(unit.section, cfg) +
       ' to ' + sectionName_(toSection, cfg) + (target.label ? ' (' + target.label + ')' : '') + '.');
   }
+}
+
+/** Moves done items (struck through, or starting with "X ") into Done under today's date. */
+function sweepDone_(adapter, today, cfg, log) {
+  var label = formatTitle(cfg.DONE_LABEL, today, cfg);
+  var prefix = new RegExp(cfg.DONE_PREFIX_PATTERN);
+  var guard = 0;
+  while (guard++ < 500) {
+    var doc = analyze(adapter.scan(), cfg);
+    var dh = doc.headings.done;
+    if (dh == null) {
+      log.push('No "' + cfg.SECTIONS.done + '" heading found; done items stay where they are.');
+      return;
+    }
+    var unit = findUnit_(doc, cfg.DONE_FROM_SECTIONS, function (u) { return doc.blocks[u.start].done; });
+    if (!unit) return;
+
+    var labelIdx = null, doneRef = null;
+    doc.blocks.forEach(function (b, i) {
+      if (b.section !== 'done') return;
+      if (labelIdx == null && b.kind === 'label' && b.text.trim() === label) labelIdx = i;
+      if (doneRef == null && b.kind === 'item') doneRef = i;
+    });
+    var anchor, shift = 0;
+    if (labelIdx == null) {
+      anchor = adapter.insertHeading(dh, label, cfg.DONE_LABEL_LEVEL); // newest first
+      if (anchor <= unit.start) shift = 1;
+      if (doneRef != null && anchor <= doneRef) doneRef++;
+    } else {
+      anchor = groupAnchor_(doc, 'done', label, null, false, cfg).anchor;
+    }
+    var idx = [];
+    for (var i = unit.start; i <= unit.end; i++) idx.push(i + shift);
+    // Join Done's own list so moved items look like the rest of Done.
+    adapter.moveItems(idx, anchor, doneRef);
+
+    // Drop the "X " from the moved item.
+    var after = analyze(adapter.scan(), cfg);
+    for (var j = after.blocks.length - 1; j >= 0; j--) {
+      var b = after.blocks[j];
+      if (b.section === 'done' && b.kind === 'item' && b.text.trim() === unit.text) {
+        var m = prefix.exec(b.text);
+        if (m) adapter.stripPrefix(j, m[0].length);
+        break;
+      }
+    }
+    log.push('Moved done item "' + unit.text.replace(prefix, '') + '" from ' +
+      sectionName_(unit.section, cfg) + ' to ' + cfg.SECTIONS.done + ' (' + label + ').');
+  }
+}
+
+/** Turns plain bullets in the rolling sections into checklist items. */
+function ensureCheckboxes_(adapter, cfg, log) {
+  var doc = analyze(adapter.scan(), cfg);
+  var n = 0;
+  for (var i = 0; i < doc.blocks.length; i++) {
+    var b = doc.blocks[i];
+    if (b.kind !== 'item' || b.checkbox || (cfg.CHECKBOX_SECTIONS || []).indexOf(b.section) < 0) continue;
+    var r = adapter.makeCheckbox(i);
+    if (r !== true) {
+      log.push(r || 'Skipped checklist formatting.');
+      return;
+    }
+    n++;
+  }
+  if (n) log.push('Turned ' + n + ' bullet' + (n === 1 ? '' : 's') + ' into checklist items.');
 }
 
 function ensureRecurringLine_(adapter, section, cfg, log) {
@@ -314,6 +411,7 @@ function ensureRecurringLine_(adapter, section, cfg, log) {
  */
 function analyze(blocks, cfg) {
   var headings = {};
+  var donePrefix = new RegExp(cfg.DONE_PREFIX_PATTERN || '^(?!)');
   var section = null, group = null;
   var out = blocks.map(function (b, i) {
     var text = b.text || '';
@@ -336,7 +434,11 @@ function analyze(blocks, cfg) {
     } else {
       kind = 'other';
     }
-    return { kind: kind, text: text, section: section, group: group, nesting: b.nesting || 0 };
+    return {
+      kind: kind, text: text, section: section, group: group, nesting: b.nesting || 0,
+      done: kind === 'item' && (b.struck === true || donePrefix.test(text)),
+      checkbox: kind === 'item' && b.checkbox === true,
+    };
   });
   return { blocks: out, headings: headings };
 }
@@ -494,7 +596,8 @@ function formatTitle(template, c, cfg) {
   var ws = weekStart(c, cfg.WEEK_STARTS_ON), we = addDays(ws, 6);
   var q = quarterOf(c);
   var tokens = {
-    dow: DOW[dow(c)], mon: MON[c.m - 1], d: c.d,
+    dow: DOW[dow(c)], mon: MON[c.m - 1], d: c.d, m: c.m, mm: pad2(c.m), dd: pad2(c.d),
+    yy: pad2(c.y % 100),
     startDow: DOW[dow(ws)], startMon: MON[ws.m - 1], startD: ws.d,
     endDow: DOW[dow(we)], endMon: MON[we.m - 1], endD: we.d,
     monthName: MONTH_NAMES[c.m - 1], year: c.y, q: q,
@@ -554,11 +657,15 @@ function parseIso_(s) {
 
 // ---------------------------------------------------------------------------
 // Adapters: the same small set of edits on the real doc or an in-memory copy.
-//   scan() -> [{type: 'heading'|'para'|'item'|'other', level, text, nesting}]
+//   scan() -> [{type: 'heading'|'para'|'item'|'other', level, text, nesting,
+//              struck, checkbox}]
 //   setText(i, text)
 //   insertPara(afterIndex, text) -> new index
+//   insertHeading(afterIndex, text, level) -> new index
 //   insertItem(afterIndex, text, listRefIndex|null) -> new index
 //   moveItems(indices, afterIndex, listRefIndex|null)
+//   stripPrefix(i, length)
+//   makeCheckbox(i) -> true, or a message saying why it couldn't
 // ---------------------------------------------------------------------------
 
 function docAdapter_() {
@@ -570,8 +677,43 @@ function docAdapter_() {
   levels[H.TITLE] = 1; levels[H.HEADING1] = 1; levels[H.HEADING2] = 2; levels[H.HEADING3] = 3;
   levels[H.HEADING4] = 4; levels[H.HEADING5] = 5; levels[H.HEADING6] = 6; levels[H.SUBTITLE] = 2;
 
+  var headingFor = { 1: H.HEADING1, 2: H.HEADING2, 3: H.HEADING3, 4: H.HEADING4, 5: H.HEADING5, 6: H.HEADING6 };
+
   function ensureNotLast(el) {
     if (body.getChildIndex(el) === body.getNumChildren() - 1) body.appendParagraph('');
+  }
+
+  // Which lists are checklists. DocumentApp can't tell, so this asks the Docs
+  // API (the "Docs" advanced service). A checklist's glyph has no symbol and
+  // no type.
+  var checklistIds = {}, checklistNote = '';
+  if (CONFIG.CHECKBOXES) {
+    if (typeof Docs === 'undefined') {
+      checklistNote = 'Checklist step skipped: add the Google Docs API service (see README).';
+    } else {
+      try {
+        var lists = Docs.Documents.get(doc.getId(), { fields: 'lists' }).lists || {};
+        Object.keys(lists).forEach(function (id) {
+          var lv = ((lists[id].listProperties || {}).nestingLevels || [])[0] || {};
+          if (!lv.glyphSymbol && (!lv.glyphType || lv.glyphType === 'GLYPH_TYPE_UNSPECIFIED')) checklistIds[id] = true;
+        });
+        if (!Object.keys(checklistIds).length) {
+          checklistNote = 'Checklist step skipped: make one checklist item by hand ' +
+            '(Format > Bullets & numbering > Checklist) and the script will match it.';
+        }
+      } catch (e) {
+        checklistNote = 'Checklist step skipped: ' + e.message;
+      }
+    }
+  }
+  function checklistRef() {
+    for (var i = 0; i < body.getNumChildren(); i++) {
+      var el = body.getChild(i);
+      if (el.getType() === DocumentApp.ElementType.LIST_ITEM && checklistIds[el.asListItem().getListId()]) {
+        return el.asListItem();
+      }
+    }
+    return null;
   }
 
   return {
@@ -587,7 +729,12 @@ function docAdapter_() {
           else out.push({ type: 'para', text: p.getText() });
         } else if (type === DocumentApp.ElementType.LIST_ITEM) {
           var li = el.asListItem();
-          out.push({ type: 'item', text: li.getText(), nesting: li.getNestingLevel() });
+          var txt = li.getText();
+          out.push({
+            type: 'item', text: txt, nesting: li.getNestingLevel(),
+            struck: txt.trim() !== '' && li.editAsText().isStrikethrough() === true,
+            checkbox: !!checklistIds[li.getListId()],
+          });
         } else {
           out.push({ type: 'other', text: '' });
         }
@@ -601,6 +748,24 @@ function docAdapter_() {
       var p = body.insertParagraph(after + 1, text);
       p.setHeading(H.NORMAL);
       return after + 1;
+    },
+    insertHeading: function (after, text, level) {
+      var p = body.insertParagraph(after + 1, text);
+      p.setHeading(headingFor[level] || H.HEADING3);
+      return after + 1;
+    },
+    stripPrefix: function (i, n) {
+      if (n > 0) body.getChild(i).asListItem().editAsText().deleteText(0, n - 1);
+    },
+    makeCheckbox: function (i) {
+      if (checklistNote) return checklistNote;
+      var ref = checklistRef();
+      if (!ref) return 'Checklist step skipped: no checklist item found in the doc.';
+      var li = body.getChild(i).asListItem();
+      var level = li.getNestingLevel();
+      li.setListId(ref);
+      li.setNestingLevel(level);
+      return true;
     },
     insertItem: function (after, text, listRef) {
       var ref = listRef != null ? body.getChild(listRef).asListItem() : null;
@@ -634,13 +799,25 @@ var MemoryAdapter = {
       scan: function () { return bs.map(function (b) { return JSON.parse(JSON.stringify(b)); }); },
       setText: function (i, text) { bs[i].text = text; },
       insertPara: function (after, text) { bs.splice(after + 1, 0, { type: 'para', text: text }); return after + 1; },
-      insertItem: function (after, text) { bs.splice(after + 1, 0, { type: 'item', text: text, nesting: 0 }); return after + 1; },
-      moveItems: function (indices, after) {
+      insertHeading: function (after, text, level) {
+        bs.splice(after + 1, 0, { type: 'heading', level: level, text: text }); return after + 1;
+      },
+      insertItem: function (after, text, listRef) {
+        var cb = listRef != null && bs[listRef] ? !!bs[listRef].checkbox : false;
+        bs.splice(after + 1, 0, { type: 'item', text: text, nesting: 0, checkbox: cb });
+        return after + 1;
+      },
+      stripPrefix: function (i, n) { bs[i].text = bs[i].text.slice(n); },
+      makeCheckbox: function (i) { bs[i].checkbox = true; return true; },
+      moveItems: function (indices, after, listRef) {
+        var refCb = listRef != null && bs[listRef] ? !!bs[listRef].checkbox : null;
         var moved = indices.map(function (i) { return bs[i]; });
         var base = Math.min.apply(null, moved.map(function (b) { return b.nesting || 0; }));
         var anchorObj = bs[after];
         var copies = moved.map(function (b) {
-          var c = JSON.parse(JSON.stringify(b)); c.nesting = (b.nesting || 0) - base; return c;
+          var c = JSON.parse(JSON.stringify(b)); c.nesting = (b.nesting || 0) - base;
+          if (refCb !== null) c.checkbox = refCb;
+          return c;
         });
         var at = bs.indexOf(anchorObj) + 1;
         Array.prototype.splice.apply(bs, [at, 0].concat(copies));
